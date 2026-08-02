@@ -70,7 +70,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-29-mcp-2026-07-28-spec.html">
+<meta property="og:title" content="Cooldecode — AI Watch: The new MCP spec">
+<meta property="og:description" content="On July 28, 2026 (yesterday), the Model Context Protocol — the standard that connects models like Claude to external tools, data and systems — published a…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-29-mcp-2026-07-28-spec.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: The new MCP spec">
+<meta name="twitter:description" content="On July 28, 2026 (yesterday), the Model Context Protocol — the standard that connects models like Claude to external tools, data and systems — published a…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrap">
@@ -138,7 +155,13 @@
       <p style="margin-bottom:0">The MCP 2026-07-28 spec changes the protocol from "stateful, always-alive connection" to "self-contained, stateless requests" — a change designed to scale on serverless and edge infrastructure, reinforce enterprise authorization, and formalize extensions like embedded UIs and long-running tasks. It's an architecture change, not just a new feature, which is why it comes with breaking compatibility that requires attention from anyone maintaining MCP servers or clients.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -215,7 +238,13 @@
       <p style="margin-bottom:0">A spec MCP 2026-07-28 muda o protocolo de "conexão com estado, sempre viva" para "requisições autocontidas, sem estado" — uma mudança pensada para escalar em infraestrutura serverless e de edge, reforçar autorização corporativa, e formalizar extensões como UIs embutidas e tarefas de longa duração. É uma mudança de arquitetura, não só uma feature nova, e por isso vem com quebra de compatibilidade que exige atenção de quem mantém servidores ou clientes MCP.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -286,6 +315,15 @@
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 

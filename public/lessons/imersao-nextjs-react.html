@@ -70,7 +70,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/imersao-nextjs-react.html">
+<meta property="og:title" content="Cooldecode — Deep dive: Next.js + React">
+<meta property="og:description" content="A standalone module, separate from the main track: what each one actually is, how they work under the hood, and — most importantly — when they pay off and…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/imersao-nextjs-react.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — Deep dive: Next.js + React">
+<meta name="twitter:description" content="A standalone module, separate from the main track: what each one actually is, how they work under the hood, and — most importantly — when they pay off and…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrapper">
@@ -190,7 +207,13 @@
     </ul>
     <p>The practical rule of thumb: React and Next.js are very good at solving the problem of complex interfaces, with heavy state and interaction, that also need good performance and good SEO at the same time. If your project doesn't have that complexity, adopting these tools might mean paying a learning and maintenance cost without getting the benefit they were designed to deliver.</p>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -308,7 +331,13 @@
     </ul>
     <p>A régua prática: React e Next.js resolvem muito bem o problema de interfaces complexas, com muito estado e muita interatividade, que também precisam de boa performance e bom SEO ao mesmo tempo. Se o seu projeto não tem essa complexidade, adotar essas ferramentas pode ser pagar um custo de aprendizado e de manutenção sem ganhar o benefício que elas foram desenhadas para entregar.</p>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -379,6 +408,15 @@
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 

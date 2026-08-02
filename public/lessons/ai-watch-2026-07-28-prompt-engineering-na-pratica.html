@@ -152,7 +152,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-28-prompt-engineering-na-pratica.html">
+<meta property="og:title" content="Cooldecode — AI Watch: Prompt engineering in practice">
+<meta property="og:description" content="Today's rotation points to prompt engineering — and there's no Anthropic/Claude news relevant enough today to jump the queue. The interesting part is that…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-28-prompt-engineering-na-pratica.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: Prompt engineering in practice">
+<meta name="twitter:description" content="Today's rotation points to prompt engineering — and there's no Anthropic/Claude news relevant enough today to jump the queue. The interesting part is that…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrap">
@@ -248,7 +265,13 @@ risking a number. Start the response with the opening brace: {"</pre>
       <p style="margin-bottom:0">Prompt engineering didn't disappear with smarter models — it became the foundation for something bigger, context engineering. The core techniques (be explicit, give context, be specific, use examples, allow uncertainty) still hold for everyday use; the advanced ones (prefill, chain of thought, chaining) come in when the task demands a strict format or several reasoning steps. And it's worth being skeptical of old advice about XML tags or elaborate personas — a lot has changed since those practices became popular.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -352,7 +375,13 @@ de arriscar um número. Comece a resposta com a chave de abertura: {"</pre>
       <p style="margin-bottom:0">Prompt engineering não desapareceu com modelos mais inteligentes — ele virou a base de algo maior, o context engineering. As técnicas centrais (ser explícito, dar contexto, ser específico, usar exemplos, permitir incerteza) continuam valendo para o dia a dia; as avançadas (prefill, chain of thought, encadeamento) entram quando a tarefa exige formato rígido ou várias etapas de raciocínio. E vale desconfiar de dicas antigas sobre tags XML ou personas elaboradas — muita coisa mudou desde que essas práticas ficaram populares.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -422,6 +451,15 @@ de arriscar um número. Comece a resposta com a chave de abertura: {"</pre>
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 
