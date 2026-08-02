@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studiant — Lição 06: O que é Next.js</title>
+<title>Cooldecode — Lesson 06: What Next.js is</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0d10;
@@ -15,8 +15,8 @@
     --border: #2a2a32;
     --text: #ececef;
     --text-dim: #a3a3ad;
-    --accent: #db2640;
-    --accent-soft: rgba(219, 38, 64, 0.12);
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
   }
   * { box-sizing: border-box; }
   body {
@@ -28,36 +28,45 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent); font-weight: 700; margin-bottom: 18px;
-  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
   .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
-  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
   .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
-  h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
   h2 .num { color: var(--accent); margin-right: 8px; }
   p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
   .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
-  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
   @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
   .col-pos { border-left: 3px solid #3fb950; }
   .col-neg { border-left: 3px solid var(--accent); }
   ul { margin: 0; padding-left: 20px; }
   li { margin-bottom: 8px; color: var(--text); }
-  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ff9fb0; font-family: 'DM Sans', monospace; }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ffb4bf; font-family: 'DM Sans', monospace; }
   pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-size: 13.5px; color: #d7d7dd; }
   table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
   th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  th { color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
   .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
   .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
   .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
   strong { color: #fff; }
   .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
   .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -65,73 +74,224 @@
 
   <a href="/" class="back-link">&larr; Back to Cooldecode</a>
 
-  <div class="eyebrow">Studiant · Lição 06 · Trilha principal</div>
-  <h1>O que é Next.js e por que ele existe "em cima" do React</h1>
-  <p class="subtitle">Você já sabe o que é React: componentes, JSX, state, props, hooks. Hoje entendemos por que quase ninguém usa React "puro" em produção — e o que exatamente um framework como o Next.js adiciona por cima dele.</p>
-
-  <h2><span class="num">01</span>O problema que o React sozinho não resolve</h2>
-  <p>React é uma <strong>biblioteca de interface</strong> — ele sabe transformar state em elementos na tela e mantê-los sincronizados. Só isso. Ele não decide como as páginas navegam entre si, não sabe como buscar dados antes de renderizar, não sabe empacotar seu código para produção, não sabe onde a página deve ser renderizada (no servidor ou no navegador) e não vem com nada pronto para SEO.</p>
-  <p>Para montar uma aplicação real com React puro, você mesmo escolhe e conecta: um roteador (React Router), uma ferramenta de build (Vite, Webpack), uma estratégia de busca de dados, uma forma de gerar HTML no servidor se precisar de SEO, e assim por diante. Isso é viável, mas é trabalho de configuração que se repete em praticamente todo projeto.</p>
-  <div class="card">
-    <div class="card-title">Em uma frase</div>
-    <p style="margin-bottom:0">Next.js é um <strong>framework construído sobre o React</strong> que já vem com roteamento, renderização no servidor, otimizações de build e convenções de projeto prontas — para você não precisar tomar essas decisões (ou remontá-las) do zero em cada projeto.</p>
-  </div>
-
-  <h2><span class="num">02</span>O que o Next.js adiciona, na prática</h2>
-  <ul>
-    <li><strong>Roteamento por arquivos:</strong> a estrutura de pastas do seu projeto já define as rotas da aplicação — não existe um arquivo de configuração de rotas para manter atualizado.</li>
-    <li><strong>Renderização no servidor:</strong> o Next.js consegue gerar o HTML de uma página no servidor (ou até em tempo de build) antes de mandar para o navegador, o que ajuda SEO e o tempo até a primeira tela aparecer.</li>
-    <li><strong>Busca de dados integrada:</strong> componentes podem buscar dados diretamente no servidor, sem precisar de uma API separada só para alimentar a tela.</li>
-    <li><strong>Otimizações automáticas:</strong> divisão de código por página, otimização de imagens, fontes e scripts — tudo com configuração mínima.</li>
-    <li><strong>Convenção sobre configuração:</strong> existe um jeito "certo" de organizar layouts, páginas de erro, carregamento e metadados, então times diferentes acabam estruturando projetos de forma parecida.</li>
-  </ul>
-
-  <h2><span class="num">03</span>Comparando com React puro</h2>
-  <table>
-    <tr><th>Aspecto</th><th>React puro (+ Vite, por ex.)</th><th>Next.js</th></tr>
-    <tr><td>Roteamento</td><td>Você escolhe e configura uma lib</td><td>Baseado em pastas, já incluso</td></tr>
-    <tr><td>Renderização no servidor</td><td>Precisa montar sua própria solução</td><td>Suportada nativamente</td></tr>
-    <tr><td>SEO</td><td>Difícil sem SSR configurado à mão</td><td>Muito mais simples por padrão</td></tr>
-    <tr><td>Curva de aprendizado</td><td>Mais baixa para começar</td><td>Mais alta (mais conceitos próprios)</td></tr>
-    <tr><td>Flexibilidade de arquitetura</td><td>Total — você decide tudo</td><td>Guiada pelas convenções do framework</td></tr>
-  </table>
-
-  <div class="grid-2">
-    <div class="card col-pos">
-      <div class="card-title" style="color:#3fb950">Quando faz sentido usar Next.js</div>
-      <ul style="margin-bottom:0">
-        <li>Aplicação pública que depende de SEO (blog, e-commerce, marketing site)</li>
-        <li>Você quer produtividade e não precisa reinventar decisões básicas de arquitetura</li>
-        <li>Times maiores, onde convenções compartilhadas evitam divergência entre projetos</li>
-      </ul>
-    </div>
-    <div class="card col-neg">
-      <div class="card-title">Quando React puro basta</div>
-      <ul style="margin-bottom:0">
-        <li>Aplicação interna, atrás de login, sem necessidade de SEO</li>
-        <li>Protótipo rápido ou ferramenta pequena e isolada</li>
-        <li>Você quer controle total sobre cada peça do stack</li>
-      </ul>
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
     </div>
   </div>
 
-  <h2><span class="num">04</span>Exemplo prático: a mesma tela, dois jeitos</h2>
-  <p>Em React puro, uma página "Sobre" é só mais um componente renderizado por um roteador que você configurou:</p>
-  <pre>// React puro com React Router
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · Lesson 06 · Main track</div>
+    <h1>What Next.js is, and why it exists "on top of" React</h1>
+    <p class="subtitle">You already know what React is: components, JSX, state, props, hooks. Today we understand why almost nobody uses "plain" React in production — and what exactly a framework like Next.js adds on top of it.</p>
+
+    <h2><span class="num">01</span>The problem React alone doesn't solve</h2>
+    <p>React is a <strong>UI library</strong> — it knows how to turn state into elements on screen and keep them in sync. That's it. It doesn't decide how pages navigate between each other, doesn't know how to fetch data before rendering, doesn't know how to bundle your code for production, doesn't know where the page should be rendered (server or browser), and doesn't come with anything ready for SEO.</p>
+    <p>To build a real application with plain React, you choose and wire up everything yourself: a router (React Router), a build tool (Vite, Webpack), a data-fetching strategy, a way to generate HTML on the server if you need SEO, and so on. That's doable, but it's setup work that repeats itself in almost every project.</p>
+    <div class="card">
+      <div class="card-title">In one sentence</div>
+      <p style="margin-bottom:0">Next.js is a <strong>framework built on top of React</strong> that already comes with routing, server-side rendering, build optimizations and project conventions ready to go — so you don't need to make those decisions (or rebuild them) from scratch in every project.</p>
+    </div>
+
+    <h2><span class="num">02</span>What Next.js adds, in practice</h2>
+    <ul>
+      <li><strong>File-based routing:</strong> your project's folder structure already defines the application's routes — there's no route config file to keep up to date.</li>
+      <li><strong>Server-side rendering:</strong> Next.js can generate a page's HTML on the server (or even at build time) before sending it to the browser, which helps SEO and time-to-first-paint.</li>
+      <li><strong>Built-in data fetching:</strong> components can fetch data directly on the server, without needing a separate API just to feed the screen.</li>
+      <li><strong>Automatic optimizations:</strong> code splitting per page, image, font and script optimization — all with minimal configuration.</li>
+      <li><strong>Convention over configuration:</strong> there's a "right" way to organize layouts, error pages, loading states and metadata, so different teams end up structuring projects in similar ways.</li>
+    </ul>
+
+    <h2><span class="num">03</span>Comparing with plain React</h2>
+    <table>
+      <tr><th>Aspect</th><th>Plain React (+ Vite, e.g.)</th><th>Next.js</th></tr>
+      <tr><td>Routing</td><td>You choose and configure a library</td><td>Folder-based, already included</td></tr>
+      <tr><td>Server-side rendering</td><td>You need to build your own solution</td><td>Supported natively</td></tr>
+      <tr><td>SEO</td><td>Hard without manually configured SSR</td><td>Much simpler by default</td></tr>
+      <tr><td>Learning curve</td><td>Lower to get started</td><td>Higher (more framework-specific concepts)</td></tr>
+      <tr><td>Architecture flexibility</td><td>Total — you decide everything</td><td>Guided by the framework's conventions</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title" style="color:#3fb950">When Next.js makes sense</div>
+        <ul style="margin-bottom:0">
+          <li>A public application that depends on SEO (blog, e-commerce, marketing site)</li>
+          <li>You want productivity and don't need to reinvent basic architecture decisions</li>
+          <li>Larger teams, where shared conventions prevent divergence between projects</li>
+        </ul>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">When plain React is enough</div>
+        <ul style="margin-bottom:0">
+          <li>An internal application, behind a login, with no need for SEO</li>
+          <li>A quick prototype or a small, isolated tool</li>
+          <li>You want total control over every piece of the stack</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="num">04</span>Practical example: the same screen, two ways</h2>
+    <p>In plain React, an "About" page is just another component rendered by a router you configured:</p>
+    <pre>// Plain React with React Router
+&lt;Routes&gt;
+  &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+&lt;/Routes&gt;</pre>
+    <p>In Next.js, the same route is born just by creating a file in the right place — there's no route list to keep in sync with the components:</p>
+    <pre>// Next.js — App Router
+// file: app/about/page.jsx
+export default function About() {
+  return &lt;h1&gt;About us&lt;/h1&gt;;
+}
+// already available at /about, no extra configuration</pre>
+    <p>It's this kind of pre-made decision — multiplied by dozens of others (images, fonts, cache, build) — that makes Next.js the most common way to use React in production today.</p>
+
+    <div class="divider"></div>
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">Next lesson: App Router — Server Components vs Client Components, and why this is the most important change in modern Next.js.</div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 06 · Trilha principal</div>
+    <h1>O que é Next.js e por que ele existe "em cima" do React</h1>
+    <p class="subtitle">Você já sabe o que é React: componentes, JSX, state, props, hooks. Hoje entendemos por que quase ninguém usa React "puro" em produção — e o que exatamente um framework como o Next.js adiciona por cima dele.</p>
+
+    <h2><span class="num">01</span>O problema que o React sozinho não resolve</h2>
+    <p>React é uma <strong>biblioteca de interface</strong> — ele sabe transformar state em elementos na tela e mantê-los sincronizados. Só isso. Ele não decide como as páginas navegam entre si, não sabe como buscar dados antes de renderizar, não sabe empacotar seu código para produção, não sabe onde a página deve ser renderizada (no servidor ou no navegador) e não vem com nada pronto para SEO.</p>
+    <p>Para montar uma aplicação real com React puro, você mesmo escolhe e conecta: um roteador (React Router), uma ferramenta de build (Vite, Webpack), uma estratégia de busca de dados, uma forma de gerar HTML no servidor se precisar de SEO, e assim por diante. Isso é viável, mas é trabalho de configuração que se repete em praticamente todo projeto.</p>
+    <div class="card">
+      <div class="card-title">Em uma frase</div>
+      <p style="margin-bottom:0">Next.js é um <strong>framework construído sobre o React</strong> que já vem com roteamento, renderização no servidor, otimizações de build e convenções de projeto prontas — para você não precisar tomar essas decisões (ou remontá-las) do zero em cada projeto.</p>
+    </div>
+
+    <h2><span class="num">02</span>O que o Next.js adiciona, na prática</h2>
+    <ul>
+      <li><strong>Roteamento por arquivos:</strong> a estrutura de pastas do seu projeto já define as rotas da aplicação — não existe um arquivo de configuração de rotas para manter atualizado.</li>
+      <li><strong>Renderização no servidor:</strong> o Next.js consegue gerar o HTML de uma página no servidor (ou até em tempo de build) antes de mandar para o navegador, o que ajuda SEO e o tempo até a primeira tela aparecer.</li>
+      <li><strong>Busca de dados integrada:</strong> componentes podem buscar dados diretamente no servidor, sem precisar de uma API separada só para alimentar a tela.</li>
+      <li><strong>Otimizações automáticas:</strong> divisão de código por página, otimização de imagens, fontes e scripts — tudo com configuração mínima.</li>
+      <li><strong>Convenção sobre configuração:</strong> existe um jeito "certo" de organizar layouts, páginas de erro, carregamento e metadados, então times diferentes acabam estruturando projetos de forma parecida.</li>
+    </ul>
+
+    <h2><span class="num">03</span>Comparando com React puro</h2>
+    <table>
+      <tr><th>Aspecto</th><th>React puro (+ Vite, por ex.)</th><th>Next.js</th></tr>
+      <tr><td>Roteamento</td><td>Você escolhe e configura uma lib</td><td>Baseado em pastas, já incluso</td></tr>
+      <tr><td>Renderização no servidor</td><td>Precisa montar sua própria solução</td><td>Suportada nativamente</td></tr>
+      <tr><td>SEO</td><td>Difícil sem SSR configurado à mão</td><td>Muito mais simples por padrão</td></tr>
+      <tr><td>Curva de aprendizado</td><td>Mais baixa para começar</td><td>Mais alta (mais conceitos próprios)</td></tr>
+      <tr><td>Flexibilidade de arquitetura</td><td>Total — você decide tudo</td><td>Guiada pelas convenções do framework</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title" style="color:#3fb950">Quando faz sentido usar Next.js</div>
+        <ul style="margin-bottom:0">
+          <li>Aplicação pública que depende de SEO (blog, e-commerce, marketing site)</li>
+          <li>Você quer produtividade e não precisa reinventar decisões básicas de arquitetura</li>
+          <li>Times maiores, onde convenções compartilhadas evitam divergência entre projetos</li>
+        </ul>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">Quando React puro basta</div>
+        <ul style="margin-bottom:0">
+          <li>Aplicação interna, atrás de login, sem necessidade de SEO</li>
+          <li>Protótipo rápido ou ferramenta pequena e isolada</li>
+          <li>Você quer controle total sobre cada peça do stack</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="num">04</span>Exemplo prático: a mesma tela, dois jeitos</h2>
+    <p>Em React puro, uma página "Sobre" é só mais um componente renderizado por um roteador que você configurou:</p>
+    <pre>// React puro com React Router
 &lt;Routes&gt;
   &lt;Route path="/sobre" element={&lt;Sobre /&gt;} /&gt;
 &lt;/Routes&gt;</pre>
-  <p>No Next.js, a mesma rota nasce só de criar um arquivo no lugar certo — não existe uma lista de rotas para manter sincronizada com os componentes:</p>
-  <pre>// Next.js — App Router
+    <p>No Next.js, a mesma rota nasce só de criar um arquivo no lugar certo — não existe uma lista de rotas para manter sincronizada com os componentes:</p>
+    <pre>// Next.js — App Router
 // arquivo: app/sobre/page.jsx
 export default function Sobre() {
   return &lt;h1&gt;Sobre nós&lt;/h1&gt;;
 }
 // já disponível em /sobre, sem configuração adicional</pre>
-  <p>É esse tipo de decisão pré-tomada — multiplicada por dezenas de outras (imagens, fontes, cache, build) — que faz o Next.js ser hoje a forma mais comum de usar React em produção.</p>
+    <p>É esse tipo de decisão pré-tomada — multiplicada por dezenas de outras (imagens, fontes, cache, build) — que faz o Next.js ser hoje a forma mais comum de usar React em produção.</p>
 
-  <div class="divider"></div>
-  <div class="footer">Próxima lição: App Router — Server Components vs Client Components, e por que essa é a mudança mais importante do Next.js moderno.</div>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">Próxima lição: App Router — Server Components vs Client Components, e por que essa é a mudança mais importante do Next.js moderno.</div>
+  </div>
 </div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+</script>
+
 </body>
 </html>

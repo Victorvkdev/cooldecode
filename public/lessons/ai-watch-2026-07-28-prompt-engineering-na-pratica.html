@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studiant — IA Watch: Prompt engineering na prática</title>
+<title>Cooldecode — AI Watch: Prompt engineering in practice</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0d10;
@@ -15,8 +15,8 @@
     --border: #2a2a32;
     --text: #ececef;
     --text-dim: #a3a3ad;
-    --accent: #db2640;
-    --accent-soft: rgba(219, 38, 64, 0.12);
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
   }
   * { box-sizing: border-box; }
   body {
@@ -28,6 +28,10 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -48,8 +52,8 @@
     display: inline-block;
   }
   h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
     font-size: 34px;
     line-height: 1.2;
     margin: 0 0 12px;
@@ -57,7 +61,7 @@
   }
   .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
   h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 22px;
     margin: 48px 0 16px;
@@ -73,7 +77,7 @@
     margin: 20px 0;
   }
   .card-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 15px;
     color: var(--accent);
@@ -93,7 +97,7 @@
     border-radius: 6px;
     padding: 2px 6px;
     font-size: 14px;
-    color: #ff9fb0;
+    color: #ffb4bf;
     font-family: 'DM Sans', monospace;
   }
   pre {
@@ -110,7 +114,7 @@
   th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
   th {
     color: var(--accent);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 13px;
     text-transform: uppercase;
@@ -139,6 +143,15 @@
   strong { color: #fff; }
   .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
   .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -146,54 +159,167 @@
 
   <a href="/" class="back-link">&larr; Back to Cooldecode</a>
 
-  <div class="eyebrow">Studiant · IA Watch · Prompt engineering na prática</div>
-  <h1>Prompt engineering em 2026: o que realmente mudou com modelos como o Opus 5</h1>
-  <p class="subtitle">A rotação de hoje aponta para prompt engineering — e não há nenhuma notícia de Anthropic/Claude relevante o suficiente hoje para furar a fila. O ponto interessante é que boa parte do que era "melhor prática" há dois ou três anos ficou obsoleto: modelos de raciocínio mudaram o jogo, e a própria Anthropic revisou seu guia oficial recentemente.</p>
-
-  <h2><span class="num">01</span>Por que prompt engineering ainda importa</h2>
-  <p>Com modelos cada vez mais capazes, é tentador achar que "basta pedir e o modelo entende". Na prática, a diferença entre uma instrução vaga e um prompt bem construído continua sendo a diferença entre precisar de várias idas e voltas para chegar no resultado certo, ou acertar de primeira. O guia oficial da Anthropic para 2026 resume bem: prompt engineering é a base sobre a qual se constrói algo mais amplo, chamado <strong>context engineering</strong> — gerenciar tudo que o modelo "vê" antes de responder, não só a última pergunta.</p>
-
-  <h2><span class="num">02</span>As técnicas que ainda funcionam bem</h2>
-  <div class="card">
-    <ul>
-      <li><strong>Ser explícito:</strong> dizer exatamente o que se quer, sem esperar que o modelo infira. "Crie um dashboard" funciona pior que "crie um dashboard com o máximo de funcionalidades relevantes, indo além do básico".</li>
-      <li><strong>Dar contexto e motivação:</strong> explicar <em>por que</em> algo importa ajuda o modelo a tomar decisões melhores em casos ambíguos. Em vez de "nunca use bullet points", funciona melhor "prefiro texto corrido porque acho mais fácil de ler e mais conversacional".</li>
-      <li><strong>Ser específico:</strong> incluir restrições claras (tamanho, formato, prazo), o público-alvo e a estrutura de saída desejada.</li>
-      <li><strong>Usar exemplos (few-shot):</strong> mostrar em vez de só descrever, especialmente quando o formato ou o tom é difícil de explicar em palavras. A recomendação é começar com um exemplo só e adicionar mais apenas se necessário.</li>
-      <li><strong>Dar permissão para o modelo dizer "não sei":</strong> pedir explicitamente que ele admita incerteza em vez de arriscar uma resposta — isso reduz alucinação de forma simples e direta.</li>
-    </ul>
-  </div>
-
-  <h2><span class="num">03</span>Técnicas avançadas, para tarefas complexas</h2>
-  <div class="card">
-    <div class="card-title">Prefill (preencher o início da resposta)</div>
-    <p style="margin-bottom:0">Via API, é possível já "começar" a resposta do modelo — por exemplo, abrir com uma chave <code>{</code> para forçar uma saída em JSON puro, sem preâmbulo. Em interfaces de chat, o efeito parecido se consegue sendo bem explícito: "responda só com JSON válido, comece com uma chave de abertura".</p>
-  </div>
-  <div class="card">
-    <div class="card-title">Chain of thought (raciocínio em etapas)</div>
-    <p style="margin-bottom:0">Pedir "pense passo a passo" antes da resposta final ajuda em tarefas analíticas complexas. Com modelos que já têm <em>extended thinking</em> nativo (como os da família Claude 4.x/5.x), essa técnica manual passa a ser menos necessária — mas ainda vale quando o raciocínio explícito precisa ser revisado por uma pessoa.</p>
-  </div>
-  <div class="card">
-    <div class="card-title">Encadeamento de prompts (prompt chaining)</div>
-    <p style="margin-bottom:0">Quebrar uma tarefa complexa em vários prompts sequenciais, onde a saída de um alimenta o próximo (resumir → revisar → melhorar com base no feedback). Aumenta a latência, mas melhora bastante a confiabilidade em tarefas de múltiplas etapas.</p>
-  </div>
-
-  <h2><span class="num">04</span>O que caiu em desuso</h2>
-  <p>O próprio guia da Anthropic é direto sobre isso: algumas técnicas populares há alguns anos perderam relevância com os modelos atuais.</p>
-  <div class="grid-2">
-    <div class="card col-neg">
-      <div class="card-title">Tags XML como estrutura</div>
-      <p style="margin-bottom:0">Antes recomendadas para separar seções de um prompt longo. Modelos atuais entendem estrutura bem só com títulos claros e espaçamento — XML ainda ajuda em casos extremos de conteúdo muito misto, mas deixou de ser regra geral.</p>
-    </div>
-    <div class="card col-neg">
-      <div class="card-title">Role prompting pesado</div>
-      <p style="margin-bottom:0">Definir uma persona elaborada ("você é um especialista renomado que nunca erra...") tende a adicionar ruído. Ser direto sobre a perspectiva desejada ("analise focando em risco e crescimento de longo prazo") costuma funcionar melhor que atribuir um papel.</p>
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
     </div>
   </div>
 
-  <h2><span class="num">05</span>Exemplo: antes e depois</h2>
-  <p>Uma tarefa simples de extração de dados mostra bem o efeito de combinar as técnicas certas.</p>
-  <pre>ANTES (vago):
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · AI Watch · Prompt engineering in practice</div>
+    <h1>Prompt engineering in 2026: what actually changed with models like Opus 5</h1>
+    <p class="subtitle">Today's rotation points to prompt engineering — and there's no Anthropic/Claude news relevant enough today to jump the queue. The interesting part is that a lot of what was "best practice" two or three years ago is now outdated: reasoning models changed the game, and Anthropic itself recently revised its official guide.</p>
+
+    <h2><span class="num">01</span>Why prompt engineering still matters</h2>
+    <p>With increasingly capable models, it's tempting to think "just ask and the model gets it". In practice, the difference between a vague instruction and a well-built prompt is still the difference between needing several back-and-forths to land on the right result, or nailing it the first time. Anthropic's official 2026 guide sums it up well: prompt engineering is the foundation for something broader, called <strong>context engineering</strong> — managing everything the model "sees" before responding, not just the last question.</p>
+
+    <h2><span class="num">02</span>Techniques that still work well</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Be explicit:</strong> say exactly what you want, without expecting the model to infer it. "Build a dashboard" performs worse than "build a dashboard with as many relevant features as possible, going beyond the basics".</li>
+        <li><strong>Give context and motivation:</strong> explaining <em>why</em> something matters helps the model make better decisions in ambiguous cases. Instead of "never use bullet points", it works better to say "I prefer flowing text because I find it easier to read and more conversational".</li>
+        <li><strong>Be specific:</strong> include clear constraints (length, format, deadline), the target audience, and the desired output structure.</li>
+        <li><strong>Use examples (few-shot):</strong> show instead of just describing, especially when the format or tone is hard to explain in words. The recommendation is to start with a single example and add more only if needed.</li>
+        <li><strong>Give the model permission to say "I don't know":</strong> explicitly ask it to admit uncertainty instead of risking an answer — this reduces hallucination in a simple, direct way.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>Advanced techniques, for complex tasks</h2>
+    <div class="card">
+      <div class="card-title">Prefill (pre-filling the start of the response)</div>
+      <p style="margin-bottom:0">Via API, you can "start" the model's response yourself — for example, opening with a <code>{</code> to force pure JSON output, with no preamble. In chat interfaces, a similar effect can be achieved by being very explicit: "respond with valid JSON only, start with an opening brace".</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Chain of thought (step-by-step reasoning)</div>
+      <p style="margin-bottom:0">Asking the model to "think step by step" before the final answer helps with complex analytical tasks. With models that already have native <em>extended thinking</em> (like the Claude 4.x/5.x family), this manual technique becomes less necessary — but it's still worth it when the explicit reasoning needs to be reviewed by a person.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Prompt chaining</div>
+      <p style="margin-bottom:0">Breaking a complex task into several sequential prompts, where one's output feeds the next (summarize → review → improve based on feedback). Increases latency, but significantly improves reliability on multi-step tasks.</p>
+    </div>
+
+    <h2><span class="num">04</span>What's fallen out of favor</h2>
+    <p>Anthropic's own guide is direct about this: some techniques that were popular a few years ago have lost relevance with current models.</p>
+    <div class="grid-2">
+      <div class="card col-neg">
+        <div class="card-title">XML tags as structure</div>
+        <p style="margin-bottom:0">Previously recommended to separate sections of a long prompt. Current models understand structure well with just clear headings and spacing — XML still helps in extreme cases of very mixed content, but it's no longer a general rule.</p>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">Heavy role prompting</div>
+        <p style="margin-bottom:0">Defining an elaborate persona ("you are a renowned expert who never makes mistakes...") tends to add noise. Being direct about the desired perspective ("analyze focusing on risk and long-term growth") usually works better than assigning a role.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">05</span>Example: before and after</h2>
+    <p>A simple data-extraction task shows the effect of combining the right techniques well.</p>
+    <pre>BEFORE (vague):
+"Pull the financial data out of this report."
+
+AFTER (specific, with format and permission for uncertainty):
+"Extract the financial metrics from this quarterly report and
+present them as JSON. The response must contain ONLY valid JSON,
+with no preamble. Use this structure:
+{
+  "revenue": "value with unit",
+  "profit_margin": "percentage",
+  "growth_rate": "percentage"
+}
+If any value isn't clear in the report, use null instead of
+risking a number. Start the response with the opening brace: {"</pre>
+    <p>The "after" version combines five things at once: an explicit instruction, context about the reason for the format, an example structure, permission to express uncertainty, and format control via prefill. No single technique on its own would solve everything — the combination is what makes the difference.</p>
+
+    <h2><span class="num">06</span>Common mistakes to avoid</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Over-engineering the prompt:</strong> a longer, more complex prompt isn't synonymous with a better result.</li>
+        <li><strong>Ignoring the basics:</strong> advanced techniques don't make up for a core instruction that's already vague or ambiguous.</li>
+        <li><strong>Using every technique at once:</strong> pick the right combination for the specific problem, don't stack everything out of caution.</li>
+        <li><strong>Not iterating:</strong> the first prompt is rarely the ideal one — testing and refining is part of the process.</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">Prompt engineering didn't disappear with smarter models — it became the foundation for something bigger, context engineering. The core techniques (be explicit, give context, be specific, use examples, allow uncertainty) still hold for everyday use; the advanced ones (prefill, chain of thought, chaining) come in when the task demands a strict format or several reasoning steps. And it's worth being skeptical of old advice about XML tags or elaborate personas — a lot has changed since those practices became popular.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — AI Watch, second daily lesson.<br><br>
+      <strong>Sources:</strong>
+      <ul class="sources">
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank">Claude by Anthropic — "Best practices for prompt engineering for 2026"</a> (published 11/10/2025, accessed 07/28/2026)</li>
+        <li><a href="https://www.k2view.com/blog/prompt-engineering-techniques/" target="_blank">K2view — "Prompt engineering techniques: Top 6 for 2026"</a> (published 04/28/2026, accessed 07/28/2026)</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · IA Watch · Prompt engineering na prática</div>
+    <h1>Prompt engineering em 2026: o que realmente mudou com modelos como o Opus 5</h1>
+    <p class="subtitle">A rotação de hoje aponta para prompt engineering — e não há nenhuma notícia de Anthropic/Claude relevante o suficiente hoje para furar a fila. O ponto interessante é que boa parte do que era "melhor prática" há dois ou três anos ficou obsoleto: modelos de raciocínio mudaram o jogo, e a própria Anthropic revisou seu guia oficial recentemente.</p>
+
+    <h2><span class="num">01</span>Por que prompt engineering ainda importa</h2>
+    <p>Com modelos cada vez mais capazes, é tentador achar que "basta pedir e o modelo entende". Na prática, a diferença entre uma instrução vaga e um prompt bem construído continua sendo a diferença entre precisar de várias idas e voltas para chegar no resultado certo, ou acertar de primeira. O guia oficial da Anthropic para 2026 resume bem: prompt engineering é a base sobre a qual se constrói algo mais amplo, chamado <strong>context engineering</strong> — gerenciar tudo que o modelo "vê" antes de responder, não só a última pergunta.</p>
+
+    <h2><span class="num">02</span>As técnicas que ainda funcionam bem</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Ser explícito:</strong> dizer exatamente o que se quer, sem esperar que o modelo infira. "Crie um dashboard" funciona pior que "crie um dashboard com o máximo de funcionalidades relevantes, indo além do básico".</li>
+        <li><strong>Dar contexto e motivação:</strong> explicar <em>por que</em> algo importa ajuda o modelo a tomar decisões melhores em casos ambíguos. Em vez de "nunca use bullet points", funciona melhor "prefiro texto corrido porque acho mais fácil de ler e mais conversacional".</li>
+        <li><strong>Ser específico:</strong> incluir restrições claras (tamanho, formato, prazo), o público-alvo e a estrutura de saída desejada.</li>
+        <li><strong>Usar exemplos (few-shot):</strong> mostrar em vez de só descrever, especialmente quando o formato ou o tom é difícil de explicar em palavras. A recomendação é começar com um exemplo só e adicionar mais apenas se necessário.</li>
+        <li><strong>Dar permissão para o modelo dizer "não sei":</strong> pedir explicitamente que ele admita incerteza em vez de arriscar uma resposta — isso reduz alucinação de forma simples e direta.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>Técnicas avançadas, para tarefas complexas</h2>
+    <div class="card">
+      <div class="card-title">Prefill (preencher o início da resposta)</div>
+      <p style="margin-bottom:0">Via API, é possível já "começar" a resposta do modelo — por exemplo, abrir com uma chave <code>{</code> para forçar uma saída em JSON puro, sem preâmbulo. Em interfaces de chat, o efeito parecido se consegue sendo bem explícito: "responda só com JSON válido, comece com uma chave de abertura".</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Chain of thought (raciocínio em etapas)</div>
+      <p style="margin-bottom:0">Pedir "pense passo a passo" antes da resposta final ajuda em tarefas analíticas complexas. Com modelos que já têm <em>extended thinking</em> nativo (como os da família Claude 4.x/5.x), essa técnica manual passa a ser menos necessária — mas ainda vale quando o raciocínio explícito precisa ser revisado por uma pessoa.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Encadeamento de prompts (prompt chaining)</div>
+      <p style="margin-bottom:0">Quebrar uma tarefa complexa em vários prompts sequenciais, onde a saída de um alimenta o próximo (resumir → revisar → melhorar com base no feedback). Aumenta a latência, mas melhora bastante a confiabilidade em tarefas de múltiplas etapas.</p>
+    </div>
+
+    <h2><span class="num">04</span>O que caiu em desuso</h2>
+    <p>O próprio guia da Anthropic é direto sobre isso: algumas técnicas populares há alguns anos perderam relevância com os modelos atuais.</p>
+    <div class="grid-2">
+      <div class="card col-neg">
+        <div class="card-title">Tags XML como estrutura</div>
+        <p style="margin-bottom:0">Antes recomendadas para separar seções de um prompt longo. Modelos atuais entendem estrutura bem só com títulos claros e espaçamento — XML ainda ajuda em casos extremos de conteúdo muito misto, mas deixou de ser regra geral.</p>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">Role prompting pesado</div>
+        <p style="margin-bottom:0">Definir uma persona elaborada ("você é um especialista renomado que nunca erra...") tende a adicionar ruído. Ser direto sobre a perspectiva desejada ("analise focando em risco e crescimento de longo prazo") costuma funcionar melhor que atribuir um papel.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">05</span>Exemplo: antes e depois</h2>
+    <p>Uma tarefa simples de extração de dados mostra bem o efeito de combinar as técnicas certas.</p>
+    <pre>ANTES (vago):
 "Tira os dados financeiros desse relatório."
 
 DEPOIS (específico, com formato e permissão de incerteza):
@@ -201,40 +327,103 @@ DEPOIS (específico, com formato e permissão de incerteza):
 apresente em JSON. A resposta deve conter APENAS JSON válido,
 sem preâmbulo. Use esta estrutura:
 {
-  \"receita\": \"valor com unidade\",
-  \"margem_lucro\": \"percentual\",
-  \"taxa_crescimento\": \"percentual\"
+  "receita": "valor com unidade",
+  "margem_lucro": "percentual",
+  "taxa_crescimento": "percentual"
 }
 Se algum valor não estiver claro no relatório, use null em vez
 de arriscar um número. Comece a resposta com a chave de abertura: {"</pre>
-  <p>A versão "depois" combina cinco coisas ao mesmo tempo: instrução explícita, contexto sobre o motivo do formato, estrutura de exemplo, permissão para expressar incerteza e controle de formato via prefill. Nenhuma técnica isolada resolveria tudo — a combinação é que faz a diferença.</p>
+    <p>A versão "depois" combina cinco coisas ao mesmo tempo: instrução explícita, contexto sobre o motivo do formato, estrutura de exemplo, permissão para expressar incerteza e controle de formato via prefill. Nenhuma técnica isolada resolveria tudo — a combinação é que faz a diferença.</p>
 
-  <h2><span class="num">06</span>Erros comuns a evitar</h2>
-  <div class="card">
-    <ul>
-      <li><strong>Superengenhar o prompt:</strong> prompt mais longo e complexo não é sinônimo de melhor resultado.</li>
-      <li><strong>Ignorar o básico:</strong> técnicas avançadas não compensam uma instrução central que já é vaga ou ambígua.</li>
-      <li><strong>Usar toda técnica de uma vez:</strong> escolher a combinação certa para o problema específico, não empilhar tudo por precaução.</li>
-      <li><strong>Não iterar:</strong> o primeiro prompt raramente é o ideal — testar e refinar é parte do processo.</li>
-    </ul>
-  </div>
+    <h2><span class="num">06</span>Erros comuns a evitar</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Superengenhar o prompt:</strong> prompt mais longo e complexo não é sinônimo de melhor resultado.</li>
+        <li><strong>Ignorar o básico:</strong> técnicas avançadas não compensam uma instrução central que já é vaga ou ambígua.</li>
+        <li><strong>Usar toda técnica de uma vez:</strong> escolher a combinação certa para o problema específico, não empilhar tudo por precaução.</li>
+        <li><strong>Não iterar:</strong> o primeiro prompt raramente é o ideal — testar e refinar é parte do processo.</li>
+      </ul>
+    </div>
 
-  <div class="divider"></div>
+    <div class="divider"></div>
 
-  <div class="card">
-    <div class="card-title">Para fixar</div>
-    <p style="margin-bottom:0">Prompt engineering não desapareceu com modelos mais inteligentes — ele virou a base de algo maior, o context engineering. As técnicas centrais (ser explícito, dar contexto, ser específico, usar exemplos, permitir incerteza) continuam valendo para o dia a dia; as avançadas (prefill, chain of thought, encadeamento) entram quando a tarefa exige formato rígido ou várias etapas de raciocínio. E vale desconfiar de dicas antigas sobre tags XML ou personas elaboradas — muita coisa mudou desde que essas práticas ficaram populares.</p>
-  </div>
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">Prompt engineering não desapareceu com modelos mais inteligentes — ele virou a base de algo maior, o context engineering. As técnicas centrais (ser explícito, dar contexto, ser específico, usar exemplos, permitir incerteza) continuam valendo para o dia a dia; as avançadas (prefill, chain of thought, encadeamento) entram quando a tarefa exige formato rígido ou várias etapas de raciocínio. E vale desconfiar de dicas antigas sobre tags XML ou personas elaboradas — muita coisa mudou desde que essas práticas ficaram populares.</p>
+    </div>
 
-  <div class="footer">
-    Studiant — IA Watch, segunda lição diária.<br><br>
-    <strong>Fontes:</strong>
-    <ul class="sources">
-      <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank">Claude by Anthropic — "Best practices for prompt engineering for 2026"</a> (publicado em 10/11/2025, consultado em 28/07/2026)</li>
-      <li><a href="https://www.k2view.com/blog/prompt-engineering-techniques/" target="_blank">K2view — "Prompt engineering techniques: Top 6 for 2026"</a> (publicado em 28/04/2026, consultado em 28/07/2026)</li>
-    </ul>
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — IA Watch, segunda lição diária.<br><br>
+      <strong>Fontes:</strong>
+      <ul class="sources">
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank">Claude by Anthropic — "Best practices for prompt engineering for 2026"</a> (publicado em 10/11/2025, consultado em 28/07/2026)</li>
+        <li><a href="https://www.k2view.com/blog/prompt-engineering-techniques/" target="_blank">K2view — "Prompt engineering techniques: Top 6 for 2026"</a> (publicado em 28/04/2026, consultado em 28/07/2026)</li>
+      </ul>
+    </div>
+
   </div>
 
 </div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+</script>
+
 </body>
 </html>
