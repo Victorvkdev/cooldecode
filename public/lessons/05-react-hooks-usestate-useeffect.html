@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studiant — Lição 05: React na prática (hooks)</title>
+<title>Cooldecode — Lesson 05: React in practice (hooks)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0d10;
@@ -15,8 +15,8 @@
     --border: #2a2a32;
     --text: #ececef;
     --text-dim: #a3a3ad;
-    --accent: #db2640;
-    --accent-soft: rgba(219, 38, 64, 0.12);
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
   }
   * { box-sizing: border-box; }
   body {
@@ -28,36 +28,45 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
-  .eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--accent); font-weight: 700; margin-bottom: 18px;
-  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
   .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
-  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
   .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
-  h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
   h2 .num { color: var(--accent); margin-right: 8px; }
   p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
   .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
-  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
   @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
   .col-pos { border-left: 3px solid #3fb950; }
   .col-neg { border-left: 3px solid var(--accent); }
   ul { margin: 0; padding-left: 20px; }
   li { margin-bottom: 8px; color: var(--text); }
-  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ff9fb0; font-family: 'DM Sans', monospace; }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ffb4bf; font-family: 'DM Sans', monospace; }
   pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-size: 13.5px; color: #d7d7dd; }
   table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
   th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  th { color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
   .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
   .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
   .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
   strong { color: #fff; }
   .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
   .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -65,20 +74,174 @@
 
   <a href="/" class="back-link">&larr; Back to Cooldecode</a>
 
-  <div class="eyebrow">Studiant · Lição 05 · Trilha principal</div>
-  <h1>React na prática: hooks (useState, useEffect) e o que eles resolvem</h1>
-  <p class="subtitle">Na lição passada vimos que <code>useState</code> dá memória a um componente. Hoje aprofundamos essa ideia e entramos no segundo hook mais usado do React, o <code>useEffect</code> — e, mais importante, entendemos o problema real que cada um resolve, comparando com o jeito "na mão" de resolver o mesmo problema em JavaScript puro.</p>
-
-  <h2><span class="num">01</span>O que é um hook, de fato</h2>
-  <p>Um <strong>hook</strong> é uma função especial do React, sempre com prefixo <code>use</code>, que permite a um componente de função "se conectar" a recursos do React — memória interna, ciclo de vida, contexto compartilhado, entre outros. Antes dos hooks (introduzidos em 2019), esses recursos só existiam em componentes de classe, uma sintaxe mais verbosa e mais difícil de reaproveitar entre componentes diferentes.</p>
-  <div class="card">
-    <div class="card-title">Regra de ouro</div>
-    <p style="margin-bottom:0">Hooks só podem ser chamados no nível mais alto de um componente (nunca dentro de <code>if</code>, laços ou funções aninhadas) e sempre na mesma ordem a cada renderização. O React usa essa ordem para saber qual pedaço de memória pertence a qual chamada de hook — quebrar essa regra gera bugs difíceis de rastrear.</p>
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
   </div>
 
-  <h2><span class="num">02</span>useState revisitado: o problema que ele resolve</h2>
-  <p>Em JavaScript puro, se você quiser guardar um valor que muda e refletir essa mudança na tela, precisa fazer isso manualmente: guardar o valor numa variável, escrever uma função que atualiza o DOM sempre que o valor muda, e lembrar de chamar essa função em todo lugar onde o valor é alterado.</p>
-  <pre>// JS puro — "na mão"
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · Lesson 05 · Main track</div>
+    <h1>React in practice: hooks (useState, useEffect) and what they solve</h1>
+    <p class="subtitle">Last lesson we saw that <code>useState</code> gives a component memory. Today we go deeper on that idea and get into the second most-used React hook, <code>useEffect</code> — and, more importantly, we understand the real problem each one solves, comparing them with the "by hand" way of solving the same problem in plain JavaScript.</p>
+
+    <h2><span class="num">01</span>What a hook actually is</h2>
+    <p>A <strong>hook</strong> is a special React function, always prefixed with <code>use</code>, that lets a function component "plug into" React's own capabilities — internal memory, lifecycle, shared context, among others. Before hooks (introduced in 2019), those capabilities only existed in class components, a more verbose syntax that was harder to reuse across different components.</p>
+    <div class="card">
+      <div class="card-title">Golden rule</div>
+      <p style="margin-bottom:0">Hooks can only be called at the top level of a component (never inside an <code>if</code>, loops, or nested functions), and always in the same order on every render. React uses that order to know which piece of memory belongs to which hook call — breaking this rule causes hard-to-trace bugs.</p>
+    </div>
+
+    <h2><span class="num">02</span>useState revisited: the problem it solves</h2>
+    <p>In plain JavaScript, if you want to store a value that changes and reflect that change on screen, you have to do it manually: store the value in a variable, write a function that updates the DOM whenever the value changes, and remember to call that function everywhere the value gets changed.</p>
+    <pre>// Plain JS — "by hand"
+let count = 0;
+const span = document.querySelector('#count');
+const button = document.querySelector('#increment');
+
+function updateScreen() {
+  span.textContent = count;
+}
+
+button.addEventListener('click', () => {
+  count++;
+  updateScreen(); // easy to forget this in a bigger app
+});</pre>
+    <p>Works fine on a simple screen. But in an application with dozens of values that change, each affecting different pieces of the screen, manually syncing "who depends on who" becomes a constant source of bugs — screens that don't update, or that update the wrong thing.</p>
+    <pre>// With useState — React handles the sync
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{count}&lt;/span&gt;
+      &lt;button onClick={() => setCount(count + 1)}&gt;Increment&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+    <p>By calling <code>setCount</code>, you never manipulate the DOM directly. You just update the data, and describe (in JSX) what the screen should look like for any value of that data. React handles comparing before and after and applying only the necessary change.</p>
+
+    <h2><span class="num">03</span>useEffect: syncing with the world outside React</h2>
+    <p><code>useEffect</code> is the hook used for anything that isn't purely "calculate what to show on screen" — API calls, browser event subscriptions, timers, direct DOM manipulation outside React's control, logging, and so on. This kind of code is called a <strong>side effect</strong>: something that happens as a consequence of rendering, but isn't the rendering itself.</p>
+    <pre>function UserProfile({ id }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch(`/api/users/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!cancelled) setUser(data);
+      });
+
+    return () => { cancelled = true; }; // cleanup
+  }, [id]); // reruns only when "id" changes
+
+  if (!user) return &lt;p&gt;Loading...&lt;/p&gt;;
+  return &lt;h2&gt;{user.name}&lt;/h2&gt;;
+}</pre>
+    <p>The second argument — the <code>[id]</code> array, called the <strong>dependency array</strong> — tells React when to rerun the effect. Without that array, the effect runs after every render. With an empty array <code>[]</code>, it runs only once, when the component first appears on screen.</p>
+
+    <h2><span class="num">04</span>The problem useEffect solves</h2>
+    <p>In plain JS, fetching data and keeping it in sync with the interface requires manually controlling the lifecycle: when the element enters the page, fetch the data; when the element leaves the page (or the parameters change), cancel the in-flight fetch to avoid updating a screen that no longer exists.</p>
+    <div class="grid-2">
+      <div class="card col-neg">
+        <div class="card-title">Without useEffect (by hand)</div>
+        <p style="margin-bottom:0">You need to know exactly when the element was inserted and removed from the DOM, usually using custom events, <code>MutationObserver</code>, or logic scattered across several places in the code.</p>
+      </div>
+      <div class="col-pos card">
+        <div class="card-title">With useEffect</div>
+        <p style="margin-bottom:0">React already knows when the component "is born," when it "dies," and when its dependencies change — and calls your effect function (and its cleanup function) at the right moments automatically.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">05</span>The most common mistake: incomplete dependency array</h2>
+    <p>The classic mistake for people learning <code>useEffect</code> is using a variable inside the effect without declaring it in the dependency array. The effect keeps "seeing" the old value of that variable (a problem known as a <em>stale closure</em>), because React only reruns the function when something in the array changes.</p>
+    <pre>// Wrong: "id" is used inside the effect, but isn't in the dependencies
+useEffect(() => {
+  fetch(`/api/users/${id}`);
+}, []); // will never refetch if "id" changes
+
+// Right:
+useEffect(() => {
+  fetch(`/api/users/${id}`);
+}, [id]);</pre>
+    <p>Tools like ESLint (with React's official hooks plugin) automatically warn when a dependency is missing — it's always worth keeping that warning enabled in the project.</p>
+
+    <h2><span class="num">06</span>useState vs useEffect, side by side</h2>
+    <table>
+      <tr><th>Hook</th><th>Solves</th><th>When to use</th></tr>
+      <tr><td><code>useState</code></td><td>Storing and updating a value that affects what appears on screen</td><td>Counters, form fields, selected tabs, growing lists</td></tr>
+      <tr><td><code>useEffect</code></td><td>Syncing the component with something outside React</td><td>API calls, event subscriptions, timers, integrations with external libraries</td></tr>
+    </table>
+
+    <h2><span class="num">07</span>Pros and cons of hooks</h2>
+    <table>
+      <tr><th>Advantage</th><th>Why</th></tr>
+      <tr><td>Logic reuse</td><td>Custom hooks let you extract stateful logic (e.g. <code>useClickCounter</code>) and reuse it across components with no inheritance or wrapper components</td></tr>
+      <tr><td>Less code</td><td>Replace much of the verbosity of class components (constructor, <code>this</code>, separate lifecycle methods)</td></tr>
+      <tr><td>Function components only</td><td>You no longer need to choose between class or function — function always works, with hooks covering the same cases</td></tr>
+    </table>
+    <table>
+      <tr><th>Disadvantage</th><th>Why</th></tr>
+      <tr><td>Strict rules</td><td>Call order and the ban on conditional hooks confuse beginners</td></tr>
+      <tr><td>useEffect is easy to misuse</td><td>Incomplete dependencies, effects that run more often than they should, or logic that should live outside React</td></tr>
+      <tr><td>Less direct debugging</td><td>Multiple hooks interacting (state + effect + context) can make the data flow harder to trace than simple imperative code</td></tr>
+    </table>
+
+    <h2><span class="num">08</span>Comparison with alternatives</h2>
+    <p>Not every framework handles "state + syncing with the outside world" the same way React does:</p>
+    <table>
+      <tr><th>Approach</th><th>How it handles the state/effect equivalent</th></tr>
+      <tr><td>React (hooks)</td><td>Special functions (<code>useState</code>, <code>useEffect</code>) inside function components</td></tr>
+      <tr><td>Vue (Composition API)</td><td>A similar concept with <code>ref</code>/<code>reactive</code> for state and <code>watchEffect</code> for effects — very close in spirit to hooks</td></tr>
+      <tr><td>Svelte</td><td>Native language reactivity: a regular variable already triggers a screen update when it changes, with no explicit hook</td></tr>
+      <tr><td>Plain JS</td><td>Everything manual: variables, DOM update functions called explicitly, manual lifecycle control</td></tr>
+    </table>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0"><code>useState</code> solves the problem of keeping the screen in sync with a changing value, without manual DOM manipulation. <code>useEffect</code> solves the problem of syncing the component with anything outside React's control — APIs, timers, browser events — automatically handling when to run and when to clean up. Together, they replace much of the "plumbing" code you'd otherwise have to write by hand in plain JavaScript.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — daily study track. Lesson 5 of 20 in the current track.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 05 · Trilha principal</div>
+    <h1>React na prática: hooks (useState, useEffect) e o que eles resolvem</h1>
+    <p class="subtitle">Na lição passada vimos que <code>useState</code> dá memória a um componente. Hoje aprofundamos essa ideia e entramos no segundo hook mais usado do React, o <code>useEffect</code> — e, mais importante, entendemos o problema real que cada um resolve, comparando com o jeito "na mão" de resolver o mesmo problema em JavaScript puro.</p>
+
+    <h2><span class="num">01</span>O que é um hook, de fato</h2>
+    <p>Um <strong>hook</strong> é uma função especial do React, sempre com prefixo <code>use</code>, que permite a um componente de função "se conectar" a recursos do React — memória interna, ciclo de vida, contexto compartilhado, entre outros. Antes dos hooks (introduzidos em 2019), esses recursos só existiam em componentes de classe, uma sintaxe mais verbosa e mais difícil de reaproveitar entre componentes diferentes.</p>
+    <div class="card">
+      <div class="card-title">Regra de ouro</div>
+      <p style="margin-bottom:0">Hooks só podem ser chamados no nível mais alto de um componente (nunca dentro de <code>if</code>, laços ou funções aninhadas) e sempre na mesma ordem a cada renderização. O React usa essa ordem para saber qual pedaço de memória pertence a qual chamada de hook — quebrar essa regra gera bugs difíceis de rastrear.</p>
+    </div>
+
+    <h2><span class="num">02</span>useState revisitado: o problema que ele resolve</h2>
+    <p>Em JavaScript puro, se você quiser guardar um valor que muda e refletir essa mudança na tela, precisa fazer isso manualmente: guardar o valor numa variável, escrever uma função que atualiza o DOM sempre que o valor muda, e lembrar de chamar essa função em todo lugar onde o valor é alterado.</p>
+    <pre>// JS puro — "na mão"
 let contador = 0;
 const span = document.querySelector('#contador');
 const botao = document.querySelector('#incrementar');
@@ -91,8 +254,8 @@ botao.addEventListener('click', () => {
   contador++;
   atualizarTela(); // fácil de esquecer isso em um app maior
 });</pre>
-  <p>Funciona bem numa tela simples. Mas em uma aplicação com dezenas de valores que mudam, cada um afetando pedaços diferentes da tela, sincronizar manualmente "quem depende de quem" vira uma fonte constante de bugs — telas que não atualizam, ou que atualizam a coisa errada.</p>
-  <pre>// Com useState — o React cuida da sincronização
+    <p>Funciona bem numa tela simples. Mas em uma aplicação com dezenas de valores que mudam, cada um afetando pedaços diferentes da tela, sincronizar manualmente "quem depende de quem" vira uma fonte constante de bugs — telas que não atualizam, ou que atualizam a coisa errada.</p>
+    <pre>// Com useState — o React cuida da sincronização
 function Contador() {
   const [contador, setContador] = useState(0);
 
@@ -103,11 +266,11 @@ function Contador() {
     &lt;/div&gt;
   );
 }</pre>
-  <p>Ao chamar <code>setContador</code>, você nunca manipula o DOM diretamente. Você só atualiza o dado, e descreve (no JSX) como a tela deveria se parecer para qualquer valor desse dado. O React cuida de comparar o antes e o depois e aplicar só a mudança necessária.</p>
+    <p>Ao chamar <code>setContador</code>, você nunca manipula o DOM diretamente. Você só atualiza o dado, e descreve (no JSX) como a tela deveria se parecer para qualquer valor desse dado. O React cuida de comparar o antes e o depois e aplicar só a mudança necessária.</p>
 
-  <h2><span class="num">03</span>useEffect: sincronizando com o mundo fora do React</h2>
-  <p><code>useEffect</code> é o hook usado para tudo que não é puramente "calcular o que mostrar na tela" — chamadas de API, assinaturas de eventos do navegador, timers, manipulação direta do DOM fora do controle do React, logging, e por aí vai. Esse tipo de código é chamado de <strong>efeito colateral</strong> (side effect): algo que acontece como consequência da renderização, mas que não é a renderização em si.</p>
-  <pre>function PerfilUsuario({ id }) {
+    <h2><span class="num">03</span>useEffect: sincronizando com o mundo fora do React</h2>
+    <p><code>useEffect</code> é o hook usado para tudo que não é puramente "calcular o que mostrar na tela" — chamadas de API, assinaturas de eventos do navegador, timers, manipulação direta do DOM fora do controle do React, logging, e por aí vai. Esse tipo de código é chamado de <strong>efeito colateral</strong> (side effect): algo que acontece como consequência da renderização, mas que não é a renderização em si.</p>
+    <pre>function PerfilUsuario({ id }) {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
@@ -125,24 +288,24 @@ function Contador() {
   if (!usuario) return &lt;p&gt;Carregando...&lt;/p&gt;;
   return &lt;h2&gt;{usuario.nome}&lt;/h2&gt;;
 }</pre>
-  <p>O segundo argumento — o array <code>[id]</code>, chamado de <strong>array de dependências</strong> — diz ao React quando reexecutar o efeito. Sem esse array, o efeito roda depois de toda renderização. Com um array vazio <code>[]</code>, roda só uma vez, quando o componente aparece na tela pela primeira vez.</p>
+    <p>O segundo argumento — o array <code>[id]</code>, chamado de <strong>array de dependências</strong> — diz ao React quando reexecutar o efeito. Sem esse array, o efeito roda depois de toda renderização. Com um array vazio <code>[]</code>, roda só uma vez, quando o componente aparece na tela pela primeira vez.</p>
 
-  <h2><span class="num">04</span>O problema que useEffect resolve</h2>
-  <p>Em JS puro, buscar dados e sincronizá-los com a interface exige controlar manualmente o ciclo de vida: quando o elemento entrou na página, buscar os dados; quando o elemento sai da página (ou os parâmetros mudam), cancelar a busca em andamento para evitar atualizar uma tela que já não existe mais.</p>
-  <div class="grid-2">
-    <div class="card col-neg">
-      <div class="card-title">Sem useEffect (na mão)</div>
-      <p style="margin-bottom:0">Você precisa saber exatamente quando o elemento foi inserido e removido do DOM, geralmente usando eventos customizados, <code>MutationObserver</code> ou lógica espalhada em vários lugares do código.</p>
+    <h2><span class="num">04</span>O problema que useEffect resolve</h2>
+    <p>Em JS puro, buscar dados e sincronizá-los com a interface exige controlar manualmente o ciclo de vida: quando o elemento entrou na página, buscar os dados; quando o elemento sai da página (ou os parâmetros mudam), cancelar a busca em andamento para evitar atualizar uma tela que já não existe mais.</p>
+    <div class="grid-2">
+      <div class="card col-neg">
+        <div class="card-title">Sem useEffect (na mão)</div>
+        <p style="margin-bottom:0">Você precisa saber exatamente quando o elemento foi inserido e removido do DOM, geralmente usando eventos customizados, <code>MutationObserver</code> ou lógica espalhada em vários lugares do código.</p>
+      </div>
+      <div class="col-pos card">
+        <div class="card-title">Com useEffect</div>
+        <p style="margin-bottom:0">O React já sabe quando o componente "nasce", quando "morre" e quando suas dependências mudam — e chama sua função de efeito (e a função de limpeza) nos momentos certos automaticamente.</p>
+      </div>
     </div>
-    <div class="col-pos card">
-      <div class="card-title">Com useEffect</div>
-      <p style="margin-bottom:0">O React já sabe quando o componente "nasce", quando "morre" e quando suas dependências mudam — e chama sua função de efeito (e a função de limpeza) nos momentos certos automaticamente.</p>
-    </div>
-  </div>
 
-  <h2><span class="num">05</span>O erro mais comum: array de dependências incompleto</h2>
-  <p>O erro clássico de quem está aprendendo <code>useEffect</code> é usar uma variável dentro do efeito sem declará-la no array de dependências. O efeito continua "enxergando" o valor antigo dessa variável (um problema conhecido como <em>stale closure</em>), porque o React só reexecuta a função quando algo do array muda.</p>
-  <pre>// Errado: "id" é usado dentro do efeito, mas não está nas dependências
+    <h2><span class="num">05</span>O erro mais comum: array de dependências incompleto</h2>
+    <p>O erro clássico de quem está aprendendo <code>useEffect</code> é usar uma variável dentro do efeito sem declará-la no array de dependências. O efeito continua "enxergando" o valor antigo dessa variável (um problema conhecido como <em>stale closure</em>), porque o React só reexecuta a função quando algo do array muda.</p>
+    <pre>// Errado: "id" é usado dentro do efeito, mas não está nas dependências
 useEffect(() => {
   fetch(`/api/usuarios/${id}`);
 }, []); // nunca vai buscar de novo se "id" mudar
@@ -151,50 +314,113 @@ useEffect(() => {
 useEffect(() => {
   fetch(`/api/usuarios/${id}`);
 }, [id]);</pre>
-  <p>Ferramentas como o ESLint (com o plugin oficial de hooks do React) avisam automaticamente quando uma dependência está faltando — vale sempre manter esse aviso ativado no projeto.</p>
+    <p>Ferramentas como o ESLint (com o plugin oficial de hooks do React) avisam automaticamente quando uma dependência está faltando — vale sempre manter esse aviso ativado no projeto.</p>
 
-  <h2><span class="num">06</span>useState vs useEffect, lado a lado</h2>
-  <table>
-    <tr><th>Hook</th><th>Resolve</th><th>Quando usar</th></tr>
-    <tr><td><code>useState</code></td><td>Guardar e atualizar um valor que afeta o que aparece na tela</td><td>Contadores, campos de formulário, abas selecionadas, listas que crescem</td></tr>
-    <tr><td><code>useEffect</code></td><td>Sincronizar o componente com algo fora do React</td><td>Chamadas de API, assinaturas de eventos, timers, integrações com bibliotecas externas</td></tr>
-  </table>
+    <h2><span class="num">06</span>useState vs useEffect, lado a lado</h2>
+    <table>
+      <tr><th>Hook</th><th>Resolve</th><th>Quando usar</th></tr>
+      <tr><td><code>useState</code></td><td>Guardar e atualizar um valor que afeta o que aparece na tela</td><td>Contadores, campos de formulário, abas selecionadas, listas que crescem</td></tr>
+      <tr><td><code>useEffect</code></td><td>Sincronizar o componente com algo fora do React</td><td>Chamadas de API, assinaturas de eventos, timers, integrações com bibliotecas externas</td></tr>
+    </table>
 
-  <h2><span class="num">07</span>Prós e contras dos hooks</h2>
-  <table>
-    <tr><th>Vantagem</th><th>Por quê</th></tr>
-    <tr><td>Reaproveitamento de lógica</td><td>Hooks customizados permitem extrair lógica com estado (ex: <code>useContadorDeCliques</code>) e reusar entre componentes sem herança nem componentes wrapper</td></tr>
-    <tr><td>Menos código</td><td>Substituem boa parte da verbosidade dos componentes de classe (construtor, <code>this</code>, métodos de ciclo de vida separados)</td></tr>
-    <tr><td>Componentes de função apenas</td><td>Não é mais preciso decidir entre classe ou função — função sempre serve, com hooks cobrindo os mesmos casos</td></tr>
-  </table>
-  <table>
-    <tr><th>Desvantagem</th><th>Por quê</th></tr>
-    <tr><td>Regras rígidas</td><td>Ordem de chamada e proibição de hooks condicionais confundem iniciantes</td></tr>
-    <tr><td>useEffect é fácil de usar mal</td><td>Dependências incompletas, efeitos que rodam mais vezes do que deveriam, ou lógica que deveria estar fora do React</td></tr>
-    <tr><td>Debugging menos direto</td><td>Múltiplos hooks interagindo (state + effect + context) podem tornar o fluxo de dados mais difícil de rastrear que um código imperativo simples</td></tr>
-  </table>
+    <h2><span class="num">07</span>Prós e contras dos hooks</h2>
+    <table>
+      <tr><th>Vantagem</th><th>Por quê</th></tr>
+      <tr><td>Reaproveitamento de lógica</td><td>Hooks customizados permitem extrair lógica com estado (ex: <code>useContadorDeCliques</code>) e reusar entre componentes sem herança nem componentes wrapper</td></tr>
+      <tr><td>Menos código</td><td>Substituem boa parte da verbosidade dos componentes de classe (construtor, <code>this</code>, métodos de ciclo de vida separados)</td></tr>
+      <tr><td>Componentes de função apenas</td><td>Não é mais preciso decidir entre classe ou função — função sempre serve, com hooks cobrindo os mesmos casos</td></tr>
+    </table>
+    <table>
+      <tr><th>Desvantagem</th><th>Por quê</th></tr>
+      <tr><td>Regras rígidas</td><td>Ordem de chamada e proibição de hooks condicionais confundem iniciantes</td></tr>
+      <tr><td>useEffect é fácil de usar mal</td><td>Dependências incompletas, efeitos que rodam mais vezes do que deveriam, ou lógica que deveria estar fora do React</td></tr>
+      <tr><td>Debugging menos direto</td><td>Múltiplos hooks interagindo (state + effect + context) podem tornar o fluxo de dados mais difícil de rastrear que um código imperativo simples</td></tr>
+    </table>
 
-  <h2><span class="num">08</span>Comparação com alternativas</h2>
-  <p>Nem todo framework resolve "estado + sincronização com o mundo externo" da mesma forma que o React:</p>
-  <table>
-    <tr><th>Abordagem</th><th>Como lida com o equivalente a state/effect</th></tr>
-    <tr><td>React (hooks)</td><td>Funções especiais (<code>useState</code>, <code>useEffect</code>) dentro de componentes de função</td></tr>
-    <tr><td>Vue (Composition API)</td><td>Conceito parecido com <code>ref</code>/<code>reactive</code> para estado e <code>watchEffect</code> para efeitos — muito próximo em espírito aos hooks</td></tr>
-    <tr><td>Svelte</td><td>Reatividade nativa da linguagem: uma variável comum já dispara atualização de tela quando muda, sem hook explícito</td></tr>
-    <tr><td>JS puro</td><td>Tudo manual: variáveis, funções de atualização de DOM chamadas explicitamente, controle manual de ciclo de vida</td></tr>
-  </table>
+    <h2><span class="num">08</span>Comparação com alternativas</h2>
+    <p>Nem todo framework resolve "estado + sincronização com o mundo externo" da mesma forma que o React:</p>
+    <table>
+      <tr><th>Abordagem</th><th>Como lida com o equivalente a state/effect</th></tr>
+      <tr><td>React (hooks)</td><td>Funções especiais (<code>useState</code>, <code>useEffect</code>) dentro de componentes de função</td></tr>
+      <tr><td>Vue (Composition API)</td><td>Conceito parecido com <code>ref</code>/<code>reactive</code> para estado e <code>watchEffect</code> para efeitos — muito próximo em espírito aos hooks</td></tr>
+      <tr><td>Svelte</td><td>Reatividade nativa da linguagem: uma variável comum já dispara atualização de tela quando muda, sem hook explícito</td></tr>
+      <tr><td>JS puro</td><td>Tudo manual: variáveis, funções de atualização de DOM chamadas explicitamente, controle manual de ciclo de vida</td></tr>
+    </table>
 
-  <div class="divider"></div>
+    <div class="divider"></div>
 
-  <div class="card">
-    <div class="card-title">Para fixar</div>
-    <p style="margin-bottom:0"><code>useState</code> resolve o problema de manter a tela sincronizada com um dado que muda, sem manipulação manual do DOM. <code>useEffect</code> resolve o problema de sincronizar o componente com qualquer coisa fora do controle do React — API, timers, eventos do navegador — cuidando automaticamente de quando rodar e quando limpar. Juntos, eles substituem boa parte do código de "encanamento" que seria necessário escrever à mão em JavaScript puro.</p>
-  </div>
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0"><code>useState</code> resolve o problema de manter a tela sincronizada com um dado que muda, sem manipulação manual do DOM. <code>useEffect</code> resolve o problema de sincronizar o componente com qualquer coisa fora do controle do React — API, timers, eventos do navegador — cuidando automaticamente de quando rodar e quando limpar. Juntos, eles substituem boa parte do código de "encanamento" que seria necessário escrever à mão em JavaScript puro.</p>
+    </div>
 
-  <div class="footer">
-    Studiant — trilha de estudos diária. Lição 5 de 20 da trilha atual.
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — trilha de estudos diária. Lição 5 de 20 da trilha atual.
+    </div>
+
   </div>
 
 </div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+</script>
+
 </body>
 </html>

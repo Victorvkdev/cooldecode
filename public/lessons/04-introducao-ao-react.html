@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Studiant — Lição 04: Introdução ao React</title>
+<title>Cooldecode — Lesson 04: Introduction to React</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d0d10;
@@ -15,8 +15,8 @@
     --border: #2a2a32;
     --text: #ececef;
     --text-dim: #a3a3ad;
-    --accent: #db2640;
-    --accent-soft: rgba(219, 38, 64, 0.12);
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
   }
   * { box-sizing: border-box; }
   body {
@@ -27,11 +27,11 @@
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
-  .wrap {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 56px 24px 80px;
-  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
   .eyebrow {
     display: inline-flex;
     align-items: center;
@@ -52,8 +52,8 @@
     display: inline-block;
   }
   h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
     font-size: 34px;
     line-height: 1.2;
     margin: 0 0 12px;
@@ -65,7 +65,7 @@
     margin-bottom: 40px;
   }
   h2 {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 22px;
     margin: 48px 0 16px;
@@ -81,7 +81,7 @@
     margin: 20px 0;
   }
   .card-title {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 15px;
     color: var(--accent);
@@ -101,7 +101,7 @@
     border-radius: 6px;
     padding: 2px 6px;
     font-size: 14px;
-    color: #ff9fb0;
+    color: #ffb4bf;
     font-family: 'DM Sans', monospace;
   }
   pre {
@@ -117,7 +117,7 @@
   th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
   th {
     color: var(--accent);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 13px;
     text-transform: uppercase;
@@ -143,6 +143,15 @@
   strong { color: #fff; }
   .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
   .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
 </style>
 </head>
 <body>
@@ -150,24 +159,155 @@
 
   <a href="/" class="back-link">&larr; Back to Cooldecode</a>
 
-  <div class="eyebrow">Studiant · Lição 04 · Trilha principal</div>
-  <h1>Introdução ao React: componentes, JSX, state e props</h1>
-  <p class="subtitle">Na lição passada vimos quando vale a pena trocar HTML/CSS/JS puro por um framework. Hoje entramos de fato no mais popular deles: o React. A ideia aqui não é decorar sintaxe, e sim entender o modelo mental por trás — porque é esse modelo que se repete, com variações, em praticamente todo framework de frontend moderno.</p>
-
-  <h2><span class="num">01</span>O que é o React, de fato</h2>
-  <p>React é uma biblioteca JavaScript para construir interfaces. Não é uma linguagem nova nem um framework completo "com tudo incluso" — é uma peça focada em resolver um problema específico: descrever como a tela deve se parecer, dado um estado, e cuidar de atualizar o DOM automaticamente quando esse estado muda.</p>
-  <div class="card">
-    <div class="card-title">A ideia central</div>
-    <p style="margin-bottom:0">Em vez de você dizer passo a passo "pegue este elemento, mude este texto, esconda aquele outro" (o jeito imperativo do vanilla JS), você <strong>descreve o resultado final</strong> que quer ver na tela para cada possível estado da aplicação. O React se encarrega de calcular a diferença entre o que está na tela agora e o que deveria estar, e aplica só as mudanças necessárias no DOM.</p>
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
   </div>
 
-  <h2><span class="num">02</span>Componentes: a unidade básica</h2>
-  <p>Um <strong>componente</strong> é uma função JavaScript que recebe dados de entrada e retorna a descrição de um pedaço de interface. Uma tela inteira é montada compondo componentes menores, como peças de Lego: um <code>Botao</code>, um <code>CardDeProduto</code>, uma <code>ListaDeItens</code> que usa vários <code>CardDeProduto</code> dentro dela.</p>
-  <p>Essa composição é o que torna o React interessante em projetos grandes: um componente bem isolado pode ser reaproveitado em várias telas, testado sozinho e alterado sem quebrar o resto da aplicação — desde que seus limites (o que ele recebe e o que ele retorna) fiquem claros.</p>
+  <div data-lang="en">
 
-  <h2><span class="num">03</span>JSX: por que a sintaxe parece HTML dentro do JS</h2>
-  <p><strong>JSX</strong> é uma extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML diretamente dentro do código. Ele não é entendido nativamente pelo navegador — uma ferramenta de build (como o Babel, geralmente já embutido em qualquer setup de React) traduz o JSX para chamadas de função JavaScript comuns antes de o código chegar ao navegador.</p>
-  <pre>function Saudacao() {
+    <div class="eyebrow">Cooldecode · Lesson 04 · Main track</div>
+    <h1>Introduction to React: components, JSX, state and props</h1>
+    <p class="subtitle">Last lesson we looked at when it's worth trading plain HTML/CSS/JS for a framework. Today we actually get into the most popular one: React. The goal here isn't to memorize syntax, but to understand the mental model behind it — because that same model, with variations, repeats across almost every modern frontend framework.</p>
+
+    <h2><span class="num">01</span>What React actually is</h2>
+    <p>React is a JavaScript library for building interfaces. It's not a new language or a complete "batteries included" framework — it's a focused piece that solves one specific problem: describing what the screen should look like given a state, and automatically taking care of updating the DOM when that state changes.</p>
+    <div class="card">
+      <div class="card-title">The core idea</div>
+      <p style="margin-bottom:0">Instead of telling the browser step by step "grab this element, change this text, hide that other one" (the imperative way of vanilla JS), you <strong>describe the final result</strong> you want on screen for every possible state of the application. React figures out the difference between what's on screen now and what should be there, and applies only the necessary changes to the DOM.</p>
+    </div>
+
+    <h2><span class="num">02</span>Components: the basic unit</h2>
+    <p>A <strong>component</strong> is a JavaScript function that receives input data and returns the description of a piece of interface. A whole screen gets assembled by composing smaller components, like Lego pieces: a <code>Button</code>, a <code>ProductCard</code>, an <code>ItemList</code> that uses several <code>ProductCard</code>s inside it.</p>
+    <p>That composition is what makes React interesting in large projects: a well-isolated component can be reused across screens, tested on its own, and changed without breaking the rest of the app — as long as its boundaries (what it receives and what it returns) stay clear.</p>
+
+    <h2><span class="num">03</span>JSX: why the syntax looks like HTML inside JS</h2>
+    <p><strong>JSX</strong> is a JavaScript syntax extension that lets you write something that looks like HTML directly inside your code. Browsers don't understand it natively — a build tool (like Babel, usually already bundled into any React setup) translates JSX into regular JavaScript function calls before the code reaches the browser.</p>
+    <pre>function Greeting() {
+  return &lt;h1&gt;Hello, world&lt;/h1&gt;;
+}
+
+// what the JSX above actually becomes, under the hood:
+function Greeting() {
+  return React.createElement('h1', null, 'Hello, world');
+}</pre>
+    <p>The reason it exists is purely practical: describing the structure of an interface in plain JavaScript, without JSX, is verbose and hard to read. JSX keeps the code close to the visual result it produces, which makes it much easier to understand an interface just by glancing at the component.</p>
+
+    <h2><span class="num">04</span>Props: how a component receives data</h2>
+    <p><strong>Props</strong> (short for "properties") are the data a component receives from whoever is using it — they work like a function's parameters. A component can't change its own props; they always flow from outside in, from a "parent" component to a "child" component.</p>
+    <pre>function ProductCard({ name, price }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h3&gt;{name}&lt;/h3&gt;
+      &lt;p&gt;${price}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// usage:
+&lt;ProductCard name="Running shoes" price="299" /&gt;
+&lt;ProductCard name="Thermal bottle" price="89" /&gt;</pre>
+    <p>The same <code>ProductCard</code> component is reused to display different products, each with its own data. That's the essence of reuse: write the visual structure once, feed it different data as many times as needed.</p>
+
+    <h2><span class="num">05</span>State: how a component keeps its own memory</h2>
+    <p>While props come from outside, <strong>state</strong> is a component's own internal memory — data that can change over time, usually in response to a user action (a click, typing, an API response). When state changes, React re-renders the component automatically to reflect the new value on screen.</p>
+    <pre>function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Current value: {count}&lt;/p&gt;
+      &lt;button onClick={() => setCount(count + 1)}&gt;
+        Increment
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+    <p><code>useState</code> is a "hook" — a special React function that gives a component the ability to have its own memory. Every call to <code>setCount</code> tells React that this piece of the interface needs to be recalculated, and React decides on its own the most efficient way to update the DOM.</p>
+
+    <h2><span class="num">06</span>Props vs state, side by side</h2>
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title">Props</div>
+        <p style="margin-bottom:0">Come from outside, from a parent component. Read-only for whoever receives them. Change when the parent decides to pass different values.</p>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">State</div>
+        <p style="margin-bottom:0">Belong to the component itself. Can be changed by the component, usually in response to an event. Every change triggers a new render.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">07</span>Pros and cons of React</h2>
+    <table>
+      <tr><th>Advantage</th><th>Why</th></tr>
+      <tr><td>Huge ecosystem</td><td>Ready-made libraries for almost anything (routing, forms, animation, requests)</td></tr>
+      <tr><td>Job market</td><td>It's the most widely adopted frontend framework, which makes it easier to find jobs, tutorials and developers</td></tr>
+      <tr><td>Real componentization</td><td>Makes it easier to split large interfaces into testable, reusable pieces</td></tr>
+    </table>
+    <table>
+      <tr><th>Disadvantage</th><th>Why</th></tr>
+      <tr><td>Learning curve</td><td>JSX, hooks, and the very concept of "UI as a function of state" take some time to get used to</td></tr>
+      <tr><td>It's only the UI layer</td><td>Routing, API calls and project structure don't come built in — every team assembles its own toolset (or uses a framework like Next.js on top)</td></tr>
+      <tr><td>Extra weight</td><td>Ships the React library to the browser, which doesn't make sense for simple, static pages</td></tr>
+    </table>
+
+    <h2><span class="num">08</span>Quick comparison with alternatives</h2>
+    <p>React isn't the only option for building declarative interfaces. It's worth knowing where it fits relative to the best-known competitors:</p>
+    <table>
+      <tr><th>Framework</th><th>Main characteristic</th></tr>
+      <tr><td>React</td><td>UI-only library, JSX syntax, the broadest ecosystem on the market</td></tr>
+      <tr><td>Vue</td><td>Syntax considered closer to traditional HTML/CSS, generally a gentler learning curve</td></tr>
+      <tr><td>Svelte</td><td>Does the heavy lifting at build time, generating less code for the browser at runtime</td></tr>
+      <tr><td>Angular</td><td>Complete framework (not just the UI layer), more opinionated about project structure, common in large enterprise applications</td></tr>
+    </table>
+    <p>In practice, the concepts of component, props and state (under different names) show up in all of them. Understanding React deeply makes it much easier to pick up any of the others later.</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">React solves the problem of keeping the screen in sync with the application's data, trading manual DOM manipulation for a declarative description of the interface. Components are the unit of reuse, props are the data coming in from outside, and state is the memory the component itself controls. This trio — component, props, state — is the foundation for everything that comes next in React, including the more advanced hooks.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — daily study track. Lesson 4 of 20 in the current track.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 04 · Trilha principal</div>
+    <h1>Introdução ao React: componentes, JSX, state e props</h1>
+    <p class="subtitle">Na lição passada vimos quando vale a pena trocar HTML/CSS/JS puro por um framework. Hoje entramos de fato no mais popular deles: o React. A ideia aqui não é decorar sintaxe, e sim entender o modelo mental por trás — porque é esse modelo que se repete, com variações, em praticamente todo framework de frontend moderno.</p>
+
+    <h2><span class="num">01</span>O que é o React, de fato</h2>
+    <p>React é uma biblioteca JavaScript para construir interfaces. Não é uma linguagem nova nem um framework completo "com tudo incluso" — é uma peça focada em resolver um problema específico: descrever como a tela deve se parecer, dado um estado, e cuidar de atualizar o DOM automaticamente quando esse estado muda.</p>
+    <div class="card">
+      <div class="card-title">A ideia central</div>
+      <p style="margin-bottom:0">Em vez de você dizer passo a passo "pegue este elemento, mude este texto, esconda aquele outro" (o jeito imperativo do vanilla JS), você <strong>descreve o resultado final</strong> que quer ver na tela para cada possível estado da aplicação. O React se encarrega de calcular a diferença entre o que está na tela agora e o que deveria estar, e aplica só as mudanças necessárias no DOM.</p>
+    </div>
+
+    <h2><span class="num">02</span>Componentes: a unidade básica</h2>
+    <p>Um <strong>componente</strong> é uma função JavaScript que recebe dados de entrada e retorna a descrição de um pedaço de interface. Uma tela inteira é montada compondo componentes menores, como peças de Lego: um <code>Botao</code>, um <code>CardDeProduto</code>, uma <code>ListaDeItens</code> que usa vários <code>CardDeProduto</code> dentro dela.</p>
+    <p>Essa composição é o que torna o React interessante em projetos grandes: um componente bem isolado pode ser reaproveitado em várias telas, testado sozinho e alterado sem quebrar o resto da aplicação — desde que seus limites (o que ele recebe e o que ele retorna) fiquem claros.</p>
+
+    <h2><span class="num">03</span>JSX: por que a sintaxe parece HTML dentro do JS</h2>
+    <p><strong>JSX</strong> é uma extensão de sintaxe do JavaScript que permite escrever algo parecido com HTML diretamente dentro do código. Ele não é entendido nativamente pelo navegador — uma ferramenta de build (como o Babel, geralmente já embutido em qualquer setup de React) traduz o JSX para chamadas de função JavaScript comuns antes de o código chegar ao navegador.</p>
+    <pre>function Saudacao() {
   return &lt;h1&gt;Olá, mundo&lt;/h1&gt;;
 }
 
@@ -175,11 +315,11 @@
 function Saudacao() {
   return React.createElement('h1', null, 'Olá, mundo');
 }</pre>
-  <p>O motivo de existir é puramente prático: descrever a estrutura de uma interface em JavaScript puro, sem JSX, é verboso e difícil de ler. O JSX deixa o código parecido com o resultado visual que ele produz, o que ajuda bastante a entender a interface só de olhar o componente.</p>
+    <p>O motivo de existir é puramente prático: descrever a estrutura de uma interface em JavaScript puro, sem JSX, é verboso e difícil de ler. O JSX deixa o código parecido com o resultado visual que ele produz, o que ajuda bastante a entender a interface só de olhar o componente.</p>
 
-  <h2><span class="num">04</span>Props: como um componente recebe dados</h2>
-  <p><strong>Props</strong> (de "properties") são os dados que um componente recebe de quem o está usando — funcionam como os parâmetros de uma função. Um componente não pode alterar suas próprias props; elas fluem sempre de fora para dentro, de um componente "pai" para um componente "filho".</p>
-  <pre>function CardDeProduto({ nome, preco }) {
+    <h2><span class="num">04</span>Props: como um componente recebe dados</h2>
+    <p><strong>Props</strong> (de "properties") são os dados que um componente recebe de quem o está usando — funcionam como os parâmetros de uma função. Um componente não pode alterar suas próprias props; elas fluem sempre de fora para dentro, de um componente "pai" para um componente "filho".</p>
+    <pre>function CardDeProduto({ nome, preco }) {
   return (
     &lt;div className="card"&gt;
       &lt;h3&gt;{nome}&lt;/h3&gt;
@@ -191,11 +331,11 @@ function Saudacao() {
 // uso:
 &lt;CardDeProduto nome="Tênis de corrida" preco="299" /&gt;
 &lt;CardDeProduto nome="Garrafa térmica" preco="89" /&gt;</pre>
-  <p>O mesmo componente <code>CardDeProduto</code> é reaproveitado para exibir produtos diferentes, cada um com seus próprios dados. Essa é a essência da reutilização: escrever a estrutura visual uma vez, alimentá-la com dados diferentes quantas vezes for preciso.</p>
+    <p>O mesmo componente <code>CardDeProduto</code> é reaproveitado para exibir produtos diferentes, cada um com seus próprios dados. Essa é a essência da reutilização: escrever a estrutura visual uma vez, alimentá-la com dados diferentes quantas vezes for preciso.</p>
 
-  <h2><span class="num">05</span>State: como um componente guarda memória própria</h2>
-  <p>Enquanto props vêm de fora, <strong>state</strong> (estado) é a memória interna de um componente — dados que podem mudar ao longo do tempo, geralmente como resposta a uma ação do usuário (um clique, uma digitação, uma resposta de API). Quando o state muda, o React re-renderiza o componente automaticamente para refletir o novo valor na tela.</p>
-  <pre>function Contador() {
+    <h2><span class="num">05</span>State: como um componente guarda memória própria</h2>
+    <p>Enquanto props vêm de fora, <strong>state</strong> (estado) é a memória interna de um componente — dados que podem mudar ao longo do tempo, geralmente como resposta a uma ação do usuário (um clique, uma digitação, uma resposta de API). Quando o state muda, o React re-renderiza o componente automaticamente para refletir o novo valor na tela.</p>
+    <pre>function Contador() {
   const [contador, setContador] = useState(0);
 
   return (
@@ -207,56 +347,119 @@ function Saudacao() {
     &lt;/div&gt;
   );
 }</pre>
-  <p><code>useState</code> é um "hook" — uma função especial do React que dá a um componente a capacidade de ter memória própria. Cada chamada de <code>setContador</code> avisa ao React que esse pedaço da interface precisa ser recalculado, e o React decide sozinho a forma mais eficiente de atualizar o DOM.</p>
+    <p><code>useState</code> é um "hook" — uma função especial do React que dá a um componente a capacidade de ter memória própria. Cada chamada de <code>setContador</code> avisa ao React que esse pedaço da interface precisa ser recalculado, e o React decide sozinho a forma mais eficiente de atualizar o DOM.</p>
 
-  <h2><span class="num">06</span>Props vs state, lado a lado</h2>
-  <div class="grid-2">
-    <div class="card col-pos">
-      <div class="card-title">Props</div>
-      <p style="margin-bottom:0">Vêm de fora, de um componente pai. São somente leitura para quem as recebe. Mudam quando o pai decide passar valores diferentes.</p>
+    <h2><span class="num">06</span>Props vs state, lado a lado</h2>
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title">Props</div>
+        <p style="margin-bottom:0">Vêm de fora, de um componente pai. São somente leitura para quem as recebe. Mudam quando o pai decide passar valores diferentes.</p>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">State</div>
+        <p style="margin-bottom:0">Pertencem ao próprio componente. Podem ser alteradas por ele mesmo, geralmente em resposta a um evento. Cada mudança dispara uma nova renderização.</p>
+      </div>
     </div>
-    <div class="card col-neg">
-      <div class="card-title">State</div>
-      <p style="margin-bottom:0">Pertencem ao próprio componente. Podem ser alteradas por ele mesmo, geralmente em resposta a um evento. Cada mudança dispara uma nova renderização.</p>
+
+    <h2><span class="num">07</span>Prós e contras do React</h2>
+    <table>
+      <tr><th>Vantagem</th><th>Por quê</th></tr>
+      <tr><td>Ecossistema enorme</td><td>Bibliotecas prontas para quase qualquer necessidade (roteamento, formulários, animações, requisições)</td></tr>
+      <tr><td>Mercado de trabalho</td><td>É o framework de frontend mais adotado, o que facilita encontrar vagas, tutoriais e desenvolvedores</td></tr>
+      <tr><td>Componentização real</td><td>Facilita dividir interfaces grandes em pedaços testáveis e reutilizáveis</td></tr>
+    </table>
+    <table>
+      <tr><th>Desvantagem</th><th>Por quê</th></tr>
+      <tr><td>Curva de aprendizado</td><td>JSX, hooks e o próprio conceito de "UI como função de estado" exigem um tempo de adaptação</td></tr>
+      <tr><td>É só a camada de UI</td><td>Roteamento, chamadas de API e organização de projeto não vêm prontos — cada equipe monta seu próprio conjunto de ferramentas (ou usa um framework como o Next.js por cima)</td></tr>
+      <tr><td>Peso extra</td><td>Carrega a biblioteca do React no navegador, o que não faz sentido para páginas simples e estáticas</td></tr>
+    </table>
+
+    <h2><span class="num">08</span>Comparação rápida com alternativas</h2>
+    <p>React não é a única opção para construir interfaces declarativas. Vale saber onde ele se encaixa em relação aos concorrentes mais conhecidos:</p>
+    <table>
+      <tr><th>Framework</th><th>Característica principal</th></tr>
+      <tr><td>React</td><td>Biblioteca focada só na UI, sintaxe JSX, o ecossistema mais amplo do mercado</td></tr>
+      <tr><td>Vue</td><td>Sintaxe considerada mais próxima do HTML/CSS tradicional, curva de aprendizado geralmente mais suave</td></tr>
+      <tr><td>Svelte</td><td>Faz o trabalho pesado em tempo de build, gerando menos código para o navegador em tempo de execução</td></tr>
+      <tr><td>Angular</td><td>Framework completo (não só a camada de UI), mais opinativo sobre estrutura de projeto, comum em aplicações corporativas grandes</td></tr>
+    </table>
+    <p>Na prática, os conceitos de componente, props e state (com nomes diferentes) aparecem em todos eles. Entender React a fundo facilita bastante aprender qualquer um dos outros depois.</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">React resolve o problema de manter a tela sincronizada com os dados da aplicação, trocando manipulação manual do DOM por uma descrição declarativa da interface. Componentes são a unidade de reuso, props são os dados que entram de fora, e state é a memória que o próprio componente controla. Esse trio — componente, props, state — é a base para tudo que vem depois no React, incluindo os hooks mais avançados.</p>
     </div>
-  </div>
 
-  <h2><span class="num">07</span>Prós e contras do React</h2>
-  <table>
-    <tr><th>Vantagem</th><th>Por quê</th></tr>
-    <tr><td>Ecossistema enorme</td><td>Bibliotecas prontas para quase qualquer necessidade (roteamento, formulários, animações, requisições)</td></tr>
-    <tr><td>Mercado de trabalho</td><td>É o framework de frontend mais adotado, o que facilita encontrar vagas, tutoriais e desenvolvedores</td></tr>
-    <tr><td>Componentização real</td><td>Facilita dividir interfaces grandes em pedaços testáveis e reutilizáveis</td></tr>
-  </table>
-  <table>
-    <tr><th>Desvantagem</th><th>Por quê</th></tr>
-    <tr><td>Curva de aprendizado</td><td>JSX, hooks e o próprio conceito de "UI como função de estado" exigem um tempo de adaptação</td></tr>
-    <tr><td>É só a camada de UI</td><td>Roteamento, chamadas de API e organização de projeto não vêm prontos — cada equipe monta seu próprio conjunto de ferramentas (ou usa um framework como o Next.js por cima)</td></tr>
-    <tr><td>Peso extra</td><td>Carrega a biblioteca do React no navegador, o que não faz sentido para páginas simples e estáticas</td></tr>
-  </table>
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
 
-  <h2><span class="num">08</span>Comparação rápida com alternativas</h2>
-  <p>React não é a única opção para construir interfaces declarativas. Vale saber onde ele se encaixa em relação aos concorrentes mais conhecidos:</p>
-  <table>
-    <tr><th>Framework</th><th>Characterística principal</th></tr>
-    <tr><td>React</td><td>Biblioteca focada só na UI, sintaxe JSX, o ecossistema mais amplo do mercado</td></tr>
-    <tr><td>Vue</td><td>Sintaxe considerada mais próxima do HTML/CSS tradicional, curva de aprendizado geralmente mais suave</td></tr>
-    <tr><td>Svelte</td><td>Faz o trabalho pesado em tempo de build, gerando menos código para o navegador em tempo de execução</td></tr>
-    <tr><td>Angular</td><td>Framework completo (não só a camada de UI), mais opinativo sobre estrutura de projeto, comum em aplicações corporativas grandes</td></tr>
-  </table>
-  <p>Na prática, os conceitos de componente, props e state (com nomes diferentes) aparecem em todos eles. Entender React a fundo facilita bastante aprender qualquer um dos outros depois.</p>
+    <div class="footer">
+      Cooldecode — trilha de estudos diária. Lição 4 de 20 da trilha atual.
+    </div>
 
-  <div class="divider"></div>
-
-  <div class="card">
-    <div class="card-title">Para fixar</div>
-    <p style="margin-bottom:0">React resolve o problema de manter a tela sincronizada com os dados da aplicação, trocando manipulação manual do DOM por uma descrição declarativa da interface. Componentes são a unidade de reuso, props são os dados que entram de fora, e state é a memória que o próprio componente controla. Esse trio — componente, props, state — é a base para tudo que vem depois no React, incluindo os hooks mais avançados.</p>
-  </div>
-
-  <div class="footer">
-    Studiant — trilha de estudos diária. Lição 4 de 20 da trilha atual.
   </div>
 
 </div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+</script>
+
 </body>
 </html>

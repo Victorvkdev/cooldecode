@@ -107,6 +107,39 @@ const posts: Post[] = [
     file: "modulo-1-complementar.html",
   },
   {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 4", pt: "Semana 2 · Lição 4" },
+    title: { en: "Introduction to React", pt: "Introdução ao React" },
+    desc: {
+      en: "Components, JSX, props and state — the mental model behind React.",
+      pt: "Componentes, JSX, props e state — o modelo mental por trás do React.",
+    },
+    date: "2026-07-28",
+    file: "04-introducao-ao-react.html",
+  },
+  {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 5", pt: "Semana 2 · Lição 5" },
+    title: { en: "React hooks: useState, useEffect", pt: "React hooks: useState, useEffect" },
+    desc: {
+      en: "What each hook solves, compared with doing it by hand in plain JS.",
+      pt: "O que cada hook resolve, comparado com fazer na mão em JS puro.",
+    },
+    date: "2026-07-29",
+    file: "05-react-hooks-usestate-useeffect.html",
+  },
+  {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 6", pt: "Semana 2 · Lição 6" },
+    title: { en: "What Next.js is", pt: "O que é Next.js" },
+    desc: {
+      en: "Why almost nobody ships plain React in production, and what Next.js adds.",
+      pt: "Por que quase ninguém usa React puro em produção, e o que o Next.js adiciona.",
+    },
+    date: "2026-07-30",
+    file: "06-o-que-e-nextjs.html",
+  },
+  {
     category: "ai",
     categoryLabel: { en: "AI Watch", pt: "IA Watch" },
     title: { en: "Claude Opus 5", pt: "Claude Opus 5" },
@@ -127,6 +160,39 @@ const posts: Post[] = [
     },
     date: "2026-07-27",
     file: "ai-watch-2026-07-27-context-window.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Prompt engineering in practice", pt: "Prompt engineering na prática" },
+    desc: {
+      en: "What changed in 2026 with reasoning models, and what fell out of favor.",
+      pt: "O que mudou em 2026 com modelos de raciocínio, e o que caiu em desuso.",
+    },
+    date: "2026-07-28",
+    file: "ai-watch-2026-07-28-prompt-engineering-na-pratica.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "MCP's new spec", pt: "A nova spec do MCP" },
+    desc: {
+      en: "Model Context Protocol goes stateless — what changes and why.",
+      pt: "O Model Context Protocol vira stateless — o que muda e por quê.",
+    },
+    date: "2026-07-29",
+    file: "ai-watch-2026-07-29-mcp-2026-07-28-spec.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Industry landscape", pt: "Panorama da indústria" },
+    desc: {
+      en: "GPT-5.6 ships, Gemini 3.5 Pro gets delayed — mapping the July 2026 race.",
+      pt: "GPT-5.6 é lançado, Gemini 3.5 Pro atrasa — o mapa da corrida em julho de 2026.",
+    },
+    date: "2026-07-30",
+    file: "ai-watch-2026-07-30-panorama-industria.html",
   },
   {
     category: "deep",
