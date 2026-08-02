@@ -8,7 +8,7 @@ type Lang = "en" | "pt";
 // create a form, and replace this with your real form endpoint.
 // Until then, the newsletter form below will show an error on submit —
 // that's expected, it's just not wired to a real inbox yet.
-const NEWSLETTER_FORM_ACTION = "https://formspree.io/f/YOUR_FORM_ID";
+const NEWSLETTER_FORM_ACTION = "https://formspree.io/f/xaqrrwro";
 
 const t = {
   tagline: {
