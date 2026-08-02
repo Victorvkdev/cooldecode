@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studiant — IA Watch: a nova spec do MCP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #db2640;
+    --accent-soft: rgba(219, 38, 64, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
+  h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .col-pos { border-left: 3px solid #3fb950; }
+  .col-neg { border-left: 3px solid var(--accent); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ff9fb0; font-family: 'DM Sans', monospace; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-size: 13.5px; color: #d7d7dd; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
+  .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  .sources { list-style: none; padding: 0; margin: 12px 0 0; }
+  .sources li { font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); }
+  strong { color: #fff; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="eyebrow">Studiant · IA Watch · Ferramentas e ecossistema de IA</div>
+  <h1>MCP acaba de mudar de arquitetura: o que é a spec 2026-07-28</h1>
+  <p class="subtitle">Em 28 de julho de 2026 (ontem), o Model Context Protocol — o padrão que conecta modelos como o Claude a ferramentas, dados e sistemas externos — publicou uma nova versão de especificação que reescreve boa parte da arquitetura interna do protocolo. A Anthropic já anunciou suporte ampliado a ela no Claude. Vale entender o que muda e por quê, porque é um protocolo que hoje já passa de 400 milhões de downloads de SDK por mês.</p>
+
+  <h2><span class="num">01</span>Relembrando: o que é o MCP</h2>
+  <p>O <strong>Model Context Protocol</strong> é um padrão aberto, criado pela Anthropic e hoje mantido de forma independente, que define como um assistente de IA (como o Claude) se conecta a "servidores" que expõem ferramentas, dados ou recursos — um servidor de banco de dados, uma API de calendário, um sistema de arquivos. Antes do MCP, cada integração desse tipo era feita de um jeito diferente; o protocolo padroniza essa conversa.</p>
+
+  <h2><span class="num">02</span>A mudança central: de protocolo com estado para protocolo sem estado</h2>
+  <p>A mudança mais importante da spec 2026-07-28 é que o MCP deixa de ser um protocolo <strong>stateful</strong> (com estado) e passa a ser <strong>stateless</strong> (sem estado) no núcleo. Na prática, isso significa:</p>
+  <div class="card">
+    <div class="card-title">O que sai</div>
+    <p style="margin-bottom:0">O handshake inicial (<code>initialize</code> / <code>notifications/initialized</code>) desaparece, junto com o conceito de sessão de conexão persistente e o cabeçalho <code>Mcp-Session-Id</code> do transporte HTTP. Cada chamada de ferramenta passa a ser uma requisição HTTP autocontida, carregando sua própria versão de protocolo, identidade e capacidades.</p>
+  </div>
+  <p>O motivo prático é infraestrutura: um protocolo sem estado pode rodar em ambientes serverless e de edge computing, que não mantêm conexões abertas por longos períodos. Um servidor MCP com estado tradicionalmente precisa de um processo vivo o tempo todo — o que é caro e complica escala automática.</p>
+
+  <h2><span class="num">03</span>Outras mudanças relevantes</h2>
+  <table>
+    <tr><th>Mudança</th><th>O que resolve</th></tr>
+    <tr><td>Multi Round-Trip Requests</td><td>Permite trocas de múltiplas idas e vindas dentro de uma mesma operação lógica, mesmo sem sessão persistente</td></tr>
+    <tr><td>Roteamento por cabeçalho HTTP</td><td>Facilita balanceamento de carga e roteamento em infraestrutura distribuída, já que cada requisição carrega o contexto necessário</td></tr>
+    <tr><td>Resultados de listagem cacheáveis</td><td><code>tools/list</code>, <code>resources/list</code> e <code>prompts/list</code> deixam de variar por conexão, permitindo cache — antes cada conexão podia receber uma resposta diferente</td></tr>
+    <tr><td>OAuth 2.0 / OIDC reforçados</td><td>Autorização alinhada a padrões corporativos, permitindo integração direta com provedores de identidade como Entra ID ou Okta, sem gambiarras</td></tr>
+    <tr><td>Framework de extensões versionado</td><td>MCP Apps (UIs interativas embutidas) e MCP Tasks (trabalho de longa duração) viram extensões formais, sem precisar mexer no núcleo do protocolo</td></tr>
+  </table>
+
+  <h2><span class="num">04</span>Destaque: como fica o trabalho de longa duração (Tasks)</h2>
+  <p>Um problema natural de um protocolo sem estado é: como lidar com uma tarefa que demora minutos ou horas para terminar, se não há mais uma conexão contínua para "avisar" quando ela acabar? A extensão <strong>Tasks</strong> resolve isso com um modelo de handle: o servidor responde a um <code>tools/call</code> com um identificador de tarefa, e o cliente consulta o andamento por conta própria, com chamadas como <code>tasks/get</code>, <code>tasks/update</code> e <code>tasks/cancel</code>.</p>
+
+  <h2><span class="num">05</span>Prós e contras dessa mudança</h2>
+  <table>
+    <tr><th>Vantagem</th><th>Por quê</th></tr>
+    <tr><td>Escala em infraestrutura moderna</td><td>Servidores MCP podem rodar em funções serverless e edge, sem processo dedicado sempre ativo</td></tr>
+    <tr><td>Segurança mais robusta</td><td>Autorização alinhada a OAuth/OIDC de produção facilita adoção em ambientes corporativos com exigências rígidas de identidade</td></tr>
+    <tr><td>Cache e performance</td><td>Listagens cacheáveis reduzem chamadas repetidas de descoberta de ferramentas</td></tr>
+  </table>
+  <table>
+    <tr><th>Desvantagem</th><th>Por quê</th></tr>
+    <tr><td>Quebra de compatibilidade</td><td>Servidores na versão nova podem não funcionar com clientes antigos, e vice-versa, exigindo que os dois lados compartilhem uma versão suportada ou implementem tradução</td></tr>
+    <tr><td>Migração custosa</td><td>Integrações existentes que dependiam de sessão persistente precisam ser reescritas para o modelo de requisição autocontida</td></tr>
+    <tr><td>Curva de adaptação</td><td>Times que já dominavam o modelo antigo (stateful) precisam reaprender partes da arquitetura</td></tr>
+  </table>
+
+  <h2><span class="num">06</span>O que isso significa na prática</h2>
+  <p>Para quem já usa integrações MCP (por exemplo dentro do Claude ou de ferramentas como Claude Code), a transição deve ser majoritariamente invisível no curto prazo: os SDKs oficiais em TypeScript e Python continuam recebendo correções e atualizações de segurança na versão antiga por pelo menos seis meses após o lançamento da v2, dando tempo para migração gradual. Para quem constrói servidores MCP próprios, vale acompanhar o changelog oficial antes de atualizar SDKs em produção, já que mudanças de protocolo como essa costumam exigir ajustes deliberados de compatibilidade.</p>
+
+  <div class="divider"></div>
+
+  <div class="card">
+    <div class="card-title">Para fixar</div>
+    <p style="margin-bottom:0">A spec MCP 2026-07-28 muda o protocolo de "conexão com estado, sempre viva" para "requisições autocontidas, sem estado" — uma mudança pensada para escalar em infraestrutura serverless e de edge, reforçar autorização corporativa, e formalizar extensões como UIs embutidas e tarefas de longa duração. É uma mudança de arquitetura, não só uma feature nova, e por isso vem com quebra de compatibilidade que exige atenção de quem mantém servidores ou clientes MCP.</p>
+  </div>
+
+  <div class="footer">
+    Studiant — trilha IA Watch. Fontes consultadas em 29/07/2026:
+    <ul class="sources">
+      <li><a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/">blog.modelcontextprotocol.io — "The 2026-07-28 Specification"</a></li>
+      <li><a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog">modelcontextprotocol.io — Changelog oficial da spec 2026-07-28</a></li>
+      <li><a href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude">claude.com/blog — "MCP 2026-07-28 spec: stateless core, coming to Claude"</a></li>
+      <li><a href="https://www.theregister.com/devops/2026/07/23/model-context-protocol-prepares-to-break-with-its-stateful-past/">The Register (23/07/2026) — "Model Context Protocol prepares to break with its stateful past"</a></li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

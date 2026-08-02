@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studiant — IA Watch: Prompt engineering na prática</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #db2640;
+    --accent-soft: rgba(219, 38, 64, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 48px 0 16px;
+    color: #fff;
+  }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .col-pos { border-left: 3px solid #3fb950; }
+  .col-neg { border-left: 3px solid var(--accent); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+    color: #ff9fb0;
+    font-family: 'DM Sans', monospace;
+  }
+  pre {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    color: #d7d7dd;
+    white-space: pre-wrap;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th {
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .sources { list-style: none; padding: 0; margin: 10px 0 0; }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); text-decoration: underline; }
+  strong { color: #fff; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="eyebrow">Studiant · IA Watch · Prompt engineering na prática</div>
+  <h1>Prompt engineering em 2026: o que realmente mudou com modelos como o Opus 5</h1>
+  <p class="subtitle">A rotação de hoje aponta para prompt engineering — e não há nenhuma notícia de Anthropic/Claude relevante o suficiente hoje para furar a fila. O ponto interessante é que boa parte do que era "melhor prática" há dois ou três anos ficou obsoleto: modelos de raciocínio mudaram o jogo, e a própria Anthropic revisou seu guia oficial recentemente.</p>
+
+  <h2><span class="num">01</span>Por que prompt engineering ainda importa</h2>
+  <p>Com modelos cada vez mais capazes, é tentador achar que "basta pedir e o modelo entende". Na prática, a diferença entre uma instrução vaga e um prompt bem construído continua sendo a diferença entre precisar de várias idas e voltas para chegar no resultado certo, ou acertar de primeira. O guia oficial da Anthropic para 2026 resume bem: prompt engineering é a base sobre a qual se constrói algo mais amplo, chamado <strong>context engineering</strong> — gerenciar tudo que o modelo "vê" antes de responder, não só a última pergunta.</p>
+
+  <h2><span class="num">02</span>As técnicas que ainda funcionam bem</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Ser explícito:</strong> dizer exatamente o que se quer, sem esperar que o modelo infira. "Crie um dashboard" funciona pior que "crie um dashboard com o máximo de funcionalidades relevantes, indo além do básico".</li>
+      <li><strong>Dar contexto e motivação:</strong> explicar <em>por que</em> algo importa ajuda o modelo a tomar decisões melhores em casos ambíguos. Em vez de "nunca use bullet points", funciona melhor "prefiro texto corrido porque acho mais fácil de ler e mais conversacional".</li>
+      <li><strong>Ser específico:</strong> incluir restrições claras (tamanho, formato, prazo), o público-alvo e a estrutura de saída desejada.</li>
+      <li><strong>Usar exemplos (few-shot):</strong> mostrar em vez de só descrever, especialmente quando o formato ou o tom é difícil de explicar em palavras. A recomendação é começar com um exemplo só e adicionar mais apenas se necessário.</li>
+      <li><strong>Dar permissão para o modelo dizer "não sei":</strong> pedir explicitamente que ele admita incerteza em vez de arriscar uma resposta — isso reduz alucinação de forma simples e direta.</li>
+    </ul>
+  </div>
+
+  <h2><span class="num">03</span>Técnicas avançadas, para tarefas complexas</h2>
+  <div class="card">
+    <div class="card-title">Prefill (preencher o início da resposta)</div>
+    <p style="margin-bottom:0">Via API, é possível já "começar" a resposta do modelo — por exemplo, abrir com uma chave <code>{</code> para forçar uma saída em JSON puro, sem preâmbulo. Em interfaces de chat, o efeito parecido se consegue sendo bem explícito: "responda só com JSON válido, comece com uma chave de abertura".</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Chain of thought (raciocínio em etapas)</div>
+    <p style="margin-bottom:0">Pedir "pense passo a passo" antes da resposta final ajuda em tarefas analíticas complexas. Com modelos que já têm <em>extended thinking</em> nativo (como os da família Claude 4.x/5.x), essa técnica manual passa a ser menos necessária — mas ainda vale quando o raciocínio explícito precisa ser revisado por uma pessoa.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Encadeamento de prompts (prompt chaining)</div>
+    <p style="margin-bottom:0">Quebrar uma tarefa complexa em vários prompts sequenciais, onde a saída de um alimenta o próximo (resumir → revisar → melhorar com base no feedback). Aumenta a latência, mas melhora bastante a confiabilidade em tarefas de múltiplas etapas.</p>
+  </div>
+
+  <h2><span class="num">04</span>O que caiu em desuso</h2>
+  <p>O próprio guia da Anthropic é direto sobre isso: algumas técnicas populares há alguns anos perderam relevância com os modelos atuais.</p>
+  <div class="grid-2">
+    <div class="card col-neg">
+      <div class="card-title">Tags XML como estrutura</div>
+      <p style="margin-bottom:0">Antes recomendadas para separar seções de um prompt longo. Modelos atuais entendem estrutura bem só com títulos claros e espaçamento — XML ainda ajuda em casos extremos de conteúdo muito misto, mas deixou de ser regra geral.</p>
+    </div>
+    <div class="card col-neg">
+      <div class="card-title">Role prompting pesado</div>
+      <p style="margin-bottom:0">Definir uma persona elaborada ("você é um especialista renomado que nunca erra...") tende a adicionar ruído. Ser direto sobre a perspectiva desejada ("analise focando em risco e crescimento de longo prazo") costuma funcionar melhor que atribuir um papel.</p>
+    </div>
+  </div>
+
+  <h2><span class="num">05</span>Exemplo: antes e depois</h2>
+  <p>Uma tarefa simples de extração de dados mostra bem o efeito de combinar as técnicas certas.</p>
+  <pre>ANTES (vago):
+"Tira os dados financeiros desse relatório."
+
+DEPOIS (específico, com formato e permissão de incerteza):
+"Extraia as métricas financeiras deste relatório trimestral e
+apresente em JSON. A resposta deve conter APENAS JSON válido,
+sem preâmbulo. Use esta estrutura:
+{
+  \"receita\": \"valor com unidade\",
+  \"margem_lucro\": \"percentual\",
+  \"taxa_crescimento\": \"percentual\"
+}
+Se algum valor não estiver claro no relatório, use null em vez
+de arriscar um número. Comece a resposta com a chave de abertura: {"</pre>
+  <p>A versão "depois" combina cinco coisas ao mesmo tempo: instrução explícita, contexto sobre o motivo do formato, estrutura de exemplo, permissão para expressar incerteza e controle de formato via prefill. Nenhuma técnica isolada resolveria tudo — a combinação é que faz a diferença.</p>
+
+  <h2><span class="num">06</span>Erros comuns a evitar</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Superengenhar o prompt:</strong> prompt mais longo e complexo não é sinônimo de melhor resultado.</li>
+      <li><strong>Ignorar o básico:</strong> técnicas avançadas não compensam uma instrução central que já é vaga ou ambígua.</li>
+      <li><strong>Usar toda técnica de uma vez:</strong> escolher a combinação certa para o problema específico, não empilhar tudo por precaução.</li>
+      <li><strong>Não iterar:</strong> o primeiro prompt raramente é o ideal — testar e refinar é parte do processo.</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="card">
+    <div class="card-title">Para fixar</div>
+    <p style="margin-bottom:0">Prompt engineering não desapareceu com modelos mais inteligentes — ele virou a base de algo maior, o context engineering. As técnicas centrais (ser explícito, dar contexto, ser específico, usar exemplos, permitir incerteza) continuam valendo para o dia a dia; as avançadas (prefill, chain of thought, encadeamento) entram quando a tarefa exige formato rígido ou várias etapas de raciocínio. E vale desconfiar de dicas antigas sobre tags XML ou personas elaboradas — muita coisa mudou desde que essas práticas ficaram populares.</p>
+  </div>
+
+  <div class="footer">
+    Studiant — IA Watch, segunda lição diária.<br><br>
+    <strong>Fontes:</strong>
+    <ul class="sources">
+      <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank">Claude by Anthropic — "Best practices for prompt engineering for 2026"</a> (publicado em 10/11/2025, consultado em 28/07/2026)</li>
+      <li><a href="https://www.k2view.com/blog/prompt-engineering-techniques/" target="_blank">K2view — "Prompt engineering techniques: Top 6 for 2026"</a> (publicado em 28/04/2026, consultado em 28/07/2026)</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

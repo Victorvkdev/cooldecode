@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studiant — IA Watch: Panorama da indústria (30/07/2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #db2640;
+    --accent-soft: rgba(219, 38, 64, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
+  h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .col-pos { border-left: 3px solid #3fb950; }
+  .col-neg { border-left: 3px solid var(--accent); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ff9fb0; font-family: 'DM Sans', monospace; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-size: 13.5px; color: #d7d7dd; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--accent); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
+  .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  .sources { margin-top: 12px; padding-left: 18px; }
+  .sources li { color: var(--text-dim); font-size: 13px; margin-bottom: 4px; }
+  .sources a { color: var(--text-dim); }
+  strong { color: #fff; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="eyebrow">Studiant · IA Watch · Panorama da indústria</div>
+  <h1>OpenAI lança o GPT-5.6, Google atrasa o Gemini 3.5 Pro: o mapa da corrida em julho de 2026</h1>
+  <p class="subtitle">Julho de 2026 concentrou dois movimentos opostos: a OpenAI lançou publicamente uma nova família de modelos, enquanto o Google segurou o lançamento do concorrente direto por não estar satisfeito com a qualidade. Vale entender os dois casos junto — eles dizem muito sobre como o setor está competindo agora.</p>
+
+  <h2><span class="num">01</span>OpenAI: GPT-5.6 em três tamanhos</h2>
+  <p>Em 9 de julho de 2026, a OpenAI lançou publicamente a família <strong>GPT-5.6</strong>, dividida em três modelos: <strong>Sol</strong> (topo de linha), <strong>Terra</strong> (equilíbrio entre custo e capacidade, voltado para uso do dia a dia) e <strong>Luna</strong> (o mais rápido e barato). O lançamento só ocorreu após uma revisão do Departamento de Comércio dos EUA liberar o acesso amplo aos modelos.</p>
+  <div class="card">
+    <div class="card-title">Ficha técnica</div>
+    <ul style="margin-bottom:0">
+      <li><strong>Contexto:</strong> até 1,05 milhão de tokens no Sol, com até 128 mil tokens de saída</li>
+      <li><strong>Preço (API, por milhão de tokens de entrada/saída):</strong> Sol US$ 5 / US$ 30 · Terra US$ 2,5 / US$ 15 · Luna US$ 1 / US$ 6</li>
+      <li><strong>Novidade de cobrança:</strong> passou a existir preço para "escrever" no cache, além do desconto de 90% já existente para "ler" do cache</li>
+      <li><strong>Recursos novos:</strong> chamadas de ferramenta programáticas, orquestração multiagente e pontos de corte de cache configuráveis</li>
+    </ul>
+  </div>
+  <p>O ponto que mais chamou atenção fora da ficha técnica: relatos de benchmarks independentes colocaram o GPT-5.6 à frente do Claude Fable 5 em tarefas agentivas de longa duração — ou seja, tarefas onde o modelo precisa manter contexto e tomar múltiplas decisões encadeadas ao longo do tempo, não só responder uma pergunta isolada.</p>
+
+  <h2><span class="num">02</span>Google: o Gemini 3.5 Pro que não saiu</h2>
+  <p>Enquanto isso, o Google vive o cenário oposto. O CEO Sundar Pichai havia sinalizado em maio que o Gemini 3.5 Pro chegaria em junho de 2026. O prazo passou, e até 21 de julho o modelo simplesmente não existia no catálogo oficial do Google — o topo de linha "Pro" seguia sendo o Gemini 3.1 Pro (Preview) e o Gemini 2.5 Pro (estável), com apenas o Gemini 3.5 <em>Flash</em> disponível.</p>
+  <p>O motivo apontado por testadores internos: o Pro estava ficando atrás do <strong>Claude Fable 5</strong> e do <strong>GPT-5.6</strong> em raciocínio avançado, código e tarefas de longo horizonte, além de problemas de eficiência de tokens. O Google atualizou os dados de treinamento no mês anterior tentando resolver isso, mas o resultado não convenceu — e a empresa preferiu segurar o lançamento a entregar um modelo abaixo do esperado. O mercado reagiu: as ações da Alphabet caíram quase 3% no dia em que a notícia veio a público (16 de julho).</p>
+
+  <h2><span class="num">03</span>Por que isso importa</h2>
+  <div class="grid-2">
+    <div class="card col-pos">
+      <div class="card-title" style="color:#3fb950">O que o caso OpenAI mostra</div>
+      <ul style="margin-bottom:0">
+        <li>A corrida virou sobre <strong>tarefas agentivas longas</strong>, não só qualidade de resposta pontual</li>
+        <li>Segmentação por preço (três tamanhos) virou padrão de mercado, não diferencial</li>
+        <li>Regulação de exportação/governo já é parte real do calendário de lançamento de modelos de ponta</li>
+      </ul>
+    </div>
+    <div class="card col-neg">
+      <div class="card-title">O que o caso Google mostra</div>
+      <ul style="margin-bottom:0">
+        <li>Nem toda gigante consegue "responder rápido" a um concorrente sem sacrificar qualidade</li>
+        <li>Coding e raciocínio de longo horizonte viraram os benchmarks que decidem reputação, não só métricas genéricas</li>
+        <li>Atraso público de modelo já tem impacto direto e mensurável no valor de mercado da empresa</li>
+      </ul>
+    </div>
+  </div>
+  <p>Para quem acompanha essas ferramentas no dia a dia (você, por exemplo, usando Claude em fluxos de desenvolvimento), o recado prático é: a distância entre os modelos de ponta está estreita e muda de mês a mês. Vale menos apostar fielmente em "o modelo X é sempre melhor" e mais acompanhar, tarefa por tarefa, qual ferramenta performa melhor no que você realmente precisa fazer.</p>
+
+  <div class="divider"></div>
+  <div class="footer">
+    <strong>Fontes consultadas (30/07/2026):</strong>
+    <ul class="sources">
+      <li><a href="https://openai.com/index/previewing-gpt-5-6-sol/">openai.com — Previewing GPT-5.6 Sol</a></li>
+      <li><a href="https://gcn.com/gpt-5-6-openai-launches-publicly/20242/">gcn.com — OpenAI GPT-5.6 launches publicly (jul/2026)</a></li>
+      <li><a href="https://www.techdogs.com/tech-news/td-newsdesk/openai-launches-gpt-56-sol-terra-and-luna-globally">techdogs.com — OpenAI Launches GPT-5.6 Sol, Terra and Luna</a></li>
+      <li><a href="https://winbuzzer.com/2026/07/20/google-reportedly-delays-gemini-35-pro-over-coding-issues-xcxwbn/">winbuzzer.com — Google delays Gemini 3.5 Pro over coding issues (20/07/2026)</a></li>
+      <li><a href="https://www.androidheadlines.com/2026/07/google-gemini-3-5-pro-model-delayed-coding-issues.html">androidheadlines.com — Gemini 3.5 Pro delayed as coding performance falls short</a></li>
+      <li><a href="https://www.timesofai.com/news/why-google-delayed-gemini-3-5-pro-ai-model/">timesofai.com — Why Google delayed Gemini 3.5 Pro</a></li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

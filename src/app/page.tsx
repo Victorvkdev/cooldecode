@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 type Lang = "en" | "pt";
+
+// TODO(Vk): create a free account at https://formspree.io (or Buttondown),
+// create a form, and replace this with your real form endpoint.
+// Until then, the newsletter form below will show an error on submit —
+// that's expected, it's just not wired to a real inbox yet.
+const NEWSLETTER_FORM_ACTION = "https://formspree.io/f/YOUR_FORM_ID";
 
 const t = {
   tagline: {
@@ -13,12 +19,36 @@ const t = {
     en: "Every post has its own EN/PT toggle inside — pick a language once you open it.",
     pt: "Cada post tem seu próprio botão EN/PT dentro dele — escolha o idioma ao abrir.",
   },
+  searchPlaceholder: { en: "Search posts...", pt: "Buscar posts..." },
+  noResults: {
+    en: "No posts match your search.",
+    pt: "Nenhum post encontrado pra essa busca.",
+  },
   mainTrack: { en: "Main track", pt: "Trilha principal" },
   aiWatch: { en: "AI Watch", pt: "IA Watch" },
   deepDives: { en: "Deep dives", pt: "Imersões" },
   comingSoon: {
     en: "More posts coming soon: Git & GitHub, other databases, AWS, more languages to watch, API integration.",
     pt: "Mais posts chegando: Git & GitHub, outros bancos de dados, AWS, outras linguagens para acompanhar, integração de APIs.",
+  },
+  newsletterTitle: {
+    en: "Learn what AI is creating for you. Don't get lost.",
+    pt: "Saiba o que a IA está criando pra você. Não fique por fora.",
+  },
+  newsletterDesc: {
+    en: "Get notified when a new deep dive or lesson goes up. No spam, just new posts.",
+    pt: "Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.",
+  },
+  newsletterPlaceholder: { en: "you@email.com", pt: "voce@email.com" },
+  newsletterButton: { en: "Notify me", pt: "Avisar" },
+  newsletterSending: { en: "Sending...", pt: "Enviando..." },
+  newsletterSuccess: {
+    en: "You're on the list — thanks!",
+    pt: "Você está na lista — obrigado!",
+  },
+  newsletterError: {
+    en: "Couldn't sign up right now. Try again later.",
+    pt: "Não deu pra cadastrar agora. Tenta de novo mais tarde.",
   },
 } as const;
 
@@ -140,8 +170,79 @@ function formatDate(iso: string, lang: Lang) {
   return lang === "en" ? `${m}/${d}/${y}` : `${d}/${m}/${y}`;
 }
 
+function NewsletterSignup({ lang }: { lang: Lang }) {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("sending");
+    try {
+      const res = await fetch(NEWSLETTER_FORM_ACTION, {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div className="bg-card border border-border rounded-2xl p-6 mb-10">
+      <div className="font-[family-name:var(--font-heading)] font-bold text-white text-lg mb-1.5">
+        {t.newsletterTitle[lang]}
+      </div>
+      <p className="text-sm text-foreground-dim mb-4">{t.newsletterDesc[lang]}</p>
+
+      {status === "success" ? (
+        <p className="text-sm text-accent font-medium">{t.newsletterSuccess[lang]}</p>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t.newsletterPlaceholder[lang]}
+            className="flex-1 bg-card-2 border border-border rounded-lg px-3 py-2 text-sm text-white placeholder:text-foreground-dim outline-none focus:border-accent"
+          />
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="bg-accent text-white text-sm font-medium rounded-lg px-4 py-2 hover:opacity-90 transition-opacity disabled:opacity-60"
+          >
+            {status === "sending" ? t.newsletterSending[lang] : t.newsletterButton[lang]}
+          </button>
+        </form>
+      )}
+      {status === "error" && (
+        <p className="text-xs text-foreground-dim mt-2">{t.newsletterError[lang]}</p>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>("en");
+  const [query, setQuery] = useState("");
+
+  const filteredPosts = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return posts;
+    return posts.filter((p) =>
+      [p.title[lang], p.desc[lang], p.categoryLabel[lang]].some((field) =>
+        field.toLowerCase().includes(q)
+      )
+    );
+  }, [query, lang]);
 
   return (
     <main className="flex-1">
@@ -178,36 +279,52 @@ export default function Home() {
         </h1>
         <p className="text-foreground-dim text-base max-w-xl mb-8">{t.tagline[lang]}</p>
 
-        <p className="text-xs text-foreground-dim bg-card-2 border border-border rounded-lg px-4 py-3 mb-12">
+        <p className="text-xs text-foreground-dim bg-card-2 border border-border rounded-lg px-4 py-3 mb-8">
           {t.langNote[lang]}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          {categoryOrder.flatMap((cat) =>
-            posts
-              .filter((p) => p.category === cat)
-              .map((post) => (
-                <a
-                  key={post.file}
-                  href={`/lessons/${post.file}`}
-                  className="group block bg-card border border-border rounded-2xl p-5 hover:border-accent transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="inline-block text-[11px] font-bold uppercase tracking-wide text-accent bg-accent-soft rounded-full px-2.5 py-1">
-                      {post.categoryLabel[lang]}
-                    </span>
-                    <span className="text-xs text-foreground-dim">{formatDate(post.date, lang)}</span>
-                  </div>
-                  <div className="font-[family-name:var(--font-heading)] font-bold text-white text-lg mb-1.5 group-hover:text-accent transition-colors">
-                    {post.title[lang]}
-                  </div>
-                  <div className="text-sm text-foreground-dim leading-relaxed">
-                    {post.desc[lang]}
-                  </div>
-                </a>
-              ))
-          )}
+        <NewsletterSignup lang={lang} />
+
+        <div className="relative mb-8">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={t.searchPlaceholder[lang]}
+            className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-foreground-dim outline-none focus:border-accent"
+          />
         </div>
+
+        {filteredPosts.length === 0 ? (
+          <p className="text-sm text-foreground-dim text-center py-10 mb-10">{t.noResults[lang]}</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            {categoryOrder.flatMap((cat) =>
+              filteredPosts
+                .filter((p) => p.category === cat)
+                .map((post) => (
+                  <a
+                    key={post.file}
+                    href={`/lessons/${post.file}`}
+                    className="group block bg-card border border-border rounded-2xl p-5 hover:border-accent transition-colors"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="inline-block text-[11px] font-bold uppercase tracking-wide text-accent bg-accent-soft rounded-full px-2.5 py-1">
+                        {post.categoryLabel[lang]}
+                      </span>
+                      <span className="text-xs text-foreground-dim">{formatDate(post.date, lang)}</span>
+                    </div>
+                    <div className="font-[family-name:var(--font-heading)] font-bold text-white text-lg mb-1.5 group-hover:text-accent transition-colors">
+                      {post.title[lang]}
+                    </div>
+                    <div className="text-sm text-foreground-dim leading-relaxed">
+                      {post.desc[lang]}
+                    </div>
+                  </a>
+                ))
+            )}
+          </div>
+        )}
 
         <p className="text-xs text-foreground-dim text-center">{t.comingSoon[lang]}</p>
 
