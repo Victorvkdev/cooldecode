@@ -152,7 +152,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/04-introducao-ao-react.html">
+<meta property="og:title" content="Cooldecode — Lesson 04: Introduction to React">
+<meta property="og:description" content="Last lesson we looked at when it's worth trading plain HTML/CSS/JS for a framework. Today we actually get into the most popular one: React. The goal here…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/04-introducao-ao-react.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — Lesson 04: Introduction to React">
+<meta name="twitter:description" content="Last lesson we looked at when it's worth trading plain HTML/CSS/JS for a framework. Today we actually get into the most popular one: React. The goal here…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrap">
@@ -271,7 +288,13 @@ function Greeting() {
       <p style="margin-bottom:0">React solves the problem of keeping the screen in sync with the application's data, trading manual DOM manipulation for a declarative description of the interface. Components are the unit of reuse, props are the data coming in from outside, and state is the memory the component itself controls. This trio — component, props, state — is the foundation for everything that comes next in React, including the more advanced hooks.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -393,7 +416,13 @@ function Saudacao() {
       <p style="margin-bottom:0">React resolve o problema de manter a tela sincronizada com os dados da aplicação, trocando manipulação manual do DOM por uma descrição declarativa da interface. Componentes são a unidade de reuso, props são os dados que entram de fora, e state é a memória que o próprio componente controla. Esse trio — componente, props, state — é a base para tudo que vem depois no React, incluindo os hooks mais avançados.</p>
     </div>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -458,6 +487,15 @@ function Saudacao() {
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 

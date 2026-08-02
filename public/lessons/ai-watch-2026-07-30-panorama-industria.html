@@ -70,7 +70,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-30-panorama-industria.html">
+<meta property="og:title" content="Cooldecode — AI Watch: Industry landscape (07/30/2026)">
+<meta property="og:description" content="July 2026 saw two opposite moves: OpenAI publicly launched a new model family, while Google held back its direct competitor over quality concerns. Worth…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-07-30-panorama-industria.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: Industry landscape (07/30/2026)">
+<meta name="twitter:description" content="July 2026 saw two opposite moves: OpenAI publicly launched a new model family, while Google held back its direct competitor over quality concerns. Worth…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrap">
@@ -129,7 +146,13 @@
     <p>For anyone following these tools day to day (you, for example, using Claude in development workflows), the practical takeaway is: the gap between frontier models is narrow and shifts month to month. It's worth betting less on "model X is always better" and more on tracking, task by task, which tool actually performs best on what you need to do.</p>
 
     <div class="divider"></div>
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -197,7 +220,13 @@
     <p>Para quem acompanha essas ferramentas no dia a dia (você, por exemplo, usando Claude em fluxos de desenvolvimento), o recado prático é: a distância entre os modelos de ponta está estreita e muda de mês a mês. Vale menos apostar fielmente em "o modelo X é sempre melhor" e mais acompanhar, tarefa por tarefa, qual ferramenta performa melhor no que você realmente precisa fazer.</p>
 
     <div class="divider"></div>
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -267,6 +296,15 @@
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 

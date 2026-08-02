@@ -179,7 +179,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/03-html-css-js-puro-vs-frameworks.html">
+<meta property="og:title" content="Cooldecode — Lesson 03: Plain HTML/CSS/JS vs frameworks">
+<meta property="og:description" content="After understanding what runs on the frontend and what runs on the backend, the next question is: do you really need a framework to build the visual…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/03-html-css-js-puro-vs-frameworks.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — Lesson 03: Plain HTML/CSS/JS vs frameworks">
+<meta name="twitter:description" content="After understanding what runs on the frontend and what runs on the backend, the next question is: do you really need a framework to build the visual…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrap">
@@ -283,7 +300,13 @@ function Counter() {
       <p style="margin-bottom:0">A framework isn't "better" than vanilla in absolute terms — it's a trade-off: more structure and productivity on complex projects, in exchange for more weight and one more layer of abstraction to learn. Neither one replaces understanding plain HTML, CSS, and JavaScript, which remain the foundation of everything that comes after, including how the framework itself works under the hood.</p>
     </div>
 
-        <div class="card">
+            <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -390,7 +413,13 @@ function Contador() {
       <p style="margin-bottom:0">Framework não é "melhor" que vanilla em absoluto — é uma troca: mais estrutura e produtividade em projetos complexos, em troca de mais peso e uma camada de abstração a mais para aprender. Nenhum dos dois substitui entender HTML, CSS e JavaScript puros, que continuam sendo a base de tudo o que vem depois, inclusive de como o próprio framework funciona por dentro.</p>
     </div>
 
-        <div class="card">
+            <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -455,6 +484,15 @@ function Contador() {
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 

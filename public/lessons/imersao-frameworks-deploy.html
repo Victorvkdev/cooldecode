@@ -57,7 +57,24 @@
   .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
   .newsletter-msg.success { color: var(--accent); font-weight:700; }
   .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
 </style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/imersao-frameworks-deploy.html">
+<meta property="og:title" content="Cooldecode — Deep dive: Frameworks &amp; deploy presets">
+<meta property="og:description" content="Triggered by the giant &quot;Application Preset&quot; dropdown on Vercel's import screen — Angular, Astro, Django, Vite, Vue and 60+ more. Grouped by what each one…">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/imersao-frameworks-deploy.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — Deep dive: Frameworks &amp; deploy presets">
+<meta name="twitter:description" content="Triggered by the giant &quot;Application Preset&quot; dropdown on Vercel's import screen — Angular, Astro, Django, Vite, Vue and 60+ more. Grouped by what each one…">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
 </head>
 <body>
 <div class="wrapper">
@@ -202,7 +219,13 @@
     </div>
     <p>The trap to avoid: picking a framework because it's unfamiliar and "looks interesting" in a dropdown. Almost every name in that list is solving a problem some other name on the same list already solves for your specific stack — the real decision is usually just "which UI library / language does my team already know", and the rest follows from that.</p>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
       <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
@@ -345,7 +368,13 @@
     </div>
     <p>A armadilha pra evitar: escolher um framework porque é desconhecido e "parece interessante" num dropdown. Quase todo nome nessa lista resolve um problema que algum outro nome da mesma lista já resolve pro seu stack específico — a decisão real geralmente é só "qual biblioteca de UI / linguagem meu time já conhece", e o resto decorre disso.</p>
 
-    <div class="card">
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
       <div class="card-title">Newsletter</div>
       <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
       <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
@@ -416,6 +445,15 @@
       btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
     });
     return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
   }
 </script>
 
