@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -14,9 +15,40 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "700"],
 });
 
+const siteUrl = "https://cooldecode-beryl.vercel.app";
+const title = "Cooldecode";
+const description =
+  "Learn what AI is creating for you. Don't get lost. A personal learning blog for frontend, backend, tooling and AI — one post at a time.";
+
 export const metadata: Metadata = {
-  title: "Cooldecode",
-  description: "Hub de estudos em tecnologia — trilhas, módulos e acompanhamento de IA.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: title,
+    template: "%s · Cooldecode",
+  },
+  description,
+  openGraph: {
+    title,
+    description,
+    url: siteUrl,
+    siteName: "Cooldecode",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Cooldecode — Learn what AI is creating for you. Don't get lost.",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/opengraph-image"],
+  },
 };
 
 export default function RootLayout({
@@ -31,6 +63,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
+        <Analytics />
       </body>
     </html>
   );
