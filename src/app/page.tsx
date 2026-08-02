@@ -120,6 +120,17 @@ const posts: Post[] = [
     date: "2026-07-26",
     file: "imersao-nextjs-react.html",
   },
+  {
+    category: "deep",
+    categoryLabel: { en: "Deep dive", pt: "Imersão" },
+    title: { en: "Frameworks & deploy presets", pt: "Frameworks e presets de deploy" },
+    desc: {
+      en: "Every framework in Vercel's import dropdown, grouped by what it actually solves.",
+      pt: "Todo framework do dropdown de import do Vercel, agrupado pelo que resolve de fato.",
+    },
+    date: "2026-08-02",
+    file: "imersao-frameworks-deploy.html",
+  },
 ];
 
 const categoryOrder: Post["category"][] = ["main", "ai", "deep"];

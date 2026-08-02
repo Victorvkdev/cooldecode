@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Deep dive: Frameworks &amp; deploy presets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Deep dive · Frameworks &amp; deploy presets</span>
+      <h1>Frameworks and deploy presets, mapped</h1>
+      <p class="subtitle">Triggered by the giant "Application Preset" dropdown on Vercel's import screen — Angular, Astro, Django, Vite, Vue and 60+ more. Grouped by what each one actually solves, not alphabetically.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#big-picture">The big picture: 4 kinds of tools in that list</a></li>
+        <li><a href="#meta-react">Full-stack meta-frameworks — React family</a></li>
+        <li><a href="#meta-other">Full-stack meta-frameworks — Vue, Svelte, Solid &amp; others</a></li>
+        <li><a href="#spa-build">Plain SPA build tools (no meta-framework)</a></li>
+        <li><a href="#component">Component frameworks without a bundled meta-layer</a></li>
+        <li><a href="#static-gen">Static site / content generators</a></li>
+        <li><a href="#backend">Backend / API frameworks</a></li>
+        <li><a href="#niche">Everything else: niche, legacy, and generic</a></li>
+        <li><a href="#how-to-choose">How to actually choose, in practice</a></li>
+      </ol>
+    </div>
+
+    <h2 id="big-picture">1. The big picture: 4 kinds of tools in that list</h2>
+    <p>That dropdown mixes tools that solve completely different problems, which is exactly why it looks overwhelming. Almost everything in it falls into one of four buckets:</p>
+    <ul>
+      <li><strong>Meta-frameworks</strong> — sit on top of a UI library (React, Vue, Svelte...) and add routing, rendering strategy (SSR/SSG), and a build pipeline. Example: Next.js on top of React.</li>
+      <li><strong>Plain build tools / SPA scaffolds</strong> — just bundle a client-side app, no server rendering or file-based routing built in. Example: Vite, Create React App.</li>
+      <li><strong>Static site / content generators</strong> — turn markdown/content files into static HTML at build time, aimed at blogs, docs, and marketing sites, not app-like interactivity. Example: Hugo, Astro, Docusaurus.</li>
+      <li><strong>Backend / API frameworks</strong> — run entirely on the server, no bundled front-end story. Example: Django, Express, FastAPI.</li>
+    </ul>
+    <p>Once you know which bucket a name belongs to, you already know 80% of what it's for — the rest is just details.</p>
+
+    <h2 id="meta-react">2. Full-stack meta-frameworks — React family</h2>
+    <table>
+      <tr><th>Name</th><th>What it is</th><th>When it fits</th></tr>
+      <tr><td><strong>Next.js</strong></td><td>The dominant React meta-framework. File-based routing, Server/Client Components, SSR/SSG/ISR, made by Vercel — deepest integration with Vercel itself.</td><td>Default choice for React apps that need SEO, mixed rendering, or just want the most support/ecosystem/tutorials available.</td></tr>
+      <tr><td><strong>Remix / React Router (v7)</strong></td><td>React meta-framework focused on web fundamentals (forms, HTTP, nested routing) over heavy build-time optimization. React Router absorbed Remix's framework mode.</td><td>Teams that want SSR with less "magic" and more direct control over data loading per route.</td></tr>
+      <tr><td><strong>Gatsby</strong></td><td>React framework focused on static generation at build time, historically GraphQL-centric for pulling data from any source into static pages.</td><td>Content-heavy sites where nearly everything can be pre-built — lost ground to Next.js/Astro in recent years.</td></tr>
+      <tr><td><strong>RedwoodJS</strong></td><td>Opinionated full-stack framework bundling React + GraphQL + Prisma (database ORM) in one project structure.</td><td>Teams that want a "Rails-like" all-in-one full-stack answer specifically for React + GraphQL.</td></tr>
+      <tr><td><strong>Blitz.js (Legacy)</strong></td><td>Was a "Next.js + batteries" full-stack framework (rpc-style data layer instead of REST/GraphQL). Marked legacy — community has largely moved on.</td><td>Mostly maintaining existing projects; not a starting point for new ones today.</td></tr>
+      <tr><td><strong>TanStack Start</strong></td><td>Newer full-stack React framework built around TanStack Router/Query, type-safety-first philosophy.</td><td>Teams already deep in the TanStack ecosystem (Query, Table, Router) wanting one cohesive stack.</td></tr>
+    </table>
+
+    <h2 id="meta-other">3. Full-stack meta-frameworks — Vue, Svelte, Solid &amp; others</h2>
+    <table>
+      <tr><th>Name</th><th>Equivalent to</th><th>Notes</th></tr>
+      <tr><td><strong>Nuxt</strong></td><td>Next.js, for Vue</td><td>File-based routing, SSR/SSG, auto-imports. The default choice if your team already knows Vue.</td></tr>
+      <tr><td><strong>SvelteKit</strong> (and legacy <strong>Sapper</strong>)</td><td>Next.js, for Svelte</td><td>Svelte compiles away a lot of runtime JS, so apps tend to ship less client-side code than the React/Vue equivalents.</td></tr>
+      <tr><td><strong>SolidStart</strong> (v0/v1)</td><td>Next.js, for SolidJS</td><td>SolidJS keeps a React-like syntax but with a fundamentally different (compiled, no virtual DOM) reactivity model — SolidStart is its official meta-framework.</td></tr>
+      <tr><td><strong>Hydrogen</strong> (v1)</td><td>Next.js, but Shopify-specific</td><td>React meta-framework purpose-built for Shopify storefronts — not a general-purpose choice.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Pattern to notice:</strong> almost every UI library eventually grows its own "Next.js equivalent" once it becomes popular enough that people want SSR/routing solved for them. Whichever UI library your team knows best, there's very likely already a meta-framework for it.
+    </div>
+
+    <h2 id="spa-build">4. Plain SPA build tools (no meta-framework)</h2>
+    <table>
+      <tr><th>Name</th><th>What it is</th></tr>
+      <tr><td><strong>Vite</strong></td><td>The modern default. Fast dev server (native ES modules, no bundling in dev), Rollup-based production build. Framework-agnostic — works with React, Vue, Svelte, plain JS.</td></tr>
+      <tr><td><strong>Create React App</strong></td><td>The historical default for bootstrapping a plain React SPA. Effectively unmaintained/deprecated by the React team in favor of Vite or a meta-framework.</td></tr>
+      <tr><td><strong>Parcel</strong></td><td>Zero-config bundler, another Webpack alternative, less common than Vite today but still used in some projects valuing near-zero setup.</td></tr>
+      <tr><td><strong>Brunch</strong></td><td>An older, less-configuration build tool from before Webpack/Vite dominance — rarely a first choice today, shows up mostly in legacy projects.</td></tr>
+      <tr><td><strong>UmiJS</strong></td><td>A React application framework popular in the Chinese dev ecosystem (built by Ant Design's team) bundling routing + build tooling.</td></tr>
+    </table>
+    <p>The thing all of these share: no server rendering, no file-based routing baked in — you get a client-side app and choose your own libraries for the rest (this is exactly the layer discussed in Module 1's Vite/Webpack/Next.js build-tool deep dive).</p>
+
+    <h2 id="component">5. Component frameworks without a bundled meta-layer</h2>
+    <table>
+      <tr><th>Name</th><th>Category</th><th>Notes</th></tr>
+      <tr><td><strong>Angular</strong></td><td>Full front-end framework (not just a library like React)</td><td>Batteries-included: routing, forms, HTTP client, dependency injection all built in, opinionated structure. Common in large enterprise teams that value convention and TypeScript-first design.</td></tr>
+      <tr><td><strong>Vue.js</strong></td><td>UI library (like React), Nuxt is its meta-framework</td><td>Template-based syntax (closer to plain HTML than JSX), often considered an easier on-ramp than React for beginners.</td></tr>
+      <tr><td><strong>Svelte</strong></td><td>UI library/compiler, SvelteKit is its meta-framework</td><td>Compiles components into vanilla JS at build time instead of shipping a runtime library — smaller bundles.</td></tr>
+      <tr><td><strong>Preact</strong></td><td>Lightweight React-API-compatible alternative</td><td>Same API surface as React at a fraction of the bundle size — used when every kilobyte matters (embeds, low-end devices).</td></tr>
+      <tr><td><strong>Ember.js</strong></td><td>Full front-end framework, older generation</td><td>Convention-heavy, was very popular pre-React; still maintained, niche today outside of existing large Ember codebases.</td></tr>
+      <tr><td><strong>Stencil</strong></td><td>Compiler for Web Components</td><td>Generates framework-agnostic custom elements — useful for shipping a component library usable from React, Vue, Angular, or plain HTML alike.</td></tr>
+      <tr><td><strong>Polymer</strong>, <strong>Dojo</strong></td><td>Older Web Components / MVC frameworks</td><td>Mostly historical relevance today; you'll encounter them maintaining legacy projects, not starting new ones.</td></tr>
+    </table>
+
+    <h2 id="static-gen">6. Static site / content generators</h2>
+    <p>These are aimed at content that doesn't change per-user — blogs, docs, marketing sites — where the whole page can be built once and served as static files.</p>
+    <table>
+      <tr><th>Name</th><th>Language/stack</th><th>Best known for</th></tr>
+      <tr><td><strong>Astro</strong></td><td>JS/TS, any UI library as "islands"</td><td>Ships zero JS by default, only hydrates the specific interactive components you mark — very popular for content sites that need a little bit of interactivity.</td></tr>
+      <tr><td><strong>Hugo</strong></td><td>Go</td><td>Extremely fast builds even on huge sites; a common choice for large documentation/blog sites.</td></tr>
+      <tr><td><strong>Jekyll</strong></td><td>Ruby</td><td>The original "static site generator", still the engine behind GitHub Pages' default setup.</td></tr>
+      <tr><td><strong>Eleventy (11ty)</strong></td><td>JS</td><td>Minimal, unopinionated — you bring your own templating language.</td></tr>
+      <tr><td><strong>Docusaurus</strong> (v1/v2+)</td><td>React</td><td>Purpose-built for documentation sites (versioning, search, sidebars out of the box) — made by Meta, used by many open source docs.</td></tr>
+      <tr><td><strong>VuePress</strong> / <strong>VitePress</strong></td><td>Vue</td><td>Same idea as Docusaurus, for the Vue ecosystem; VitePress is the newer, Vite-powered successor.</td></tr>
+      <tr><td><strong>Gridsome</strong>, <strong>Saber</strong>, <strong>Scully</strong></td><td>Vue / React / Angular</td><td>Framework-specific static generators (Gridsome = Vue, Saber = React, Scully = Angular) — smaller communities than the leaders above.</td></tr>
+      <tr><td><strong>Hexo</strong>, <strong>Middleman</strong>, <strong>Zola</strong></td><td>JS / Ruby / Rust</td><td>Blog-oriented static generators, popular in specific niches/communities more than mainstream product sites.</td></tr>
+    </table>
+
+    <h2 id="backend">7. Backend / API frameworks</h2>
+    <p>These run only on a server — no bundled front-end. Some ship HTML themselves (Django, Flask), others exist purely as JSON APIs consumed by a separate front-end (Express, FastAPI, NestJS).</p>
+    <table>
+      <tr><th>Name</th><th>Language</th><th>Notes</th></tr>
+      <tr><td><strong>Django</strong></td><td>Python</td><td>Covered in depth in Module 1's extra material — full-stack, batteries-included, admin panel auto-generated from models.</td></tr>
+      <tr><td><strong>Flask</strong></td><td>Python</td><td>Minimal, unopinionated Python framework — you assemble the pieces yourself, opposite philosophy from Django.</td></tr>
+      <tr><td><strong>FastAPI</strong></td><td>Python</td><td>Modern, async-first, automatic OpenAPI/docs generation from type hints — has become the default for Python-based JSON APIs, especially ML/AI-adjacent services.</td></tr>
+      <tr><td><strong>FastHTML</strong></td><td>Python</td><td>Newer approach: write server-rendered HTML directly from Python without a separate templating language or front-end framework.</td></tr>
+      <tr><td><strong>Express</strong></td><td>Node.js/JS</td><td>The long-standing minimal default for Node APIs — small core, huge middleware ecosystem.</td></tr>
+      <tr><td><strong>NestJS</strong></td><td>Node.js/TS</td><td>Opinionated, Angular-inspired structure (modules, decorators, dependency injection) on top of Express/Fastify — popular for larger Node backend teams.</td></tr>
+      <tr><td><strong>Fastify</strong></td><td>Node.js/JS</td><td>Performance-focused Express alternative, schema-based validation built in.</td></tr>
+      <tr><td><strong>Koa</strong></td><td>Node.js/JS</td><td>From the original Express team, smaller core relying more on middleware composition (async/await-first design).</td></tr>
+      <tr><td><strong>Hono</strong>, <strong>Elysia</strong>, <strong>H3</strong>, <strong>Nitro</strong></td><td>JS/TS (edge-first)</td><td>Newer, lightweight frameworks designed to run well on edge runtimes (Vercel Edge, Cloudflare Workers) — smaller footprint than Express/Nest.</td></tr>
+      <tr><td><strong>Go</strong>, <strong>Node</strong>, <strong>Python</strong> (generic)</td><td>—</td><td>These generic entries mean "just run this raw runtime", for projects not using a named framework at all.</td></tr>
+    </table>
+
+    <h2 id="niche">8. Everything else: niche, legacy, and generic</h2>
+    <p>A handful of entries don't fit the categories above cleanly:</p>
+    <ul>
+      <li><strong>Ionic Angular / Ionic React</strong> — hybrid mobile app frameworks (build once, run as an app via a WebView wrapper), using Angular or React as the UI layer.</li>
+      <li><strong>Storybook</strong> — not a website framework at all, it's a tool for developing and documenting UI components in isolation. Appears here because it can also be deployed as a static site (the component catalog itself).</li>
+      <li><strong>Sanity</strong> (v2/v3) — a headless CMS with its own studio/admin app that can be deployed like a front-end project.</li>
+      <li><strong>Mastra</strong>, <strong>xmcp</strong> — newer frameworks for building AI agents / MCP servers, not traditional websites — included because Vercel now hosts these workloads too.</li>
+      <li><strong>Services</strong>, <strong>Container</strong>, <strong>Other</strong> — generic presets for anything Vercel can't auto-detect a specific framework for (a Dockerfile-based project, a background service, etc).</li>
+    </ul>
+
+    <h2 id="how-to-choose">9. How to actually choose, in practice</h2>
+    <div class="callout">
+      <strong>If you're building an interactive product/app</strong> (dashboard, SaaS, anything with logins and dynamic data): pick a meta-framework matching the UI library your team knows — Next.js for React (the safest default today), Nuxt for Vue, SvelteKit for Svelte.
+    </div>
+    <div class="callout">
+      <strong>If you're building a content site</strong> (blog, docs, marketing/landing page with little interactivity): reach for a static site generator instead of a full meta-framework — Astro if you want some interactive components mixed in, Hugo/Eleventy if you want it as fast and minimal as possible.
+    </div>
+    <div class="callout">
+      <strong>If you're building a pure API</strong> consumed by a separate front-end: match the language your team/data science stack already uses — FastAPI or Django if Python, Express/Fastify/NestJS if Node, and consider the edge-first options (Hono, Elysia) only if latency at the edge is an explicit requirement.
+    </div>
+    <p>The trap to avoid: picking a framework because it's unfamiliar and "looks interesting" in a dropdown. Almost every name in that list is solving a problem some other name on the same list already solves for your specific stack — the real decision is usually just "which UI library / language does my team already know", and the rest follows from that.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Imersão · Frameworks e presets de deploy</span>
+      <h1>Frameworks e presets de deploy, mapeados</h1>
+      <p class="subtitle">Motivado pelo dropdown gigante de "Application Preset" na tela de import do Vercel — Angular, Astro, Django, Vite, Vue e mais de 60 outros. Agrupado pelo que cada um resolve de fato, não em ordem alfabética.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#panorama">O panorama geral: 4 tipos de ferramenta nessa lista</a></li>
+        <li><a href="#meta-react-pt">Meta-frameworks fullstack — família React</a></li>
+        <li><a href="#meta-outros-pt">Meta-frameworks fullstack — Vue, Svelte, Solid e outros</a></li>
+        <li><a href="#spa-build-pt">Ferramentas de build de SPA puro (sem meta-framework)</a></li>
+        <li><a href="#componente-pt">Frameworks de componente sem camada de meta-framework</a></li>
+        <li><a href="#static-gen-pt">Geradores de site estático / conteúdo</a></li>
+        <li><a href="#backend-pt">Frameworks de backend / API</a></li>
+        <li><a href="#nicho-pt">Todo o resto: nicho, legado e genérico</a></li>
+        <li><a href="#como-escolher">Como escolher de verdade, na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="panorama">1. O panorama geral: 4 tipos de ferramenta nessa lista</h2>
+    <p>Esse dropdown mistura ferramentas que resolvem problemas completamente diferentes, e é exatamente por isso que parece opressor. Quase tudo ali cai em uma de quatro categorias:</p>
+    <ul>
+      <li><strong>Meta-frameworks</strong> — ficam em cima de uma biblioteca de UI (React, Vue, Svelte...) e adicionam roteamento, estratégia de renderização (SSR/SSG) e um pipeline de build. Exemplo: Next.js em cima do React.</li>
+      <li><strong>Ferramentas de build puras / scaffolds de SPA</strong> — só empacotam uma aplicação client-side, sem renderização no servidor ou roteamento baseado em arquivos embutido. Exemplo: Vite, Create React App.</li>
+      <li><strong>Geradores de site estático / conteúdo</strong> — transformam arquivos markdown/conteúdo em HTML estático no momento do build, voltados a blogs, documentação e sites institucionais, não a interatividade de aplicativo. Exemplo: Hugo, Astro, Docusaurus.</li>
+      <li><strong>Frameworks de backend / API</strong> — rodam inteiramente no servidor, sem história de front-end embutida. Exemplo: Django, Express, FastAPI.</li>
+    </ul>
+    <p>Uma vez que você sabe em qual categoria um nome se encaixa, você já sabe 80% pra que ele serve — o resto é só detalhe.</p>
+
+    <h2 id="meta-react-pt">2. Meta-frameworks fullstack — família React</h2>
+    <table>
+      <tr><th>Nome</th><th>O que é</th><th>Quando se encaixa</th></tr>
+      <tr><td><strong>Next.js</strong></td><td>O meta-framework dominante do React. Roteamento baseado em arquivos, Server/Client Components, SSR/SSG/ISR, feito pela Vercel — integração mais profunda com a própria Vercel.</td><td>Escolha padrão pra apps React que precisam de SEO, renderização mista, ou simplesmente querem o maior suporte/ecossistema/tutoriais disponíveis.</td></tr>
+      <tr><td><strong>Remix / React Router (v7)</strong></td><td>Meta-framework React focado em fundamentos da web (formulários, HTTP, roteamento aninhado) em vez de otimização pesada em tempo de build. O React Router absorveu o modo framework do Remix.</td><td>Times que querem SSR com menos "mágica" e mais controle direto sobre o carregamento de dados por rota.</td></tr>
+      <tr><td><strong>Gatsby</strong></td><td>Framework React focado em geração estática no momento do build, historicamente centrado em GraphQL pra puxar dados de qualquer fonte pra páginas estáticas.</td><td>Sites com muito conteúdo onde quase tudo pode ser pré-construído — perdeu espaço pro Next.js/Astro nos últimos anos.</td></tr>
+      <tr><td><strong>RedwoodJS</strong></td><td>Framework fullstack opinativo que junta React + GraphQL + Prisma (ORM de banco) numa estrutura de projeto só.</td><td>Times que querem uma resposta "tipo Rails" tudo-em-um, especificamente pra React + GraphQL.</td></tr>
+      <tr><td><strong>Blitz.js (Legacy)</strong></td><td>Era um framework fullstack "Next.js + baterias" (camada de dados estilo rpc em vez de REST/GraphQL). Marcado como legado — a comunidade migrou em boa parte.</td><td>Majoritariamente manutenção de projetos existentes; não é ponto de partida pra projetos novos hoje.</td></tr>
+      <tr><td><strong>TanStack Start</strong></td><td>Framework fullstack React mais recente, construído em volta do TanStack Router/Query, com filosofia type-safety em primeiro lugar.</td><td>Times já profundos no ecossistema TanStack (Query, Table, Router) que querem um stack coeso.</td></tr>
+    </table>
+
+    <h2 id="meta-outros-pt">3. Meta-frameworks fullstack — Vue, Svelte, Solid e outros</h2>
+    <table>
+      <tr><th>Nome</th><th>Equivalente a</th><th>Observações</th></tr>
+      <tr><td><strong>Nuxt</strong></td><td>Next.js, pro Vue</td><td>Roteamento baseado em arquivos, SSR/SSG, auto-imports. Escolha padrão se o time já conhece Vue.</td></tr>
+      <tr><td><strong>SvelteKit</strong> (e o legado <strong>Sapper</strong>)</td><td>Next.js, pro Svelte</td><td>Svelte compila boa parte do JS de runtime pra fora, então apps tendem a mandar menos código client-side que os equivalentes React/Vue.</td></tr>
+      <tr><td><strong>SolidStart</strong> (v0/v1)</td><td>Next.js, pro SolidJS</td><td>SolidJS mantém sintaxe parecida com React mas com modelo de reatividade fundamentalmente diferente (compilado, sem DOM virtual) — SolidStart é seu meta-framework oficial.</td></tr>
+      <tr><td><strong>Hydrogen</strong> (v1)</td><td>Next.js, mas específico da Shopify</td><td>Meta-framework React feito sob medida pra lojas Shopify — não é escolha de propósito geral.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Padrão pra notar:</strong> quase toda biblioteca de UI acaba criando seu próprio "equivalente ao Next.js" assim que fica popular o suficiente pra as pessoas quererem SSR/roteamento resolvido pra elas. Qualquer que seja a biblioteca de UI que seu time já conhece melhor, muito provavelmente já existe um meta-framework pra ela.
+    </div>
+
+    <h2 id="spa-build-pt">4. Ferramentas de build de SPA puro (sem meta-framework)</h2>
+    <table>
+      <tr><th>Nome</th><th>O que é</th></tr>
+      <tr><td><strong>Vite</strong></td><td>O padrão moderno. Servidor de dev rápido (módulos ES nativos, sem empacotar em dev), build de produção baseado em Rollup. Agnóstico de framework — funciona com React, Vue, Svelte, JS puro.</td></tr>
+      <tr><td><strong>Create React App</strong></td><td>O padrão histórico pra iniciar uma SPA React pura. Efetivamente sem manutenção/descontinuado pelo time do React, em favor do Vite ou de um meta-framework.</td></tr>
+      <tr><td><strong>Parcel</strong></td><td>Bundler zero-config, outra alternativa ao Webpack, menos comum que o Vite hoje mas ainda usado em projetos que valorizam configuração quase nula.</td></tr>
+      <tr><td><strong>Brunch</strong></td><td>Ferramenta de build mais antiga, com menos configuração, de antes da dominância do Webpack/Vite — raramente uma primeira escolha hoje, aparece mais em projetos legados.</td></tr>
+      <tr><td><strong>UmiJS</strong></td><td>Framework de aplicação React popular no ecossistema chinês de desenvolvimento (feito pelo time do Ant Design) juntando roteamento + ferramental de build.</td></tr>
+    </table>
+    <p>O que todos esses compartilham: sem renderização no servidor, sem roteamento baseado em arquivos embutido — você recebe uma aplicação client-side e escolhe suas próprias bibliotecas pro resto (essa é exatamente a camada discutida no aprofundamento de Vite/Webpack/build do Next.js do Módulo 1).</p>
+
+    <h2 id="componente-pt">5. Frameworks de componente sem camada de meta-framework embutida</h2>
+    <table>
+      <tr><th>Nome</th><th>Categoria</th><th>Observações</th></tr>
+      <tr><td><strong>Angular</strong></td><td>Framework de front-end completo (não só uma biblioteca como o React)</td><td>Com baterias incluídas: roteamento, formulários, cliente HTTP, injeção de dependência, tudo embutido, estrutura opinativa. Comum em times grandes/corporativos que valorizam convenção e design TypeScript-first.</td></tr>
+      <tr><td><strong>Vue.js</strong></td><td>Biblioteca de UI (como o React), Nuxt é seu meta-framework</td><td>Sintaxe baseada em templates (mais parecida com HTML puro que JSX), frequentemente considerada uma entrada mais fácil que o React pra iniciantes.</td></tr>
+      <tr><td><strong>Svelte</strong></td><td>Biblioteca/compilador de UI, SvelteKit é seu meta-framework</td><td>Compila componentes pra JS puro no momento do build em vez de mandar uma biblioteca de runtime — bundles menores.</td></tr>
+      <tr><td><strong>Preact</strong></td><td>Alternativa leve compatível com a API do React</td><td>Mesma superfície de API do React numa fração do tamanho do bundle — usado quando cada kilobyte importa (embeds, dispositivos limitados).</td></tr>
+      <tr><td><strong>Ember.js</strong></td><td>Framework de front-end completo, geração mais antiga</td><td>Muito baseado em convenção, era muito popular antes do React; ainda mantido, hoje é nicho fora de bases de código Ember grandes já existentes.</td></tr>
+      <tr><td><strong>Stencil</strong></td><td>Compilador de Web Components</td><td>Gera custom elements agnósticos de framework — útil pra distribuir uma biblioteca de componentes usável a partir de React, Vue, Angular ou HTML puro.</td></tr>
+      <tr><td><strong>Polymer</strong>, <strong>Dojo</strong></td><td>Frameworks mais antigos de Web Components / MVC</td><td>Relevância majoritariamente histórica hoje; você encontra eles mantendo projetos legados, não começando projetos novos.</td></tr>
+    </table>
+
+    <h2 id="static-gen-pt">6. Geradores de site estático / conteúdo</h2>
+    <p>Esses são voltados a conteúdo que não muda por usuário — blogs, documentação, sites institucionais — onde a página inteira pode ser construída uma vez e servida como arquivos estáticos.</p>
+    <table>
+      <tr><th>Nome</th><th>Linguagem/stack</th><th>Mais conhecido por</th></tr>
+      <tr><td><strong>Astro</strong></td><td>JS/TS, qualquer biblioteca de UI como "ilhas"</td><td>Não manda JS por padrão, só hidrata os componentes interativos específicos que você marcar — muito popular pra sites de conteúdo que precisam de um pouco de interatividade.</td></tr>
+      <tr><td><strong>Hugo</strong></td><td>Go</td><td>Builds extremamente rápidos mesmo em sites enormes; escolha comum pra sites grandes de documentação/blog.</td></tr>
+      <tr><td><strong>Jekyll</strong></td><td>Ruby</td><td>O "gerador de site estático" original, ainda é o motor por trás da configuração padrão do GitHub Pages.</td></tr>
+      <tr><td><strong>Eleventy (11ty)</strong></td><td>JS</td><td>Minimalista, sem opinião forte — você traz sua própria linguagem de template.</td></tr>
+      <tr><td><strong>Docusaurus</strong> (v1/v2+)</td><td>React</td><td>Feito sob medida pra sites de documentação (versionamento, busca, sidebars prontos) — feito pela Meta, usado por muita documentação open source.</td></tr>
+      <tr><td><strong>VuePress</strong> / <strong>VitePress</strong></td><td>Vue</td><td>Mesma ideia do Docusaurus, pro ecossistema Vue; VitePress é o sucessor mais novo, movido a Vite.</td></tr>
+      <tr><td><strong>Gridsome</strong>, <strong>Saber</strong>, <strong>Scully</strong></td><td>Vue / React / Angular</td><td>Geradores estáticos específicos de framework (Gridsome = Vue, Saber = React, Scully = Angular) — comunidades menores que os líderes acima.</td></tr>
+      <tr><td><strong>Hexo</strong>, <strong>Middleman</strong>, <strong>Zola</strong></td><td>JS / Ruby / Rust</td><td>Geradores estáticos voltados a blog, populares em nichos/comunidades específicas mais que em sites de produto mainstream.</td></tr>
+    </table>
+
+    <h2 id="backend-pt">7. Frameworks de backend / API</h2>
+    <p>Esses rodam só no servidor — sem front-end embutido. Alguns entregam HTML eles mesmos (Django, Flask), outros existem puramente como APIs JSON consumidas por um front-end separado (Express, FastAPI, NestJS).</p>
+    <table>
+      <tr><th>Nome</th><th>Linguagem</th><th>Observações</th></tr>
+      <tr><td><strong>Django</strong></td><td>Python</td><td>Coberto em profundidade no material complementar do Módulo 1 — fullstack, com baterias incluídas, painel admin gerado automaticamente a partir dos modelos.</td></tr>
+      <tr><td><strong>Flask</strong></td><td>Python</td><td>Framework Python minimalista, sem opinião forte — você monta as peças você mesmo, filosofia oposta ao Django.</td></tr>
+      <tr><td><strong>FastAPI</strong></td><td>Python</td><td>Moderno, async por padrão, geração automática de OpenAPI/docs a partir de type hints — virou o padrão pra APIs JSON em Python, especialmente serviços adjacentes a ML/IA.</td></tr>
+      <tr><td><strong>FastHTML</strong></td><td>Python</td><td>Abordagem mais nova: escrever HTML renderizado no servidor direto do Python, sem uma linguagem de template separada nem framework de front-end.</td></tr>
+      <tr><td><strong>Express</strong></td><td>Node.js/JS</td><td>O padrão minimalista de longa data pra APIs Node — núcleo pequeno, ecossistema de middleware enorme.</td></tr>
+      <tr><td><strong>NestJS</strong></td><td>Node.js/TS</td><td>Estrutura opinativa, inspirada no Angular (módulos, decorators, injeção de dependência) em cima do Express/Fastify — popular em times de backend Node maiores.</td></tr>
+      <tr><td><strong>Fastify</strong></td><td>Node.js/JS</td><td>Alternativa ao Express focada em performance, com validação baseada em schema embutida.</td></tr>
+      <tr><td><strong>Koa</strong></td><td>Node.js/JS</td><td>Do time original do Express, núcleo menor dependendo mais de composição de middleware (design async/await desde o início).</td></tr>
+      <tr><td><strong>Hono</strong>, <strong>Elysia</strong>, <strong>H3</strong>, <strong>Nitro</strong></td><td>JS/TS (edge-first)</td><td>Frameworks mais novos e leves, desenhados pra rodar bem em runtimes de edge (Vercel Edge, Cloudflare Workers) — pegada menor que Express/Nest.</td></tr>
+      <tr><td><strong>Go</strong>, <strong>Node</strong>, <strong>Python</strong> (genérico)</td><td>—</td><td>Essas entradas genéricas significam "só rode esse runtime cru", pra projetos que não usam nenhum framework nomeado.</td></tr>
+    </table>
+
+    <h2 id="nicho-pt">8. Todo o resto: nicho, legado e genérico</h2>
+    <p>Um punhado de entradas não se encaixa direito nas categorias acima:</p>
+    <ul>
+      <li><strong>Ionic Angular / Ionic React</strong> — frameworks de app mobile híbrido (constrói uma vez, roda como app via um wrapper WebView), usando Angular ou React como camada de UI.</li>
+      <li><strong>Storybook</strong> — não é framework de site nenhum, é uma ferramenta pra desenvolver e documentar componentes de UI isoladamente. Aparece aqui porque também pode ser publicado como um site estático (o próprio catálogo de componentes).</li>
+      <li><strong>Sanity</strong> (v2/v3) — um CMS headless com seu próprio app de studio/admin que pode ser publicado como um projeto de front-end.</li>
+      <li><strong>Mastra</strong>, <strong>xmcp</strong> — frameworks mais novos pra construir agentes de IA / servidores MCP, não sites tradicionais — incluídos porque a Vercel agora hospeda esse tipo de carga também.</li>
+      <li><strong>Services</strong>, <strong>Container</strong>, <strong>Other</strong> — presets genéricos pra qualquer coisa que a Vercel não consiga detectar automaticamente um framework específico (um projeto baseado em Dockerfile, um serviço de background, etc).</li>
+    </ul>
+
+    <h2 id="como-escolher">9. Como escolher de verdade, na prática</h2>
+    <div class="callout">
+      <strong>Se você está construindo um produto/app interativo</strong> (dashboard, SaaS, qualquer coisa com login e dados dinâmicos): escolha um meta-framework que combine com a biblioteca de UI que seu time conhece — Next.js pro React (a escolha padrão mais segura hoje), Nuxt pro Vue, SvelteKit pro Svelte.
+    </div>
+    <div class="callout">
+      <strong>Se você está construindo um site de conteúdo</strong> (blog, documentação, página institucional/landing com pouca interatividade): use um gerador de site estático em vez de um meta-framework completo — Astro se quiser misturar alguns componentes interativos, Hugo/Eleventy se quiser o mais rápido e minimalista possível.
+    </div>
+    <div class="callout">
+      <strong>Se você está construindo uma API pura</strong> consumida por um front-end separado: combine com a linguagem que seu time/stack de dados já usa — FastAPI ou Django se for Python, Express/Fastify/NestJS se for Node, e considere as opções edge-first (Hono, Elysia) só se latência na borda for um requisito explícito.
+    </div>
+    <p>A armadilha pra evitar: escolher um framework porque é desconhecido e "parece interessante" num dropdown. Quase todo nome nessa lista resolve um problema que algum outro nome da mesma lista já resolve pro seu stack específico — a decisão real geralmente é só "qual biblioteca de UI / linguagem meu time já conhece", e o resto decorre disso.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Deep dive</span>
+  <span class="accent" id="footer-right">Frameworks &amp; deploy presets</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Deep dive';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Imersão';
+    }
+  }
+</script>
+
+</body>
+</html>
