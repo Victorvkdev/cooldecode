@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Module 1: Extra material</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg-card: #161618;
+    --bg-card-2: #1c1c1f;
+    --border: #2a2a2e;
+    --text: #e9e9ec;
+    --text-dim: #a3a3ab;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrapper { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  header.lesson-header { margin-bottom: 40px; }
+  .badge {
+    display: inline-block;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft);
+    border: 1px solid rgba(124, 58, 237, 0.35);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff;
+    margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border);
+  }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code {
+    font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2);
+    border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd;
+  }
+  pre {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; overflow-x: auto; margin: 18px 0 24px;
+  }
+  pre code { background: none; border: none; padding: 0; color: #e9e9ec; font-size: 13.5px; line-height: 1.6; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 24px; }
+  @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-2 .card { margin: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout {
+    border-left: 3px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px;
+  }
+  .callout strong { color: var(--accent); }
+  .toc {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px 24px; margin: 0 0 40px;
+  }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 10px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc .meta { color: var(--text-dim); font-size: 12.5px; display: block; margin-top: 2px; }
+  .q-label {
+    display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--text-dim); margin-bottom: 6px;
+  }
+  .q-label strong { color: var(--accent); }
+  footer {
+    margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border);
+    color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header class="lesson-header">
+      <span class="badge">Module 1 · Extra material</span>
+      <h1>Module 1 — Extra material</h1>
+      <p class="subtitle">Deep dives and specific questions raised during Module 1 (Week 1 — Fundamentals and context), outside the numbered lesson sequence. This file grows as new questions come up.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#q1-en">Does client-side rendering (CSR) hurt SEO and make the page heavier?</a><span class="meta">2026-07-26</span></li>
+        <li><a href="#q2-en">Django and Rails: what they are, what they're for, what defines them</a><span class="meta">2026-07-26</span></li>
+        <li><a href="#q3-en">What JSX actually is</a><span class="meta">2026-07-26</span></li>
+        <li><a href="#q4-en">What you need to know to really know React and Next.js</a><span class="meta">2026-07-26</span></li>
+        <li><a href="#q5-en">Vite, Webpack, and Next.js's build tool — what each one does</a><span class="meta">2026-07-26</span></li>
+      </ol>
+    </div>
+
+    <h2 id="q1-en">1. Does client-side rendering hurt SEO and make the page heavy?</h2>
+    <p class="q-label">Original question: <strong>"the server sends an almost-empty HTML + a bunch of JavaScript" — does this hurt Google indexing? Does it make the page heavy? Is it still a problem today?</strong></p>
+
+    <p>Yes, historically this was (and to some extent still is) a real problem — but the situation has changed a lot since React's early years. It's worth splitting this into two questions: <strong>indexing</strong> and <strong>weight/performance</strong>.</p>
+
+    <h3>Indexing</h3>
+    <p>When you use pure <em>client-side rendering</em> (CSR), the HTML the server delivers is literally something like <code>&lt;div id="root"&gt;&lt;/div&gt;</code> — empty until JavaScript runs in the browser and fills the screen. If the crawler reading that page doesn't execute JavaScript, it sees a blank page.</p>
+    <p>Googlebot, since around 2018-2019, executes JavaScript in a second pass (the so-called "second wave of indexing"). This means pure CSR sites <strong>can</strong> be indexed by Google today — but with important caveats:</p>
+    <ul>
+      <li>This second rendering pass happens after the first read of the raw HTML, which can delay indexing by days to weeks on large sites — bad for content that needs to show up fast (news, launches, promotions).</li>
+      <li>Not every crawler executes JavaScript properly. Social media bots that generate link previews (WhatsApp, Twitter/X, LinkedIn), some AI crawlers, and smaller search engines often only read the raw HTML — so your link might show up with no title, image, or description.</li>
+      <li>If JavaScript fails for any reason (script error, timeout, an external dependency being down), the page is literally empty for anyone not executing JS — including users with JS disabled or an unstable connection.</li>
+    </ul>
+
+    <h3>Page weight</h3>
+    <p>Here the problem is more consistent: a CSR application needs to deliver to the browser all the JavaScript required to assemble the interface <em>before</em> any content shows up. This increases the time until the page becomes interactive and worsens metrics like <strong>LCP</strong> (Largest Contentful Paint) and <strong>TTI</strong> (Time to Interactive) — which are part of <em>Core Web Vitals</em>, an official Google ranking factor.</p>
+
+    <div class="callout">
+      <strong>When this is still a real problem today:</strong> large e-commerce catalogs, content/news sites, landing pages that depend on organic traffic, and any page whose link needs to generate a nice preview on social media. In these cases, relying only on CSR is risky.
+    </div>
+    <div class="callout">
+      <strong>When it's no longer a relevant problem:</strong> admin panels, internal dashboards, apps behind a login, B2B tools nobody is going to search for on Google — there SEO simply doesn't matter, and pure CSR is perfectly acceptable (and simpler to build).
+    </div>
+
+    <p>It's exactly this trade-off that motivated the existence of Next.js and similar frameworks: they let the server send already-ready HTML (good for SEO and for the first load) and then "hydrate" that page with JavaScript so it becomes interactive — combining both models instead of picking just one. Lessons 7 and 8 of the main track go into detail on how this works (SSR, SSG, ISR).</p>
+
+    <h2 id="q2-en">2. Django and Rails: what they are, what they're for, what defines them</h2>
+    <p class="q-label">Original question: <strong>deep dive on Django/Rails — what it is, what it's used for, characteristics</strong></p>
+
+    <p>Django and Rails are the two most-cited examples of a <strong>monolithic full-stack framework</strong> — meaning frameworks that already come with practically everything a typical backend needs (routing, database access, templates, authentication) integrated and working together, instead of you assembling each piece separately.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Django (Python)</div>
+        <p style="margin-bottom:0">A "batteries included" framework. It comes out of the box with an ORM (a layer that translates Python into SQL), an admin panel automatically generated from your data models, a ready-made authentication system, and a migration system to version database changes. It follows the MVT pattern (Model-View-Template). Strong for applications where the data model is the center of the project: content systems, back-offices, fintech products, government.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Ruby on Rails (Ruby)</div>
+        <p style="margin-bottom:0">Popularized the "convention over configuration" principle — if you follow the expected names and folders, the framework "guesses" the rest without needing manual configuration. Uses the MVC pattern, has ActiveRecord as its ORM, and code-generation tools (<em>scaffolding</em>) that create full CRUD screens from a single command. Became known for prioritizing developer productivity and happiness.</p>
+      </div>
+    </div>
+
+    <h3>Common characteristics</h3>
+    <ul>
+      <li><strong>Monolithic by default:</strong> a single project handles routes, database, business rules and (optionally) the HTML rendering itself — unlike setting up a separate API from a React frontend.</li>
+      <li><strong>Built-in ORM:</strong> you write code in the framework's language (Python/Ruby) and it generates the SQL behind the scenes — less need to write queries by hand day to day.</li>
+      <li><strong>Migrations:</strong> changes to the database structure are versioned as code, alongside the rest of the project.</li>
+      <li><strong>Strong conventions:</strong> folder names, files and patterns are practically enforced by the framework — this greatly speeds up teams who accept the conventions, and can bother those who want to structure the project their own way.</li>
+    </ul>
+
+    <h3>Where they fit today</h3>
+    <p>For products where the backend is the heart of the application — lots of business rules, lots of data modeling, little need for a super dynamic interface — Django and Rails remain extremely relevant and productive. For applications where the frontend needs to be highly interactive (which is what drove the wave of SPAs with React), it's more common today to use these frameworks only as an <strong>API</strong> ("API-only" mode), with the frontend built separately in React/Next.js — or to simply opt for a 100% JavaScript/TypeScript stack on both sides, which is the path this track is following.</p>
+
+    <h2 id="q3-en">3. What JSX actually is</h2>
+    <p class="q-label">Original question: <strong>"okay, it's React's syntax, but what does that actually mean?"</strong></p>
+
+    <p>JSX is a syntax extension to JavaScript that lets you write HTML-like markup inside JS code itself. The important point: <strong>this is not real HTML, nor valid JavaScript on its own</strong> — it's syntactic sugar that needs to be transformed before the browser runs anything (this is where the build tool concept from Lesson 01 comes back in).</p>
+
+    <p>Without JSX, creating an element in React would be written like this, calling the <code>React.createElement</code> function directly:</p>
+    <pre><code>React.createElement("p", null, "Today it's ", temperature, "°C")</code></pre>
+
+    <p>With JSX, the same element becomes this — much closer to HTML and easier to read when there are many nested elements:</p>
+    <pre><code>&lt;p&gt;Today it's {temperature}°C&lt;/p&gt;</code></pre>
+
+    <p>A build tool (Babel, the SWC compiler, or Next.js's internal compiler) reads this JSX and converts it back into plain JavaScript function calls before delivering the code to the browser. In other words: JSX exists <strong>only to make life easier for whoever writes the code</strong> — the browser never sees JSX, it only sees the already-converted result.</p>
+
+    <div class="callout">
+      <strong>Key point:</strong> what JSX actually describes isn't "real HTML" — it's a JavaScript data structure (a "React element") that describes what the interface should look like. React uses this description to decide what actually needs to change on screen (the browser's DOM), without you having to manipulate the DOM manually.
+    </div>
+
+    <p>That's why JSX is called "React's syntax": it's not a new language, it's a shorthand, readable way of describing function calls that, ultimately, React uses to assemble the interface.</p>
+
+    <h2 id="q4-en">4. What you need to know to really know React and Next.js</h2>
+    <p class="q-label">Original question: <strong>what would I need to know to consider that I really know Next.js and React, without always depending on AI?</strong></p>
+
+    <p>There's a difference between "I can put together a screen by pasting code an AI suggested" and "I understand why this code works and I can write it, debug it, and adapt it on my own." The list below is a checklist of real skills, not technology names to memorize.</p>
+
+    <div class="card">
+      <div class="card-title">React — fundamentals that need to be solid</div>
+      <ul>
+        <li>Difference between <strong>props</strong> (data coming from outside) and <strong>state</strong> (data the component itself controls and that changes over time)</li>
+        <li>One-way data flow (from parent to child component) and when to "lift state up" to share data between sibling components</li>
+        <li>Essential hooks: <code>useState</code>, <code>useEffect</code> (and understanding the dependency array), <code>useContext</code>, and at least the intuition for <code>useMemo</code>/<code>useCallback</code></li>
+        <li>Conditional rendering and lists (with <code>key</code> — and understanding <em>why</em> the key matters so React doesn't confuse items)</li>
+        <li>Controlled forms (inputs whose value lives in state)</li>
+        <li>Component composition: when to break something into smaller components and how to avoid passing props down through many levels (<em>prop drilling</em>)</li>
+        <li>A sense (not the internal details) of how React decides to re-render and why unnecessary renders happen</li>
+        <li>Being able to read a React error stack trace and understand where it came from</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Next.js — what changes on top of plain React</div>
+      <ul>
+        <li>The App Router's file-based routing (folders and files like <code>page.tsx</code>, <code>layout.tsx</code> automatically define routes)</li>
+        <li>The difference between <strong>Server Components</strong> (run only on the server, don't send extra JS to the client) and <strong>Client Components</strong> (marked with <code>"use client"</code>) — and knowing when to use each one</li>
+        <li>Rendering strategies: SSR, SSG, and ISR, and in which scenario each one makes sense (Lesson 8 of the main track goes deeper on this)</li>
+        <li>Fetching data inside Server Components and basic caching/revalidation concepts</li>
+        <li>Route handlers (Next's internal "APIs") and how to create endpoints inside the project itself</li>
+        <li>Environment variables and the difference between the ones that stay server-only and the ones that leak to the client</li>
+        <li>A basic understanding of how deployment works (Vercel or another host) and what happens in that process</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">The real signs that you "know it", beyond syntax</div>
+      <ul>
+        <li>You can debug an error by reading the message/stack trace and the code itself, without needing to paste everything into an AI</li>
+        <li>You can explain <em>why</em> a piece of code was written that way — not just that it "works"</li>
+        <li>You can open a component you've never seen before (from someone else, from an open source project) and understand the data flow on your own</li>
+        <li>You've gone straight to the official docs (react.dev, nextjs.org/docs) to answer a question, instead of relying only on third-party explanations</li>
+        <li>You've built at least one project from scratch through to the end — not just following a tutorial — and hit the real friction points: authentication, forms, deployment, error handling</li>
+      </ul>
+    </div>
+
+    <p>Using AI to speed up the process is perfectly reasonable — the problem is when it replaces understanding instead of supporting it. The practical test: if you could explain every piece of your own code to someone else, without reopening the AI chat, you're already on the right track.</p>
+
+    <h2 id="q5-en">5. Vite, Webpack, and Next.js's build tool — what each one does</h2>
+    <p class="q-label">Original question: deep dive on "Tools like Vite, Webpack, or Next.js's internal build tool"</p>
+
+    <p>All three solve the same general problem (turning source code into something the browser can run quickly), but with different philosophies and histories.</p>
+
+    <div class="card">
+      <div class="card-title">Webpack</div>
+      <p>The oldest and most configurable bundler of the three, popular since the early 2010s. It works by building a <strong>dependency graph</strong>: it starts from an entry file, follows every <code>import</code>/<code>require</code> it finds, and bundles everything into one or more final files ("bundles"). It uses two central concepts: <strong>loaders</strong> (transform files — e.g. <code>babel-loader</code> converts JSX/TypeScript into plain JS, <code>css-loader</code> processes CSS) and <strong>plugins</strong> (extend steps of the build process, like generating the final HTML). It's extremely flexible, but that flexibility comes at a cost: configuring it from scratch is verbose, and large projects can get slow to rebuild during development.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vite</div>
+      <p>Created by Evan You (also the creator of Vue) and released in 2020, Vite attacks the same problem differently: during development, it doesn't bundle everything before serving — it serves source files almost directly to the browser using native ES modules, and only transforms each file on demand, as the browser requests it. This makes the dev server start almost instantly, even on large projects. To generate the production build, Vite uses Rollup under the hood to produce an optimized bundle. Configuration is much simpler than Webpack's, with good defaults out of the box.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Next.js's internal build</div>
+      <p>Unlike the two above, Next.js's build isn't something you choose or configure directly most of the time — it comes built into the framework. Historically, Next used Webpack under the hood (still allowing customization via <code>next.config.js</code>). In more recent versions, Next adopted <strong>Turbopack</strong>, a Rust-based bundler created by Vercel itself as Webpack's successor, aiming for the speed of tools like Vite while already accounting for Next's particularities (Server Components, hybrid rendering, etc). In practice, you run <code>next dev</code> and <code>next build</code>, and the framework decides on its own how to separate what goes to the server and what goes to the client, without you having to think about the bundler.</p>
+    </div>
+
+    <table>
+      <tr><th>Tool</th><th>Who configures it</th><th>Speed philosophy</th></tr>
+      <tr><td>Webpack</td><td>You, manually</td><td>Bundles everything before serving</td></tr>
+      <tr><td>Vite</td><td>You, with few adjustments</td><td>Serves on demand in dev; bundles (via Rollup) only for the final build</td></tr>
+      <tr><td>Next.js build</td><td>The framework decides for you</td><td>Native compiler (Turbopack) optimized for Next's features</td></tr>
+    </table>
+
+    <p>In practice, when using Next.js you rarely choose between these three options — the framework already embeds its own. Plain Vite and Webpack show up when you're setting up a React project without Next.js (or any other frontend application that doesn't use a full-stack framework), and there the choice between the two usually leans toward Vite, because of its development speed.</p>
+
+    <div class="callout">
+      <strong>Still have a question about something in Module 1?</strong> Just ask — this file keeps getting new sections as more questions about this module come up.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header class="lesson-header">
+      <span class="badge">Módulo 1 · Material complementar</span>
+      <h1>Módulo 1 — Material complementar</h1>
+      <p class="subtitle">Aprofundamentos e dúvidas pontuais levantadas durante o Módulo 1 (Semana 1 — Fundamentos e contexto), fora da sequência numerada das lições. Este arquivo cresce conforme novas perguntas surgem.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#q1">Rendering no cliente (CSR) prejudica SEO e deixa a página mais pesada?</a><span class="meta">26/07/2026</span></li>
+        <li><a href="#q2">Django e Rails: o que são, para que servem, o que os caracteriza</a><span class="meta">26/07/2026</span></li>
+        <li><a href="#q3">O que é JSX, de fato?</a><span class="meta">26/07/2026</span></li>
+        <li><a href="#q4">O que preciso saber para dizer que realmente sei React e Next.js</a><span class="meta">26/07/2026</span></li>
+        <li><a href="#q5">Vite, Webpack e o build do Next.js — o que cada um faz</a><span class="meta">26/07/2026</span></li>
+      </ol>
+    </div>
+
+    <h2 id="q1">1. Rendering no cliente prejudica SEO e deixa a página pesada?</h2>
+    <p class="q-label">Pergunta original: <strong>"servidor manda um HTML quase vazio + JavaScript" isso prejudica indexação no Google? Torna a página pesada? Ainda é um problema hoje?</strong></p>
+
+    <p>Sim, historicamente isso foi (e em parte ainda é) um problema real — mas a situação mudou bastante desde os primeiros anos do React. Vale separar em duas perguntas: <strong>indexação</strong> e <strong>peso/performance</strong>.</p>
+
+    <h3>Indexação</h3>
+    <p>Quando você usa <em>client-side rendering</em> (CSR) puro, o HTML que o servidor entrega é literalmente algo como <code>&lt;div id="root"&gt;&lt;/div&gt;</code> — vazio até o JavaScript rodar no navegador e preencher a tela. Se o crawler que está lendo essa página não executar JavaScript, ele vê uma página em branco.</p>
+    <p>O Googlebot, desde por volta de 2018-2019, executa JavaScript em uma segunda etapa (o chamado "second wave of indexing"). Isso significa que sites CSR puros <strong>conseguem</strong> ser indexados pelo Google hoje — mas com ressalvas importantes:</p>
+    <ul>
+      <li>Essa segunda etapa de renderização acontece depois da primeira leitura do HTML cru, o que pode atrasar a indexação de dias a semanas em sites grandes — ruim para conteúdo que precisa aparecer rápido (notícias, lançamentos, promoções).</li>
+      <li>Nem todo crawler executa JavaScript direito. Bots de redes sociais que geram preview de link (WhatsApp, Twitter/X, LinkedIn), alguns crawlers de IA e buscadores menores frequentemente só leem o HTML bruto — então seu link pode aparecer sem título, imagem ou descrição.</li>
+      <li>Se o JavaScript falhar por qualquer motivo (erro de script, timeout, dependência externa fora do ar), a página fica literalmente vazia para quem não executa JS — inclusive usuários com JS desativado ou com conexão instável.</li>
+    </ul>
+
+    <h3>Peso da página</h3>
+    <p>Aqui o problema é mais consistente: uma aplicação CSR precisa entregar ao navegador todo o JavaScript necessário para montar a interface <em>antes</em> de qualquer conteúdo aparecer. Isso aumenta o tempo até a página ficar interativa e piora métricas como <strong>LCP</strong> (Largest Contentful Paint) e <strong>TTI</strong> (Time to Interactive) — que fazem parte dos <em>Core Web Vitals</em>, um fator de ranqueamento oficial do Google.</p>
+
+    <div class="callout">
+      <strong>Em que situação isso ainda é um problema real hoje:</strong> catálogos grandes de e-commerce, sites de conteúdo/notícias, landing pages que dependem de tráfego orgânico, e qualquer página cujo link precisa gerar preview bonito em redes sociais. Nesses casos, depender só de CSR é arriscado.
+    </div>
+    <div class="callout">
+      <strong>Quando não é mais um problema relevante:</strong> painéis administrativos, dashboards internos, apps atrás de login, ferramentas B2B que ninguém vai buscar no Google — aí SEO simplesmente não importa, e CSR puro é perfeitamente aceitável (e mais simples de construir).
+    </div>
+
+    <p>É exatamente esse trade-off que motivou a existência do Next.js e de frameworks parecidos: eles deixam o servidor mandar HTML já pronto (bom para SEO e para o primeiro carregamento) e, depois, "hidratam" essa página com JavaScript para ela virar interativa — combinando os dois modelos em vez de escolher só um. As lições 7 e 8 da trilha principal vão entrar em detalhe em como isso funciona (SSR, SSG, ISR).</p>
+
+    <h2 id="q2">2. Django e Rails: o que são, para que servem, o que os caracteriza</h2>
+    <p class="q-label">Pergunta original: <strong>aprofundamento em Django/Rails — o que é, para que é usado, características</strong></p>
+
+    <p>Django e Rails são os dois exemplos mais citados de <strong>framework fullstack monolítico</strong> — ou seja, frameworks que já vêm com praticamente tudo que um backend típico precisa (roteamento, acesso a banco, templates, autenticação) integrado e funcionando junto, em vez de você montar cada peça separadamente.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Django (Python)</div>
+        <p style="margin-bottom:0">Framework "com pilhas incluídas" (<em>batteries included</em>). Vem de fábrica com ORM (camada que traduz Python para SQL), painel administrativo gerado automaticamente a partir dos seus modelos de dados, sistema de autenticação pronto, e um sistema de migrações para versionar mudanças no banco. Segue o padrão MVT (Model-View-Template). Forte em aplicações onde o modelo de dados é o centro do projeto: sistemas de conteúdo, back-offices, produtos fintech, governo.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Ruby on Rails (Ruby)</div>
+        <p style="margin-bottom:0">Popularizou o princípio "convenção sobre configuração" — se você seguir os nomes e pastas esperados, o framework "adivinha" o resto sem precisar configurar manualmente. Usa o padrão MVC, tem o ActiveRecord como ORM, e ferramentas de geração de código (<em>scaffolding</em>) que criam telas de CRUD completas a partir de um comando. Ficou conhecido por priorizar a produtividade e a felicidade de quem programa.</p>
+      </div>
+    </div>
+
+    <h3>Características em comum</h3>
+    <ul>
+      <li><strong>Monolíticos por padrão:</strong> um único projeto cuida de rotas, banco, regras de negócio e (opcionalmente) da própria renderização do HTML — diferente de montar uma API separada de um frontend em React.</li>
+      <li><strong>ORM embutido:</strong> você escreve código na linguagem do framework (Python/Ruby) e ele gera o SQL por trás — menos necessidade de escrever queries na mão no dia a dia.</li>
+      <li><strong>Migrações:</strong> mudanças na estrutura do banco de dados são versionadas como código, junto com o resto do projeto.</li>
+      <li><strong>Convenções fortes:</strong> nomes de pasta, arquivos e padrões são praticamente impostos pelo framework — isso acelera muito times que aceitam as convenções, e pode incomodar quem quer estruturar o projeto do próprio jeito.</li>
+    </ul>
+
+    <h3>Onde eles se encaixam hoje</h3>
+    <p>Para produtos onde o backend é o coração da aplicação — muita regra de negócio, muito modelo de dados, pouca necessidade de uma interface super dinâmica — Django e Rails continuam extremamente relevantes e produtivos. Para aplicações onde o frontend precisa ser altamente interativo (o que motivou a onda de SPAs com React), é mais comum hoje usar esses frameworks apenas como uma <strong>API</strong> (modo "API-only"), com o frontend construído separadamente em React/Next.js — ou simplesmente optar por um stack 100% JavaScript/TypeScript nos dois lados, que é o caminho que esta trilha está seguindo.</p>
+
+    <h2 id="q3">3. O que é JSX, de fato?</h2>
+    <p class="q-label">Pergunta original: <strong>"tá, é a sintaxe do React, mas o que isso quer dizer?"</strong></p>
+
+    <p>JSX é uma extensão de sintaxe do JavaScript que permite escrever marcações parecidas com HTML dentro do próprio código JS. O ponto importante: <strong>isso não é HTML de verdade, nem JavaScript válido por si só</strong> — é açúcar sintático que precisa ser transformado antes de o navegador rodar qualquer coisa (aqui entra de novo o conceito de build tool da Lição 01).</p>
+
+    <p>Sem JSX, criar um elemento em React seria escrito assim, chamando a função <code>React.createElement</code> diretamente:</p>
+    <pre><code>React.createElement("p", null, "Hoje são ", temperatura, "°C")</code></pre>
+
+    <p>Com JSX, o mesmo elemento vira isso — muito mais parecido com HTML e mais fácil de ler quando há muitos elementos aninhados:</p>
+    <pre><code>&lt;p&gt;Hoje são {temperatura}°C&lt;/p&gt;</code></pre>
+
+    <p>Uma ferramenta de build (Babel, o compilador do SWC, ou o compilador interno do Next.js) lê esse JSX e o converte de volta para chamadas de função JavaScript puro antes de entregar o código ao navegador. Ou seja: JSX existe <strong>só para facilitar a vida de quem escreve o código</strong> — o navegador nunca vê JSX, ele só vê o resultado já convertido.</p>
+
+    <div class="callout">
+      <strong>Ponto-chave:</strong> o que o JSX realmente descreve não é "HTML de verdade" — é uma estrutura de dados em JavaScript (um "React element") que descreve como a interface deveria se parecer. O React usa essa descrição para decidir o que precisa mudar na tela de verdade (o DOM do navegador), sem você precisar manipular o DOM manualmente.
+    </div>
+
+    <p>É por isso que JSX é chamado de "a sintaxe do React": não é uma linguagem nova, é uma forma abreviada e legível de descrever chamadas de função que, no fim das contas, o React usa para montar a interface.</p>
+
+    <h2 id="q4">4. O que preciso saber para dizer que realmente sei React e Next.js?</h2>
+    <p class="q-label">Pergunta original: <strong>o que eu precisaria saber para considerar que realmente sei Next.js e React sem depender de IAs sempre?</strong></p>
+
+    <p>Existe uma diferença entre "consigo montar uma tela colando código que uma IA sugeriu" e "entendo por que esse código funciona e consigo escrevê-lo, debugá-lo e adaptá-lo sozinho". A lista abaixo é um checklist de competências reais, não de nomes de tecnologia para decorar.</p>
+
+    <div class="card">
+      <div class="card-title">React — fundamentos que precisam estar sólidos</div>
+      <ul>
+        <li>Diferença entre <strong>props</strong> (dados vindos de fora) e <strong>state</strong> (dados que o próprio componente controla e que mudam ao longo do tempo)</li>
+        <li>Fluxo de dados de mão única (de componente pai para filho) e quando "subir o estado" (<em>lifting state up</em>) para compartilhar dados entre componentes irmãos</li>
+        <li>Hooks essenciais: <code>useState</code>, <code>useEffect</code> (e entender o array de dependências), <code>useContext</code>, e pelo menos a intuição de <code>useMemo</code>/<code>useCallback</code></li>
+        <li>Renderização condicional e listas (com <code>key</code> — e entender <em>por que</em> a key importa para o React não confundir itens)</li>
+        <li>Formulários controlados (inputs cujo valor vive no state)</li>
+        <li>Composição de componentes: quando quebrar algo em componentes menores e como evitar passar props em cascata por muitos níveis (<em>prop drilling</em>)</li>
+        <li>Noção (não os detalhes internos) de como o React decide re-renderizar e por que renders desnecessários acontecem</li>
+        <li>Conseguir ler uma stack trace de erro do React e entender de onde ela veio</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Next.js — o que muda em cima do React puro</div>
+      <ul>
+        <li>Roteamento baseado em arquivos do App Router (pastas e arquivos <code>page.tsx</code>, <code>layout.tsx</code> definem rotas automaticamente)</li>
+        <li>A diferença entre <strong>Server Components</strong> (rodam só no servidor, não mandam JS extra pro cliente) e <strong>Client Components</strong> (marcados com <code>"use client"</code>) — e saber decidir quando usar cada um</li>
+        <li>Estratégias de renderização: SSR, SSG e ISR, e em que cenário cada uma faz sentido (a Lição 8 da trilha principal vai aprofundar isso)</li>
+        <li>Busca de dados dentro de Server Components e conceitos básicos de cache/revalidação</li>
+        <li>Route handlers (as "APIs" internas do Next) e como criar endpoints dentro do próprio projeto</li>
+        <li>Variáveis de ambiente e a diferença entre as que ficam só no servidor e as que vazam para o cliente</li>
+        <li>Entendimento básico de como o deploy funciona (Vercel ou outro host) e o que acontece nesse processo</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Os sinais reais de que você "sabe", além da sintaxe</div>
+      <ul>
+        <li>Consegue debugar um erro lendo a mensagem/stack trace e o próprio código, sem precisar colar tudo numa IA</li>
+        <li>Consegue explicar <em>por que</em> um trecho de código foi escrito daquele jeito — não só que ele "funciona"</li>
+        <li>Consegue abrir um componente que nunca viu (de outra pessoa, de um projeto open source) e entender o fluxo de dados sozinho</li>
+        <li>Já foi direto na documentação oficial (react.dev, nextjs.org/docs) para tirar uma dúvida, em vez de depender só de explicações de terceiros</li>
+        <li>Já construiu pelo menos um projeto do zero até o fim — não só seguindo tutorial — e passou pelos atritos reais: autenticação, formulários, deploy, tratamento de erro</li>
+      </ul>
+    </div>
+
+    <p>Usar IA para acelerar o processo é perfeitamente razoável — o problema é quando ela substitui a compreensão em vez de apoiá-la. O teste prático: se você conseguisse explicar cada trecho do seu próprio código para outra pessoa, sem reabrir o chat da IA, você já está no caminho certo.</p>
+
+    <h2 id="q5">5. Vite, Webpack e o build do Next.js — o que cada um faz</h2>
+    <p class="q-label">Pergunta original: aprofundar "Ferramentas como Vite, Webpack ou o build interno do Next.js"</p>
+
+    <p>Os três resolvem o mesmo problema geral (transformar código-fonte em algo que o navegador consegue rodar de forma rápida), mas com filosofias e históricos diferentes.</p>
+
+    <div class="card">
+      <div class="card-title">Webpack</div>
+      <p>É o bundler mais antigo e mais configurável dos três, popular desde o início dos anos 2010. Funciona construindo um <strong>grafo de dependências</strong>: começa por um arquivo de entrada, segue todos os <code>import</code>/<code>require</code> encontrados, e junta tudo em um ou mais arquivos finais ("bundles"). Usa dois conceitos centrais: <strong>loaders</strong> (transformam arquivos — ex: <code>babel-loader</code> converte JSX/TypeScript em JS puro, <code>css-loader</code> processa CSS) e <strong>plugins</strong> (estendem etapas do processo de build, como gerar o HTML final). É extremamente flexível, mas essa flexibilidade tem custo: configurar do zero é verboso, e projetos grandes podem ficar lentos para rebuildar durante o desenvolvimento.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Vite</div>
+      <p>Criado por Evan You (também criador do Vue) e lançado em 2020, o Vite ataca o mesmo problema de um jeito diferente: durante o desenvolvimento, ele não empacota tudo antes de servir — ele serve os arquivos-fonte quase diretamente ao navegador usando módulos ES nativos, e só transforma cada arquivo sob demanda, conforme o navegador o pede. Isso faz o servidor de desenvolvimento iniciar quase instantaneamente, mesmo em projetos grandes. Para gerar a versão de produção, o Vite usa o Rollup por baixo dos panos para produzir um bundle otimizado. Configuração muito mais simples que o Webpack, com bons padrões prontos.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Build interno do Next.js</div>
+      <p>Diferente dos dois anteriores, o build do Next.js não é algo que você escolhe ou configura diretamente na maior parte do tempo — ele vem embutido no framework. Historicamente, o Next usava o Webpack por baixo dos panos (ainda permitindo customização via <code>next.config.js</code>). Nas versões mais recentes, o Next passou a adotar o <strong>Turbopack</strong>, um bundler escrito em Rust, criado pela própria Vercel como sucessor do Webpack, buscando a velocidade de ferramentas como o Vite mas já pensado para suportar as particularidades do Next (Server Components, renderização híbrida, etc). Na prática, você roda <code>next dev</code> e <code>next build</code>, e o framework decide sozinho como separar o que vai para o servidor e o que vai para o cliente, sem que você precise pensar em bundler.</p>
+    </div>
+
+    <table>
+      <tr><th>Ferramenta</th><th>Quem configura</th><th>Filosofia de velocidade</th></tr>
+      <tr><td>Webpack</td><td>Você, manualmente</td><td>Empacota tudo antes de servir</td></tr>
+      <tr><td>Vite</td><td>Você, com poucos ajustes</td><td>Serve sob demanda em dev; empacota (via Rollup) só na build final</td></tr>
+      <tr><td>Build do Next.js</td><td>O framework decide por você</td><td>Compilador nativo (Turbopack) otimizado para as features do Next</td></tr>
+    </table>
+
+    <p>Na prática, ao usar Next.js você raramente escolhe entre essas três opções — o framework já embute a sua própria. Vite e Webpack "puros" aparecem quando você está montando um projeto React sem Next.js (ou qualquer outra aplicação frontend que não use um framework fullstack), e aí a escolha entre os dois costuma pender para o Vite, por causa da velocidade de desenvolvimento.</p>
+
+    <div class="callout">
+      <strong>Ainda tem dúvida sobre algo do Módulo 1?</strong> Só perguntar — este arquivo continua recebendo novas seções conforme surgirem mais perguntas sobre este módulo.
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Extra material</span>
+  <span class="accent" id="footer-right">Module 1 — Fundamentals and context</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Extra material';
+      footerRight.textContent = 'Module 1 — Fundamentals and context';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Material complementar';
+      footerRight.textContent = 'Módulo 1 — Fundamentos e contexto';
+    }
+  }
+</script>
+
+</body>
+</html>

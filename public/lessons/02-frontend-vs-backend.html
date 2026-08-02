@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 02: Frontend vs Backend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    padding: 0;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 48px 0 16px;
+    color: #fff;
+  }
+  h2 .num {
+    color: var(--accent);
+    margin-right: 8px;
+  }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .col-front { border-left: 3px solid var(--accent); }
+  .col-back { border-left: 3px solid #4d7cff; }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+    color: #ffb4bf;
+    font-family: 'DM Sans', monospace;
+  }
+  pre {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    color: #d7d7dd;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 44px 0;
+  }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · Lesson 02 · Main track</div>
+    <h1>Frontend vs Backend: the big picture, what runs where and why</h1>
+    <p class="subtitle">Before picking a framework or a stack, it's worth understanding the most basic division of labor in any web application: what happens in the user's browser and what happens on a server you don't directly control.</p>
+
+    <h2><span class="num">01</span>What each side is</h2>
+    <p>Every web application has, at minimum, two halves. The <strong>frontend</strong> is everything that runs inside the user's browser: what they see, click, and type. The <strong>backend</strong> is everything that runs on a server, away from the user's eyes: business rules, database access, authentication, integrations with other services.</p>
+
+    <div class="grid-2">
+      <div class="card col-front">
+        <div class="card-title">Frontend</div>
+        <p style="margin-bottom:0">HTML, CSS and JavaScript executed in the browser. Responsible for layout, interactivity, forms, animations, and calling the backend when it needs data.</p>
+      </div>
+      <div class="card col-back">
+        <div class="card-title">Backend</div>
+        <p style="margin-bottom:0">Code that runs on a server (Node, Python, Go, etc.), accesses the database, validates business rules, and exposes an API for the frontend to consume.</p>
+      </div>
+    </div>
+
+    <p>The boundary between the two is, in practice, a network call. The frontend asks for something (e.g., "give me the list of products"), the backend processes it and sends back a response, usually as JSON.</p>
+
+    <h2><span class="num">02</span>Why this split exists</h2>
+    <p>This separation isn't bureaucracy — it solves real problems:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Security:</strong> sensitive rules (database passwords, API keys, billing logic) can't live in the browser, where any user can open the inspector and read the source code.</li>
+        <li><strong>Trust in the data:</strong> validations that only exist in the frontend can be bypassed — a trustworthy backend re-validates everything before writing anything.</li>
+        <li><strong>Scale and reuse:</strong> the same backend can serve a website, a mobile app, and an admin panel at the same time, without duplicating business rules in every frontend.</li>
+        <li><strong>Team division:</strong> in larger teams, frontend and backend evolve at different paces and can be worked on by people with different specialties.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>What runs where, in practice</h2>
+    <table>
+      <tr><th>Task</th><th>Where it runs</th></tr>
+      <tr><td>Render the interface and respond to clicks</td><td>Frontend</td></tr>
+      <tr><td>Validate email format before submitting (quick feedback)</td><td>Frontend</td></tr>
+      <tr><td>Actually verify the email isn't already registered</td><td>Backend</td></tr>
+      <tr><td>Store password, hash it, compare credentials</td><td>Backend</td></tr>
+      <tr><td>Query the database</td><td>Backend</td></tr>
+      <tr><td>Animations, transitions, a component's local state</td><td>Frontend</td></tr>
+      <tr><td>Process payment, call a third-party API with a secret key</td><td>Backend</td></tr>
+    </table>
+
+    <h2><span class="num">04</span>A practical example</h2>
+    <p>Imagine a simple signup form. The typical flow is:</p>
+    <pre>1. User fills in name and email in the browser (frontend)
+2. Frontend does a quick check: "does this look like a valid email?"
+3. Frontend sends the data to the backend via an HTTP request
+   POST /api/users  { name, email }
+4. Backend receives it, actually validates it, checks if the email already exists
+5. Backend writes to the database
+6. Backend responds with success or an error message
+7. Frontend receives the response and updates the screen</pre>
+    <p>Notice the frontend never talks directly to the database. It always goes through the backend, which acts as a gatekeeper deciding what can or can't happen.</p>
+
+    <h2><span class="num">05</span>Pros, cons, and the myth that "frontend is easier"</h2>
+    <div class="card">
+      <div class="card-title">Worth remembering</div>
+      <p style="margin-bottom:0">Frontend isn't "simpler" than backend — it's just a different kind of complexity. Handling interface state, cross-browser compatibility, accessibility, and rendering performance is just as challenging as designing an API or modeling a database. Where you choose to invest more study time depends on the type of problem you want to solve, not on which side is "easier".</p>
+    </div>
+
+    <h2><span class="num">06</span>What about "fullstack" frameworks?</h2>
+    <p>Tools like Next.js (which you'll study soon) blur this line a bit: they let you write code that runs on both the server and the browser, in the same project. Even so, the conceptual distinction still holds — what changes is that the same language (JavaScript/TypeScript) gets used on both sides, which makes the learning curve easier, but doesn't eliminate the need to think separately about "what only the server can safely do" and "what the browser needs to stay responsive".</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">Frontend = user experience, runs in their browser. Backend = rules and data, runs on a server you control. Communication between the two happens via API. Neither one is "the easy side" — they're different specialties that, together, form a complete application.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — daily study track. Lesson 2 of 20 in the current track.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 02 · Trilha principal</div>
+    <h1>Frontend vs Backend: panorama geral, o que roda onde e por quê</h1>
+    <p class="subtitle">Antes de escolher um framework ou uma stack, vale entender a divisão de trabalho mais básica de qualquer aplicação web: o que acontece no navegador do usuário e o que acontece em um servidor que você não controla diretamente.</p>
+
+    <h2><span class="num">01</span>O que é cada lado</h2>
+    <p>Toda aplicação web tem, no mínimo, duas metades. O <strong>frontend</strong> é tudo que roda dentro do navegador do usuário: o que ele vê, clica e digita. O <strong>backend</strong> é tudo que roda em um servidor, longe dos olhos do usuário: regras de negócio, acesso a banco de dados, autenticação, integrações com outros serviços.</p>
+
+    <div class="grid-2">
+      <div class="card col-front">
+        <div class="card-title">Frontend</div>
+        <p style="margin-bottom:0">HTML, CSS e JavaScript executados no navegador. Responsável por layout, interatividade, formulários, animações e por chamar o backend quando precisa de dados.</p>
+      </div>
+      <div class="card col-back">
+        <div class="card-title">Backend</div>
+        <p style="margin-bottom:0">Código que roda em um servidor (Node, Python, Go, etc.), acessa banco de dados, valida regras de negócio e expõe uma API para o frontend consumir.</p>
+      </div>
+    </div>
+
+    <p>A fronteira entre os dois é, na prática, uma chamada de rede. O frontend pede algo (ex.: "me dá a lista de produtos"), o backend processa e devolve uma resposta, geralmente em JSON.</p>
+
+    <h2><span class="num">02</span>Por que essa divisão existe</h2>
+    <p>Essa separação não é burocracia — ela resolve problemas reais:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Segurança:</strong> regras sensíveis (senha de banco de dados, chaves de API, lógica de cobrança) não podem ficar no navegador, onde qualquer usuário pode abrir o inspetor e ler o código-fonte.</li>
+        <li><strong>Confiança nos dados:</strong> validações que só existem no frontend podem ser burladas — um backend confiável revalida tudo antes de gravar qualquer coisa.</li>
+        <li><strong>Escala e reuso:</strong> o mesmo backend pode servir um site, um app mobile e um painel administrativo ao mesmo tempo, sem duplicar regra de negócio em cada frontend.</li>
+        <li><strong>Divisão de times:</strong> em equipes maiores, frontend e backend evoluem em ritmos diferentes e podem ser trabalhados por pessoas com especialidades distintas.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>O que roda onde, na prática</h2>
+    <table>
+      <tr><th>Tarefa</th><th>Onde roda</th></tr>
+      <tr><td>Renderizar a interface e responder a cliques</td><td>Frontend</td></tr>
+      <tr><td>Validar formato de e-mail antes de enviar (feedback rápido)</td><td>Frontend</td></tr>
+      <tr><td>Validar de verdade se o e-mail já está cadastrado</td><td>Backend</td></tr>
+      <tr><td>Guardar senha, calcular hash, comparar credenciais</td><td>Backend</td></tr>
+      <tr><td>Consultar banco de dados</td><td>Backend</td></tr>
+      <tr><td>Animações, transições, estado local de um componente</td><td>Frontend</td></tr>
+      <tr><td>Processar pagamento, chamar API de terceiros com chave secreta</td><td>Backend</td></tr>
+    </table>
+
+    <h2><span class="num">04</span>Um exemplo prático</h2>
+    <p>Imagine um formulário de cadastro simples. O fluxo típico é:</p>
+    <pre>1. Usuário preenche nome e e-mail no navegador (frontend)
+2. Frontend faz uma checagem rápida: "isso parece um e-mail válido?"
+3. Frontend envia os dados para o backend via requisição HTTP
+   POST /api/usuarios  { nome, email }
+4. Backend recebe, valida de verdade, verifica se o e-mail já existe
+5. Backend grava no banco de dados
+6. Backend responde com sucesso ou com uma mensagem de erro
+7. Frontend recebe a resposta e atualiza a tela</pre>
+    <p>Repare que o frontend nunca fala diretamente com o banco de dados. Ele sempre passa pelo backend, que atua como um porteiro que decide o que pode ou não acontecer.</p>
+
+    <h2><span class="num">05</span>Prós, contras e o mito do "frontend é mais fácil"</h2>
+    <div class="card">
+      <div class="card-title">Vale lembrar</div>
+      <p style="margin-bottom:0">Frontend não é "mais simples" que backend — é apenas um tipo diferente de complexidade. Lidar com estado de interface, compatibilidade entre navegadores, acessibilidade e performance de renderização é tão desafiador quanto projetar uma API ou modelar um banco de dados. A escolha de onde investir mais tempo de estudo depende do tipo de problema que você quer resolver, não de qual lado é "mais fácil".</p>
+    </div>
+
+    <h2><span class="num">06</span>E os frameworks "fullstack"?</h2>
+    <p>Ferramentas como Next.js (que você vai estudar em breve) borram um pouco essa linha: permitem escrever código que roda tanto no servidor quanto no navegador, no mesmo projeto. Mesmo assim, a distinção conceitual continua valendo — o que muda é que a mesma linguagem (JavaScript/TypeScript) passa a ser usada nos dois lados, o que facilita a curva de aprendizado, mas não elimina a necessidade de pensar separadamente em "o que só o servidor pode fazer com segurança" e "o que o navegador precisa para ficar responsivo".</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">Frontend = experiência do usuário, roda no navegador dele. Backend = regras e dados, roda em um servidor que você controla. A comunicação entre os dois acontece via API. Nenhum dos dois é "o lado fácil" — são especialidades diferentes que, juntas, formam uma aplicação completa.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — trilha de estudos diária de Vk. Lição 2 de 20 da trilha atual.
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

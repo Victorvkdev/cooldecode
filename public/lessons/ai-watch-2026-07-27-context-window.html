@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Context window explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    padding: 0;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 48px 0 16px;
+    color: #fff;
+  }
+  h2 .num {
+    color: var(--accent);
+    margin-right: 8px;
+  }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .col-front { border-left: 3px solid var(--accent); }
+  .col-back { border-left: 3px solid #4d7cff; }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+    color: #ffb4bf;
+    font-family: 'DM Sans', monospace;
+  }
+  pre {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    color: #d7d7dd;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 44px 0;
+  }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .sources { list-style: none; padding: 0; margin: 12px 0 0; }
+  .sources li { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); }
+  strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · AI Watch · LLM fundamentals</div>
+    <h1>Context window: what it is, and why "1 million tokens" doesn't mean 1 million useful tokens</h1>
+    <p class="subtitle">Recent models keep announcing bigger and bigger context windows — Anthropic launched Claude Opus 5 on July 24, 2026 with support for a 1-million-token context. But what does that actually mean in practice, and why isn't "fitting more text" the same as "using that text well"?</p>
+
+    <h2><span class="num">01</span>What a context window is</h2>
+    <p>The <strong>context window</strong> is the total amount of information a model processes in a single inference call: system instructions, conversation history, attached documents, and the response it's about to generate — all of it counts toward the same limit. It's measured in <strong>tokens</strong>, text units that, on average, correspond to roughly three-quarters of an English word (in Portuguese the ratio varies a bit because of accents and conjugations).</p>
+    <p>Think of the context window as the model's "working memory" for that specific call: anything outside of it, the model simply doesn't see.</p>
+
+    <h2><span class="num">02</span>Why it doesn't grow for free</h2>
+    <p>Transformer-based models use a mechanism called <strong>self-attention</strong>, which makes every token "look at" every other token in the sequence to decide what's relevant. The computational cost of this mechanism grows roughly quadratically with sequence length: doubling the context window can quadruple the processing cost of the attention layer.</p>
+    <div class="card">
+      <div class="card-title">In practice</div>
+      <p style="margin-bottom:0">That's why increasing the context window isn't just "allowing more text" — it requires specific architectures and engineering optimizations so each request doesn't become prohibitively expensive and slow.</p>
+    </div>
+
+    <h2><span class="num">03</span>The real problem in 2026: effective context vs. raw context</h2>
+    <p>Building a model that accepts 1 or even 10 million input tokens is, today, a relatively solved engineering problem. The bigger challenge is making sure the model can actually <strong>make good use</strong> of all of it — finding a specific piece of information buried somewhere in the middle of a giant document remains harder than the window size suggests.</p>
+    <p>Two documented phenomena in this context:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Lost in the middle:</strong> models tend to prioritize information at the beginning or end of the context, neglecting what's in the middle — even when they weren't deliberately designed to do so.</li>
+        <li><strong>Attention dilution:</strong> more tokens give the model more material to work with, but also introduce more noise; not everything in the window is equally relevant to the current task, and the model has to "filter" that internally.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>What this changes in practice for people using AI</h2>
+    <table>
+      <tr><th>Practice</th><th>Why</th></tr>
+      <tr><td>Put the most important instruction at the start or end of the prompt</td><td>Reduces the risk of it getting "lost" in the middle of a long context</td></tr>
+      <tr><td>Don't blindly rely on "fitting everything" into a giant prompt</td><td>A large context doesn't guarantee perfect retrieval of any given passage</td></tr>
+      <tr><td>Prefer relevant, well-selected context over maximum context</td><td>Less noise tends to produce more accurate answers</td></tr>
+      <tr><td>Test the actual task, not just the document size</td><td>"It fits in the context" and "the model uses that context well" are different things</td></tr>
+    </table>
+
+    <h2><span class="num">05</span>Why this is topical right now</h2>
+    <p>The launch of Claude Opus 5, on July 24, 2026, brought support for a 1-million-token context window with up to 128,000 output tokens — a meaningful leap over previous generations of the Opus family. Announcements like this tend to create the impression that "a bigger context window" alone solves problems like summarizing entire books, analyzing full codebases, or holding very long conversations without quality loss. Recent research shows that's only part of the equation: window size is necessary, but not sufficient — what really matters is how much of that window's content the model can actually retrieve and use.</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">A context window is the working memory of a single call to the model, measured in tokens. It's expensive to grow (attention scales roughly quadratically), and even when large, it suffers from practical limitations like "lost in the middle". When using a model with a large window, it's worth testing whether it actually retrieves specific information well within it — don't assume "it fits" means "it's used well".</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — AI Watch, 07/27/2026 edition.
+      <ul class="sources">
+        <li>Sources: <a href="https://www.anthropic.com/news/claude-opus-5">Anthropic — Introducing Claude Opus 5</a> (Jul 24, 2026)</li>
+        <li><a href="https://datanorth.ai/blog/context-length">DataNorth AI — LLM Context Length & Context Window Explained (2026)</a></li>
+        <li><a href="https://atlan.com/know/llm-context-window-limitations/">Atlan — LLM Context Window Limitations in 2026</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · IA Watch · Conceitos fundamentais de LLMs</div>
+    <h1>Context window: o que é, e por que "1 milhão de tokens" não significa 1 milhão de tokens úteis</h1>
+    <p class="subtitle">Modelos recentes anunciam janelas de contexto cada vez maiores — a Anthropic lançou o Claude Opus 5 em 24 de julho de 2026 com suporte a 1 milhão de tokens de contexto. Mas o que isso realmente significa na prática, e por que "caber mais texto" não é o mesmo que "usar bem esse texto"?</p>
+
+    <h2><span class="num">01</span>O que é context window</h2>
+    <p>A <strong>context window</strong> (janela de contexto) é a quantidade total de informação que um modelo processa em uma única inferência: instruções do sistema, histórico da conversa, documentos anexados e a própria resposta que ele vai gerar — tudo isso soma dentro do mesmo limite. É medida em <strong>tokens</strong>, unidades de texto que, em média, equivalem a algo entre três quartos de palavra em inglês (em português a proporção varia um pouco por causa de acentuação e conjugações).</p>
+    <p>Pense na context window como a "memória de trabalho" do modelo durante aquela chamada específica: tudo o que está fora dela, o modelo simplesmente não vê.</p>
+
+    <h2><span class="num">02</span>Por que ela não cresce de graça</h2>
+    <p>Modelos baseados em transformer usam um mecanismo chamado <strong>self-attention</strong>, que faz cada token "olhar" para todos os outros tokens da sequência para decidir o que é relevante. O custo computacional desse mecanismo cresce de forma aproximadamente quadrática com o tamanho da sequência: dobrar a janela de contexto pode multiplicar por quatro o custo de processamento da camada de atenção.</p>
+    <div class="card">
+      <div class="card-title">Na prática</div>
+      <p style="margin-bottom:0">É por isso que aumentar a context window não é só "permitir mais texto" — exige arquiteturas e otimizações de engenharia específicas para não tornar cada requisição proibitivamente cara e lenta.</p>
+    </div>
+
+    <h2><span class="num">03</span>O problema real de 2026: contexto efetivo vs contexto bruto</h2>
+    <p>Construir um modelo que aceita 1 ou até 10 milhões de tokens de entrada é, hoje, um problema de engenharia relativamente resolvido. O desafio maior é garantir que o modelo consiga <strong>usar bem</strong> tudo isso — encontrar uma informação específica escondida em algum ponto no meio de um documento gigantesco continua sendo mais difícil do que o tamanho da janela sugere.</p>
+    <p>Dois fenômenos documentados nesse contexto:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Lost in the middle:</strong> modelos tendem a priorizar informação que está no início ou no fim do contexto, negligenciando o que está no meio — mesmo quando não foram projetados deliberadamente para isso.</li>
+        <li><strong>Diluição de atenção:</strong> mais tokens dão ao modelo mais material para trabalhar, mas também introduzem mais ruído; nem tudo que está na janela é igualmente relevante para a tarefa atual, e o modelo precisa "filtrar" isso internamente.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>O que isso muda na prática de quem usa IA</h2>
+    <table>
+      <tr><th>Prática</th><th>Por quê</th></tr>
+      <tr><td>Colocar a instrução mais importante no início ou no fim do prompt</td><td>Reduz o risco de ela "se perder" no meio de um contexto longo</td></tr>
+      <tr><td>Não confiar cegamente em "caber tudo" num prompt gigante</td><td>Contexto grande não garante recuperação perfeita de qualquer trecho</td></tr>
+      <tr><td>Preferir contexto relevante e bem selecionado a contexto máximo</td><td>Menos ruído tende a gerar respostas mais precisas</td></tr>
+      <tr><td>Testar a tarefa real, não só o tamanho do documento</td><td>"Cabe no contexto" e "o modelo usa bem esse contexto" são coisas diferentes</td></tr>
+    </table>
+
+    <h2><span class="num">05</span>Por que isso está em alta agora</h2>
+    <p>O lançamento do Claude Opus 5, em 24 de julho de 2026, trouxe suporte a uma janela de contexto de 1 milhão de tokens com até 128 mil tokens de saída — um salto relevante frente às gerações anteriores da família Opus. Esse tipo de anúncio tende a gerar a impressão de que "context window maior" resolve sozinho problemas como resumir livros inteiros, analisar bases de código completas ou manter conversas longuíssimas sem perda de qualidade. A pesquisa recente mostra que isso é só parte da equação: o tamanho da janela é necessário, mas não suficiente — o que importa de verdade é o quanto do conteúdo daquela janela o modelo consegue efetivamente recuperar e usar.</p>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">Context window é a memória de trabalho de uma chamada ao modelo, medida em tokens. Ela custa caro para crescer (atenção escala de forma aproximadamente quadrática) e, mesmo grande, sofre de limitações práticas como "lost in the middle". Ao usar um modelo com janela grande, vale testar se ele recupera bem informação específica dentro dela — não assumir que "cabe tudo" equivale a "usa tudo bem".</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — IA Watch, edição de 27/07/2026.
+      <ul class="sources">
+        <li>Fontes: <a href="https://www.anthropic.com/news/claude-opus-5">Anthropic — Introducing Claude Opus 5</a> (24 jul 2026)</li>
+        <li><a href="https://datanorth.ai/blog/context-length">DataNorth AI — LLM Context Length & Context Window Explained (2026)</a></li>
+        <li><a href="https://atlan.com/know/llm-context-window-limitations/">Atlan — LLM Context Window Limitations in 2026</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

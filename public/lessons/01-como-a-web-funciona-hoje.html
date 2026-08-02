@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 01: How the web works today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --bg-card: #161618;
+    --bg-card-2: #1c1c1f;
+    --border: #2a2a2e;
+    --text: #e9e9ec;
+    --text-dim: #a3a3ab;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .lang-switch {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 24px;
+  }
+
+  .lang-switch-inner {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .lang-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  header.lesson-header {
+    margin-bottom: 40px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid rgba(124, 58, 237, 0.35);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    color: #fff;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin: 0;
+  }
+
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #fff;
+    margin: 44px 0 16px;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+  }
+
+  h2:first-of-type { border-top: none; padding-top: 0; }
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: #fff;
+    margin: 28px 0 10px;
+  }
+
+  p { margin: 0 0 16px; color: var(--text); }
+
+  .lead {
+    font-size: 17px;
+    color: var(--text-dim);
+  }
+
+  ul, ol {
+    margin: 0 0 16px;
+    padding-left: 22px;
+  }
+
+  li { margin-bottom: 8px; }
+
+  strong { color: #fff; }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+
+  code {
+    font-family: 'SF Mono', 'Menlo', monospace;
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 0.88em;
+    color: #ffb3bd;
+  }
+
+  pre {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 18px 0 24px;
+  }
+
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #e9e9ec;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin: 20px 0;
+  }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0 24px;
+  }
+
+  @media (max-width: 560px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .grid-2 .card { margin: 0; }
+
+  .pill-list { list-style: none; padding: 0; margin: 0; }
+  .pill-list li {
+    padding-left: 26px;
+    position: relative;
+  }
+  .pill-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pill-list.cons li::before {
+    content: "✕";
+  }
+
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 28px;
+  }
+
+  .flow-step {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .flow-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+  }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin: 24px 0;
+    font-size: 15px;
+  }
+
+  .callout strong { color: var(--accent); }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header class="lesson-header">
+      <span class="badge">Lesson 01 · Week 1</span>
+      <h1>How the web works today: client, server, build tools, and where every piece of the "modern stack" fits</h1>
+      <p class="subtitle lead">Before learning React, Next.js, Supabase or any other tool, you need a clear mental map of who does what when you visit a website. Without that map, every new tool becomes a loose name with nowhere to attach to.</p>
+    </header>
+
+    <h2>The basic model: client and server</h2>
+
+    <p>The entire web runs on a simple idea: there's a machine that <strong>asks</strong> for something (the client) and a machine that <strong>answers</strong> (the server). When you type an address in the browser, this happens:</p>
+
+    <div class="flow">
+      <div class="flow-step">Browser (client)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">HTTP request</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Server</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Response (HTML/JSON/etc)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Browser renders</div>
+    </div>
+
+    <p>The <strong>client</strong> is, in the vast majority of cases, the browser — but it can also be a mobile app, another server, or a script making an API call. The <strong>server</strong> is any machine configured to listen for requests and send back a response. That can be a physical server sitting in a cold room somewhere, or — much more common today — a function that runs for a few milliseconds in the cloud and then "shuts down".</p>
+
+    <p>This client/server pair is the foundation of everything. React, Next.js, Vercel, Supabase — all of these tools exist to make that request-and-response cycle faster, more organized, or cheaper to maintain. None of them replace this model; they all live inside it.</p>
+
+    <h2>What the server actually stores and does</h2>
+
+    <p>A modern web server usually handles three responsibilities:</p>
+
+    <ol>
+      <li><strong>Business logic</strong> — rules that decide what can or can't happen (e.g., "a user can't buy more items than exist in stock").</li>
+      <li><strong>Data access</strong> — reading and writing to a database (that's what SQL does, a topic Lesson 11 will dig into).</li>
+      <li><strong>Content delivery</strong> — returning ready-made HTML, or JSON data for the client to build the screen.</li>
+    </ol>
+
+    <p>It's this third responsibility — <em>how</em> content is delivered — that separates the "classic" web from the web you'll study in the next lessons.</p>
+
+    <h3>Classic web: the server sends ready HTML</h3>
+
+    <p>In the older (and still extremely common) model, the server assembles the complete HTML page and sends it ready to the browser. The browser only needs to display it. That's what WordPress, plain PHP, or Django/Rails applications do by default.</p>
+
+    <h3>Modern web: the client assembles the page with JavaScript</h3>
+
+    <p>Starting in the 2010s, a different model gained traction: the server sends a nearly empty HTML shell plus a bunch of JavaScript, and it's that JavaScript, running <strong>in the user's browser</strong>, that builds the interface, fetches data via API, and updates the screen without reloading the whole page. This is the model React popularized, and it's the reason practically everything you'll study in this track exists.</p>
+
+    <div class="callout">
+      <strong>Key point:</strong> "frontend" and "backend" aren't technologies — they're <em>places where code runs</em>. Frontend runs on the user's device (the browser). Backend runs on a machine you control. The confusion most beginners have is thinking certain languages are "frontend" or "backend" — in reality, today, JavaScript runs comfortably on both sides.
+    </div>
+
+    <h2>Build tools: why your code needs to be "processed" before it runs</h2>
+
+    <p>Here's a piece that confuses a lot of people: if the browser already understands HTML, CSS and JavaScript natively, why does almost no modern project write "raw" code that goes straight to the browser?</p>
+
+    <p>The answer is that, today, the code you <em>write</em> is rarely the code the browser <em>receives</em>. In between there's a step called <strong>build</strong> (compiling/bundling), done by build tools. They solve practical problems:</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Without a build tool</div>
+        <ul class="pill-list cons">
+          <li>You write JSX (React's syntax) and the browser doesn't understand it natively</li>
+          <li>Every JS file is a separate HTTP request — slow with many files</li>
+          <li>Modern code (ES2023) might not run on older browsers</li>
+          <li>CSS and images aren't automatically optimized</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">With a build tool</div>
+        <ul class="pill-list">
+          <li>JSX/TypeScript get converted to plain JavaScript the browser understands</li>
+          <li>Multiple files get grouped ("bundled") into a few optimized files</li>
+          <li>Code gets "translated" (transpiled) to more compatible JS versions</li>
+          <li>Images, CSS and fonts go through automatic optimization</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Tools like <strong>Vite</strong>, <strong>Webpack</strong>, or Next.js's built-in build system do this work. You write readable code organized across several files; the build tool delivers a compact, compatible, fast-to-load version to the browser. This happens every time you run commands like <code>npm run build</code> or <code>npm run dev</code>.</p>
+
+    <h2>Where every piece of the "modern stack" fits</h2>
+
+    <p>With the client/server model and the concept of build tools clear, the map for the next lessons looks like this:</p>
+
+    <div class="card">
+      <div class="card-title">Track map</div>
+      <ul>
+        <li><strong>React</strong> (lessons 4–5) — a library for building the interface that runs on the client, organized into components.</li>
+        <li><strong>Next.js</strong> (lessons 6–8) — a framework built on top of React that decides <em>where</em> each part of your code runs (client or server) and handles the build automatically.</li>
+        <li><strong>Vercel / Netlify</strong> (lessons 9–10) — platforms that host the build output and run your server functions without you having to manage a machine.</li>
+        <li><strong>SQL / databases</strong> (lessons 11–14) — where the data actually lives, accessed by code running on the server.</li>
+        <li><strong>Supabase</strong> (lesson 15) — a ready-made package of database + authentication + storage, so you don't have to assemble every backend piece by hand.</li>
+        <li><strong>Figma / Framer</strong> (lessons 17–20) — design tools that connect to code through tokens, components, and (in Framer's case) even direct publishing.</li>
+      </ul>
+    </div>
+
+    <h2>Practical example: the same page in three stages</h2>
+
+    <p>To make this stick, imagine a simple page that shows "Today it's <em>X</em> degrees". Here's how it would exist under both models:</p>
+
+    <h3>1. Server sends ready HTML (classic model)</h3>
+
+    <pre><code>&lt;!-- The server already calculated the temperature and returns this --&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;p&gt;Today it's 24°C&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <p>The browser does nothing but display it. If the temperature changes, the whole page needs to reload to see the new value.</p>
+
+    <h3>2. Client fetches data and builds the screen (modern model with React)</h3>
+
+    <pre><code>function Weather() {
+  const [temperature, setTemperature] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/weather")
+      .then(res => res.json())
+      .then(data => setTemperature(data.temp));
+  }, []);
+
+  return &lt;p&gt;Today it's {temperature ?? "..."}°C&lt;/p&gt;;
+}</code></pre>
+
+    <p>Here, the server only returns raw data (<code>{"temp": 24}</code>) through an API, and it's the JavaScript running in the user's browser that decides how to display it. The advantage: this same function can update the temperature every minute <em>without reloading the page</em>, and the same API endpoint can feed both the website and a mobile app.</p>
+
+    <h3>3. The build tool's role in between</h3>
+
+    <p>The code from step 2 uses <code>useState</code>, <code>useEffect</code>, and a syntax (JSX) that mixes HTML with JavaScript. No browser understands this directly. Before it reaches the user, a build tool transforms this code into something like this:</p>
+
+    <pre><code>function Weather(){var e=useState(null),t=e[0],temperature=e[0],setTemperature=e[1];
+return useEffect(function(){fetch("/api/weather").then(function(r){return r.json()})
+.then(function(d){setTemperature(d.temp)})},[]),React.createElement("p",null,
+"Today it's ",temperature??"...","°C")}</code></pre>
+
+    <p>Compact, without unnecessary whitespace, and using only JavaScript syntax any browser understands. You never write this by hand — that's exactly the repetitive work Vite, Webpack, and Next.js's build system automate.</p>
+
+    <h2>Pros and cons of both models</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Server sends ready HTML</div>
+        <ul class="pill-list">
+          <li>Simpler to understand and debug</li>
+          <li>Great for SEO (crawlers read the HTML directly)</li>
+          <li>Works even with JavaScript disabled</li>
+        </ul>
+        <ul class="pill-list cons">
+          <li>Every interaction may require reloading the page</li>
+          <li>Less fluid experience in interactive apps</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Client builds with JS (React & co)</div>
+        <ul class="pill-list">
+          <li>Fluid interfaces, no full page reloads</li>
+          <li>Same API can feed web, mobile, other systems</li>
+        </ul>
+        <ul class="pill-list cons">
+          <li>More JavaScript for the browser to download and run</li>
+          <li>SEO needs extra care (solved by Next.js, lessons 7-8)</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Neither one is "correct" — they're tools for different problems. In practice, what you'll see in the next lessons is that frameworks like Next.js exist precisely to <strong>combine both models in the same application</strong>, choosing case by case where each piece of the page should be assembled.</p>
+
+    <div class="callout">
+      <strong>For the next lesson:</strong> now that you know where client, server, and build tools fit in, Lesson 02 will detail exactly what runs on each side — and why that split is the most important architectural decision of any project.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header class="lesson-header">
+      <span class="badge">Lição 01 · Semana 1</span>
+      <h1>Como a web funciona hoje: cliente, servidor, build tools e onde cada peça do "stack moderno" entra</h1>
+      <p class="subtitle lead">Antes de aprender React, Next.js, Supabase ou qualquer outra ferramenta, você precisa ter um mapa mental claro de quem faz o quê quando você acessa um site. Sem esse mapa, cada ferramenta nova vira um nome solto sem lugar para encaixar.</p>
+    </header>
+
+    <h2>O modelo básico: cliente e servidor</h2>
+
+    <p>Toda a web roda sobre uma ideia simples: existe uma máquina que <strong>pede</strong> algo (o cliente) e uma máquina que <strong>responde</strong> (o servidor). Quando você digita um endereço no navegador, isso acontece:</p>
+
+    <div class="flow">
+      <div class="flow-step">Navegador (cliente)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Requisição HTTP</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Servidor</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Resposta (HTML/JSON/etc)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Navegador renderiza</div>
+    </div>
+
+    <p>O <strong>cliente</strong> é, na grande maioria dos casos, o navegador — mas também pode ser um app mobile, outro servidor, ou um script fazendo uma chamada de API. O <strong>servidor</strong> é qualquer máquina configurada para escutar requisições e devolver uma resposta. Isso pode ser um servidor físico numa sala fria em algum lugar, ou — o que é bem mais comum hoje — uma função que roda por alguns milissegundos numa nuvem e depois "desliga".</p>
+
+    <p>Esse par cliente/servidor é a fundação de tudo. React, Next.js, Vercel, Supabase — todas essas ferramentas existem para tornar esse ciclo de pedido-e-resposta mais rápido, mais organizado ou mais barato de manter. Nenhuma delas substitui esse modelo; todas vivem dentro dele.</p>
+
+    <h2>O que o servidor de fato guarda e faz</h2>
+
+    <p>Um servidor web moderno geralmente cuida de três responsabilidades:</p>
+
+    <ol>
+      <li><strong>Lógica de negócio</strong> — regras que decidem o que pode ou não acontecer (ex: "um usuário não pode comprar mais itens do que existem em estoque").</li>
+      <li><strong>Acesso a dados</strong> — ler e escrever num banco de dados (isso é o que SQL faz, tema que a Lição 11 vai destrinchar).</li>
+      <li><strong>Entrega de conteúdo</strong> — devolver HTML já pronto, ou dados em JSON para o cliente montar a tela.</li>
+    </ol>
+
+    <p>É essa terceira responsabilidade — <em>como</em> o conteúdo é entregue — que separa a web "clássica" da web que você vai estudar nas próximas lições.</p>
+
+    <h3>Web clássica: servidor manda HTML pronto</h3>
+
+    <p>No modelo mais antigo (e ainda extremamente comum), o servidor monta a página HTML completa e a envia pronta para o navegador. O navegador só precisa exibir. Isso é o que WordPress, PHP puro ou aplicações Django/Rails fazem por padrão.</p>
+
+    <h3>Web moderna: cliente monta a página com JavaScript</h3>
+
+    <p>A partir dos anos 2010, ganhou força um modelo diferente: o servidor manda um HTML quase vazio + um monte de JavaScript, e é esse JavaScript, rodando <strong>no navegador do usuário</strong>, que monta a interface, busca dados via API e atualiza a tela sem precisar recarregar a página inteira. Esse é o modelo que React popularizou, e é a razão de existir de praticamente tudo que você vai estudar nessa trilha.</p>
+
+    <div class="callout">
+      <strong>Ponto-chave:</strong> "frontend" e "backend" não são tecnologias — são <em>lugares onde o código roda</em>. Frontend roda no dispositivo do usuário (navegador). Backend roda numa máquina que você controla. A confusão que a maioria dos iniciantes tem é achar que certas linguagens são "de frontend" ou "de backend" — na verdade, hoje, JavaScript roda confortavelmente nos dois lados.
+    </div>
+
+    <h2>Build tools: por que seu código precisa ser "processado" antes de rodar</h2>
+
+    <p>Aqui entra uma peça que confunde muita gente: se o navegador já entende HTML, CSS e JavaScript nativamente, por que quase nenhum projeto moderno escreve código "cru" que vai direto pro navegador?</p>
+
+    <p>A resposta é que, hoje, o código que você <em>escreve</em> raramente é o código que o navegador <em>recebe</em>. No meio do caminho existe uma etapa chamada <strong>build</strong> (compilação/empacotamento), feita por ferramentas de build. Elas resolvem problemas práticos:</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Sem build tool</div>
+        <ul class="pill-list cons">
+          <li>Você escreve JSX (a sintaxe do React) e o navegador não entende isso nativamente</li>
+          <li>Cada arquivo JS é um request HTTP separado — lento com muitos arquivos</li>
+          <li>Código moderno (ES2023) pode não rodar em navegadores mais antigos</li>
+          <li>CSS e imagens não são otimizados automaticamente</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Com build tool</div>
+        <ul class="pill-list">
+          <li>JSX/TypeScript são convertidos para JavaScript puro que o navegador entende</li>
+          <li>Múltiplos arquivos são agrupados ("bundle") em poucos arquivos otimizados</li>
+          <li>Código é "traduzido" (transpilado) para versões de JS mais compatíveis</li>
+          <li>Imagens, CSS e fontes passam por otimização automática</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Ferramentas como <strong>Vite</strong>, <strong>Webpack</strong> ou o build interno do <strong>Next.js</strong> fazem esse trabalho. Você escreve código legível e organizado em vários arquivos; a build tool entrega ao navegador uma versão compacta, compatível e rápida de carregar. Isso acontece toda vez que você roda comandos como <code>npm run build</code> ou <code>npm run dev</code>.</p>
+
+    <h2>Onde cada peça do "stack moderno" entra</h2>
+
+    <p>Com o modelo cliente/servidor e o conceito de build tools claros, o mapa das próximas lições fica assim:</p>
+
+    <div class="card">
+      <div class="card-title">Mapa da trilha</div>
+      <ul>
+        <li><strong>React</strong> (lições 4–5) — biblioteca para construir a interface que roda no cliente, organizada em componentes.</li>
+        <li><strong>Next.js</strong> (lições 6–8) — um framework construído em cima do React que decide <em>onde</em> cada parte do seu código roda (cliente ou servidor) e cuida do build automaticamente.</li>
+        <li><strong>Vercel / Netlify</strong> (lições 9–10) — plataformas que hospedam o resultado do build e rodam suas funções de servidor sem você precisar administrar uma máquina.</li>
+        <li><strong>SQL / bancos de dados</strong> (lições 11–14) — onde os dados realmente vivem, acessados pelo código que roda no servidor.</li>
+        <li><strong>Supabase</strong> (lição 15) — um pacote pronto de banco de dados + autenticação + storage, para não montar cada peça do backend na mão.</li>
+        <li><strong>Figma / Framer</strong> (lições 17–20) — ferramentas de design que se conectam ao código através de tokens, componentes e (no caso do Framer) até publicação direta.</li>
+      </ul>
+    </div>
+
+    <h2>Exemplo prático: os três estágios de uma mesma página</h2>
+
+    <p>Para fixar a ideia, imagine uma página simples que mostra "Hoje são <em>X</em> graus". Veja como ela existiria nos dois modelos:</p>
+
+    <h3>1. Servidor manda HTML pronto (modelo clássico)</h3>
+
+    <pre><code>&lt;!-- O servidor já calculou a temperatura e devolve isso --&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;p&gt;Hoje são 24°C&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <p>O navegador não faz nada além de exibir. Se a temperatura mudar, é preciso recarregar a página inteira para ver o novo valor.</p>
+
+    <h3>2. Cliente busca dados e monta a tela (modelo moderno com React)</h3>
+
+    <pre><code>function Clima() {
+  const [temperatura, setTemperatura] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/clima")
+      .then(res => res.json())
+      .then(data => setTemperatura(data.temp));
+  }, []);
+
+  return &lt;p&gt;Hoje são {temperatura ?? "..."}°C&lt;/p&gt;;
+}</code></pre>
+
+    <p>Aqui, o servidor só devolve dados brutos (<code>{"temp": 24}</code>) através de uma API, e é o JavaScript rodando no navegador do usuário que decide como exibir isso. A vantagem: essa mesma função pode atualizar a temperatura a cada minuto <em>sem recarregar a página</em>, e o mesmo endpoint de API pode alimentar tanto o site quanto um app mobile.</p>
+
+    <h3>3. O papel do build tool nesse meio</h3>
+
+    <p>O código do passo 2 usa <code>useState</code>, <code>useEffect</code> e uma sintaxe (JSX) que mistura HTML com JavaScript. Nenhum navegador entende isso diretamente. Antes de chegar ao usuário, uma build tool transforma esse código em algo assim:</p>
+
+    <pre><code>function Clima(){var e=useState(null),t=e[0],temperatura=e[0],setTemperatura=e[1];
+return useEffect(function(){fetch("/api/clima").then(function(r){return r.json()})
+.then(function(d){setTemperatura(d.temp)})},[]),React.createElement("p",null,
+"Hoje são ",temperatura??"...","°C")}</code></pre>
+
+    <p>Compacto, sem espaços desnecessários, e usando apenas sintaxe de JavaScript que qualquer navegador entende. Você nunca escreve isso à mão — é exatamente esse trabalho repetitivo que Vite, Webpack e o build do Next.js automatizam.</p>
+
+    <h2>Prós e contras dos dois modelos</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Servidor manda HTML pronto</div>
+        <ul class="pill-list">
+          <li>Mais simples de entender e depurar</li>
+          <li>Ótimo para SEO (buscadores leem o HTML direto)</li>
+          <li>Funciona mesmo com JavaScript desativado</li>
+        </ul>
+        <ul class="pill-list cons">
+          <li>Cada interação pode exigir recarregar a página</li>
+          <li>Experiência menos fluida em apps interativos</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Cliente monta com JS (React e cia)</div>
+        <ul class="pill-list">
+          <li>Interfaces fluidas, sem recarregar a página inteira</li>
+          <li>Mesma API pode alimentar web, mobile, outros sistemas</li>
+        </ul>
+        <ul class="pill-list cons">
+          <li>Mais JavaScript para o navegador baixar e executar</li>
+          <li>SEO exige cuidado extra (resolvido por Next.js, lição 7-8)</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Nenhum dos dois é "certo" — são ferramentas para problemas diferentes. Na prática, o que você vai ver nas próximas lições é que frameworks como Next.js existem justamente para <strong>combinar os dois modelos na mesma aplicação</strong>, escolhendo caso a caso onde cada pedaço da página deve ser montado.</p>
+
+    <div class="callout">
+      <strong>Para a próxima lição:</strong> agora que você sabe onde cliente, servidor e build tools entram, a Lição 02 vai detalhar o que especificamente roda em cada lado — e por que essa divisão é a decisão arquitetural mais importante de qualquer projeto.
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lesson 01 of 20</span>
+  <span class="accent" id="footer-right">Week 1 — Foundations and context</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Lesson 01 of 20';
+      footerRight.textContent = 'Week 1 — Foundations and context';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Lição 01 de 20';
+      footerRight.textContent = 'Semana 1 — Fundamentos e contexto';
+    }
+  }
+</script>
+
+</body>
+</html>

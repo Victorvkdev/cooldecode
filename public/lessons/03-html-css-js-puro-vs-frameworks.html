@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 03: Plain HTML/CSS/JS vs frameworks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    padding: 0;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 48px 0 16px;
+    color: #fff;
+  }
+  h2 .num {
+    color: var(--accent);
+    margin-right: 8px;
+  }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 640px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .col-front { border-left: 3px solid var(--accent); }
+  .col-back { border-left: 3px solid #4d7cff; }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-size: 14px;
+    color: #ffb4bf;
+    font-family: 'DM Sans', monospace;
+  }
+  pre {
+    background: var(--bg-card-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 13.5px;
+    color: #d7d7dd;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 44px 0;
+  }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · Lesson 03 · Main track</div>
+    <h1>Plain HTML/CSS/JS vs frameworks: when the extra complexity pays off</h1>
+    <p class="subtitle">After understanding what runs on the frontend and what runs on the backend, the next question is: do you really need a framework to build the visual layer, or does plain HTML/CSS/JS (the famous "vanilla") get the job done? The right answer is "it depends on the size of the problem" — and it's worth understanding why.</p>
+
+    <h2><span class="num">01</span>What "vanilla" and "framework" mean</h2>
+    <p><strong>Vanilla JS</strong> (or plain HTML/CSS/JS) means building the interface using only what the browser already understands natively, with no libraries to structure components or manage state. A <strong>frontend framework</strong> (React, Vue, Svelte, Angular) adds a layer on top: reusable components, a declarative way to describe "what the screen should look like given this state", and tools to automatically update the screen when data changes.</p>
+
+    <div class="grid-2">
+      <div class="card col-front">
+        <div class="card-title">Vanilla</div>
+        <p style="margin-bottom:0">You manipulate the DOM directly: <code>document.querySelector</code>, <code>addEventListener</code>, <code>innerHTML</code>. Total control, zero abstraction hiding what's happening.</p>
+      </div>
+      <div class="card col-back">
+        <div class="card-title">Framework</div>
+        <p style="margin-bottom:0">You describe the interface as a function of state (<code>UI = f(state)</code>) and the framework decides how to efficiently update the DOM behind the scenes.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">02</span>Why frameworks exist</h2>
+    <p>Nobody invented React or Vue on a whim. They solve a real problem that shows up as an interface grows: manually keeping the DOM in sync with the application's state turns into a nightmare of subtle bugs.</p>
+    <div class="card">
+      <ul>
+        <li><strong>State synchronization:</strong> in a to-do list with filters, sorting, and inline editing, manipulating the DOM by hand for every change generates a lot of repetitive, error-prone code.</li>
+        <li><strong>Componentization:</strong> frameworks encourage breaking the UI into reusable pieces (a card, a modal, a form) with their own rules — this scales better across teams and large projects.</li>
+        <li><strong>Ecosystem:</strong> routing, global state management, testing tools, and a huge volume of ready-made libraries other people have already built.</li>
+        <li><strong>Team standardization:</strong> when several people work on the same code, a framework enforces conventions that reduce style variation between developers.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>Why vanilla still makes sense</h2>
+    <p>The idea that "every project needs React" is a common myth, especially among people who are learning. Vanilla JS is still the right choice in several scenarios:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Mostly static sites:</strong> a landing page, a blog, a portfolio — little to no interactivity doesn't justify loading an entire framework.</li>
+        <li><strong>Critical performance:</strong> without a framework's abstraction layer, the JavaScript sent to the browser is smaller and startup is faster.</li>
+        <li><strong>Isolated widgets:</strong> a small component embedded in another system (e.g., a chat widget embedded across several different sites) often doesn't need the infrastructure of a full framework.</li>
+        <li><strong>Learning the fundamentals:</strong> understanding DOM manipulation, events, and a page's lifecycle helps you understand what the framework is doing underneath — writing "vanilla" code before learning React isn't wasted time, it's an investment.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>Direct comparison</h2>
+    <table>
+      <tr><th>Criterion</th><th>Vanilla JS</th><th>Framework</th></tr>
+      <tr><td>Initial learning curve</td><td>Lower</td><td>Higher (JSX, hooks, build tools)</td></tr>
+      <tr><td>Weight sent to the browser</td><td>Only what you write</td><td>+ framework library (tens of KB)</td></tr>
+      <tr><td>Maintenance on complex screens</td><td>Degrades fast with scale</td><td>Scales better with componentization</td></tr>
+      <tr><td>Team development speed</td><td>Depends on your own conventions</td><td>Conventions come built-in</td></tr>
+      <tr><td>Ecosystem of ready-made libraries</td><td>You build what's missing</td><td>Much broader</td></tr>
+      <tr><td>Ideal for</td><td>Simple sites, widgets, learning</td><td>Applications with heavy state and interaction</td></tr>
+    </table>
+
+    <h2><span class="num">05</span>Practical example: the same task in both worlds</h2>
+    <p>A button that, when clicked, increments an on-screen counter.</p>
+    <pre>// Vanilla JS
+let counter = 0;
+const button = document.querySelector('#btn');
+const display = document.querySelector('#counter');
+
+button.addEventListener('click', () => {
+  counter++;
+  display.textContent = counter;
+});</pre>
+    <pre>// React
+function Counter() {
+  const [counter, setCounter] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{counter}&lt;/span&gt;
+      &lt;button onClick={() => setCounter(counter + 1)}&gt;+1&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+    <p>For this isolated example, vanilla is arguably simpler. The difference shows up when that counter needs to be reflected in three places on screen at once, synchronized with data coming from an API, inside a screen with dozens of other interactive components — that's when the framework's declarative approach starts to pay for its extra cost.</p>
+
+    <h2><span class="num">06</span>How to decide in practice</h2>
+    <div class="card">
+      <div class="card-title">Rule of thumb</div>
+      <p style="margin-bottom:0">Ask: "will this interface grow in state and interaction over time, or is it essentially static?". Small, static, or short-lived projects favor vanilla. Projects that will gain screens, complex forms, real-time data, and multiple people touching the code favor a framework — the learning cost pays for itself quickly as complexity grows.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">A framework isn't "better" than vanilla in absolute terms — it's a trade-off: more structure and productivity on complex projects, in exchange for more weight and one more layer of abstraction to learn. Neither one replaces understanding plain HTML, CSS, and JavaScript, which remain the foundation of everything that comes after, including how the framework itself works under the hood.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — daily study track. Lesson 3 of 20 in the current track.
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 03 · Trilha principal</div>
+    <h1>HTML/CSS/JS puro vs frameworks: quando a complexidade extra compensa</h1>
+    <p class="subtitle">Depois de entender o que roda no frontend e o que roda no backend, a próxima pergunta é: preciso mesmo de um framework para construir a parte visual, ou HTML/CSS/JS puro (o famoso "vanilla") resolve? A resposta certa é "depende do tamanho do problema" — e vale entender por quê.</p>
+
+    <h2><span class="num">01</span>O que é "vanilla" e o que é "framework"</h2>
+    <p><strong>Vanilla JS</strong> (ou HTML/CSS/JS puro) significa escrever a interface usando só o que o navegador já entende nativamente, sem bibliotecas para estruturar componentes ou gerenciar estado. Um <strong>framework de frontend</strong> (React, Vue, Svelte, Angular) adiciona uma camada por cima: componentes reutilizáveis, um jeito declarativo de descrever "como a tela deve ficar dado este estado", e ferramentas para atualizar a tela automaticamente quando os dados mudam.</p>
+
+    <div class="grid-2">
+      <div class="card col-front">
+        <div class="card-title">Vanilla</div>
+        <p style="margin-bottom:0">Você manipula o DOM diretamente: <code>document.querySelector</code>, <code>addEventListener</code>, <code>innerHTML</code>. Total controle, zero abstração escondendo o que está acontecendo.</p>
+      </div>
+      <div class="card col-back">
+        <div class="card-title">Framework</div>
+        <p style="margin-bottom:0">Você descreve a interface como função do estado (<code>UI = f(estado)</code>) e o framework decide como atualizar o DOM de forma eficiente por trás das cortinas.</p>
+      </div>
+    </div>
+
+    <h2><span class="num">02</span>Por que frameworks existem</h2>
+    <p>Ninguém inventou React ou Vue por capricho. Eles resolvem um problema real que aparece conforme uma interface cresce: manter o DOM sincronizado manualmente com o estado da aplicação vira um pesadelo de bugs sutis.</p>
+    <div class="card">
+      <ul>
+        <li><strong>Sincronização de estado:</strong> numa lista de tarefas com filtros, ordenação e edição inline, manipular o DOM à mão para cada mudança gera muito código repetido e propenso a erro.</li>
+        <li><strong>Componentização:</strong> frameworks incentivam quebrar a UI em pedaços reutilizáveis (um card, um modal, um formulário) com suas próprias regras — isso escala melhor em equipes e projetos grandes.</li>
+        <li><strong>Ecossistema:</strong> roteamento, gerenciamento de estado global, ferramentas de teste e um enorme volume de bibliotecas prontas já resolvidas por outras pessoas.</li>
+        <li><strong>Padronização em equipe:</strong> quando várias pessoas mexem no mesmo código, um framework impõe convenções que reduzem a variação de estilo entre desenvolvedores.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">03</span>Por que vanilla ainda faz sentido</h2>
+    <p>A ideia de que "todo projeto precisa de React" é um mito comum, especialmente entre quem está aprendendo. Vanilla JS continua sendo a escolha certa em vários cenários:</p>
+    <div class="card">
+      <ul>
+        <li><strong>Sites majoritariamente estáticos:</strong> uma landing page, um blog, um portfólio — pouca ou nenhuma interatividade não justifica carregar um framework inteiro.</li>
+        <li><strong>Performance crítica:</strong> sem a camada de abstração de um framework, o JavaScript enviado ao navegador é menor e a inicialização é mais rápida.</li>
+        <li><strong>Widgets isolados:</strong> um componente pequeno embutido em outro sistema (ex.: um widget de chat incorporado em vários sites diferentes) muitas vezes não precisa da infraestrutura de um framework completo.</li>
+        <li><strong>Aprendizado dos fundamentos:</strong> entender manipulação de DOM, eventos e o ciclo de vida de uma página ajuda a entender o que o framework está fazendo por baixo — programar "vanilla" antes de aprender React não é perda de tempo, é investimento.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>Comparação direta</h2>
+    <table>
+      <tr><th>Critério</th><th>Vanilla JS</th><th>Framework</th></tr>
+      <tr><td>Curva de aprendizado inicial</td><td>Menor</td><td>Maior (JSX, hooks, build tools)</td></tr>
+      <tr><td>Peso enviado ao navegador</td><td>Só o que você escreve</td><td>+ biblioteca do framework (dezenas de KB)</td></tr>
+      <tr><td>Manutenção em telas complexas</td><td>Piora rápido com a escala</td><td>Escala melhor com componentização</td></tr>
+      <tr><td>Velocidade de desenvolvimento em equipe</td><td>Depende de convenções próprias</td><td>Convenções já vêm prontas</td></tr>
+      <tr><td>Ecossistema de bibliotecas prontas</td><td>Você monta o que falta</td><td>Muito mais amplo</td></tr>
+      <tr><td>Ideal para</td><td>Sites simples, widgets, aprendizado</td><td>Aplicações com muito estado e interação</td></tr>
+    </table>
+
+    <h2><span class="num">05</span>Exemplo prático: a mesma tarefa nos dois mundos</h2>
+    <p>Um botão que, ao ser clicado, incrementa um contador na tela.</p>
+    <pre>// Vanilla JS
+let contador = 0;
+const botao = document.querySelector('#btn');
+const display = document.querySelector('#contador');
+
+botao.addEventListener('click', () => {
+  contador++;
+  display.textContent = contador;
+});</pre>
+    <pre>// React
+function Contador() {
+  const [contador, setContador] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;span&gt;{contador}&lt;/span&gt;
+      &lt;button onClick={() => setContador(contador + 1)}&gt;+1&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</pre>
+    <p>Para esse exemplo isolado, o vanilla é até mais simples. A diferença aparece quando esse contador precisa refletir em três lugares da tela ao mesmo tempo, sincronizado com dados vindos de uma API, dentro de uma tela com dezenas de outros componentes interativos — aí a abordagem declarativa do framework começa a compensar o custo extra.</p>
+
+    <h2><span class="num">06</span>Como decidir na prática</h2>
+    <div class="card">
+      <div class="card-title">Regra prática</div>
+      <p style="margin-bottom:0">Pergunte: "essa interface vai crescer em estado e interação ao longo do tempo, ou é essencialmente estática?". Projetos pequenos, estáticos ou de vida curta favorecem vanilla. Projetos que vão ganhar telas, formulários complexos, dados em tempo real e múltiplas pessoas mexendo no código favorecem um framework — o custo de aprendizado se paga rápido conforme a complexidade cresce.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">Framework não é "melhor" que vanilla em absoluto — é uma troca: mais estrutura e produtividade em projetos complexos, em troca de mais peso e uma camada de abstração a mais para aprender. Nenhum dos dois substitui entender HTML, CSS e JavaScript puros, que continuam sendo a base de tudo o que vem depois, inclusive de como o próprio framework funciona por dentro.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — trilha de estudos diária de Vk. Lição 3 de 20 da trilha atual.
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Deep dive: Tailwind CSS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge {
+    display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 18px 0 24px; }
+  pre code { background: none; border: none; padding: 0; color: #e9e9ec; font-size: 13.5px; line-height: 1.6; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 24px; }
+  @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-2 .card { margin: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .pill-list { list-style: none; padding: 0; margin: 0; }
+  .pill-list li { padding-left: 26px; position: relative; }
+  .pill-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .pill-list.cons li::before { content: "✕"; }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 10px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Deep dive · Tailwind CSS</span>
+      <h1>Tailwind CSS deep dive</h1>
+      <p class="subtitle">A standalone module, separate from the main track, dedicated to really understanding what Tailwind is, why it exists, and when it pays off (or not) in practice.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-is">What Tailwind is</a></li>
+        <li><a href="#why-exists">Why it exists: the problem it solves</a></li>
+        <li><a href="#how-works">How it works under the hood</a></li>
+        <li><a href="#core-features">Core features</a></li>
+        <li><a href="#example">Practical example</a></li>
+        <li><a href="#pros-cons">Pros and cons</a></li>
+        <li><a href="#comparison">Comparison with alternatives</a></li>
+        <li><a href="#ecosystem">Ecosystem around Tailwind</a></li>
+        <li><a href="#when-to-use">When to use it, and when it's not worth it</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-is">1. What Tailwind is</h2>
+    <p>Tailwind CSS is a <strong>utility-first</strong> styling framework: instead of writing CSS classes with semantic names (<code>.card</code>, <code>.btn-primary</code>) and defining their rules in a separate file, Tailwind gives you a huge set of small, ready-made classes — each doing a single thing — that you combine directly in your HTML/JSX.</p>
+    <pre><code>&lt;button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"&gt;
+  Submit
+&lt;/button&gt;</code></pre>
+    <p>Notice there's no <code>.submit-button</code> class with a block of CSS in another file. The button's entire style is described right there, through the combination of utility classes (background color, text color, padding, rounded corners, and the hover state).</p>
+
+    <h2 id="why-exists">2. Why it exists: the problem it solves</h2>
+    <p>Before Tailwind (and similar tools), the common flow was: write HTML with semantic classes, and keep a separate CSS file with the rules for each class. In practice, this creates friction anyone who's worked on large CSS projects knows well:</p>
+    <ul>
+      <li><strong>Naming things is hard:</strong> every component change requires inventing (or poorly reusing) a new class name.</li>
+      <li><strong>CSS grows and never shrinks:</strong> it's risky to remove a CSS rule because nobody's sure whether it's still used somewhere on the site.</li>
+      <li><strong>Two sources of truth:</strong> to understand a component's look, you need to check the HTML <em>and</em> the CSS at the same time, jumping between files.</li>
+      <li><strong>Visual inconsistency:</strong> without a token system, it's easy to accumulate dozens of slightly different grays or spacing values scattered across the project.</li>
+    </ul>
+    <p>Tailwind attacks these problems in a specific way: it removes the need to name classes (you just combine ready-made utilities), and it forces consistency because all color, spacing, and size options come from a predefined design scale (Tailwind's own customizable "design system").</p>
+
+    <h2 id="how-works">3. How it works under the hood</h2>
+    <p>Tailwind isn't just one giant CSS sheet with every possible class already built in — that would be extremely heavy. It works with a compiler (the <strong>Just-In-Time engine</strong>, on by default since version 3) that:</p>
+    <ol>
+      <li>Scans your project's files (HTML, JSX, TSX, etc.) looking for Tailwind classes used in the code's text.</li>
+      <li>Generates, on demand, only the CSS matching the classes it found in use.</li>
+      <li>Produces a lean final CSS file, containing only what that specific project needs — even though the total catalog of available classes is huge.</li>
+    </ol>
+    <p>That's why Tailwind projects in production typically have a surprisingly small final CSS file, even when using hundreds of class combinations throughout the code.</p>
+
+    <h2 id="core-features">4. Core features</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Design scale (tokens)</div>
+        <p style="margin-bottom:0">Colors, spacing, font sizes, and breakpoints follow a predefined numeric scale (e.g., <code>p-1</code>, <code>p-2</code>, <code>p-4</code>...), avoiding arbitrary values scattered through the code. All of this is configurable in a central file (<code>tailwind.config.js</code>).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">State and responsive variants</div>
+        <p style="margin-bottom:0">Prefixes combine with any utility: <code>hover:</code>, <code>focus:</code>, <code>dark:</code> (dark mode), and breakpoint prefixes like <code>md:</code>, <code>lg:</code> for responsiveness — all right in the class, with no need to write separate media queries.</p>
+      </div>
+    </div>
+    <p>Other important features: the <code>@apply</code> directive lets you group repeated utilities into your own class when it makes sense (so you don't repeat the same 10-class combination in several places); and Tailwind doesn't impose any ready-made visual component (button, card, modal) — it's purely a system of style utilities, and the design of each component is up to you.</p>
+
+    <h2 id="example">5. Practical example</h2>
+    <p>A simple product card, comparing traditional CSS with Tailwind:</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Traditional CSS</div>
+        <pre style="margin:0"><code>&lt;div class="product-card"&gt;
+  &lt;h3&gt;Product&lt;/h3&gt;
+&lt;/div&gt;
+
+/* separate CSS file */
+.product-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-title">Tailwind</div>
+        <pre style="margin:0"><code>&lt;div class="bg-white rounded-xl
+            p-4 shadow-sm"&gt;
+  &lt;h3&gt;Product&lt;/h3&gt;
+&lt;/div&gt;
+
+/* no additional CSS
+   file needed */</code></pre>
+      </div>
+    </div>
+
+    <h2 id="pros-cons">6. Pros and cons</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Pros</div>
+        <ul class="pill-list">
+          <li>No need to invent class names or switch between files to understand the style</li>
+          <li>Visual consistency enforced by the design scale</li>
+          <li>Small final CSS, even in large projects (JIT generates only what's needed)</li>
+          <li>Easy to remove: deleting a component takes its CSS with it (no leftover "dead CSS")</li>
+          <li>Great fit with componentization (React, Vue, etc.) — style lives right alongside structure</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Cons</div>
+        <ul class="pill-list cons">
+          <li>HTML/JSX gets visually "cluttered" with lots of classes — can be intimidating for newcomers to the project</li>
+          <li>Initial learning curve to memorize utility names</li>
+          <li>Without discipline, it's possible to repeat the same long class combination in several places (mitigated with componentization or <code>@apply</code>)</li>
+          <li>Depends on a build step (the CSS doesn't exist "ready" without the compiler running)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="comparison">7. Comparison with alternatives</h2>
+    <table>
+      <tr><th>Approach</th><th>Core idea</th><th>Main trade-off</th></tr>
+      <tr><td>Traditional CSS / CSS Modules</td><td>Semantic classes, CSS in a separate file</td><td>More organized by "meaning", but requires naming everything and keeping two files in sync</td></tr>
+      <tr><td>CSS-in-JS (styled-components, Emotion)</td><td>Write CSS inside the JS/component file itself</td><td>Style stays with the component, but historically came with runtime performance cost (mitigated in newer solutions)</td></tr>
+      <tr><td>Bootstrap / ready-made component libraries</td><td>Finished visual components (buttons, cards, grids)</td><td>Much faster to get started, but sites tend to "all look the same" and deep customization is more work</td></tr>
+      <tr><td>Tailwind</td><td>Combinable atomic utilities, no ready-made visual components</td><td>Full visual control and consistency via tokens, but you build every component from scratch (or use libraries built on top of Tailwind, see below)</td></tr>
+    </table>
+
+    <h2 id="ecosystem">8. Ecosystem around Tailwind</h2>
+    <p>Since Tailwind doesn't provide ready-made components, libraries built on top of it emerged to fill that gap:</p>
+    <ul>
+      <li><strong>shadcn/ui:</strong> not a package you install — it's a set of components you copy directly into your own project (using Tailwind + Radix UI underneath), giving you full control over each component's code.</li>
+      <li><strong>Headless UI:</strong> behavior components (dropdown, modal, menu) with no visual styling at all — just accessibility and interaction logic, so you style it 100% with Tailwind.</li>
+      <li><strong>daisyUI:</strong> a plugin that adds ready-made component classes (<code>btn</code>, <code>card</code>) on top of Tailwind, for those who want speed instead of assembling every piece by hand.</li>
+    </ul>
+
+    <h2 id="when-to-use">9. When to use it, and when it's not worth it</h2>
+    <div class="callout">
+      <strong>Worth using when:</strong> the project is componentized (React, Vue, Next.js), the team values visual consistency without needing a designer to review every detail, and there's an intention to keep CSS lean over time.
+    </div>
+    <div class="callout">
+      <strong>Might not be worth it when:</strong> the project is very small and not componentized (a simple static site, for example, where traditional CSS already solves it with no effort), when the team has a strong preference for fully separating structure and style, or when there's a real tooling constraint that prevents running a CSS build step.
+    </div>
+
+    <p>In practice, within the track you're following (React + Next.js), Tailwind is today the market's most common choice for styling — not because it's "mandatory", but because it solves the specific friction of componentized projects well, and has huge ecosystem adoption (including in tools like shadcn/ui, used together with Next.js).</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Imersão · Tailwind CSS</span>
+      <h1>Imersão em Tailwind CSS</h1>
+      <p class="subtitle">Módulo separado da trilha principal, dedicado a entender de verdade o que é Tailwind, por que ele existe, e quando ele compensa (ou não) na prática.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e">O que é Tailwind</a></li>
+        <li><a href="#por-que-existe">Por que existe: o problema que resolve</a></li>
+        <li><a href="#como-funciona">Como funciona por baixo dos panos</a></li>
+        <li><a href="#caracteristicas">Características centrais</a></li>
+        <li><a href="#exemplo">Exemplo prático</a></li>
+        <li><a href="#pros-contras">Prós e contras</a></li>
+        <li><a href="#comparacao">Comparação com alternativas</a></li>
+        <li><a href="#ecossistema">Ecossistema em volta do Tailwind</a></li>
+        <li><a href="#quando-usar">Quando usar e quando não compensa</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e">1. O que é Tailwind</h2>
+    <p>Tailwind CSS é um framework de estilização <strong>utility-first</strong> (utilitário-primeiro): em vez de você escrever classes CSS com nomes semânticos (<code>.card</code>, <code>.btn-primary</code>) e definir as regras delas em um arquivo separado, o Tailwind te dá um conjunto enorme de classes pequenas e prontas — cada uma fazendo uma única coisa — que você combina diretamente no HTML/JSX.</p>
+    <pre><code>&lt;button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"&gt;
+  Enviar
+&lt;/button&gt;</code></pre>
+    <p>Repare: não existe uma classe <code>.botao-enviar</code> com um bloco de CSS em outro arquivo. O estilo inteiro do botão está descrito ali mesmo, através da combinação de classes utilitárias (cor de fundo, cor de texto, espaçamento interno, cantos arredondados, e o estado de hover).</p>
+
+    <h2 id="por-que-existe">2. Por que existe: o problema que resolve</h2>
+    <p>Antes do Tailwind (e ferramentas parecidas), o fluxo comum era: escrever HTML com classes semânticas, e manter um arquivo CSS separado com as regras de cada classe. Na prática, isso gera atrito conhecido por quem já trabalhou em projetos CSS grandes:</p>
+    <ul>
+      <li><strong>Nomear coisas é difícil:</strong> toda mudança de componente exige inventar (ou reaproveitar mal) um nome de classe novo.</li>
+      <li><strong>CSS cresce e nunca encolhe:</strong> é arriscado remover uma regra de CSS porque ninguém tem certeza se ela ainda está em uso em algum lugar do site.</li>
+      <li><strong>Duas fontes de verdade:</strong> para entender o visual de um componente, você precisa olhar o HTML <em>e</em> o CSS ao mesmo tempo, pulando entre arquivos.</li>
+      <li><strong>Inconsistência visual:</strong> sem um sistema de tokens, é fácil acumular dezenas de tons de cinza ou espaçamentos ligeiramente diferentes espalhados pelo projeto.</li>
+    </ul>
+    <p>O Tailwind ataca esses problemas de um jeito específico: elimina a necessidade de nomear classes (você só combina utilitários prontos), e força consistência porque todas as opções de cor, espaçamento e tamanho vêm de uma escala de design pré-definida (o "design system" do próprio Tailwind, customizável).</p>
+
+    <h2 id="como-funciona">3. Como funciona por baixo dos panos</h2>
+    <p>O Tailwind não é só uma folha de CSS gigante com todas as classes possíveis já prontas — isso seria pesadíssimo. Ele funciona com um compilador (o <strong>Just-In-Time engine</strong>, ativado por padrão desde a versão 3) que:</p>
+    <ol>
+      <li>Varre os arquivos do seu projeto (HTML, JSX, TSX, etc.) procurando por classes Tailwind sendo usadas no texto do código.</li>
+      <li>Gera, sob demanda, apenas o CSS correspondente às classes que ele encontrou em uso.</li>
+      <li>Produz um arquivo CSS final enxuto, contendo só o necessário para aquele projeto específico — mesmo que o catálogo total de classes disponíveis seja enorme.</li>
+    </ol>
+    <p>É por isso que projetos Tailwind em produção normalmente têm um CSS final surpreendentemente pequeno, mesmo usando centenas de combinações de classes ao longo do código.</p>
+
+    <h2 id="caracteristicas">4. Características centrais</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Escala de design (tokens)</div>
+        <p style="margin-bottom:0">Cores, espaçamentos, tamanhos de fonte e breakpoints seguem uma escala numérica pré-definida (ex: <code>p-1</code>, <code>p-2</code>, <code>p-4</code>...), evitando valores arbitrários espalhados pelo código. Tudo isso é configurável em um arquivo central (<code>tailwind.config.js</code>).</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Variantes de estado e responsividade</div>
+        <p style="margin-bottom:0">Prefixos combinam com qualquer utilitário: <code>hover:</code>, <code>focus:</code>, <code>dark:</code> (modo escuro), e prefixos de breakpoint como <code>md:</code>, <code>lg:</code> para responsividade — tudo direto na classe, sem precisar escrever media queries à parte.</p>
+      </div>
+    </div>
+    <p>Outras características importantes: a diretiva <code>@apply</code> permite agrupar utilitários repetidos em uma classe própria quando fizer sentido (para não repetir a mesma combinação de 10 classes em vários lugares); e o Tailwind não impõe nenhum componente visual pronto (botão, card, modal) — ele é puramente um sistema de utilitários de estilo, o design de cada componente é decisão sua.</p>
+
+    <h2 id="exemplo">5. Exemplo prático</h2>
+    <p>Um cartão de produto simples, comparando CSS tradicional com Tailwind:</p>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">CSS tradicional</div>
+        <pre style="margin:0"><code>&lt;div class="product-card"&gt;
+  &lt;h3&gt;Produto&lt;/h3&gt;
+&lt;/div&gt;
+
+/* arquivo CSS separado */
+.product-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}</code></pre>
+      </div>
+      <div class="card">
+        <div class="card-title">Tailwind</div>
+        <pre style="margin:0"><code>&lt;div class="bg-white rounded-xl
+            p-4 shadow-sm"&gt;
+  &lt;h3&gt;Produto&lt;/h3&gt;
+&lt;/div&gt;
+
+/* nenhum arquivo CSS
+   adicional necessário */</code></pre>
+      </div>
+    </div>
+
+    <h2 id="pros-contras">6. Prós e contras</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Prós</div>
+        <ul class="pill-list">
+          <li>Não precisa inventar nome de classe nem alternar entre arquivos para entender o estilo</li>
+          <li>Consistência visual forçada pela escala de design</li>
+          <li>CSS final pequeno, mesmo em projetos grandes (JIT gera só o necessário)</li>
+          <li>Fácil de remover: ao apagar um componente, o CSS junto some (não fica "CSS morto" sobrando)</li>
+          <li>Ótima integração com componentização (React, Vue, etc.) — o estilo vive junto com a estrutura</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Contras</div>
+        <ul class="pill-list cons">
+          <li>HTML/JSX fica visualmente "poluído" com muitas classes — pode assustar quem chega no projeto</li>
+          <li>Curva de aprendizado inicial para memorizar os nomes de utilitários</li>
+          <li>Sem disciplina, é possível repetir a mesma combinação longa de classes em vários lugares (mitigado com componentização ou <code>@apply</code>)</li>
+          <li>Depende de uma etapa de build (o CSS não existe "pronto" sem o compilador rodar)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="comparacao">7. Comparação com alternativas</h2>
+    <table>
+      <tr><th>Abordagem</th><th>Ideia central</th><th>Trade-off principal</th></tr>
+      <tr><td>CSS tradicional / CSS Modules</td><td>Classes semânticas, CSS em arquivo separado</td><td>Mais organizado por "significado", mas exige nomear tudo e manter dois arquivos sincronizados</td></tr>
+      <tr><td>CSS-in-JS (styled-components, Emotion)</td><td>Escreve CSS dentro do próprio arquivo JS/componente</td><td>Estilo fica junto do componente, mas historicamente com custo de performance em runtime (mitigado em soluções mais novas)</td></tr>
+      <tr><td>Bootstrap / bibliotecas de componentes prontos</td><td>Componentes visuais já finalizados (botões, cards, grids)</td><td>Muito mais rápido para sair do zero, mas sites tendem a "parecer todos iguais" e customizar fundo é mais trabalhoso</td></tr>
+      <tr><td>Tailwind</td><td>Utilitários atômicos combináveis, sem componentes visuais prontos</td><td>Controle total do visual e consistência via tokens, mas você constrói cada componente do zero (ou usa bibliotecas em cima do Tailwind, veja abaixo)</td></tr>
+    </table>
+
+    <h2 id="ecossistema">8. Ecossistema em volta do Tailwind</h2>
+    <p>Como o Tailwind não fornece componentes prontos, surgiram bibliotecas construídas em cima dele para cobrir essa lacuna:</p>
+    <ul>
+      <li><strong>shadcn/ui:</strong> não é uma biblioteca instalada via pacote — é um conjunto de componentes que você copia para dentro do seu próprio projeto (usando Tailwind + Radix UI por baixo), o que te dá controle total do código de cada componente.</li>
+      <li><strong>Headless UI:</strong> componentes de comportamento (dropdown, modal, menu) sem nenhum estilo visual — só a lógica de acessibilidade e interação, para você estilizar 100% com Tailwind.</li>
+      <li><strong>daisyUI:</strong> um plugin que adiciona classes de componentes prontos (<code>btn</code>, <code>card</code>) por cima do Tailwind, para quem quer velocidade em vez de montar cada peça na mão.</li>
+    </ul>
+
+    <h2 id="quando-usar">9. Quando usar e quando não compensa</h2>
+    <div class="callout">
+      <strong>Compensa usar quando:</strong> o projeto é componentizado (React, Vue, Next.js), o time valoriza consistência visual sem precisar de um designer revisando cada detalhe, e existe a intenção de manter o CSS enxuto ao longo do tempo.
+    </div>
+    <div class="callout">
+      <strong>Pode não compensar quando:</strong> o projeto é muito pequeno e não componentizado (um site estático simples, por exemplo, onde CSS tradicional já resolve sem esforço), quando o time tem forte preferência por separar completamente estrutura e estilo, ou quando há restrição real de tooling que impeça rodar uma etapa de build de CSS.
+    </div>
+
+    <p>Na prática, dentro da trilha que você está seguindo (React + Next.js), o Tailwind é hoje a escolha mais comum do mercado para estilização — não porque seja "obrigatório", mas porque resolve bem o atrito específico de projetos componentizados, e tem enorme adoção no ecossistema (inclusive em ferramentas como shadcn/ui, usadas em conjunto com Next.js).</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Deep dive</span>
+  <span class="accent" id="footer-right">Tailwind CSS</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Deep dive';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Imersão';
+    }
+  }
+</script>
+
+</body>
+</html>

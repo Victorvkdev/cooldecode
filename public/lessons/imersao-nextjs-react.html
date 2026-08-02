@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Deep dive: Next.js + React</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge {
+    display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35);
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 18px 0 24px; }
+  pre code { background: none; border: none; padding: 0; color: #e9e9ec; font-size: 13.5px; line-height: 1.6; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0 24px; }
+  @media (max-width: 560px) { .grid-2 { grid-template-columns: 1fr; } }
+  .grid-2 .card { margin: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .pill-list { list-style: none; padding: 0; margin: 0; }
+  .pill-list li { padding-left: 26px; position: relative; }
+  .pill-list li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .pill-list.cons li::before { content: "✕"; }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 10px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Deep dive · Next.js + React</span>
+      <h1>React and Next.js deep dive</h1>
+      <p class="subtitle">A standalone module, separate from the main track: what each one actually is, how they work under the hood, and — most importantly — when they pay off and when they don't.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-is-react">What React is</a></li>
+        <li><a href="#how-react-works">How React works under the hood</a></li>
+        <li><a href="#what-is-next">What Next.js is</a></li>
+        <li><a href="#how-next-works">How Next.js works under the hood</a></li>
+        <li><a href="#react-vs-next">React alone vs React + Next.js</a></li>
+        <li><a href="#when-to-use">When to use it</a></li>
+        <li><a href="#when-not-to-use">When it's not worth it</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-is-react">1. What React is</h2>
+    <p>React is a <strong>library</strong> (not a full framework) for building user interfaces, created by Facebook and released in 2013. It solves a specific problem: keeping the visual interface in sync with data that changes over time, without you having to manually manipulate HTML on every change.</p>
+    <p>React's core idea is <strong>composition through components</strong>: instead of thinking about the entire page at once, you break the interface into independent, reusable pieces (a button, a product card, a form), each with its own data and behavior, and assemble the screen by combining these pieces like blocks.</p>
+    <div class="callout">
+      <strong>Why React was born:</strong> before it, manually updating the interface (finding an element in the DOM and changing its content) in large, highly interactive applications became hard to maintain as the number of screens and interactions grew — small changes in one place would break other parts of the page without warning. React proposed describing <em>what the interface should look like</em> for a given data state, and letting React itself decide what actually needs to change on screen.
+    </div>
+
+    <h2 id="how-react-works">2. How React works under the hood</h2>
+    <p>React's core mechanism is <strong>reconciliation</strong>, popularly (though somewhat loosely) associated with the term "virtual DOM". Broadly, it works like this:</p>
+    <ol>
+      <li>Each component describes, through JSX, what the interface should look like for the current data state — this description is an in-memory data structure, not the page's actual HTML.</li>
+      <li>When a component's state (internal data) or props (received data) change, React generates a new version of that description.</li>
+      <li>React compares the new version with the previous one (the "diff" between them) and calculates the smallest set of changes needed in the browser's real DOM.</li>
+      <li>Only those specific changes get applied to the actual screen — instead of recreating everything from scratch on every update.</li>
+    </ol>
+    <p>This process is what enables fast, fluid updates even in complex interfaces, and it's why concepts like the <code>key</code> in lists exist: they help React know exactly which specific item changed, was added, or removed, instead of recreating the entire list.</p>
+
+    <h2 id="what-is-next">3. What Next.js is</h2>
+    <p>Next.js is a <strong>framework built on top of React</strong>, created by the company Vercel. If React solves "how to structure and update the interface", Next.js solves a set of problems React alone doesn't define an answer for: where each part of your code should run (server or client), how to structure routes, how to fetch data efficiently, and how to ship all of that optimized for production.</p>
+    <p>Next.js doesn't replace React — it adds a layer of architectural decisions and tooling around it, so each project doesn't have to reinvent these solutions from scratch.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">What React alone doesn't solve</div>
+        <ul class="pill-list cons">
+          <li>Routing between pages (needs an extra library, like React Router)</li>
+          <li>Server-side rendering (by default, everything runs in the client's browser)</li>
+          <li>Build configuration (Vite or Webpack need to be set up separately)</li>
+          <li>Per-page image, font, and SEO optimization</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">What Next.js delivers out of the box</div>
+        <ul class="pill-list">
+          <li>File and folder-based routing (App Router)</li>
+          <li>Per-page rendering choice: server, client, or hybrid</li>
+          <li>Build and bundler already configured and optimized by default</li>
+          <li>Automatic image, font, and SEO metadata optimization</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="how-next-works">4. How Next.js works under the hood</h2>
+    <p>The most important concept in modern Next.js (App Router) is the distinction between <strong>Server Components</strong> and <strong>Client Components</strong>:</p>
+    <ul>
+      <li><strong>Server Components</strong> (the default): run only on the server, generate ready-made HTML, and <em>don't</em> send extra JavaScript to the user's browser. Great for parts of the page that don't need interactivity (text, listings, content coming straight from a database).</li>
+      <li><strong>Client Components</strong> (explicitly marked with <code>"use client"</code> at the top of the file): run in the browser, and are required whenever the interface needs real interactivity — clicks, forms, local state, effects.</li>
+    </ul>
+    <p>Beyond that, Next.js decides, per route, a rendering strategy (Lesson 8 of the main track will go deeper into this):</p>
+    <table>
+      <tr><th>Strategy</th><th>When the HTML is generated</th></tr>
+      <tr><td>SSR (Server-Side Rendering)</td><td>On every request, the moment the user asks for the page</td></tr>
+      <tr><td>SSG (Static Site Generation)</td><td>Once, at project build time</td></tr>
+      <tr><td>ISR (Incremental Static Regeneration)</td><td>Like SSG, but automatically revalidated from time to time</td></tr>
+    </table>
+    <p>It's this flexibility — being able to mix all three strategies, page by page, within the same project — that sets Next.js apart from a plain React application, which by default only knows how to do one thing: render everything in the client's browser (CSR).</p>
+
+    <h2 id="react-vs-next">5. React alone vs React + Next.js</h2>
+    <table>
+      <tr><th></th><th>Plain React (e.g. with Vite)</th><th>React + Next.js</th></tr>
+      <tr><td>Routing</td><td>Needs an extra library</td><td>File-based, included</td></tr>
+      <tr><td>Rendering</td><td>Client-only (CSR) by default</td><td>Server, client, or hybrid, per route</td></tr>
+      <tr><td>SEO</td><td>Requires extra manual work</td><td>Natively solved via SSR/SSG</td></tr>
+      <tr><td>Build configuration</td><td>You choose and configure it (e.g. Vite)</td><td>Built in, little to configure</td></tr>
+      <tr><td>Learning curve</td><td>Simpler to get started</td><td>More concepts to learn upfront (Server/Client Components, rendering strategies)</td></tr>
+    </table>
+
+    <h2 id="when-to-use">6. When to use it</h2>
+    <div class="callout">
+      <strong>Plain React (no Next.js) pays off when:</strong> you're building an application that doesn't need SEO (an internal dashboard, a tool behind a login, a "desktop-like" app running in the browser), a separate backend already serves data via API, and you want the fewest possible layers between your code and the final result.
+    </div>
+    <div class="callout">
+      <strong>Next.js pays off when:</strong> the project needs to show up well in search engines (content sites, e-commerce, landing pages), you want to mix static content with dynamic parts in the same application, or you'd rather have routing, build, and optimizations already solved instead of assembling every piece by hand.
+    </div>
+
+    <h2 id="when-not-to-use">7. When it's not worth it</h2>
+    <p>Not every project needs React (with or without Next.js). It's worth considering simpler alternatives when:</p>
+    <ul>
+      <li><strong>The site is mostly static</strong> (few pages, little to no dynamic data): plain HTML/CSS, or a simpler static site generator, delivers the same result with much less complexity and less JavaScript for the user to download.</li>
+      <li><strong>It's a small widget embedded in another page</strong> (a counter, a standalone form): loading React's entire runtime for that is often disproportionate to the problem.</li>
+      <li><strong>Extreme performance is the number one requirement</strong> and even a few extra kilobytes of JavaScript matter (e.g. pages that need to load on very slow connections or very limited devices).</li>
+      <li><strong>The team isn't familiar with the modern JavaScript ecosystem</strong> and the timeline doesn't allow for the learning curve — in that case, a more opinionated framework in another language (like Django or Rails, covered in Module 1's extra material) might deliver value faster.</li>
+    </ul>
+    <p>The practical rule of thumb: React and Next.js are very good at solving the problem of complex interfaces, with heavy state and interaction, that also need good performance and good SEO at the same time. If your project doesn't have that complexity, adopting these tools might mean paying a learning and maintenance cost without getting the benefit they were designed to deliver.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Imersão · Next.js + React</span>
+      <h1>Imersão em React e Next.js</h1>
+      <p class="subtitle">Módulo separado da trilha principal: o que cada um é de fato, como funcionam por baixo dos panos, e — o mais importante — em que situações eles compensam ou não compensam usar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e-react">O que é React</a></li>
+        <li><a href="#como-react-funciona">Como o React funciona por baixo dos panos</a></li>
+        <li><a href="#o-que-e-next">O que é Next.js</a></li>
+        <li><a href="#como-next-funciona">Como o Next.js funciona por baixo dos panos</a></li>
+        <li><a href="#react-vs-next">React sozinho vs React + Next.js</a></li>
+        <li><a href="#quando-usar">Quando usar</a></li>
+        <li><a href="#quando-nao-compensa">Quando não compensa usar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e-react">1. O que é React</h2>
+    <p>React é uma <strong>biblioteca</strong> (não um framework completo) para construir interfaces de usuário, criada pelo Facebook e lançada em 2013. Ele resolve um problema específico: manter a interface visual sincronizada com os dados que mudam ao longo do tempo, sem você precisar manipular o HTML manualmente a cada mudança.</p>
+    <p>A ideia central do React é a <strong>composição por componentes</strong>: em vez de pensar na página inteira de uma vez, você quebra a interface em pedaços independentes e reutilizáveis (um botão, um card de produto, um formulário), cada um com seus próprios dados e comportamento, e monta a tela combinando esses pedaços como blocos.</p>
+    <div class="callout">
+      <strong>Por que o React nasceu:</strong> antes dele, atualizar a interface manualmente (buscar um elemento no DOM e mudar seu conteúdo) em aplicações grandes e muito interativas ficava difícil de manter conforme o número de telas e interações crescia — pequenas mudanças em um lugar quebravam outras partes da página sem aviso. O React propôs descrever <em>como a interface deveria estar</em> para um determinado estado de dados, e deixar o próprio React decidir o que precisa mudar de verdade na tela.
+    </div>
+
+    <h2 id="como-react-funciona">2. Como o React funciona por baixo dos panos</h2>
+    <p>O mecanismo central do React é a <strong>reconciliação</strong>, popularmente (embora de forma simplificada) associada ao termo "DOM virtual". Funciona assim, em linhas gerais:</p>
+    <ol>
+      <li>Cada componente descreve, através de JSX, como a interface deveria se parecer para o estado atual dos dados — essa descrição é uma estrutura de dados em memória, não o HTML real da página.</li>
+      <li>Quando o state (dados internos) ou as props (dados recebidos) de um componente mudam, o React gera uma nova versão dessa descrição.</li>
+      <li>O React compara a versão nova com a versão anterior (a "diferença" entre elas) e calcula o menor conjunto de mudanças necessárias no DOM real do navegador.</li>
+      <li>Só essas mudanças específicas são aplicadas na tela de verdade — em vez de recriar tudo do zero a cada atualização.</li>
+    </ol>
+    <p>Esse processo é o que permite atualizações rápidas e fluidas mesmo em interfaces complexas, e é a razão pela qual conceitos como a <code>key</code> em listas existem: eles ajudam o React a saber exatamente qual item específico mudou, foi adicionado ou removido, em vez de recriar a lista inteira.</p>
+
+    <h2 id="o-que-e-next">3. O que é Next.js</h2>
+    <p>Next.js é um <strong>framework construído em cima do React</strong>, criado pela empresa Vercel. Se o React resolve "como estruturar e atualizar a interface", o Next.js resolve um conjunto de problemas que o React sozinho não define uma resposta: onde cada parte do código deve rodar (servidor ou cliente), como estruturar rotas, como buscar dados de forma eficiente, e como entregar tudo isso otimizado para produção.</p>
+    <p>Next.js não substitui o React — ele adiciona uma camada de decisões arquiteturais e ferramentas em volta dele, para que cada projeto não precise reinventar essas soluções do zero.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">O que o React sozinho não resolve</div>
+        <ul class="pill-list cons">
+          <li>Roteamento entre páginas (precisa de biblioteca extra, como React Router)</li>
+          <li>Renderização no servidor (por padrão, tudo roda no navegador do cliente)</li>
+          <li>Configuração de build (Vite ou Webpack precisam ser configurados à parte)</li>
+          <li>Otimização de imagens, fontes, SEO por página</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">O que o Next.js entrega pronto</div>
+        <ul class="pill-list">
+          <li>Roteamento baseado em pastas e arquivos (App Router)</li>
+          <li>Escolha de renderização por página: servidor, cliente, ou híbrido</li>
+          <li>Build e bundler já configurados e otimizados por padrão</li>
+          <li>Otimização automática de imagem, fonte, metadados de SEO</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="como-next-funciona">4. Como o Next.js funciona por baixo dos panos</h2>
+    <p>O conceito mais importante do Next.js moderno (App Router) é a distinção entre <strong>Server Components</strong> e <strong>Client Components</strong>:</p>
+    <ul>
+      <li><strong>Server Components</strong> (o padrão): rodam só no servidor, geram HTML pronto, e <em>não</em> enviam JavaScript extra para o navegador do usuário. Ótimos para partes da página que não precisam de interatividade (texto, listagens, conteúdo vindo direto de banco de dados).</li>
+      <li><strong>Client Components</strong> (marcados explicitamente com <code>"use client"</code> no topo do arquivo): rodam no navegador, e são necessários sempre que a interface precisa de interatividade real — cliques, formulários, estado local, efeitos.</li>
+    </ul>
+    <p>Além disso, o Next.js decide, por rota, uma estratégia de renderização (a Lição 8 da trilha principal vai aprofundar isso):</p>
+    <table>
+      <tr><th>Estratégia</th><th>Quando o HTML é gerado</th></tr>
+      <tr><td>SSR (Server-Side Rendering)</td><td>A cada requisição, no momento em que o usuário pede a página</td></tr>
+      <tr><td>SSG (Static Site Generation)</td><td>Uma vez, no momento do build do projeto</td></tr>
+      <tr><td>ISR (Incremental Static Regeneration)</td><td>Como SSG, mas revalidado automaticamente de tempos em tempos</td></tr>
+    </table>
+    <p>É essa flexibilidade — poder misturar as três estratégias, página por página, dentro do mesmo projeto — que diferencia o Next.js de uma aplicação React pura, que por padrão só sabe fazer uma coisa: renderizar tudo no navegador do cliente (CSR).</p>
+
+    <h2 id="react-vs-next">5. React sozinho vs React + Next.js</h2>
+    <table>
+      <tr><th></th><th>React puro (ex: com Vite)</th><th>React + Next.js</th></tr>
+      <tr><td>Roteamento</td><td>Precisa de biblioteca extra</td><td>Baseado em arquivos, incluído</td></tr>
+      <tr><td>Renderização</td><td>Só no cliente (CSR), por padrão</td><td>Servidor, cliente ou híbrido, por rota</td></tr>
+      <tr><td>SEO</td><td>Exige trabalho manual extra</td><td>Resolvido nativamente via SSR/SSG</td></tr>
+      <tr><td>Configuração de build</td><td>Você escolhe e configura (Vite, por ex.)</td><td>Embutida, pouco a configurar</td></tr>
+      <tr><td>Curva de aprendizado</td><td>Mais simples de começar</td><td>Mais conceitos para entender de início (Server/Client Components, estratégias de renderização)</td></tr>
+    </table>
+
+    <h2 id="quando-usar">6. Quando usar</h2>
+    <div class="callout">
+      <strong>React puro (sem Next.js) compensa quando:</strong> você está construindo uma aplicação que não precisa de SEO (um painel interno, uma ferramenta atrás de login, um app "tipo desktop" rodando no navegador), já existe um backend separado servindo dados via API, e você quer o mínimo de camadas entre o seu código e o resultado final.
+    </div>
+    <div class="callout">
+      <strong>Next.js compensa quando:</strong> o projeto precisa aparecer bem em buscadores (sites de conteúdo, e-commerce, landing pages), você quer misturar conteúdo estático com partes dinâmicas na mesma aplicação, ou prefere ter roteamento, build e otimizações já resolvidos em vez de montar cada peça manualmente.
+    </div>
+
+    <h2 id="quando-nao-compensa">7. Quando não compensa usar</h2>
+    <p>Nem todo projeto precisa de React (com ou sem Next.js). Vale considerar alternativas mais simples quando:</p>
+    <ul>
+      <li><strong>O site é majoritariamente estático</strong> (poucas páginas, pouco ou nenhum dado dinâmico): HTML/CSS puro, ou um gerador de site estático mais simples, entrega o mesmo resultado com muito menos complexidade e menos JavaScript para o usuário baixar.</li>
+      <li><strong>É um widget pequeno embutido em outra página</strong> (um contador, um formulário isolado): carregar todo o runtime do React para isso costuma ser desproporcional ao problema.</li>
+      <li><strong>Performance extrema é o requisito número um</strong> e até alguns kilobytes de JavaScript a mais importam (ex: páginas que precisam carregar em conexões muito lentas ou dispositivos muito limitados).</li>
+      <li><strong>O time não tem familiaridade com o ecossistema JavaScript moderno</strong> e o prazo não permite a curva de aprendizado — nesse caso, um framework mais opinativo em outra linguagem (como Django ou Rails, vistos no material complementar do Módulo 1) pode entregar valor mais rápido.</li>
+    </ul>
+    <p>A régua prática: React e Next.js resolvem muito bem o problema de interfaces complexas, com muito estado e muita interatividade, que também precisam de boa performance e bom SEO ao mesmo tempo. Se o seu projeto não tem essa complexidade, adotar essas ferramentas pode ser pagar um custo de aprendizado e de manutenção sem ganhar o benefício que elas foram desenhadas para entregar.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Deep dive</span>
+  <span class="accent" id="footer-right">React + Next.js</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Deep dive';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Imersão';
+    }
+  }
+</script>
+
+</body>
+</html>

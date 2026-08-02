@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Opus 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1.2;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    margin: 48px 0 16px;
+    color: #fff;
+  }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    margin: 20px 0;
+  }
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .pill {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .quote {
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 18px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin: 16px 0;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+    margin: 44px 0;
+  }
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer ul { padding-left: 18px; margin-top: 8px; }
+  .footer li { margin-bottom: 6px; font-size: 12.5px; color: var(--text-dim); }
+  strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · AI Watch · Anthropic/Claude news</div>
+    <h1>Claude Opus 5 has arrived: what changes in the family's top-tier model</h1>
+    <p class="subtitle">Anthropic launched Opus 5 on July 24, 2026 — its newest model and, according to the company itself, its most aligned yet. Here's what's new, and why it matters even if you don't use the API directly.</p>
+
+    <h2><span class="num">01</span>What happened</h2>
+    <p>On 07/24/2026, Anthropic announced <strong>Claude Opus 5</strong>, the new version of the Opus model, replacing Opus 4.8. It's already available across all platforms: Claude.ai, Claude Code, Claude Cowork, and via API. It became the default model on the Claude Max plan and the strongest one available on Claude Pro.</p>
+
+    <div class="card">
+      <div class="card-title">In one sentence</div>
+      <p style="margin-bottom:0">Opus 5 comes close to the intelligence of Claude Fable 5 (Anthropic's flagship model) at half the price, with a focus on long-running tasks and autonomous agents.</p>
+    </div>
+
+    <h2><span class="num">02</span>Where it stands out</h2>
+    <p>According to Anthropic's official materials, Opus 5 is the new state of the art on coding and knowledge-work evaluations like <em>Frontier-Bench</em> and <em>GDPval-AA</em> — but it still trails Mythos 5 on offensive cybersecurity tasks.</p>
+    <table>
+      <tr><th>Evaluation</th><th>Highlighted result</th></tr>
+      <tr><td>Frontier-Bench v0.1</td><td>More than doubles Opus 4.8's performance, at a lower cost per task</td></tr>
+      <tr><td>CursorBench 3.2</td><td>Within 0.5% of Fable 5's peak score, at half the cost per task</td></tr>
+      <tr><td>ARC-AGI 3</td><td>A score three times higher than the next-best model</td></tr>
+      <tr><td>OSWorld 2.0 (computer use)</td><td>Surpasses Fable 5's best result at just over a third of the cost</td></tr>
+    </table>
+    <p>There was also notable progress in scientific research: better performance across every internal life-sciences evaluation, with organic chemistry standing out (+10.2 percentage points over Opus 4.8 on inferring molecular structures from spectroscopy data).</p>
+
+    <h2><span class="num">03</span>Price and availability</h2>
+    <p>Opus 5 keeps the same price as Opus 4.8: <strong>$5 per million input tokens</strong> and <strong>$25 per million output tokens</strong>. It's also available in "Fast" mode, roughly 2.5x faster, at twice the base price.</p>
+    <div class="card">
+      <div class="card-title">Also in this release</div>
+      <ul>
+        <li><strong>Mid-conversation tool changes</strong> (beta): you can now change which tools Claude is allowed to use without invalidating the prompt cache.</li>
+        <li><strong>Automatic fallback</strong> (beta): requests blocked by safety classifiers can now be automatically routed to another model instead of simply being refused.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>Alignment and safety</h2>
+    <p>Anthropic states that Opus 5 is the most aligned model it has released to date, with the lowest rates of deceptive behavior and the lowest susceptibility to being tricked into misuse. At the same time, the company reinforces that the model was deliberately kept behind Mythos 5 on offensive cybersecurity tasks and high-risk biology — a design choice, not an accidental limitation.</p>
+
+    <h2><span class="num">05</span>Why this matters if you study and build with AI</h2>
+    <p>For anyone using Claude day to day (whether writing code or asking for analysis), the main takeaway from this launch is: more quality and more autonomy on long-running tasks, at the same price as the previous model. Teams that reported early access (like Cursor, Devin, and Zapier) mainly highlighted gains in debugging difficult bugs, end-to-end automations, and consistency across runs — in other words, less quality variance on each new attempt.</p>
+
+    <div class="quote">"Claude Opus 5 topped Zapier's AutomationBench leaderboard without spending more tokens than prior Claude models." — Wade Foster, CEO of Zapier</div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">To remember</div>
+      <p style="margin-bottom:0">Opus 5 (07/24/2026) is Anthropic's latest update to the Opus line: cheaper than Fable 5, stronger than Opus 4.8, focused on long-running agents and professional work, at the same price as the previous generation.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — AI Watch, 07/26/2026 edition.<br>
+      Sources:
+      <ul>
+        <li>Anthropic — "Introducing Claude Opus 5" (anthropic.com/news/claude-opus-5), published 07/24/2026</li>
+        <li>Anthropic — Newsroom (anthropic.com/news), accessed 07/26/2026</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · IA Watch · Novidades Anthropic/Claude</div>
+    <h1>Claude Opus 5 chegou: o que muda no modelo mais caro da família</h1>
+    <p class="subtitle">A Anthropic lançou o Opus 5 em 24 de julho de 2026 — o modelo mais recente e, segundo a própria empresa, o mais alinhado até agora. Entenda o que ele traz de novo e por que isso importa mesmo se você não usa a API diretamente.</p>
+
+    <h2><span class="num">01</span>O que aconteceu</h2>
+    <p>No dia 24/07/2026, a Anthropic anunciou o <strong>Claude Opus 5</strong>, a nova versão do modelo Opus, substituindo o Opus 4.8. Ele já está disponível em todas as plataformas: Claude.ai, Claude Code, Claude Cowork e via API. Passou a ser o modelo padrão do plano Claude Max e o mais forte disponível no Claude Pro.</p>
+
+    <div class="card">
+      <div class="card-title">Em uma frase</div>
+      <p style="margin-bottom:0">O Opus 5 chega perto da inteligência do Claude Fable 5 (o modelo topo de linha da Anthropic) pela metade do preço, com foco em tarefas longas e agentes autônomos.</p>
+    </div>
+
+    <h2><span class="num">02</span>Onde ele se destaca</h2>
+    <p>Segundo o material oficial da Anthropic, o Opus 5 é o novo estado da arte em avaliações de código e trabalho de conhecimento, como o <em>Frontier-Bench</em> e o <em>GDPval-AA</em> — mas ainda fica atrás do Mythos 5 em tarefas de cibersegurança ofensiva.</p>
+    <table>
+      <tr><th>Avaliação</th><th>Resultado destacado</th></tr>
+      <tr><td>Frontier-Bench v0.1</td><td>Mais que dobra a performance do Opus 4.8, com custo por tarefa menor</td></tr>
+      <tr><td>CursorBench 3.2</td><td>Fica a 0,5% do pico do Fable 5, pela metade do custo por tarefa</td></tr>
+      <tr><td>ARC-AGI 3</td><td>Pontuação três vezes maior que o próximo melhor modelo</td></tr>
+      <tr><td>OSWorld 2.0 (uso de computador)</td><td>Supera o melhor resultado do Fable 5 gastando pouco mais de um terço do custo</td></tr>
+    </table>
+    <p>Também houve avanço notável em pesquisa científica: melhor desempenho em todas as avaliações internas de ciências da vida, com destaque para química orgânica (+10,2 pontos percentuais sobre o Opus 4.8 em inferência de estruturas moleculares a partir de dados de espectroscopia).</p>
+
+    <h2><span class="num">03</span>Preço e disponibilidade</h2>
+    <p>O Opus 5 mantém o mesmo preço do Opus 4.8: <strong>US$ 5 por milhão de tokens de entrada</strong> e <strong>US$ 25 por milhão de tokens de saída</strong>. Também está disponível em modo "Fast", cerca de 2,5 vezes mais rápido, pelo dobro do preço base.</p>
+    <div class="card">
+      <div class="card-title">Também nesta leva</div>
+      <ul>
+        <li><strong>Mudança de ferramentas no meio da conversa</strong> (beta): dá para trocar quais ferramentas o Claude pode usar sem invalidar o cache do prompt.</li>
+        <li><strong>Fallback automático</strong> (beta): pedidos bloqueados por classificadores de segurança podem ser automaticamente roteados para outro modelo, em vez de simplesmente recusados.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">04</span>Alinhamento e segurança</h2>
+    <p>A Anthropic afirma que o Opus 5 é o modelo mais alinhado já lançado por ela até o momento, com as menores taxas de comportamento enganoso e menor suscetibilidade a ser manipulado para uso indevido. Ao mesmo tempo, a empresa reforça que o modelo foi deliberadamente mantido atrás do Mythos 5 em tarefas de cibersegurança ofensiva e biologia de alto risco — uma escolha de design, não uma limitação acidental.</p>
+
+    <h2><span class="num">05</span>Por que isso importa para quem estuda e constrói com IA</h2>
+    <p>Para quem usa Claude no dia a dia (seja escrevendo código, seja pedindo análises), o principal recado do lançamento é: mais qualidade e mais autonomia em tarefas longas, pelo mesmo preço do modelo anterior. Times que relataram uso antecipado (como Cursor, Devin e Zapier) destacaram principalmente ganhos em depuração de bugs difíceis, automações de ponta a ponta e consistência entre execuções — ou seja, menos variação de qualidade a cada nova tentativa.</p>
+
+    <div class="quote">"Claude Opus 5 topped Zapier's AutomationBench leaderboard without spending more tokens than prior Claude models." — Wade Foster, CEO da Zapier</div>
+
+    <div class="divider"></div>
+
+    <div class="card">
+      <div class="card-title">Para fixar</div>
+      <p style="margin-bottom:0">Opus 5 (24/07/2026) é a atualização mais recente da linha Opus da Anthropic: mais barato que o Fable 5, mais forte que o Opus 4.8, focado em agentes de longa duração e trabalho profissional, mantendo o mesmo preço da geração anterior.</p>
+    </div>
+
+    <div class="footer">
+      Cooldecode — IA Watch, edição de 26/07/2026.<br>
+      Fontes:
+      <ul>
+        <li>Anthropic — "Introducing Claude Opus 5" (anthropic.com/news/claude-opus-5), publicado em 24/07/2026</li>
+        <li>Anthropic — Newsroom (anthropic.com/news), consultado em 26/07/2026</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>
