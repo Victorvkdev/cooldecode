@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lição 8: Static vs SSR vs SSG vs ISR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 0 0 20px; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Lesson 8 · Next.js &amp; deploy</span>
+      <h1>Static vs SSR vs SSG vs ISR: picking a rendering strategy</h1>
+      <p class="subtitle">Same React components, four different answers to "when does the HTML actually get built?" Getting this choice right is one of the highest-leverage decisions in a Next.js project.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why">Why rendering strategy is even a decision</a></li>
+        <li><a href="#static">Static rendering (plain static export)</a></li>
+        <li><a href="#ssg">SSG — Static Site Generation</a></li>
+        <li><a href="#ssr">SSR — Server-Side Rendering</a></li>
+        <li><a href="#isr">ISR — Incremental Static Regeneration</a></li>
+        <li><a href="#compare">Side-by-side comparison</a></li>
+        <li><a href="#app-router">How the App Router changes the mental model</a></li>
+        <li><a href="#choose">How to actually choose</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why">1. Why rendering strategy is even a decision</h2>
+    <p>Every page a browser receives is just HTML, but <em>when</em> that HTML gets generated changes everything about performance, cost, and freshness. There are really only three moments it can happen: at build time (before any user ever asks for the page), at request time (right when a user asks for it), or somewhere in between (built once, then quietly rebuilt on a schedule). Static, SSG, SSR, and ISR are four names for exactly those moments — the confusion is that "static" and "SSG" often get used interchangeably even though they're subtly different.</p>
+
+    <h2 id="static">2. Static rendering (plain static export)</h2>
+    <p>The simplest possible case: HTML files are generated once, ahead of time, and served as-is forever — no server-side logic runs per request. This is what you get from a plain static export (<code>next export</code> or the App Router's static export mode) or a classic static site generator.</p>
+    <ul>
+      <li><strong>Pros:</strong> can be hosted on literally any static file host or CDN, extremely fast (no server compute per request), effectively free to scale, no server to keep alive or secure.</li>
+      <li><strong>Cons:</strong> content is frozen until you rebuild and redeploy the whole thing — no per-user personalization, no live data without a client-side fetch afterward.</li>
+    </ul>
+    <p>Good fit: marketing pages, documentation, a portfolio — anything where every visitor should see the exact same HTML and updates are rare.</p>
+
+    <h2 id="ssg">3. SSG — Static Site Generation</h2>
+    <p>SSG is static rendering's more data-aware sibling: Next.js fetches data and renders each page once <strong>at build time</strong>, then the server just hands out those pre-built files. The difference from plain static export is that SSG pages are typically generated per-item from a data source (a blog post per Markdown file, a product page per database row) rather than being hand-authored HTML.</p>
+    <div class="card">
+      <div class="card-title">Mental model</div>
+      <p>Think of SSG as "run the page's data-fetching logic once, at deploy time, for every possible version of the page, and cache the result forever."</p>
+    </div>
+    <p>Good fit: blogs, docs, catalogs where content changes on a schedule (a deploy) rather than second-to-second.</p>
+
+    <h2 id="ssr">4. SSR — Server-Side Rendering</h2>
+    <p>SSR flips the timing: the HTML is generated <strong>at request time</strong>, on the server, for every single visit. The server runs the page's data-fetching and rendering logic fresh, every time someone loads the page.</p>
+    <ul>
+      <li><strong>Pros:</strong> always up to date, can be personalized per request (logged-in user's dashboard, real-time prices), no stale content risk.</li>
+      <li><strong>Cons:</strong> slower than serving a pre-built file (there's always at least one round trip to a data source per request), needs a running server (or serverless function) rather than just static files, cost scales with traffic.</li>
+    </ul>
+    <p>Good fit: dashboards, anything behind a login, search results, checkout flows — pages where "slightly stale" is not acceptable.</p>
+
+    <h2 id="isr">5. ISR — Incremental Static Regeneration</h2>
+    <p>ISR is Next.js's answer to "I want SSG's speed but I can't rebuild the whole site every time content changes." It's a hybrid: the first visitor after deploy gets the pre-built static version (fast), and you configure a <code>revalidate</code> time — after that window passes, the <em>next</em> request triggers a background regeneration, and future visitors get the refreshed version, without anyone waiting on a slow rebuild.</p>
+    <pre><code>// app/products/[id]/page.tsx
+export const revalidate = 60; // regenerate at most once per 60 seconds
+
+export default async function ProductPage({ params }) {
+  const product = await getProduct(params.id);
+  return &lt;ProductView product={product} /&gt;;
+}</code></pre>
+    <p>Good fit: e-commerce product pages, news articles, anything with hundreds/thousands of pages that change occasionally but don't need to be instantly live for every single edit.</p>
+
+    <h2 id="compare">6. Side-by-side comparison</h2>
+    <table>
+      <tr><th>Strategy</th><th>HTML built when</th><th>Freshness</th><th>Typical cost/scale profile</th></tr>
+      <tr><td>Static export</td><td>At build time, once</td><td>Frozen until next deploy</td><td>Cheapest, CDN-only</td></tr>
+      <tr><td>SSG</td><td>At build time, per page</td><td>Frozen until next deploy</td><td>Cheap, CDN-only</td></tr>
+      <tr><td>ISR</td><td>At build time, then periodically in the background</td><td>"Eventually fresh" (bounded by revalidate window)</td><td>Cheap, occasional server compute</td></tr>
+      <tr><td>SSR</td><td>At every request</td><td>Always fresh</td><td>Server compute on every request</td></tr>
+    </table>
+
+    <h2 id="app-router">7. How the App Router changes the mental model</h2>
+    <p>In the App Router, you don't usually pick a strategy explicitly with a named function anymore (like the old <code>getStaticProps</code>/<code>getServerSideProps</code> from the Pages Router) — instead, Next.js infers it from how your Server Component fetches data. A component with statically analyzable data fetching gets rendered at build time and cached like SSG; add a <code>revalidate</code> export and it behaves like ISR; use a dynamic API (like reading cookies or search params) and the route automatically becomes SSR for that request. The four concepts didn't disappear — they became a spectrum the framework picks a point on for you, per route, based on what the code actually does.</p>
+
+    <h2 id="choose">8. How to actually choose, in practice</h2>
+    <div class="callout">
+      <strong>Default to static/SSG</strong> for anything where all visitors see the same content and updates happen on a deploy cadence — it's the cheapest and fastest option by a wide margin.
+    </div>
+    <div class="callout">
+      <strong>Reach for ISR</strong> when you have many pages backed by a data source that changes occasionally (products, articles) and a full rebuild per change would be wasteful or too slow.
+    </div>
+    <div class="callout">
+      <strong>Reach for SSR</strong> only when the page truly needs per-request freshness or personalization — it's the most expensive option and should be the exception, not the default.
+    </div>
+    <p>The trap to avoid: reaching for SSR by default "just in case," when in practice most of a typical app's pages (marketing, docs, product listings, even most dashboards' shell) can be static or ISR, with only the truly dynamic slices needing per-request rendering.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Lição 8 · Next.js e deploy</span>
+      <h1>Static vs SSR vs SSG vs ISR: escolhendo uma estratégia de renderização</h1>
+      <p class="subtitle">Os mesmos componentes React, quatro respostas diferentes pra "quando o HTML é construído de fato?" Acertar essa escolha é uma das decisões de maior alavancagem num projeto Next.js.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#por-que">Por que estratégia de renderização é sequer uma decisão</a></li>
+        <li><a href="#estatico">Renderização estática (static export puro)</a></li>
+        <li><a href="#ssg-pt">SSG — Static Site Generation</a></li>
+        <li><a href="#ssr-pt">SSR — Server-Side Rendering</a></li>
+        <li><a href="#isr-pt">ISR — Incremental Static Regeneration</a></li>
+        <li><a href="#comparacao">Comparação lado a lado</a></li>
+        <li><a href="#app-router-pt">Como o App Router muda o modelo mental</a></li>
+        <li><a href="#escolher">Como escolher de verdade, na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="por-que">1. Por que estratégia de renderização é sequer uma decisão</h2>
+    <p>Toda página que o navegador recebe é só HTML, mas <em>quando</em> esse HTML é gerado muda tudo em termos de performance, custo e atualidade da informação. Só existem três momentos possíveis: no momento do build (antes de qualquer usuário pedir a página), no momento da requisição (na hora que alguém pede) ou em algum ponto intermediário (construído uma vez e depois silenciosamente reconstruído numa agenda). Static, SSG, SSR e ISR são quatro nomes pra exatamente esses momentos — a confusão é que "static" e "SSG" costumam ser usados como sinônimos mesmo sendo sutilmente diferentes.</p>
+
+    <h2 id="estatico">2. Renderização estática (static export puro)</h2>
+    <p>O caso mais simples possível: arquivos HTML são gerados uma vez, antecipadamente, e servidos exatamente como estão pra sempre — nenhuma lógica de servidor roda por requisição. É o que você recebe de um static export puro (<code>next export</code> ou o modo de export estático do App Router) ou de um gerador de site estático clássico.</p>
+    <ul>
+      <li><strong>Prós:</strong> pode ser hospedado literalmente em qualquer host de arquivo estático ou CDN, extremamente rápido (sem computação de servidor por requisição), praticamente de graça pra escalar, sem servidor pra manter vivo ou seguro.</li>
+      <li><strong>Contras:</strong> conteúdo fica congelado até você reconstruir e reimplantar tudo — sem personalização por usuário, sem dado ao vivo sem um fetch no cliente depois.</li>
+    </ul>
+    <p>Bom encaixe: páginas institucionais, documentação, um portfólio — qualquer coisa onde todo visitante deveria ver exatamente o mesmo HTML e atualizações são raras.</p>
+
+    <h2 id="ssg-pt">3. SSG — Static Site Generation</h2>
+    <p>SSG é a irmã mais "ciente de dados" da renderização estática: o Next.js busca dados e renderiza cada página uma vez <strong>no momento do build</strong>, e o servidor só entrega esses arquivos pré-construídos. A diferença do static export puro é que páginas SSG normalmente são geradas por item a partir de uma fonte de dados (um post de blog por arquivo Markdown, uma página de produto por linha do banco) em vez de HTML escrito à mão.</p>
+    <div class="card">
+      <div class="card-title">Modelo mental</div>
+      <p>Pense em SSG como "rode a lógica de busca de dados da página uma vez, no momento do deploy, pra cada versão possível da página, e guarde o resultado em cache pra sempre."</p>
+    </div>
+    <p>Bom encaixe: blogs, documentação, catálogos onde o conteúdo muda numa cadência de deploy em vez de segundo a segundo.</p>
+
+    <h2 id="ssr-pt">4. SSR — Server-Side Rendering</h2>
+    <p>SSR inverte o momento: o HTML é gerado <strong>no momento da requisição</strong>, no servidor, pra cada visita. O servidor roda a lógica de busca de dados e renderização da página do zero, toda vez que alguém carrega a página.</p>
+    <ul>
+      <li><strong>Prós:</strong> sempre atualizado, pode ser personalizado por requisição (dashboard de usuário logado, preços em tempo real), sem risco de conteúdo desatualizado.</li>
+      <li><strong>Contras:</strong> mais lento que servir um arquivo pré-construído (sempre existe pelo menos uma ida-e-volta a uma fonte de dados por requisição), precisa de um servidor rodando (ou função serverless) em vez de só arquivos estáticos, custo escala com tráfego.</li>
+    </ul>
+    <p>Bom encaixe: dashboards, qualquer coisa atrás de login, resultados de busca, fluxos de checkout — páginas onde "levemente desatualizado" não é aceitável.</p>
+
+    <h2 id="isr-pt">5. ISR — Incremental Static Regeneration</h2>
+    <p>ISR é a resposta do Next.js pra "eu quero a velocidade do SSG mas não posso reconstruir o site inteiro toda vez que o conteúdo muda." É um híbrido: o primeiro visitante depois do deploy recebe a versão estática pré-construída (rápida), e você configura um tempo de <code>revalidate</code> — depois que essa janela passa, a <em>próxima</em> requisição dispara uma regeneração em background, e visitantes futuros recebem a versão atualizada, sem ninguém esperar por um rebuild lento.</p>
+    <pre><code>// app/products/[id]/page.tsx
+export const revalidate = 60; // regenera no máximo uma vez a cada 60 segundos
+
+export default async function ProductPage({ params }) {
+  const product = await getProduct(params.id);
+  return &lt;ProductView product={product} /&gt;;
+}</code></pre>
+    <p>Bom encaixe: páginas de produto de e-commerce, artigos de notícia, qualquer coisa com centenas/milhares de páginas que mudam ocasionalmente mas não precisam estar instantaneamente ao vivo pra cada edição.</p>
+
+    <h2 id="comparacao">6. Comparação lado a lado</h2>
+    <table>
+      <tr><th>Estratégia</th><th>HTML construído quando</th><th>Atualidade</th><th>Perfil típico de custo/escala</th></tr>
+      <tr><td>Static export</td><td>No momento do build, uma vez</td><td>Congelado até o próximo deploy</td><td>Mais barato, só CDN</td></tr>
+      <tr><td>SSG</td><td>No momento do build, por página</td><td>Congelado até o próximo deploy</td><td>Barato, só CDN</td></tr>
+      <tr><td>ISR</td><td>No momento do build, depois periodicamente em background</td><td>"Eventualmente atualizado" (limitado pela janela de revalidate)</td><td>Barato, computação de servidor ocasional</td></tr>
+      <tr><td>SSR</td><td>A cada requisição</td><td>Sempre atualizado</td><td>Computação de servidor a cada requisição</td></tr>
+    </table>
+
+    <h2 id="app-router-pt">7. Como o App Router muda o modelo mental</h2>
+    <p>No App Router, você normalmente não escolhe mais uma estratégia explicitamente com uma função nomeada (como os antigos <code>getStaticProps</code>/<code>getServerSideProps</code> do Pages Router) — em vez disso, o Next.js infere a partir de como seu Server Component busca dados. Um componente com busca de dados estaticamente analisável é renderizado no build e fica em cache como SSG; adicione um export de <code>revalidate</code> e ele se comporta como ISR; use uma API dinâmica (como ler cookies ou parâmetros de busca) e a rota vira SSR automaticamente pra aquela requisição. Os quatro conceitos não desapareceram — viraram um espectro no qual o framework escolhe um ponto pra você, por rota, com base no que o código de fato faz.</p>
+
+    <h2 id="escolher">8. Como escolher de verdade, na prática</h2>
+    <div class="callout">
+      <strong>Prefira static/SSG por padrão</strong> pra qualquer coisa onde todo visitante vê o mesmo conteúdo e atualizações acontecem numa cadência de deploy — é a opção mais barata e rápida, de longe.
+    </div>
+    <div class="callout">
+      <strong>Use ISR</strong> quando você tem muitas páginas alimentadas por uma fonte de dados que muda ocasionalmente (produtos, artigos) e um rebuild completo a cada mudança seria desperdício ou lento demais.
+    </div>
+    <div class="callout">
+      <strong>Use SSR</strong> só quando a página realmente precisa de atualidade ou personalização por requisição — é a opção mais cara e deveria ser a exceção, não o padrão.
+    </div>
+    <p>A armadilha pra evitar: recorrer ao SSR por padrão "só por garantia", quando na prática a maioria das páginas de um app típico (institucional, documentação, listagens de produto, até a casca da maioria dos dashboards) pode ser static ou ISR, com só as fatias verdadeiramente dinâmicas precisando de renderização por requisição.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lição 8</span>
+  <span class="accent" id="footer-right">Static, SSR, SSG &amp; ISR</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 8' : 'Cooldecode · Lição 8';
+  }
+</script>
+
+</body>
+</html>

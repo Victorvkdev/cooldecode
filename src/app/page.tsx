@@ -151,6 +151,17 @@ const posts: Post[] = [
     file: "07-app-router-server-client-components.html",
   },
   {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 8", pt: "Semana 2 · Lição 8" },
+    title: { en: "Static vs SSR vs SSG vs ISR", pt: "Static vs SSR vs SSG vs ISR" },
+    desc: {
+      en: "Four moments the HTML can be built — and how to pick the right one for each page.",
+      pt: "Quatro momentos em que o HTML pode ser construído — e como escolher o certo pra cada página.",
+    },
+    date: "2026-08-04",
+    file: "08-static-ssr-ssg-isr.html",
+  },
+  {
     category: "ai",
     categoryLabel: { en: "AI Watch", pt: "IA Watch" },
     title: { en: "Claude Opus 5", pt: "Claude Opus 5" },
@@ -215,6 +226,17 @@ const posts: Post[] = [
     },
     date: "2026-08-03",
     file: "ai-watch-2026-08-03-cowork-mobile-web.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Embeddings, explained", pt: "Embeddings, explicados" },
+    desc: {
+      en: "How meaning becomes math — the concept behind semantic search and RAG.",
+      pt: "Como significado vira matemática — o conceito por trás da busca semântica e do RAG.",
+    },
+    date: "2026-08-04",
+    file: "ai-watch-2026-08-04-embeddings.html",
   },
   {
     category: "deep",
