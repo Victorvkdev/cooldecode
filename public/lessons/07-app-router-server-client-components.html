@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 07: App Router, Server vs Client Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .col-pos { border-left: 3px solid #3fb950; }
+  .col-neg { border-left: 3px solid var(--accent); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ffb4bf; font-family: 'DM Sans', monospace; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; font-size: 13.5px; color: #d7d7dd; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
+  .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  strong { color: #fff; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/07-app-router-server-client-components.html">
+<meta property="og:title" content="Cooldecode — Lesson 07: App Router, Server vs Client Components">
+<meta property="og:description" content="Every component in the App Router is a Server Component by default — until you add one line, `use client`, and everything about it changes. Here's what that boundary actually means.">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/07-app-router-server-client-components.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — Lesson 07: App Router, Server vs Client Components">
+<meta name="twitter:description" content="Every component in the App Router is a Server Component by default — until you add one line, `use client`, and everything about it changes. Here's what that boundary actually means.">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · Lesson 07 · Main track</div>
+    <h1>App Router: Server Components vs Client Components</h1>
+    <p class="subtitle">You know the App Router gives you file-based routing. What it doesn't advertise as loudly is that every component you write inside it starts life as a Server Component — and that single default reshapes how you're supposed to build a Next.js app.</p>
+
+    <h2><span class="num">01</span>Server Components are the default, not an opt-in</h2>
+    <p>In the App Router, <strong>every component is a Server Component unless you say otherwise</strong>. That's a reversal from the mental model most React developers grew up with, where everything renders in the browser and "server-side rendering" was something added on top.</p>
+    <p>A Server Component runs — as the name says — only on the server. It renders to HTML (or a special streaming format) before anything reaches the browser, and by default it ships <strong>zero JavaScript</strong> for that component to the client. There's no hydration cost for it, because there's nothing to hydrate: it never runs again in the browser.</p>
+    <div class="card">
+      <div class="card-title">What a Server Component can do</div>
+      <ul style="margin-bottom:0">
+        <li>Read environment variables and secrets directly, without exposing them to the client</li>
+        <li>Query a database or call an internal API directly inside the component, with no separate API route needed</li>
+        <li><code>await</code> data straight in the component body — no <code>useEffect</code>, no loading state to manage by hand</li>
+        <li>Import large libraries (a markdown renderer, a date library) without adding a single byte to the browser bundle</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">What a Server Component cannot do</div>
+      <ul style="margin-bottom:0">
+        <li>Use <code>useState</code>, <code>useEffect</code>, or any hook that depends on the component being alive in the browser</li>
+        <li>Attach event handlers like <code>onClick</code> or <code>onChange</code></li>
+        <li>Touch browser-only APIs: <code>window</code>, <code>localStorage</code>, geolocation, etc.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">02</span>Client Components: the explicit opt-in</h2>
+    <p>The moment a component needs interactivity, state, or a browser API, you mark it with a single line at the very top of the file: <code>"use client"</code>. That directive doesn't mean "this only runs in the browser" — it means "this component (and everything it imports) needs to be included in the JavaScript bundle sent to the browser, because it has to run there too."</p>
+    <pre>"use client";
+
+import { useState } from "react";
+
+export default function LikeButton() {
+  const [liked, setLiked] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; setLiked(!liked)}&gt;
+      {liked ? "Liked" : "Like"}
+    &lt;/button&gt;
+  );
+}</pre>
+    <p>Client Components still render once on the server for the initial HTML (so the page isn't blank on first load), then <strong>hydrate</strong> in the browser and become interactive from that point on — the same mechanics React has always used, just now scoped to only the components that actually need it.</p>
+
+    <h2><span class="num">03</span>The boundary is the real architectural decision</h2>
+    <p>Marking a file <code>"use client"</code> doesn't just affect that file — it affects everything it imports. Once you cross into client territory, everything downstream in that import tree ships to the browser too. That's why the recommended pattern is to push <code>"use client"</code> as far down the tree as possible: keep layout, data-fetching, and static content as Server Components, and isolate the interactive bit — a button, a form, a dropdown — into its own small Client Component.</p>
+    <table>
+      <tr><th>Aspect</th><th>Server Component</th><th>Client Component</th></tr>
+      <tr><td>Where it runs</td><td>Server only</td><td>Server (first render) + browser</td></tr>
+      <tr><td>JS sent to browser</td><td>None</td><td>Yes, its whole bundle</td></tr>
+      <tr><td>Hooks (useState, useEffect)</td><td>Not allowed</td><td>Allowed</td></tr>
+      <tr><td>Direct data access (DB, secrets)</td><td>Yes</td><td>No — needs to receive data as props or fetch via an API</td></tr>
+      <tr><td>Browser APIs, event handlers</td><td>Not allowed</td><td>Allowed</td></tr>
+      <tr><td>Default in the App Router</td><td>Yes</td><td>Opt-in via <code>"use client"</code></td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title" style="color:#3fb950">Keep as Server Component</div>
+        <ul style="margin-bottom:0">
+          <li>Page layouts, headers, footers with no interactivity</li>
+          <li>Anything that fetches data to display (a list, an article, a dashboard's static parts)</li>
+          <li>Markdown/content rendering, formatting, anything CPU-heavy but non-interactive</li>
+        </ul>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">Mark as Client Component</div>
+        <ul style="margin-bottom:0">
+          <li>Forms, buttons, toggles, anything with <code>onClick</code>/<code>onChange</code></li>
+          <li>Components using <code>useState</code>, <code>useEffect</code>, or context</li>
+          <li>Anything touching <code>window</code>, browser storage, or third-party client-only libraries</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="num">04</span>Practical example: mixing both in one page</h2>
+    <p>A product page can fetch its data on the server and pass only what's needed down to a small interactive piece — say, an "add to cart" button:</p>
+    <pre>// app/products/[id]/page.jsx — Server Component (default, no directive needed)
+import AddToCartButton from "./add-to-cart-button";
+
+export default async function ProductPage({ params }) {
+  const product = await getProductFromDatabase(params.id);
+
+  return (
+    &lt;article&gt;
+      &lt;h1&gt;{product.name}&lt;/h1&gt;
+      &lt;p&gt;{product.description}&lt;/p&gt;
+      &lt;AddToCartButton productId={product.id} /&gt;
+    &lt;/article&gt;
+  );
+}</pre>
+    <pre>// app/products/[id]/add-to-cart-button.jsx — Client Component
+"use client";
+
+import { useState } from "react";
+
+export default function AddToCartButton({ productId }) {
+  const [added, setAdded] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; setAdded(true)}&gt;
+      {added ? "Added!" : "Add to cart"}
+    &lt;/button&gt;
+  );
+}</pre>
+    <p>The page itself, the fetch, and the product text never reach the browser as JavaScript. Only the button's small bundle does. That's the whole point: interactivity becomes something you add in specific, deliberate places — not something the entire page pays for by default.</p>
+
+    <div class="callout"><strong>One rule that saves debugging time:</strong> props passed from a Server Component into a Client Component must be serializable (strings, numbers, plain objects, arrays) — you can't pass a function, a class instance, or a database connection across that boundary, only data.</div>
+
+    <div class="divider"></div>
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">Next lesson: Static vs SSR vs SSG vs ISR — when to use each rendering strategy.</div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · Lição 07 · Trilha principal</div>
+    <h1>App Router: Server Components vs Client Components</h1>
+    <p class="subtitle">Você já sabe que o App Router traz roteamento por arquivos. O que ele não anuncia tão alto é que todo componente que você escreve dentro dele nasce como Server Component — e esse único padrão muda a forma como você deve construir uma aplicação Next.js.</p>
+
+    <h2><span class="num">01</span>Server Components são o padrão, não um extra opcional</h2>
+    <p>No App Router, <strong>todo componente é um Server Component, a menos que você diga o contrário</strong>. Isso é uma inversão do modelo mental com que a maioria dos devs React cresceu, onde tudo renderiza no navegador e "server-side rendering" era algo adicionado por cima.</p>
+    <p>Um Server Component roda — como o nome diz — só no servidor. Ele renderiza para HTML (ou um formato especial de streaming) antes de qualquer coisa chegar ao navegador, e por padrão não envia <strong>nenhum JavaScript</strong> daquele componente para o cliente. Não existe custo de hidratação para ele, porque não há nada para hidratar: ele nunca roda de novo no navegador.</p>
+    <div class="card">
+      <div class="card-title">O que um Server Component pode fazer</div>
+      <ul style="margin-bottom:0">
+        <li>Ler variáveis de ambiente e segredos diretamente, sem expô-los ao cliente</li>
+        <li>Consultar um banco de dados ou chamar uma API interna direto dentro do componente, sem precisar de uma rota de API separada</li>
+        <li>Usar <code>await</code> para buscar dados direto no corpo do componente — sem <code>useEffect</code>, sem gerenciar loading na mão</li>
+        <li>Importar bibliotecas grandes (um renderizador de markdown, uma lib de datas) sem adicionar um único byte ao bundle do navegador</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">O que um Server Component não pode fazer</div>
+      <ul style="margin-bottom:0">
+        <li>Usar <code>useState</code>, <code>useEffect</code> ou qualquer hook que dependa do componente estar vivo no navegador</li>
+        <li>Anexar handlers de evento como <code>onClick</code> ou <code>onChange</code></li>
+        <li>Tocar em APIs exclusivas do navegador: <code>window</code>, <code>localStorage</code>, geolocalização, etc.</li>
+      </ul>
+    </div>
+
+    <h2><span class="num">02</span>Client Components: o opt-in explícito</h2>
+    <p>No momento em que um componente precisa de interatividade, state ou uma API de navegador, você marca com uma única linha no topo do arquivo: <code>"use client"</code>. Essa diretiva não significa "isso só roda no navegador" — significa "esse componente (e tudo que ele importa) precisa entrar no bundle de JavaScript enviado ao navegador, porque também precisa rodar lá."</p>
+    <pre>"use client";
+
+import { useState } from "react";
+
+export default function LikeButton() {
+  const [liked, setLiked] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; setLiked(!liked)}&gt;
+      {liked ? "Curtido" : "Curtir"}
+    &lt;/button&gt;
+  );
+}</pre>
+    <p>Client Components ainda renderizam uma vez no servidor para o HTML inicial (assim a página não fica em branco no primeiro carregamento), e depois <strong>hidratam</strong> no navegador e se tornam interativos a partir daí — a mesma mecânica que o React sempre usou, só que agora restrita apenas aos componentes que realmente precisam disso.</p>
+
+    <h2><span class="num">03</span>A fronteira é a verdadeira decisão de arquitetura</h2>
+    <p>Marcar um arquivo com <code>"use client"</code> não afeta só aquele arquivo — afeta tudo que ele importa. Uma vez que você cruza para o território de client, tudo que vem depois naquela árvore de imports também vai para o navegador. É por isso que o padrão recomendado é empurrar o <code>"use client"</code> o mais para baixo possível na árvore: manter layout, busca de dados e conteúdo estático como Server Components, e isolar a parte interativa — um botão, um formulário, um dropdown — em seu próprio Client Component pequeno.</p>
+    <table>
+      <tr><th>Aspecto</th><th>Server Component</th><th>Client Component</th></tr>
+      <tr><td>Onde roda</td><td>Só no servidor</td><td>Servidor (primeira renderização) + navegador</td></tr>
+      <tr><td>JS enviado ao navegador</td><td>Nenhum</td><td>Sim, o bundle inteiro dele</td></tr>
+      <tr><td>Hooks (useState, useEffect)</td><td>Não permitido</td><td>Permitido</td></tr>
+      <tr><td>Acesso direto a dados (BD, segredos)</td><td>Sim</td><td>Não — precisa receber via props ou buscar por uma API</td></tr>
+      <tr><td>APIs de navegador, handlers de evento</td><td>Não permitido</td><td>Permitido</td></tr>
+      <tr><td>Padrão no App Router</td><td>Sim</td><td>Opt-in via <code>"use client"</code></td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="card col-pos">
+        <div class="card-title" style="color:#3fb950">Mantenha como Server Component</div>
+        <ul style="margin-bottom:0">
+          <li>Layouts de página, headers, footers sem interatividade</li>
+          <li>Qualquer coisa que busca dados para exibir (uma lista, um artigo, as partes estáticas de um dashboard)</li>
+          <li>Renderização de markdown, formatação, qualquer coisa pesada de CPU mas não interativa</li>
+        </ul>
+      </div>
+      <div class="card col-neg">
+        <div class="card-title">Marque como Client Component</div>
+        <ul style="margin-bottom:0">
+          <li>Formulários, botões, toggles, qualquer coisa com <code>onClick</code>/<code>onChange</code></li>
+          <li>Componentes usando <code>useState</code>, <code>useEffect</code> ou context</li>
+          <li>Qualquer coisa que toque <code>window</code>, storage do navegador, ou libs client-only de terceiros</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="num">04</span>Exemplo prático: misturando os dois numa página</h2>
+    <p>Uma página de produto pode buscar seus dados no servidor e passar só o necessário para uma peça interativa pequena — por exemplo, um botão "adicionar ao carrinho":</p>
+    <pre>// app/products/[id]/page.jsx — Server Component (padrão, sem diretiva)
+import AddToCartButton from "./add-to-cart-button";
+
+export default async function ProductPage({ params }) {
+  const product = await getProductFromDatabase(params.id);
+
+  return (
+    &lt;article&gt;
+      &lt;h1&gt;{product.name}&lt;/h1&gt;
+      &lt;p&gt;{product.description}&lt;/p&gt;
+      &lt;AddToCartButton productId={product.id} /&gt;
+    &lt;/article&gt;
+  );
+}</pre>
+    <pre>// app/products/[id]/add-to-cart-button.jsx — Client Component
+"use client";
+
+import { useState } from "react";
+
+export default function AddToCartButton({ productId }) {
+  const [added, setAdded] = useState(false);
+  return (
+    &lt;button onClick={() =&gt; setAdded(true)}&gt;
+      {added ? "Adicionado!" : "Adicionar ao carrinho"}
+    &lt;/button&gt;
+  );
+}</pre>
+    <p>A página em si, a busca de dados e o texto do produto nunca chegam ao navegador como JavaScript. Só o bundle pequeno do botão chega. É esse o ponto principal: interatividade passa a ser algo que você adiciona em lugares específicos e deliberados — não algo que a página inteira paga por padrão.</p>
+
+    <div class="callout"><strong>Uma regra que economiza tempo de debug:</strong> props passadas de um Server Component para um Client Component precisam ser serializáveis (strings, números, objetos e arrays simples) — você não pode passar uma função, uma instância de classe ou uma conexão de banco através dessa fronteira, só dados.</div>
+
+    <div class="divider"></div>
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">Próxima lição: Static vs SSR vs SSG vs ISR — quando usar cada estratégia de renderização.</div>
+  </div>
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

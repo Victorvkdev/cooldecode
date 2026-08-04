@@ -140,6 +140,17 @@ const posts: Post[] = [
     file: "06-o-que-e-nextjs.html",
   },
   {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 7", pt: "Semana 2 · Lição 7" },
+    title: { en: "App Router: Server vs Client Components", pt: "App Router: Server vs Client Components" },
+    desc: {
+      en: "Every component starts as a Server Component by default — what that means and when to opt into a Client Component.",
+      pt: "Todo componente nasce como Server Component por padrão — o que isso significa e quando optar por um Client Component.",
+    },
+    date: "2026-08-03",
+    file: "07-app-router-server-client-components.html",
+  },
+  {
     category: "ai",
     categoryLabel: { en: "AI Watch", pt: "IA Watch" },
     title: { en: "Claude Opus 5", pt: "Claude Opus 5" },
@@ -193,6 +204,17 @@ const posts: Post[] = [
     },
     date: "2026-07-30",
     file: "ai-watch-2026-07-30-panorama-industria.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Cowork goes mobile and web", pt: "Cowork vai para mobile e web" },
+    desc: {
+      en: "Anthropic expands Cowork beyond desktop, with sessions that now run remotely and keep going with no device online.",
+      pt: "A Anthropic expande o Cowork além do desktop, com sessões que agora rodam remotamente e continuam mesmo sem nenhum dispositivo online.",
+    },
+    date: "2026-08-03",
+    file: "ai-watch-2026-08-03-cowork-mobile-web.html",
   },
   {
     category: "deep",
