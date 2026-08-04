@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Cowork goes mobile and web (08/03/2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg-card: #16161b;
+    --bg-card-2: #1c1c22;
+    --border: #2a2a32;
+    --text: #ececef;
+    --text-dim: #a3a3ad;
+    --accent: #7c3aed;
+    --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #17171c 0%, #0d0d10 55%);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 18px; }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.2; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin-bottom: 40px; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; margin: 48px 0 16px; color: #fff; }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  p { margin: 0 0 16px; color: var(--text); font-size: 16px; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 24px 26px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+  .col-pos { border-left: 3px solid #3fb950; }
+  .col-neg { border-left: 3px solid var(--accent); }
+  ul { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 8px; color: var(--text); }
+  code { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px; font-size: 14px; color: #ffb4bf; font-family: 'DM Sans', monospace; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .pill { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 3px 12px; font-size: 12.5px; font-weight: 700; }
+  .divider { height: 1px; background: linear-gradient(90deg, var(--border), transparent); margin: 44px 0; }
+  .footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  .sources { margin-top: 12px; padding-left: 18px; }
+  .sources li { color: var(--text-dim); font-size: 13px; margin-bottom: 4px; }
+  .sources a { color: var(--text-dim); }
+  strong { color: #fff; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-03-cowork-mobile-web.html">
+<meta property="og:title" content="Cooldecode — AI Watch: Cowork goes mobile and web (08/03/2026)">
+<meta property="og:description" content="Cowork stops being a desktop-only tool: Anthropic is rolling it out to claude.ai on the web and to iOS/Android, with sessions that keep running with no device online at all.">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-03-cowork-mobile-web.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: Cowork goes mobile and web (08/03/2026)">
+<meta name="twitter:description" content="Cowork stops being a desktop-only tool: Anthropic is rolling it out to claude.ai on the web and to iOS/Android, with sessions that keep running with no device online at all.">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+</head>
+<body>
+<div class="wrap">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <div class="eyebrow">Cooldecode · AI Watch · Anthropic/Claude news</div>
+    <h1>Cowork stops being a desktop-only thing</h1>
+    <p class="subtitle">Anthropic is expanding Cowork — the "agent that manages files and tasks for you" mode of Claude — from a desktop app to the web (claude.ai) and to native iOS/Android apps, in beta. The interesting part isn't just "now on more devices" — it's a change in where the work actually runs.</p>
+
+    <h2><span class="num">01</span>What changed</h2>
+    <p>Until this rollout, Cowork ran as a desktop app: sessions, file access and scheduled tasks all lived on your machine. Starting in July 2026, Anthropic opened Cowork on <strong>claude.ai on the web</strong> and on <strong>iOS and Android</strong>, in beta, starting with Max plan subscribers and expanding to other plans over the following weeks.</p>
+    <p>Chat and Cowork now also share one home tab on web and desktop — one sidebar, one search, one place for Projects and Artifacts — instead of being two separate surfaces you had to switch between.</p>
+
+    <h2><span class="num">02</span>The part that actually matters: where sessions run</h2>
+    <p>The headline isn't "more platforms." It's that the new surfaces run on a <strong>different execution model</strong>: sessions are hosted remotely on Anthropic's servers and saved to your account, instead of being tied to a single desktop process.</p>
+    <div class="card">
+      <div class="card-title">What that unlocks</div>
+      <ul style="margin-bottom:0">
+        <li>A Cowork task can keep running — including scheduled tasks — with <strong>no device online at all</strong></li>
+        <li>You can check progress, resume a session, or approve a next step from your phone, then pick it back up on desktop</li>
+        <li>Work started on one surface (say, desktop) isn't stranded there — it follows the account, not the machine</li>
+      </ul>
+    </div>
+    <p>This is the same shift that happened years ago with build servers moving from "your laptop" to CI runners in the cloud: once execution stops being tied to a specific device, the device becomes just a window into the work, not the thing doing the work.</p>
+
+    <h2><span class="num">03</span>Rollout details worth knowing</h2>
+    <table>
+      <tr><th>What</th><th>Detail</th></tr>
+      <tr><td>Announced</td><td>Beta opened July 7–8, 2026; continued rolling out through late July</td></tr>
+      <tr><td>Who gets it first</td><td>Max plan subscribers, with Pro/Team/Enterprise to follow in subsequent weeks</td></tr>
+      <tr><td>Platforms added</td><td>Web (claude.ai) and native apps for iOS and Android</td></tr>
+      <tr><td>Promo window</td><td>Doubled usage limits for the feature, running through August 5, 2026 (11:59 PM PT), covering Pro/Max/Team/legacy seat-based Enterprise — excluding Free plans</td></tr>
+      <tr><td>Context</td><td>Anthropic's own usage data reportedly shows most Cowork users aren't using it to write code — they're using it for file and task management, the same non-developer use case this newsletter's "Studiant" project itself runs on</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="col-pos card">
+        <div class="card-title" style="color:#3fb950">Why this is a meaningful move</div>
+        <ul style="margin-bottom:0">
+          <li>Positions Cowork as a general productivity agent, not a developer-only tool bolted onto a chat app</li>
+          <li>Remote execution removes the "my laptop has to be on" ceiling that limited scheduled/background tasks</li>
+          <li>Unifying chat and Cowork into one home reduces the friction of picking the "right" surface before starting a task</li>
+        </ul>
+      </div>
+      <div class="col-neg card">
+        <div class="card-title">Still worth watching</div>
+        <ul style="margin-bottom:0">
+          <li>It's a beta gated by plan tier — full availability across all plans isn't confirmed yet</li>
+          <li>Remote, always-on execution raises the usual questions around cost, quota, and what "usage" means once tasks run unattended</li>
+          <li>Mobile approval flows for agentic tasks are new territory — UX patterns here are still being figured out industry-wide</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>For context: this very lesson was generated by a scheduled Cowork task, running with no one watching it happen — which makes this one of those AI Watch topics that's also a live demo of the thing it's describing.</p>
+
+    <div class="divider"></div>
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">
+      <strong>Sources consulted (08/03/2026):</strong>
+      <ul class="sources">
+        <li><a href="https://9to5mac.com/2026/07/13/anthropic-expanding-claude-cowork-to-mobile-and-web-details-here/">9to5mac.com — Anthropic expanding Claude Cowork to mobile and web (jul 13, 2026)</a></li>
+        <li><a href="https://winbuzzer.com/2026/07/08/anthropic-opens-claude-cowork-beta-to-mobile-and-web-xcxwbn/">winbuzzer.com — Anthropic opens Claude Cowork beta to mobile and web (jul 8, 2026)</a></li>
+        <li><a href="https://venturebeat.com/technology/anthropic-brings-claude-cowork-to-mobile-and-web-as-usage-data-shows-most-users-arent-coding">venturebeat.com — Anthropic brings Claude Cowork to mobile and web as usage data shows most users aren't coding</a></li>
+        <li><a href="https://the-decoder.com/anthropics-claude-cowork-ai-agent-is-now-available-on-mobile-and-web/">the-decoder.com — Anthropic's Claude Cowork AI agent is now available on mobile and web</a></li>
+        <li><a href="https://www.infoworld.com/article/4194472/anthropic-expands-claude-cowork-to-web-and-mobile-as-enterprise-use-broadens.html">infoworld.com — Anthropic expands Claude Cowork to web and mobile as enterprise use broadens</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <div class="eyebrow">Cooldecode · IA Watch · Novidades Anthropic/Claude</div>
+    <h1>Cowork deixa de ser coisa só de desktop</h1>
+    <p class="subtitle">A Anthropic está expandindo o Cowork — o modo do Claude que "gerencia arquivos e tarefas pra você" — de um app de desktop para a web (claude.ai) e para apps nativos de iOS/Android, em beta. A parte interessante não é só "agora em mais dispositivos" — é uma mudança em onde o trabalho de fato roda.</p>
+
+    <h2><span class="num">01</span>O que mudou</h2>
+    <p>Até esse lançamento, o Cowork rodava como um app de desktop: sessões, acesso a arquivos e tarefas agendadas viviam todos na sua máquina. A partir de julho de 2026, a Anthropic abriu o Cowork no <strong>claude.ai na web</strong> e em <strong>iOS e Android</strong>, em beta, começando pelos assinantes do plano Max e se expandindo para outros planos nas semanas seguintes.</p>
+    <p>Chat e Cowork agora também compartilham uma única aba inicial na web e no desktop — uma sidebar, uma busca, um lugar só pra Projects e Artifacts — em vez de serem duas superfícies separadas entre as quais você tinha que alternar.</p>
+
+    <h2><span class="num">02</span>A parte que realmente importa: onde as sessões rodam</h2>
+    <p>A manchete não é "mais plataformas". É que as novas superfícies rodam num <strong>modelo de execução diferente</strong>: as sessões são hospedadas remotamente nos servidores da Anthropic e salvas na sua conta, em vez de ficarem presas a um único processo de desktop.</p>
+    <div class="card">
+      <div class="card-title">O que isso destrava</div>
+      <ul style="margin-bottom:0">
+        <li>Uma tarefa do Cowork pode continuar rodando — incluindo tarefas agendadas — com <strong>nenhum dispositivo online</strong></li>
+        <li>Você pode checar progresso, retomar uma sessão ou aprovar um próximo passo pelo celular, e depois continuar no desktop</li>
+        <li>Trabalho iniciado numa superfície (digamos, desktop) não fica preso ali — ele acompanha a conta, não a máquina</li>
+      </ul>
+    </div>
+    <p>É a mesma mudança que aconteceu anos atrás com servidores de build saindo "do seu notebook" para runners de CI na nuvem: quando a execução deixa de estar amarrada a um dispositivo específico, o dispositivo passa a ser só uma janela pro trabalho, não a coisa que faz o trabalho.</p>
+
+    <h2><span class="num">03</span>Detalhes do lançamento que valem saber</h2>
+    <table>
+      <tr><th>O quê</th><th>Detalhe</th></tr>
+      <tr><td>Anunciado</td><td>Beta aberto em 7–8 de julho de 2026; expansão continuou até o fim de julho</td></tr>
+      <tr><td>Quem recebe primeiro</td><td>Assinantes do plano Max, com Pro/Team/Enterprise vindo nas semanas seguintes</td></tr>
+      <tr><td>Plataformas adicionadas</td><td>Web (claude.ai) e apps nativos de iOS e Android</td></tr>
+      <tr><td>Janela promocional</td><td>Limites de uso dobrados pra funcionalidade, até 5 de agosto de 2026 (23h59 PT), cobrindo Pro/Max/Team/Enterprise legado por assento — exceto planos Free</td></tr>
+      <tr><td>Contexto</td><td>Dados de uso da própria Anthropic mostram que a maioria dos usuários do Cowork não usa pra escrever código — usam pra gerenciar arquivos e tarefas, o mesmo caso de uso não-dev sobre o qual este projeto "Studiant" roda</td></tr>
+    </table>
+
+    <div class="grid-2">
+      <div class="col-pos card">
+        <div class="card-title" style="color:#3fb950">Por que esse movimento importa</div>
+        <ul style="margin-bottom:0">
+          <li>Posiciona o Cowork como um agente de produtividade geral, não uma ferramenta só pra dev colada num app de chat</li>
+          <li>Execução remota remove o teto de "meu notebook precisa estar ligado" que limitava tarefas agendadas/em segundo plano</li>
+          <li>Unificar chat e Cowork numa única home reduz a fricção de escolher a superfície "certa" antes de começar uma tarefa</li>
+        </ul>
+      </div>
+      <div class="col-neg card">
+        <div class="card-title">Ainda vale acompanhar</div>
+        <ul style="margin-bottom:0">
+          <li>É um beta restrito por nível de plano — disponibilidade completa em todos os planos ainda não está confirmada</li>
+          <li>Execução remota e sempre ativa levanta as perguntas usuais sobre custo, cota e o que "uso" significa quando tarefas rodam sem ninguém olhando</li>
+          <li>Fluxos de aprovação mobile pra tarefas agentivas são território novo — os padrões de UX aqui ainda estão sendo definidos por toda a indústria</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Contexto extra: esta própria lição foi gerada por uma tarefa agendada do Cowork, rodando sem ninguém acompanhando em tempo real — o que faz desse tema de IA Watch também uma demonstração viva da coisa que ele está descrevendo.</p>
+
+    <div class="divider"></div>
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+    <div class="footer">
+      <strong>Fontes consultadas (03/08/2026):</strong>
+      <ul class="sources">
+        <li><a href="https://9to5mac.com/2026/07/13/anthropic-expanding-claude-cowork-to-mobile-and-web-details-here/">9to5mac.com — Anthropic expanding Claude Cowork to mobile and web (13/jul/2026)</a></li>
+        <li><a href="https://winbuzzer.com/2026/07/08/anthropic-opens-claude-cowork-beta-to-mobile-and-web-xcxwbn/">winbuzzer.com — Anthropic opens Claude Cowork beta to mobile and web (08/jul/2026)</a></li>
+        <li><a href="https://venturebeat.com/technology/anthropic-brings-claude-cowork-to-mobile-and-web-as-usage-data-shows-most-users-arent-coding">venturebeat.com — Anthropic brings Claude Cowork to mobile and web as usage data shows most users aren't coding</a></li>
+        <li><a href="https://the-decoder.com/anthropics-claude-cowork-ai-agent-is-now-available-on-mobile-and-web/">the-decoder.com — Anthropic's Claude Cowork AI agent is now available on mobile and web</a></li>
+        <li><a href="https://www.infoworld.com/article/4194472/anthropic-expands-claude-cowork-to-web-and-mobile-as-enterprise-use-broadens.html">infoworld.com — Anthropic expands Claude Cowork to web and mobile as enterprise use broadens</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>
