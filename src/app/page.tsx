@@ -162,6 +162,17 @@ const posts: Post[] = [
     file: "08-static-ssr-ssg-isr.html",
   },
   {
+    category: "main",
+    categoryLabel: { en: "Week 2 · Lesson 9", pt: "Semana 2 · Lição 9" },
+    title: { en: "Why use Vercel", pt: "Por que usar Vercel" },
+    desc: {
+      en: "Native Next.js integration, preview URLs, edge functions — and the honest downsides, including the metered bill.",
+      pt: "Integração nativa com Next.js, preview URLs, edge functions — e as desvantagens honestas, incluindo a cobrança por uso.",
+    },
+    date: "2026-08-05",
+    file: "09-por-que-usar-vercel.html",
+  },
+  {
     category: "ai",
     categoryLabel: { en: "AI Watch", pt: "IA Watch" },
     title: { en: "Claude Opus 5", pt: "Claude Opus 5" },
@@ -237,6 +248,20 @@ const posts: Post[] = [
     },
     date: "2026-08-04",
     file: "ai-watch-2026-08-04-embeddings.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: {
+      en: "Model lifecycles, deprecation and pricing",
+      pt: "Ciclo de vida, descontinuação e preço de modelos",
+    },
+    desc: {
+      en: "Claude Opus 4.1 retires today and Sonnet 5's intro pricing ends Aug 31 — why model IDs are perishable infrastructure.",
+      pt: "O Claude Opus 4.1 é aposentado hoje e o preço promocional do Sonnet 5 acaba em 31/8 — por que IDs de modelo são infraestrutura perecível.",
+    },
+    date: "2026-08-05",
+    file: "ai-watch-2026-08-05-ciclo-de-vida-de-modelos.html",
   },
   {
     category: "deep",

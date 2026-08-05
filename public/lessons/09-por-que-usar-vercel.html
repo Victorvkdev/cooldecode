@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 9: Why use Vercel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 0 0 20px; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Lesson 9 · Next.js &amp; deploy</span>
+      <h1>Why use Vercel: the platform built around the framework</h1>
+      <p class="subtitle">Vercel is the company that makes Next.js. That single fact explains most of what's good about deploying there — and most of what people warn you about.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What Vercel actually is</a></li>
+        <li><a href="#native">The native-integration argument</a></li>
+        <li><a href="#workflow">The deploy workflow: preview URLs and git</a></li>
+        <li><a href="#edge">Edge functions and the edge network</a></li>
+        <li><a href="#dx">What else comes in the box</a></li>
+        <li><a href="#cons">The honest downsides</a></li>
+        <li><a href="#alternatives">How it compares to the alternatives</a></li>
+        <li><a href="#example">A concrete example, start to finish</a></li>
+        <li><a href="#verdict">When Vercel is the right call</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What Vercel actually is</h2>
+    <p>Vercel is a hosting and deployment platform for web applications. But describing it as "hosting" undersells it, because it isn't a server you rent and configure — it's a build-and-serve pipeline. You point it at a git repository; every time you push, it installs your dependencies, runs your build command, and takes the output apart into three different kinds of thing:</p>
+    <ul>
+      <li><strong>Static assets</strong> (pre-built HTML, CSS, JS, images) get pushed onto a global CDN.</li>
+      <li><strong>Server-rendered routes</strong> become serverless functions that spin up on demand.</li>
+      <li><strong>Edge-designated code</strong> (middleware, edge functions) gets deployed to a lightweight runtime in data centres close to your users.</li>
+    </ul>
+    <p>You never see a machine, never install a runtime, never configure a reverse proxy. The tradeoff is that you're accepting Vercel's opinions about how the pieces fit together — which brings us to the main reason people choose it.</p>
+
+    <h2 id="native">2. The native-integration argument</h2>
+    <p>Vercel employs the team that builds Next.js. When a new Next.js feature ships — a new caching primitive, a new rendering mode, a new middleware API — Vercel is the platform where it works on day one, because the feature and its hosting story were designed together.</p>
+    <p>Concretely, that means the four rendering strategies from the previous lesson need <em>zero</em> configuration on Vercel. When your build produces a mix of statically generated pages, ISR pages with a <code>revalidate</code> window, and dynamic SSR routes, Vercel reads the build output and wires each one to the right infrastructure automatically:</p>
+    <table>
+      <tr><th>What your code does</th><th>What Vercel does with it</th></tr>
+      <tr><td>Static page, no dynamic data</td><td>Cached HTML on the CDN, served with no compute</td></tr>
+      <tr><td>Page exporting <code>revalidate = 60</code></td><td>Cached HTML plus a background regeneration job on a 60s window</td></tr>
+      <tr><td>Route reading cookies/headers</td><td>A serverless function invoked per request</td></tr>
+      <tr><td><code>middleware.ts</code></td><td>Edge runtime, executed before the request reaches anything else</td></tr>
+    </table>
+    <div class="callout">
+      <strong>The real value here isn't speed, it's absence of work.</strong> Every other platform <em>can</em> host Next.js, but reproducing ISR's background regeneration or middleware's edge execution yourself means understanding Next.js's build manifest and building adapters. Vercel is the reference implementation.
+    </div>
+
+    <h2 id="workflow">3. The deploy workflow: preview URLs and git</h2>
+    <p>The workflow is the part that changes how a team behaves, and it's worth understanding even if you never use Vercel specifically, because it's now the industry norm.</p>
+    <ol>
+      <li>You connect a git repository once.</li>
+      <li><strong>Every push to any branch</strong> triggers a build and produces a unique, live, shareable URL — a <em>preview deployment</em>. Not a local dev server, not a staging environment shared by five people: a real deployment of exactly that commit.</li>
+      <li>A push to the production branch (usually <code>main</code>) triggers a production deployment to your real domain.</li>
+      <li>If a production deploy is broken, you can <strong>promote a previous deployment</strong> back to production — an instant rollback, because old deployments aren't deleted, they're just no longer aliased to the production domain.</li>
+    </ol>
+    <p>That last point is subtle and important. A Vercel deployment is <em>immutable</em>: it's a snapshot that keeps existing at its own URL forever. "Deploying to production" is really just repointing a domain alias at a different immutable snapshot. Rollback stops being a scary rebuild and becomes a pointer change.</p>
+    <h3>Why preview URLs matter more than they sound like they should</h3>
+    <p>Preview deployments turn code review into something a non-developer can participate in. A designer can click a link in a pull request and see the actual change, on a real URL, on their phone, without installing anything. Feedback moves from "can you screenshot it?" to "here, try it."</p>
+
+    <h2 id="edge">4. Edge functions and the edge network</h2>
+    <p>"Edge" means running code in many small locations geographically near users, rather than in one big data centre. Vercel offers two flavours of server-side execution and the difference matters:</p>
+    <table>
+      <tr><th></th><th>Serverless functions (Node runtime)</th><th>Edge functions / middleware</th></tr>
+      <tr><td>Where they run</td><td>One chosen region</td><td>Many locations, near the user</td></tr>
+      <tr><td>Runtime</td><td>Full Node.js</td><td>Restricted, web-standard APIs only</td></tr>
+      <tr><td>Cold start</td><td>Noticeable (tens/hundreds of ms)</td><td>Near zero</td></tr>
+      <tr><td>Can talk to</td><td>Any database driver, filesystem, native modules</td><td>HTTP/fetch only — no raw TCP database drivers</td></tr>
+      <tr><td>Good for</td><td>Real work: DB queries, heavy rendering, third-party SDKs</td><td>Fast decisions: auth checks, redirects, A/B splits, geo/locale routing, rewriting headers</td></tr>
+    </table>
+    <p>The classic edge use case is a decision that must happen before anything else, on every request, and must not add latency. Redirecting a logged-out visitor away from a private route is the textbook example:</p>
+    <pre><code>// middleware.ts — runs at the edge, before the route renders
+import { NextResponse } from 'next/server';
+
+export function middleware(request) {
+  const session = request.cookies.get('session');
+  if (!session &amp;&amp; request.nextUrl.pathname.startsWith('/account')) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = { matcher: '/account/:path*' };</code></pre>
+    <p>The trap: the edge runtime's restrictions are real. Reaching for an edge function and then discovering your Postgres client can't run there is a common early frustration. Edge is for cheap, fast, request-shaping logic — not for your data layer.</p>
+
+    <h2 id="dx">5. What else comes in the box</h2>
+    <ul>
+      <li><strong>Automatic HTTPS and domains</strong> — certificates are issued and renewed for you.</li>
+      <li><strong>Image optimisation</strong> — Next.js's <code>&lt;Image&gt;</code> component resizes, re-encodes to modern formats, and caches images on demand.</li>
+      <li><strong>Environment variables per environment</strong> — separate values for production, preview, and development, injected at build/run time.</li>
+      <li><strong>Analytics and Speed Insights</strong> — real-user Core Web Vitals from actual visitors rather than a lab test.</li>
+      <li><strong>Managed data primitives</strong> — key-value and blob storage, so small stateful needs don't force you into another vendor.</li>
+      <li><strong>A generous free tier</strong> for personal, non-commercial projects — the reason so many people's first deploy ever is on Vercel.</li>
+    </ul>
+
+    <h2 id="cons">6. The honest downsides</h2>
+    <p>A lesson that only lists advantages isn't teaching you anything. The real objections:</p>
+    <ul>
+      <li><strong>Usage-based pricing can surprise you.</strong> Bandwidth, function invocations, function duration, and image optimisations are all metered. A page that goes viral, or a badly-configured SSR route that should have been static, can produce a bill far larger than a fixed-price server would have. This is the single most common complaint.</li>
+      <li><strong>Lock-in by convenience, not by contract.</strong> Nothing stops you leaving, but the more you use platform-specific features (its storage products, its cron jobs, its edge config), the more of your app is Vercel-shaped rather than Next.js-shaped.</li>
+      <li><strong>It's optimised for one framework.</strong> Vercel supports many frameworks, but Next.js is the one that gets first-class treatment. Deploying something else there works — you just stop getting the "it's designed together" benefit that was the main argument.</li>
+      <li><strong>Serverless constraints are inherited.</strong> Execution time limits, no persistent in-memory state between requests, no long-running background workers, cold starts. If your workload is a websocket server or a 10-minute video transcode, this is the wrong shape of platform.</li>
+      <li><strong>Less control.</strong> No SSH, no custom nginx config, no OS-level tuning. That's a feature until the day it's a wall.</li>
+    </ul>
+
+    <h2 id="alternatives">7. How it compares to the alternatives</h2>
+    <table>
+      <tr><th>Option</th><th>Model</th><th>Best when</th></tr>
+      <tr><td><strong>Vercel</strong></td><td>Framework-native build pipeline, serverless + edge</td><td>Next.js app, small team, you want zero infra work</td></tr>
+      <tr><td><strong>Netlify</strong></td><td>Very similar model, framework-agnostic heritage</td><td>Static-heavy sites, non-Next frameworks (next lesson covers this properly)</td></tr>
+      <tr><td><strong>Cloudflare Pages/Workers</strong></td><td>Edge-first — everything runs at the edge by default</td><td>Latency-critical, global audience, cost-sensitive at high traffic</td></tr>
+      <tr><td><strong>A VPS</strong> (rented Linux box)</td><td>You install and run everything</td><td>You need full control, long-running processes, or predictable flat cost</td></tr>
+      <tr><td><strong>AWS / GCP directly</strong></td><td>Raw primitives you assemble yourself</td><td>Large org, existing cloud footprint, compliance requirements</td></tr>
+      <tr><td><strong>Static host</strong> (S3, GitHub Pages)</td><td>Files only, no server</td><td>Fully static output, cheapest possible option</td></tr>
+    </table>
+    <p>A useful way to think about the spectrum: on the left, platforms sell you <em>convenience</em> and charge by usage; on the right, they sell you <em>control</em> and charge by capacity. Vercel is close to the far left.</p>
+
+    <h2 id="example">8. A concrete example, start to finish</h2>
+    <p>Say you're building a documentation site with a handful of dynamic pages. The whole lifecycle on Vercel looks like this:</p>
+    <pre><code># 1. Push a feature branch
+git checkout -b feat/search
+git push -u origin feat/search
+# → Vercel builds it, comments a preview URL on the PR:
+#   https://docs-git-feat-search-yourteam.vercel.app
+
+# 2. Share that URL. Someone finds a bug. Push a fix.
+#    Same branch, new commit, new preview URL. Old one still works.
+
+# 3. Merge to main
+# → production build, live on docs.example.com
+
+# 4. Something's broken in production
+#    Dashboard → previous deployment → "Promote to Production"
+#    Live again in seconds. No rebuild.</code></pre>
+    <p>Notice what never appears in that list: provisioning a server, installing Node, configuring a web server, setting up TLS, writing a deploy script, or arranging a rollback strategy. That elimination <em>is</em> the product.</p>
+
+    <h2 id="verdict">9. When Vercel is the right call</h2>
+    <div class="callout">
+      <strong>Choose it</strong> when you're building a Next.js app, the team is small or has no dedicated infrastructure person, and traffic is moderate or predictable. The time you don't spend on deployment is worth more than the premium you pay per request.
+    </div>
+    <div class="callout">
+      <strong>Think twice</strong> when you have very high bandwidth traffic (metered pricing gets expensive fast), need long-running or stateful processes, or have compliance requirements that dictate where and how compute runs.
+    </div>
+    <p>And the pragmatic middle path most projects actually take: start on Vercel because the friction is near zero, keep as much of the app as possible framework-standard rather than platform-specific, and revisit the decision when a real bill or a real technical wall gives you an actual reason to. Migrating a mostly-standard Next.js app off Vercel later is annoying but tractable; not shipping because you spent three weeks choosing infrastructure is worse.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Lição 9 · Next.js e deploy</span>
+      <h1>Por que usar Vercel: a plataforma construída em volta do framework</h1>
+      <p class="subtitle">A Vercel é a empresa que faz o Next.js. Esse único fato explica quase tudo que é bom em fazer deploy lá — e quase tudo que as pessoas te alertam.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que">O que a Vercel é, de fato</a></li>
+        <li><a href="#nativa">O argumento da integração nativa</a></li>
+        <li><a href="#fluxo">O fluxo de deploy: preview URLs e git</a></li>
+        <li><a href="#edge-pt">Edge functions e a rede de edge</a></li>
+        <li><a href="#dx-pt">O que mais vem na caixa</a></li>
+        <li><a href="#contras">As desvantagens honestas</a></li>
+        <li><a href="#alternativas">Como se compara às alternativas</a></li>
+        <li><a href="#exemplo">Um exemplo concreto, do início ao fim</a></li>
+        <li><a href="#veredito">Quando a Vercel é a escolha certa</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que">1. O que a Vercel é, de fato</h2>
+    <p>A Vercel é uma plataforma de hospedagem e deploy de aplicações web. Mas chamar de "hospedagem" é vender ela por menos, porque não é um servidor que você aluga e configura — é uma esteira de build-e-entrega. Você aponta ela pra um repositório git; a cada push, ela instala suas dependências, roda seu comando de build e desmonta o resultado em três tipos diferentes de coisa:</p>
+    <ul>
+      <li><strong>Assets estáticos</strong> (HTML, CSS, JS e imagens pré-construídos) vão pra uma CDN global.</li>
+      <li><strong>Rotas renderizadas no servidor</strong> viram funções serverless que sobem sob demanda.</li>
+      <li><strong>Código marcado como edge</strong> (middleware, edge functions) vai pra um runtime leve em data centers perto dos seus usuários.</li>
+    </ul>
+    <p>Você nunca vê uma máquina, nunca instala um runtime, nunca configura um proxy reverso. O preço é aceitar as opiniões da Vercel sobre como as peças se encaixam — o que nos leva ao motivo principal de as pessoas escolherem ela.</p>
+
+    <h2 id="nativa">2. O argumento da integração nativa</h2>
+    <p>A Vercel emprega o time que constrói o Next.js. Quando um recurso novo do Next.js sai — um novo primitivo de cache, um novo modo de renderização, uma nova API de middleware — a Vercel é a plataforma onde ele funciona no dia um, porque o recurso e a história de hospedagem dele foram desenhados juntos.</p>
+    <p>Na prática, isso significa que as quatro estratégias de renderização da lição anterior precisam de <em>zero</em> configuração na Vercel. Quando seu build produz uma mistura de páginas geradas estaticamente, páginas ISR com janela de <code>revalidate</code> e rotas SSR dinâmicas, a Vercel lê a saída do build e liga cada uma na infraestrutura certa automaticamente:</p>
+    <table>
+      <tr><th>O que seu código faz</th><th>O que a Vercel faz com isso</th></tr>
+      <tr><td>Página estática, sem dado dinâmico</td><td>HTML em cache na CDN, servido sem nenhuma computação</td></tr>
+      <tr><td>Página exportando <code>revalidate = 60</code></td><td>HTML em cache mais uma regeneração em background numa janela de 60s</td></tr>
+      <tr><td>Rota lendo cookies/headers</td><td>Uma função serverless invocada por requisição</td></tr>
+      <tr><td><code>middleware.ts</code></td><td>Runtime de edge, executado antes da requisição chegar em qualquer outra coisa</td></tr>
+    </table>
+    <div class="callout">
+      <strong>O valor real aqui não é velocidade, é ausência de trabalho.</strong> Qualquer outra plataforma <em>pode</em> hospedar Next.js, mas reproduzir a regeneração em background do ISR ou a execução no edge do middleware por conta própria exige entender o manifesto de build do Next.js e construir adaptadores. A Vercel é a implementação de referência.
+    </div>
+
+    <h2 id="fluxo">3. O fluxo de deploy: preview URLs e git</h2>
+    <p>O fluxo é a parte que muda como um time se comporta, e vale entender mesmo que você nunca use a Vercel especificamente, porque hoje isso é a norma da indústria.</p>
+    <ol>
+      <li>Você conecta um repositório git uma vez.</li>
+      <li><strong>Todo push em qualquer branch</strong> dispara um build e produz uma URL única, ao vivo e compartilhável — um <em>preview deployment</em>. Não é um servidor de desenvolvimento local, nem um ambiente de staging compartilhado por cinco pessoas: é um deploy real exatamente daquele commit.</li>
+      <li>Um push na branch de produção (normalmente <code>main</code>) dispara um deploy de produção no seu domínio real.</li>
+      <li>Se um deploy de produção quebrou, você pode <strong>promover um deploy anterior</strong> de volta pra produção — um rollback instantâneo, porque deploys antigos não são apagados, só deixam de ter o domínio de produção apontado pra eles.</li>
+    </ol>
+    <p>Esse último ponto é sutil e importante. Um deploy na Vercel é <em>imutável</em>: é um snapshot que continua existindo na própria URL pra sempre. "Fazer deploy em produção" é, na verdade, só reapontar um alias de domínio pra outro snapshot imutável. Rollback deixa de ser um rebuild assustador e vira uma mudança de ponteiro.</p>
+    <h3>Por que preview URLs importam mais do que parece</h3>
+    <p>Preview deployments transformam code review em algo em que quem não é desenvolvedor consegue participar. Uma pessoa de design clica num link no pull request e vê a mudança real, numa URL real, no celular, sem instalar nada. O feedback sai de "consegue mandar um print?" pra "toma, testa aí".</p>
+
+    <h2 id="edge-pt">4. Edge functions e a rede de edge</h2>
+    <p>"Edge" significa rodar código em muitos lugares pequenos geograficamente perto dos usuários, em vez de num único data center grande. A Vercel oferece dois sabores de execução no servidor, e a diferença importa:</p>
+    <table>
+      <tr><th></th><th>Funções serverless (runtime Node)</th><th>Edge functions / middleware</th></tr>
+      <tr><td>Onde rodam</td><td>Uma região escolhida</td><td>Muitos lugares, perto do usuário</td></tr>
+      <tr><td>Runtime</td><td>Node.js completo</td><td>Restrito, só APIs padrão da web</td></tr>
+      <tr><td>Cold start</td><td>Perceptível (dezenas/centenas de ms)</td><td>Perto de zero</td></tr>
+      <tr><td>Consegue falar com</td><td>Qualquer driver de banco, sistema de arquivos, módulos nativos</td><td>Só HTTP/fetch — sem drivers TCP de banco</td></tr>
+      <tr><td>Bom pra</td><td>Trabalho de verdade: queries no banco, renderização pesada, SDKs de terceiros</td><td>Decisões rápidas: checagem de auth, redirects, testes A/B, roteamento por geo/idioma, reescrever headers</td></tr>
+    </table>
+    <p>O caso de uso clássico de edge é uma decisão que precisa acontecer antes de tudo, em toda requisição, e não pode adicionar latência. Redirecionar um visitante deslogado pra fora de uma rota privada é o exemplo de manual:</p>
+    <pre><code>// middleware.ts — roda no edge, antes da rota renderizar
+import { NextResponse } from 'next/server';
+
+export function middleware(request) {
+  const session = request.cookies.get('session');
+  if (!session &amp;&amp; request.nextUrl.pathname.startsWith('/account')) {
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+  return NextResponse.next();
+}
+
+export const config = { matcher: '/account/:path*' };</code></pre>
+    <p>A armadilha: as restrições do runtime de edge são reais. Escolher uma edge function e só depois descobrir que seu cliente de Postgres não roda lá é uma frustração comum no começo. Edge é pra lógica barata, rápida e de modelagem de requisição — não pra sua camada de dados.</p>
+
+    <h2 id="dx-pt">5. O que mais vem na caixa</h2>
+    <ul>
+      <li><strong>HTTPS e domínios automáticos</strong> — certificados são emitidos e renovados pra você.</li>
+      <li><strong>Otimização de imagens</strong> — o componente <code>&lt;Image&gt;</code> do Next.js redimensiona, reconverte pra formatos modernos e guarda em cache sob demanda.</li>
+      <li><strong>Variáveis de ambiente por ambiente</strong> — valores separados pra produção, preview e desenvolvimento, injetados no build/execução.</li>
+      <li><strong>Analytics e Speed Insights</strong> — Core Web Vitals de usuários reais, em vez de um teste de laboratório.</li>
+      <li><strong>Primitivos de dados gerenciados</strong> — armazenamento key-value e de blobs, pra necessidades pequenas de estado não te obrigarem a contratar outro fornecedor.</li>
+      <li><strong>Um plano gratuito generoso</strong> pra projetos pessoais e não comerciais — o motivo do primeiro deploy da vida de tanta gente ser na Vercel.</li>
+    </ul>
+
+    <h2 id="contras">6. As desvantagens honestas</h2>
+    <p>Uma lição que só lista vantagens não está te ensinando nada. As objeções reais:</p>
+    <ul>
+      <li><strong>Cobrança por uso pode te surpreender.</strong> Banda, invocações de função, duração de função e otimizações de imagem são todas medidas. Uma página que viraliza, ou uma rota SSR mal configurada que deveria ser estática, pode gerar uma fatura muito maior do que um servidor de preço fixo geraria. Essa é a reclamação mais comum de todas.</li>
+      <li><strong>Lock-in por conveniência, não por contrato.</strong> Nada impede você de sair, mas quanto mais você usa recursos específicos da plataforma (os produtos de storage dela, os cron jobs, o edge config), mais o seu app tem o formato da Vercel em vez do formato do Next.js.</li>
+      <li><strong>É otimizada pra um framework.</strong> A Vercel suporta muitos frameworks, mas o Next.js é o que recebe tratamento de primeira classe. Fazer deploy de outra coisa lá funciona — você só deixa de ganhar o benefício do "foi desenhado junto", que era o argumento principal.</li>
+      <li><strong>As restrições de serverless são herdadas.</strong> Limites de tempo de execução, nenhum estado persistente em memória entre requisições, nenhum worker de background de longa duração, cold starts. Se sua carga de trabalho é um servidor de websocket ou uma transcodificação de vídeo de 10 minutos, esse é o formato errado de plataforma.</li>
+      <li><strong>Menos controle.</strong> Sem SSH, sem configuração customizada de nginx, sem ajuste em nível de sistema operacional. Isso é um recurso até o dia em que é uma parede.</li>
+    </ul>
+
+    <h2 id="alternativas">7. Como se compara às alternativas</h2>
+    <table>
+      <tr><th>Opção</th><th>Modelo</th><th>Melhor quando</th></tr>
+      <tr><td><strong>Vercel</strong></td><td>Esteira de build nativa do framework, serverless + edge</td><td>App Next.js, time pequeno, você quer zero trabalho de infra</td></tr>
+      <tr><td><strong>Netlify</strong></td><td>Modelo muito parecido, herança agnóstica de framework</td><td>Sites com muito conteúdo estático, frameworks que não são Next (a próxima lição cobre isso a fundo)</td></tr>
+      <tr><td><strong>Cloudflare Pages/Workers</strong></td><td>Edge-first — tudo roda no edge por padrão</td><td>Latência crítica, público global, sensibilidade a custo em tráfego alto</td></tr>
+      <tr><td><strong>Uma VPS</strong> (máquina Linux alugada)</td><td>Você instala e roda tudo</td><td>Você precisa de controle total, processos de longa duração ou custo fixo previsível</td></tr>
+      <tr><td><strong>AWS / GCP direto</strong></td><td>Primitivos brutos que você monta sozinho</td><td>Organização grande, presença de nuvem já existente, requisitos de compliance</td></tr>
+      <tr><td><strong>Host estático</strong> (S3, GitHub Pages)</td><td>Só arquivos, sem servidor</td><td>Saída totalmente estática, opção mais barata possível</td></tr>
+    </table>
+    <p>Uma forma útil de pensar no espectro: na esquerda, as plataformas te vendem <em>conveniência</em> e cobram por uso; na direita, te vendem <em>controle</em> e cobram por capacidade. A Vercel fica bem na ponta esquerda.</p>
+
+    <h2 id="exemplo">8. Um exemplo concreto, do início ao fim</h2>
+    <p>Digamos que você está construindo um site de documentação com algumas páginas dinâmicas. O ciclo completo na Vercel é assim:</p>
+    <pre><code># 1. Push numa branch de feature
+git checkout -b feat/search
+git push -u origin feat/search
+# → a Vercel builda e comenta uma preview URL no PR:
+#   https://docs-git-feat-search-seutime.vercel.app
+
+# 2. Compartilhe essa URL. Alguém acha um bug. Você corrige e dá push.
+#    Mesma branch, commit novo, preview URL nova. A antiga continua funcionando.
+
+# 3. Merge na main
+# → build de produção, no ar em docs.exemplo.com
+
+# 4. Algo quebrou em produção
+#    Dashboard → deploy anterior → "Promote to Production"
+#    No ar de novo em segundos. Sem rebuild.</code></pre>
+    <p>Repare no que nunca aparece nessa lista: provisionar um servidor, instalar Node, configurar um servidor web, montar TLS, escrever um script de deploy ou organizar uma estratégia de rollback. Essa eliminação <em>é</em> o produto.</p>
+
+    <h2 id="veredito">9. Quando a Vercel é a escolha certa</h2>
+    <div class="callout">
+      <strong>Escolha ela</strong> quando você está construindo um app Next.js, o time é pequeno ou não tem ninguém dedicado a infraestrutura, e o tráfego é moderado ou previsível. O tempo que você não gasta com deploy vale mais do que o prêmio que você paga por requisição.
+    </div>
+    <div class="callout">
+      <strong>Pense duas vezes</strong> quando você tem tráfego de banda muito alto (cobrança por uso encarece rápido), precisa de processos longos ou com estado, ou tem requisitos de compliance que ditam onde e como a computação roda.
+    </div>
+    <p>E o caminho pragmático do meio, que a maioria dos projetos de fato segue: comece na Vercel porque o atrito é perto de zero, mantenha o máximo possível do app em padrões do framework em vez de específicos da plataforma, e revisite a decisão quando uma fatura real ou uma parede técnica real te der um motivo de verdade. Migrar um app Next.js majoritariamente padrão pra fora da Vercel depois é chato, mas resolvível; não lançar nada porque você passou três semanas escolhendo infraestrutura é pior.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lição 9</span>
+  <span class="accent" id="footer-right">Vercel</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 9' : 'Cooldecode · Lição 9';
+  }
+</script>
+
+</body>
+</html>
