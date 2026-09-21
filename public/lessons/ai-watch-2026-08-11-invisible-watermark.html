@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude's invisible text watermark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude now watermarks its text — invisibly, and it survives copy-paste</h1>
+      <p class="subtitle">Anthropic started embedding machine-readable marks directly into Claude's generated text on August 2, 2026. Here's how the mark actually works, and why "invisible" doesn't mean "reliable AI detector."</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What happened</a></li>
+        <li><a href="#how-it-works">How the watermark actually works</a></li>
+        <li><a href="#detection">Detection — and its real limits</a></li>
+        <li><a href="#why-now">Why now: EU rules and C2PA context</a></li>
+        <li><a href="#why-it-matters">What this means for you</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What happened</h2>
+    <p>Starting with models launched on or after <strong>August 2, 2026</strong>, Claude embeds an imperceptible, machine-readable mark directly into the text it generates. Anthropic says the mark doesn't change the meaning, quality, or readability of the response — a reader can't tell by looking that a piece of text carries one. The company plans to publish technical details so third parties can build tools that check content for supported Claude marks.</p>
+
+    <h2 id="how-it-works">2. How the watermark actually works</h2>
+    <p>The key design decision: the mark is <strong>part of the text itself, not metadata attached to a file</strong>. A metadata tag (like an EXIF field on a photo) gets stripped the moment content is copied into a different document, pasted into an email, or converted to another format. Because Claude's watermark lives inside the actual sequence of words and characters generated, it travels with the text through copy-paste and may survive some light editing.</p>
+    <div class="callout">
+      <strong>What you won't find:</strong> there's no unusual character, no telltale spacing pattern, no visible sequence to spot by eye. That's the point — the mark is designed to be statistically detectable by a dedicated tool, not visually detectable by a human proofreading the page.
+    </div>
+
+    <h2 id="detection">3. Detection — and its real limits</h2>
+    <p>Anthropic has been explicit that this system is <strong>not a definitive AI detector</strong>. A few limits worth keeping in mind before treating a "mark found" or "mark not found" result as a verdict:</p>
+    <ul>
+      <li><strong>Finding a mark only suggests Claude involvement</strong> — it indicates the text may have passed through Claude at some point, not that every word came from the model unedited.</li>
+      <li><strong>Heavy editing, paraphrasing, or translation can destroy the signal.</strong> The mark is statistical, not a fixed tag — enough rewriting and it may no longer be reliably detectable.</li>
+      <li><strong>Mixing Claude output with human-written text dilutes the signal further</strong>, and very short passages may simply not contain enough material for reliable detection either way.</li>
+    </ul>
+    <p>In other words: this is a forensic signal for large, mostly-unedited chunks of text, not a pass/fail plagiarism-style checker for every sentence a student or employee submits.</p>
+
+    <h2 id="why-now">4. Why now: EU rules and C2PA context</h2>
+    <p>The timing lines up with growing regulatory pressure — most notably EU rules pushing for machine-readable disclosure of AI-generated content — and with the broader C2PA (Coalition for Content Provenance and Authenticity) push toward provenance standards for AI output across text, image, audio, and video. Schools, publishers, and platforms have been grappling with undisclosed AI-written content for a while now; an invisible-but-detectable mark is Anthropic's answer to "how do we make Claude's output traceable without changing how it reads."</p>
+
+    <h2 id="why-it-matters">5. What this means for you</h2>
+    <p>If you use Claude to draft anything you plan to publish, submit, or pass off as fully your own unedited writing, assume that large unedited blocks are now traceable back to Claude by anyone with the right detection tool — even after copy-pasting into a different document. It doesn't mean every AI-assisted sentence will be flagged forever (editing degrades the signal), but it does close the gap between "invisible to the eye" and "untraceable," which used to be treated as the same thing.</p>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
+      <div class="card-title">Sources</div>
+      <ul class="sources">
+        <li>Business Standard — "Anthropic's Claude will invisibly watermark AI-generated text: How it works", August 2026</li>
+        <li>Benzinga — "Anthropic's Claude Just Got a Hidden Watermark That Follows Your AI-Written Text Everywhere You Paste It", August 11, 2026</li>
+        <li>Northeast Times — "Anthropic will embed invisible watermarks in all Claude AI text", August 11, 2026</li>
+        <li>Interesting Engineering — "Copy-paste no more: Anthropic puts invisible watermarks on Claude text under EU rules", August 2026</li>
+        <li>explainx.ai — "Claude Invisible Watermarks — What They Detect (And Miss)", August 2026</li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude agora marca seu texto com marca d'água invisível — e ela sobrevive ao copiar e colar</h1>
+      <p class="subtitle">A Anthropic começou a embutir marcas legíveis por máquina direto no texto gerado pelo Claude em 2 de agosto de 2026. Veja como a marca funciona de fato, e por que "invisível" não significa "detector de IA confiável".</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">O que aconteceu</a></li>
+        <li><a href="#como-funciona">Como a marca d'água funciona de fato</a></li>
+        <li><a href="#deteccao">Detecção — e seus limites reais</a></li>
+        <li><a href="#por-que-agora">Por que agora: regras da UE e o contexto do C2PA</a></li>
+        <li><a href="#o-que-significa">O que isso significa pra você</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que aconteceu</h2>
+    <p>A partir dos modelos lançados em ou após <strong>2 de agosto de 2026</strong>, o Claude embute uma marca imperceptível e legível por máquina direto no texto que gera. A Anthropic diz que a marca não muda o significado, a qualidade ou a legibilidade da resposta — quem lê não consegue perceber a olho nu que um trecho de texto carrega uma. A empresa planeja publicar detalhes técnicos pra que terceiros construam ferramentas de checagem de conteúdo pras marcas suportadas do Claude.</p>
+
+    <h2 id="como-funciona">2. Como a marca d'água funciona de fato</h2>
+    <p>A decisão de design chave: a marca é <strong>parte do próprio texto, não metadado anexado a um arquivo</strong>. Uma tag de metadado (como um campo EXIF numa foto) é removida no momento em que o conteúdo é copiado pra um documento diferente, colado num e-mail, ou convertido pra outro formato. Como a marca d'água do Claude vive dentro da própria sequência de palavras e caracteres gerada, ela viaja junto com o texto através de copiar e colar e pode sobreviver a alguma edição leve.</p>
+    <div class="callout">
+      <strong>O que você não vai encontrar:</strong> não tem caractere estranho, nem padrão de espaçamento suspeito, nem sequência visível pra identificar a olho. Esse é o objetivo — a marca é feita pra ser detectável estatisticamente por uma ferramenta dedicada, não detectável visualmente por um humano revisando a página.
+    </div>
+
+    <h2 id="deteccao">3. Detecção — e seus limites reais</h2>
+    <p>A Anthropic foi explícita que esse sistema <strong>não é um detector de IA definitivo</strong>. Alguns limites que vale ter em mente antes de tratar um resultado de "marca encontrada" ou "marca não encontrada" como veredito:</p>
+    <ul>
+      <li><strong>Encontrar uma marca só sugere envolvimento do Claude</strong> — indica que o texto pode ter passado pelo Claude em algum momento, não que cada palavra veio do modelo sem edição.</li>
+      <li><strong>Edição pesada, paráfrase ou tradução podem destruir o sinal.</strong> A marca é estatística, não uma tag fixa — reescrita suficiente e ela pode deixar de ser detectável de forma confiável.</li>
+      <li><strong>Misturar saída do Claude com texto escrito por humano dilui o sinal ainda mais</strong>, e trechos muito curtos simplesmente podem não conter material suficiente pra detecção confiável de qualquer forma.</li>
+    </ul>
+    <p>Em outras palavras: isso é um sinal forense pra blocos grandes de texto majoritariamente não editados, não um checador estilo passa/não-passa de plágio pra cada frase que um estudante ou funcionário entrega.</p>
+
+    <h2 id="por-que-agora">4. Por que agora: regras da UE e o contexto do C2PA</h2>
+    <p>O momento coincide com pressão regulatória crescente — em especial regras da UE empurrando por divulgação legível por máquina de conteúdo gerado por IA — e com o movimento mais amplo do C2PA (Coalition for Content Provenance and Authenticity) em direção a padrões de proveniência pra saída de IA em texto, imagem, áudio e vídeo. Escolas, editoras e plataformas vêm lidando com conteúdo gerado por IA não divulgado há um tempo; uma marca invisível-mas-detectável é a resposta da Anthropic pra "como tornar a saída do Claude rastreável sem mudar como ela é lida".</p>
+
+    <h2 id="o-que-significa">5. O que isso significa pra você</h2>
+    <p>Se você usa o Claude pra rascunhar qualquer coisa que pretende publicar, entregar, ou passar como inteiramente escrita por você sem edição, assuma que blocos grandes e não editados agora são rastreáveis de volta ao Claude por qualquer pessoa com a ferramenta de detecção certa — mesmo depois de copiar e colar num documento diferente. Isso não significa que toda frase assistida por IA vai ser marcada pra sempre (edição degrada o sinal), mas fecha a lacuna entre "invisível ao olho" e "não rastreável", que costumavam ser tratados como a mesma coisa.</p>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
+      <div class="card-title">Fontes</div>
+      <ul class="sources">
+        <li>Business Standard — "Anthropic's Claude will invisibly watermark AI-generated text: How it works", agosto de 2026</li>
+        <li>Benzinga — "Anthropic's Claude Just Got a Hidden Watermark That Follows Your AI-Written Text Everywhere You Paste It", 11 de agosto de 2026</li>
+        <li>Northeast Times — "Anthropic will embed invisible watermarks in all Claude AI text", 11 de agosto de 2026</li>
+        <li>Interesting Engineering — "Copy-paste no more: Anthropic puts invisible watermarks on Claude text under EU rules", agosto de 2026</li>
+        <li>explainx.ai — "Claude Invisible Watermarks — What They Detect (And Miss)", agosto de 2026</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Invisible watermark</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

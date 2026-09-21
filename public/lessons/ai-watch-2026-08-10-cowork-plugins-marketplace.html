@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Cowork's plugin marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Tools &amp; ecosystem</span>
+      <h1>Plugins as the new unit of AI tooling: inside Cowork's marketplace</h1>
+      <p class="subtitle">A plugin bundles a skill, a slash command, and an MCP connector into one install. That packaging choice says a lot about where "AI tools" are heading in 2026.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What's actually new</a></li>
+        <li><a href="#anatomy">Anatomy of a plugin</a></li>
+        <li><a href="#why-bundling">Why bundle skills, commands, and connectors together</a></li>
+        <li><a href="#marketplace-model">The marketplace model: official and custom</a></li>
+        <li><a href="#why-it-matters">Why this matters beyond Cowork</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What's actually new</h2>
+    <p>Cowork mode — the desktop feature for non-developers to automate file and task work — now supports installable <strong>plugins</strong>: packaged bundles that add domain-specific skills, slash commands, and connectors (MCP servers wired to external tools) to a session in one step. Anthropic runs an official marketplace of curated plugins, and any publisher can stand up a custom marketplace by hosting a manifest file at a public URL — the same open model GitHub used for package registries.</p>
+    <p>One example: the "Claude Design" plugin from Anthropic Labs turns Cowork into a text-to-prototype tool for decks, landing pages, and one-pagers, exporting to PDF, PPTX, Canva, or HTML, and handing off polished output to Claude Code for implementation.</p>
+
+    <h2 id="anatomy">2. Anatomy of a plugin</h2>
+    <table>
+      <tr><th>Component</th><th>What it does</th></tr>
+      <tr><td><strong>Skill</strong></td><td>Domain expertise and step-by-step workflows that activate automatically when relevant — the model reaches for it without being explicitly told to.</td></tr>
+      <tr><td><strong>Slash command</strong></td><td>An explicit action the user triggers by name (e.g. <code>/deploy</code>), rather than something the model decides to use on its own.</td></tr>
+      <tr><td><strong>Connector</strong></td><td>An MCP server wired to a real external tool (Slack, Notion, a CRM) so the plugin can read and act on live data, not just answer from static instructions.</td></tr>
+    </table>
+    <p>Individually, skills, commands, and connectors already existed as separate concepts. Wrapping all three into a single installable unit is the actual product decision here — it turns "configure an agent for a workflow" into "click install."</p>
+
+    <h2 id="why-bundling">3. Why bundle skills, commands, and connectors together</h2>
+    <p>A skill without a connector is just instructions with no access to real data. A connector without a skill is a raw API with no judgment about when and how to use it well. Most useful automations need both plus, often, an explicit trigger a user can invoke directly. Shipping the three together means an install gives you a working capability instead of three separate configuration steps that have to be wired up correctly by hand.</p>
+    <div class="callout">
+      <strong>The parallel worth noticing:</strong> this mirrors how browser extensions bundled UI, permissions, and background scripts into one install two decades ago, and how VS Code extensions bundle language servers, commands, and UI panels today. Packaging capability as one unit — rather than as separate configuration the user assembles — is a recurring pattern whenever a platform's ecosystem starts to mature.
+    </div>
+
+    <h2 id="marketplace-model">4. The marketplace model: official and custom</h2>
+    <p>The official marketplace covers categories like productivity, legal, sales, financial services, HR, and engineering, curated and vetted by Anthropic. But the distribution model is deliberately open: anyone can publish a marketplace by exposing a manifest at a URL, the same decentralized approach used for most modern package ecosystems (npm registries, VS Code marketplaces, browser extension stores under custom review).</p>
+    <p>Anthropic also publishes an open source repository of plugins aimed specifically at knowledge workers, separate from the built-in marketplace — a signal that the intent is a broader ecosystem, not a single closed catalog.</p>
+
+    <h2 id="why-it-matters">5. Why this matters beyond Cowork</h2>
+    <p>Plugin support is currently a research preview for paid Claude users, which means the format is still being iterated on — but the direction is clear: the unit of "an AI tool" is shifting away from a single prompt or a single connector, toward a packaged bundle that combines judgment (skill), an explicit trigger (command), and live access (connector). Anyone evaluating or building on top of Claude's tooling ecosystem should expect "plugin" to become the default shape new capabilities ship in, rather than a one-off skill or an isolated MCP server.</p>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
+      <div class="card-title">Sources</div>
+      <ul class="sources">
+        <li>Claude by Anthropic — "Customize Cowork with plugins" (claude.com/blog/cowork-plugins), August 2026</li>
+        <li>GitHub — anthropics/knowledge-work-plugins, open source plugin repository for Cowork, accessed August 2026</li>
+        <li>Composio — "Best Claude Cowork Plugins You Must Not Miss in 2026", accessed August 2026</li>
+        <li>Systemprompt.io — "Install Anthropic Marketplace Plugins in Claude Code", accessed August 2026</li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema</span>
+      <h1>Plugins como a nova unidade de ferramentas de IA: por dentro do marketplace do Cowork</h1>
+      <p class="subtitle">Um plugin junta uma skill, um comando de barra e um conector MCP numa instalação só. Essa escolha de empacotamento diz bastante sobre pra onde as "ferramentas de IA" estão indo em 2026.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#novidade">O que de fato é novo</a></li>
+        <li><a href="#anatomia">Anatomia de um plugin</a></li>
+        <li><a href="#por-que-empacotar">Por que juntar skills, comandos e conectores</a></li>
+        <li><a href="#modelo-marketplace">O modelo de marketplace: oficial e customizado</a></li>
+        <li><a href="#por-que-importa">Por que isso importa além do Cowork</a></li>
+      </ol>
+    </div>
+
+    <h2 id="novidade">1. O que de fato é novo</h2>
+    <p>O Cowork — o recurso de desktop pra pessoas não-desenvolvedoras automatizarem trabalho com arquivos e tarefas — agora suporta <strong>plugins</strong> instaláveis: pacotes que adicionam skills específicas de domínio, comandos de barra e conectores (servidores MCP ligados a ferramentas externas) numa sessão de um passo só. A Anthropic mantém um marketplace oficial de plugins curados, e qualquer publicador pode montar um marketplace customizado hospedando um arquivo de manifesto numa URL pública — o mesmo modelo aberto que o GitHub usou pra registros de pacotes.</p>
+    <p>Um exemplo: o plugin "Claude Design", da Anthropic Labs, transforma o Cowork numa ferramenta de texto-pra-prototipo pra decks, landing pages e one-pagers, exportando pra PDF, PPTX, Canva ou HTML, e entregando o resultado polido pro Claude Code implementar.</p>
+
+    <h2 id="anatomia">2. Anatomia de um plugin</h2>
+    <table>
+      <tr><th>Componente</th><th>O que faz</th></tr>
+      <tr><td><strong>Skill</strong></td><td>Conhecimento de domínio e fluxos passo a passo que ativam automaticamente quando relevantes — o modelo recorre a ela sem precisar de instrução explícita.</td></tr>
+      <tr><td><strong>Comando de barra</strong></td><td>Uma ação explícita que o usuário aciona pelo nome (ex: <code>/deploy</code>), em vez de algo que o modelo decide usar por conta própria.</td></tr>
+      <tr><td><strong>Conector</strong></td><td>Um servidor MCP ligado a uma ferramenta externa real (Slack, Notion, um CRM) pra que o plugin possa ler e agir sobre dados ao vivo, não só responder com base em instruções estáticas.</td></tr>
+    </table>
+    <p>Individualmente, skills, comandos e conectores já existiam como conceitos separados. Envolver os três numa unidade instalável só é a decisão de produto real aqui — transforma "configurar um agente pra um fluxo de trabalho" em "clicar em instalar".</p>
+
+    <h2 id="por-que-empacotar">3. Por que juntar skills, comandos e conectores</h2>
+    <p>Uma skill sem conector é só instrução sem acesso a dado real. Um conector sem skill é uma API crua sem discernimento de quando e como usar bem. A maioria das automações úteis precisa dos dois, mais, com frequência, um gatilho explícito que o usuário pode acionar direto. Entregar os três juntos faz com que uma instalação já dê uma capacidade funcionando, em vez de três passos de configuração separados que precisam ser conectados corretamente na mão.</p>
+    <div class="callout">
+      <strong>O paralelo que vale notar:</strong> isso espelha como extensões de navegador juntavam interface, permissões e scripts em background numa instalação só, duas décadas atrás, e como extensões do VS Code juntam language servers, comandos e painéis de UI hoje. Empacotar capacidade como uma unidade — em vez de configuração separada que o usuário monta — é um padrão recorrente sempre que o ecossistema de uma plataforma começa a maturar.
+    </div>
+
+    <h2 id="modelo-marketplace">4. O modelo de marketplace: oficial e customizado</h2>
+    <p>O marketplace oficial cobre categorias como produtividade, jurídico, vendas, serviços financeiros, RH e engenharia, curadas e verificadas pela Anthropic. Mas o modelo de distribuição é deliberadamente aberto: qualquer pessoa pode publicar um marketplace expondo um manifesto numa URL, a mesma abordagem descentralizada usada pela maioria dos ecossistemas de pacotes modernos (registros npm, marketplaces do VS Code, lojas de extensão de navegador sob revisão própria).</p>
+    <p>A Anthropic também publica um repositório open source de plugins voltado especificamente a trabalhadores de conhecimento, separado do marketplace embutido — um sinal de que a intenção é um ecossistema mais amplo, não um catálogo único e fechado.</p>
+
+    <h2 id="por-que-importa">5. Por que isso importa além do Cowork</h2>
+    <p>O suporte a plugins hoje é uma pré-visualização de pesquisa pra usuários pagos do Claude, o que significa que o formato ainda está sendo iterado — mas a direção é clara: a unidade de "uma ferramenta de IA" está migrando de um prompt único ou um conector isolado, pra um pacote combinando discernimento (skill), um gatilho explícito (comando) e acesso ao vivo (conector). Quem está avaliando ou construindo em cima do ecossistema de ferramentas do Claude deveria esperar que "plugin" se torne o formato padrão em que novas capacidades chegam, em vez de uma skill isolada ou um servidor MCP solto.</p>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="card" style="margin-top:32px;">
+      <div class="card-title">Fontes</div>
+      <ul class="sources">
+        <li>Claude by Anthropic — "Customize Cowork with plugins" (claude.com/blog/cowork-plugins), agosto de 2026</li>
+        <li>GitHub — anthropics/knowledge-work-plugins, repositório open source de plugins pra Cowork, acessado em agosto de 2026</li>
+        <li>Composio — "Best Claude Cowork Plugins You Must Not Miss in 2026", acessado em agosto de 2026</li>
+        <li>Systemprompt.io — "Install Anthropic Marketplace Plugins in Claude Code", acessado em agosto de 2026</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Cowork plugins</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

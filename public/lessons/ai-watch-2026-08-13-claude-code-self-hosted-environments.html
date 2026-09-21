@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Code self-hosted environments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 12px; }
+  .sources li { font-size: 13px; word-break: break-word; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude Code can now run on your own servers — but your prompts still go to Anthropic</h1>
+      <p class="subtitle">Anthropic just opened a public beta letting Team and Enterprise customers run Claude Code sessions inside their own network. Here's what that actually changes, and what it doesn't.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What was announced</a></li>
+        <li><a href="#why">Why this exists</a></li>
+        <li><a href="#not">What it is NOT</a></li>
+        <li><a href="#tradeoffs">Trade-offs</a></li>
+        <li><a href="#why-care">Why a solo learner should care</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What was announced</h2>
+    <p>Anthropic opened a public beta for <strong>self-hosted environments</strong> in Claude Code — its coding agent. Instead of a session's file access and command execution happening on Anthropic-managed infrastructure, teams on the Team and Enterprise plans can now run those sessions on servers inside their own network, whether the session was started from the CLI, web, mobile, or desktop.</p>
+    <p>Concretely, this means a Claude Code session running self-hosted can reach internal services, private databases, and internal package registries that were never exposed to the public internet, and can use compilers, SDKs, and internal command-line tools pre-installed on that infrastructure — none of which a purely Anthropic-hosted session could touch.</p>
+
+    <h2 id="why">2. Why this exists</h2>
+    <p>Coding agents are only as useful as what they can reach. A lot of real engineering work touches things that live behind a firewall on purpose — internal APIs, staging databases, proprietary build tooling, private artifact registries. Until now, using an agent against that kind of environment meant either exposing internal systems to the internet (a security team's nightmare) or keeping the agent's usefulness capped to whatever's public. Self-hosted environments remove that trade-off for organizations that are willing to own the infrastructure.</p>
+
+    <h2 id="not">3. What it is NOT</h2>
+    <div class="callout">
+      <strong>This is self-hosted execution, not self-hosted inference.</strong> The model itself still runs on Anthropic's servers. Prompts, model responses, tool call results, and full session transcripts still travel to Anthropic to generate each response — only the environment where commands actually execute (reading files, running builds, hitting internal services) moves onto the customer's own infrastructure.
+    </div>
+    <p>It's also off by default, and not available at all for organizations that use Zero Data Retention (ZDR) agreements, since the self-hosted runner needs to persist some session state that ZDR configurations are designed to avoid.</p>
+
+    <h2 id="tradeoffs">4. Trade-offs</h2>
+    <table>
+      <tr><th>Gain</th><th>Cost</th></tr>
+      <tr><td>Access to internal services/databases without exposing them publicly</td><td>Engineering time to set up and maintain the self-hosted runner</td></tr>
+      <tr><td>Pre-installed internal tooling, compilers, SDKs available to the agent</td><td>Still not full data isolation — prompts/transcripts still reach Anthropic</td></tr>
+      <tr><td>Compliance-friendlier network posture for regulated environments</td><td>Only available on Team/Enterprise plans, and disabled for ZDR customers</td></tr>
+    </table>
+
+    <h2 id="why-care">5. Why a solo learner should care</h2>
+    <p>Even outside a big team, this is a useful data point about how AI coding tools are evolving: the trend isn't just "make the model smarter", it's "give the agent safer, more controlled ways to reach the real systems a developer actually works with" — internal networks, private repos, custom toolchains. The distinction between "where code executes" and "where the model runs" is also a good mental model to keep in general when evaluating any AI dev tool's privacy claims: always ask which side of that line a given feature is actually solving.</p>
+
+    <footer style="margin-top:0; padding-top:0; border-top:none;">
+      <div class="card-title" style="margin-bottom:8px;">Sources (August 2026)</div>
+      <ul class="sources">
+        <li><a href="https://claude.com/blog/run-claude-code-sessions-on-your-own-compute" target="_blank" rel="noopener">Anthropic — "Self-hosted environments for Claude Code"</a></li>
+        <li><a href="https://code.claude.com/docs/en/self-hosted-environments" target="_blank" rel="noopener">Claude Code Docs — Self-hosted environments</a></li>
+        <li><a href="https://www.edtechinnovationhub.com/news/anthropic-opens-self-hosted-claude-code-sessions-to-team-and-enterprise-customers" target="_blank" rel="noopener">EdTech Innovation Hub — coverage of the beta launch</a></li>
+        <li><a href="https://www.unite.ai/claude-code-sessions-can-now-run-on-infrastructure-your-team-controls/" target="_blank" rel="noopener">Unite.AI — "Claude Code Sessions Can Now Run on Infrastructure Your Team Controls"</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades Anthropic/Claude</span>
+      <h1>Claude Code agora roda nos seus próprios servidores — mas seus prompts continuam indo pra Anthropic</h1>
+      <p class="subtitle">A Anthropic acabou de abrir uma beta pública deixando clientes Team e Enterprise rodarem sessões do Claude Code dentro da própria rede. Aqui está o que isso muda de verdade, e o que não muda.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que">O que foi anunciado</a></li>
+        <li><a href="#por-que-existe">Por que isso existe</a></li>
+        <li><a href="#nao-e">O que isso NÃO é</a></li>
+        <li><a href="#trocas">Trade-offs</a></li>
+        <li><a href="#importa-pt">Por que isso importa pra quem estuda sozinho</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que">1. O que foi anunciado</h2>
+    <p>A Anthropic abriu uma beta pública de <strong>ambientes self-hosted</strong> no Claude Code — seu agente de código. Em vez do acesso a arquivos e execução de comandos de uma sessão acontecerem em infraestrutura gerenciada pela Anthropic, times nos planos Team e Enterprise agora podem rodar essas sessões em servidores dentro da própria rede, seja a sessão iniciada pelo CLI, web, mobile ou desktop.</p>
+    <p>Na prática, isso significa que uma sessão do Claude Code rodando self-hosted consegue acessar serviços internos, bancos de dados privados e registries internos de pacotes que nunca foram expostos à internet pública, e pode usar compiladores, SDKs e ferramentas internas de linha de comando pré-instaladas nessa infraestrutura — nada disso uma sessão puramente hospedada pela Anthropic conseguiria tocar.</p>
+
+    <h2 id="por-que-existe">2. Por que isso existe</h2>
+    <p>Agentes de código só são tão úteis quanto aquilo que conseguem alcançar. Boa parte do trabalho real de engenharia toca coisas que ficam atrás de um firewall de propósito — APIs internas, bancos de staging, ferramental de build proprietário, registries privados de artefatos. Até agora, usar um agente contra esse tipo de ambiente significava ou expor sistemas internos à internet (um pesadelo pro time de segurança) ou manter a utilidade do agente limitada ao que é público. Ambientes self-hosted removem esse trade-off pras organizações dispostas a assumir a infraestrutura.</p>
+
+    <h2 id="nao-e">3. O que isso NÃO é</h2>
+    <div class="callout">
+      <strong>Isso é execução self-hosted, não inferência self-hosted.</strong> O modelo em si continua rodando nos servidores da Anthropic. Prompts, respostas do modelo, resultados de chamadas de ferramenta e transcrições completas da sessão continuam viajando até a Anthropic pra gerar cada resposta — só o ambiente onde os comandos realmente executam (ler arquivos, rodar builds, acessar serviços internos) se move pra infraestrutura do cliente.
+    </div>
+    <p>Também vem desligado por padrão, e não está disponível pra organizações que usam acordos de Zero Data Retention (ZDR), já que o runner self-hosted precisa persistir algum estado de sessão que configurações ZDR são desenhadas justamente pra evitar.</p>
+
+    <h2 id="trocas">4. Trade-offs</h2>
+    <table>
+      <tr><th>Ganho</th><th>Custo</th></tr>
+      <tr><td>Acesso a serviços/bancos internos sem expô-los publicamente</td><td>Tempo de engenharia pra montar e manter o runner self-hosted</td></tr>
+      <tr><td>Ferramental interno, compiladores e SDKs pré-instalados disponíveis pro agente</td><td>Ainda não é isolamento total de dados — prompts/transcrições continuam chegando na Anthropic</td></tr>
+      <tr><td>Postura de rede mais amigável a compliance em ambientes regulados</td><td>Só disponível nos planos Team/Enterprise, e desabilitado pra clientes ZDR</td></tr>
+    </table>
+
+    <h2 id="importa-pt">5. Por que isso importa pra quem estuda sozinho</h2>
+    <p>Mesmo fora de um time grande, esse é um dado útil sobre como as ferramentas de código com IA estão evoluindo: a tendência não é só "deixar o modelo mais inteligente", é "dar ao agente formas mais seguras e controladas de alcançar os sistemas reais com que um desenvolvedor de fato trabalha" — redes internas, repositórios privados, toolchains customizadas. A distinção entre "onde o código executa" e "onde o modelo roda" também é um bom modelo mental pra manter em geral ao avaliar as alegações de privacidade de qualquer ferramenta de IA pra desenvolvimento: sempre pergunte de qual lado dessa linha um recurso específico realmente está resolvendo.</p>
+
+    <footer style="margin-top:0; padding-top:0; border-top:none;">
+      <div class="card-title" style="margin-bottom:8px;">Fontes (agosto de 2026)</div>
+      <ul class="sources">
+        <li><a href="https://claude.com/blog/run-claude-code-sessions-on-your-own-compute" target="_blank" rel="noopener">Anthropic — "Self-hosted environments for Claude Code"</a></li>
+        <li><a href="https://code.claude.com/docs/en/self-hosted-environments" target="_blank" rel="noopener">Claude Code Docs — Self-hosted environments</a></li>
+        <li><a href="https://www.edtechinnovationhub.com/news/anthropic-opens-self-hosted-claude-code-sessions-to-team-and-enterprise-customers" target="_blank" rel="noopener">EdTech Innovation Hub — cobertura do lançamento da beta</a></li>
+        <li><a href="https://www.unite.ai/claude-code-sessions-can-now-run-on-infrastructure-your-team-controls/" target="_blank" rel="noopener">Unite.AI — "Claude Code Sessions Can Now Run on Infrastructure Your Team Controls"</a></li>
+      </ul>
+    </footer>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Code self-hosted environments</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

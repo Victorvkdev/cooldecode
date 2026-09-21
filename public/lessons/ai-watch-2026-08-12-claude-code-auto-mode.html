@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Code's auto mode becomes the default</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12.5px; color: var(--text-dim); }
+  .sources ul { padding-left: 18px; margin-bottom: 0; }
+  .sources li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude Code flips a switch: auto mode becomes the default on August 14</h1>
+      <p class="subtitle">Starting this week, new Claude Code sessions on Pro, Max and Team plans won't stop to ask permission before most actions. Here's what changes, why Anthropic says it's safer, and what to actually watch for.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">1. What's changing</a></li>
+        <li><a href="#how">2. How auto mode decides what to gate</a></li>
+        <li><a href="#why">3. Why Anthropic calls this safer, not riskier</a></li>
+        <li><a href="#who">4. Who's affected, and when</a></li>
+        <li><a href="#takeaway">5. What this says about where agentic coding is heading</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What's changing</h2>
+    <p>Since Claude Code launched, its default behavior has been to stop and ask before most tool calls — running a shell command, editing a file, installing a package — and wait for you to approve it. That confirmation prompt is the thing every Claude Code user has clicked through dozens of times a day.</p>
+    <p>Starting <strong>August 14, 2026</strong>, that default flips. New Claude Code sessions on Pro, Max and Team plans will start in <strong>auto mode</strong>: Claude proceeds on its own without asking, as long as the action isn't judged irreversible, destructive, or reaching outside your own environment (like pushing to a remote repo or hitting an external API with side effects). Enterprise, API and cloud-platform users get the same change within the following month.</p>
+    <p>If you'd already set a personal default permission mode, you'll likely see a one-time prompt about the switch. If your organization pinned a specific default, nothing changes for you automatically.</p>
+
+    <h2 id="how">2. How auto mode decides what to gate</h2>
+    <p>The mechanism isn't a fixed allow-list of "safe" commands. Anthropic added a classifier that screens every tool call in real time and decides whether it needs a human in the loop — based on whether the action looks irreversible, destructive, or aimed at something outside the current project/environment. Routine, reversible, in-project actions (editing a file, running tests, reading code) pass straight through; things that look like <code>rm -rf</code>, a force-push, or a call to an external paid API are the kind of thing still expected to pause for approval.</p>
+    <p>Anthropic also announced it would stop charging Pro, Max and Team users for the extra tokens the classifier itself consumes while making that judgment call — with the same change planned for the other platforms.</p>
+
+    <h2 id="why">3. Why Anthropic calls this safer, not riskier</h2>
+    <p>The justification leans on usage data that's a little uncomfortable to read: in a study of 1,053 paid testers, the auto-mode classifier caught <strong>89%</strong> of genuinely harmful actions before they ran — while human reviewers manually approving each prompt caught only <strong>13.6%</strong>. Separately, Anthropic found that <strong>97%</strong> of Claude Code's permission prompts get approved by users overall, which reads less like careful review and more like people reflexively clicking "yes" to get back to work.</p>
+    <div class="callout">
+      <strong>The uncomfortable logic:</strong> if most humans are approving prompts on autopilot anyway, a classifier that's actually paying attention to each action can, in aggregate, catch more real problems than the manual-approval habit it's replacing — even though it removes a step that felt like a safety net.
+    </div>
+
+    <h2 id="who">4. Who's affected, and when</h2>
+    <table>
+      <tr><th>Plan</th><th>When auto mode becomes default</th></tr>
+      <tr><td>Pro, Max, Team</td><td>August 14, 2026 (new sessions)</td></tr>
+      <tr><td>Enterprise, API, cloud platforms</td><td>Within the following month</td></tr>
+    </table>
+    <p>This lands in the same window as a broader run of Claude Code fixes and additions — self-hosted environments in public beta for teams that need on-prem/compliance control, and general reliability fixes (Git detection on Windows, session/sync issues, memory cleanup). None of those change the core story here, though: the headline is the permission-model shift itself.</p>
+
+    <h2 id="takeaway">5. What this says about where agentic coding is heading</h2>
+    <p>This is a small UI change with a bigger implication: it's a public bet, backed by measured data rather than just a preference, that constant manual gatekeeping isn't actually the safety mechanism it feels like — a well-calibrated automatic check can outperform it. It's also a preview of where agentic tools in general are heading: fewer step-by-step confirmations, more scoped autonomy bounded by a classifier that's actually paying attention, rather than a human who's mentally checked out after the fortieth "yes" of the day.</p>
+    <p>The practical takeaway for anyone using Claude Code day to day: it's worth knowing the new default exists, understanding what auto mode will and won't still stop for, and deciding deliberately whether to keep it, tune it, or dial permissions back up for specific higher-stakes projects — rather than discovering the switch mid-task.</p>
+
+    <div class="sources">
+      <strong>Sources (as of August 10-12, 2026):</strong>
+      <ul>
+        <li><a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Claude by Anthropic — "Auto mode is now the default in Claude Code for Pro, Max, and Team plans"</a></li>
+        <li><a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch — "Anthropic is turning Claude Code's auto mode on by default"</a></li>
+        <li><a href="https://www.infoworld.com/article/4207959/anthropic-makes-claude-codes-auto-mode-default-for-paid-users.html" target="_blank" rel="noopener">InfoWorld — "Anthropic makes Claude Code's auto mode default for paid users"</a></li>
+        <li><a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude-code-puts-auto-mode-in-the-drivers-seat/5285326" target="_blank" rel="noopener">The Register — "Claude Code puts auto mode in the driver's seat"</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude Code vira a chave: o modo automático se torna padrão em 14 de agosto</h1>
+      <p class="subtitle">A partir desta semana, novas sessões do Claude Code nos planos Pro, Max e Team não vão mais parar pra pedir permissão antes da maioria das ações. Veja o que muda, por que a Anthropic diz que isso é mais seguro, e o que realmente vale acompanhar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-pt2">1. O que está mudando</a></li>
+        <li><a href="#como-pt2">2. Como o modo automático decide o que bloquear</a></li>
+        <li><a href="#porque-pt2">3. Por que a Anthropic chama isso de mais seguro, não de mais arriscado</a></li>
+        <li><a href="#quem-pt2">4. Quem é afetado, e quando</a></li>
+        <li><a href="#conclusao-pt2">5. O que isso diz sobre o rumo da programação com agentes</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-pt2">1. O que está mudando</h2>
+    <p>Desde o lançamento do Claude Code, o comportamento padrão dele é parar e pedir aprovação antes da maioria das chamadas de ferramenta — rodar um comando de shell, editar um arquivo, instalar um pacote — e esperar você confirmar. Esse prompt de confirmação é a coisa que todo usuário de Claude Code já clicou dezenas de vezes por dia.</p>
+    <p>A partir de <strong>14 de agosto de 2026</strong>, esse padrão se inverte. Novas sessões do Claude Code nos planos Pro, Max e Team vão começar no <strong>modo automático</strong>: o Claude segue em frente sozinho sem perguntar, desde que a ação não seja julgada irreversível, destrutiva, ou alcance algo fora do seu próprio ambiente (como um push pra um repositório remoto ou uma chamada a uma API externa com efeitos colaterais). Usuários de Enterprise, API e plataformas de nuvem recebem a mesma mudança dentro do mês seguinte.</p>
+    <p>Se você já tinha configurado um modo de permissão padrão pessoal, provavelmente vai ver um aviso único sobre a mudança. Se a sua organização fixou um padrão específico, nada muda automaticamente pra você.</p>
+
+    <h2 id="como-pt2">2. Como o modo automático decide o que bloquear</h2>
+    <p>O mecanismo não é uma lista fixa de comandos "seguros". A Anthropic adicionou um classificador que analisa cada chamada de ferramenta em tempo real e decide se ela precisa de um humano no processo — baseado em se a ação parece irreversível, destrutiva, ou direcionada a algo fora do projeto/ambiente atual. Ações rotineiras, reversíveis e dentro do projeto (editar um arquivo, rodar testes, ler código) passam direto; coisas que parecem um <code>rm -rf</code>, um force-push, ou uma chamada a uma API externa paga continuam sendo o tipo de coisa que se espera que pare pra aprovação.</p>
+    <p>A Anthropic também anunciou que vai parar de cobrar usuários Pro, Max e Team pelos tokens extras que o próprio classificador consome ao fazer esse julgamento — com a mesma mudança planejada pras outras plataformas.</p>
+
+    <h2 id="porque-pt2">3. Por que a Anthropic chama isso de mais seguro, não de mais arriscado</h2>
+    <p>A justificativa se apoia em dados de uso que são um pouco incômodos de ler: num estudo com 1.053 testadores pagantes, o classificador do modo automático pegou <strong>89%</strong> das ações genuinamente prejudiciais antes de elas rodarem — enquanto revisores humanos aprovando cada prompt manualmente pegaram só <strong>13,6%</strong>. Separadamente, a Anthropic descobriu que <strong>97%</strong> dos prompts de permissão do Claude Code são aprovados pelos usuários no geral, o que parece menos revisão cuidadosa e mais gente clicando "sim" no automático pra voltar a trabalhar.</p>
+    <div class="callout">
+      <strong>A lógica incômoda:</strong> se a maioria dos humanos já está aprovando prompts no automático de qualquer forma, um classificador que realmente presta atenção em cada ação pode, no agregado, pegar mais problemas reais do que o hábito de aprovação manual que ele está substituindo — mesmo removendo uma etapa que parecia uma rede de segurança.
+    </div>
+
+    <h2 id="quem-pt2">4. Quem é afetado, e quando</h2>
+    <table>
+      <tr><th>Plano</th><th>Quando o modo automático vira padrão</th></tr>
+      <tr><td>Pro, Max, Team</td><td>14 de agosto de 2026 (novas sessões)</td></tr>
+      <tr><td>Enterprise, API, plataformas de nuvem</td><td>Dentro do mês seguinte</td></tr>
+    </table>
+    <p>Isso chega na mesma janela de uma leva mais ampla de correções e adições no Claude Code — ambientes self-hosted em beta público pra times que precisam de controle on-prem/compliance, e correções gerais de confiabilidade (detecção de Git no Windows, problemas de sessão/sincronização, limpeza de memória). Nada disso muda a história central aqui, porém: a manchete é a própria mudança no modelo de permissão.</p>
+
+    <h2 id="conclusao-pt2">5. O que isso diz sobre o rumo da programação com agentes</h2>
+    <p>É uma mudança pequena de interface com uma implicação maior: é uma aposta pública, apoiada em dados medidos em vez de apenas uma preferência, de que o controle manual constante não é de fato o mecanismo de segurança que parece ser — uma verificação automática bem calibrada pode superá-lo. Também é uma prévia de pra onde ferramentas com agentes em geral estão indo: menos confirmações passo a passo, mais autonomia delimitada por um classificador que realmente presta atenção, em vez de um humano que já desligou o piloto mentalmente depois do quadragésimo "sim" do dia.</p>
+    <p>A conclusão prática pra quem usa Claude Code no dia a dia: vale saber que o novo padrão existe, entender o que o modo automático ainda vai e não vai parar pra confirmar, e decidir de forma deliberada se vai manter, ajustar, ou aumentar as permissões de volta pra projetos específicos de maior risco — em vez de descobrir a troca no meio de uma tarefa.</p>
+
+    <div class="sources">
+      <strong>Fontes (em 10-12 de agosto de 2026):</strong>
+      <ul>
+        <li><a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Claude by Anthropic — "Auto mode is now the default in Claude Code for Pro, Max, and Team plans"</a></li>
+        <li><a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch — "Anthropic is turning Claude Code's auto mode on by default"</a></li>
+        <li><a href="https://www.infoworld.com/article/4207959/anthropic-makes-claude-codes-auto-mode-default-for-paid-users.html" target="_blank" rel="noopener">InfoWorld — "Anthropic makes Claude Code's auto mode default for paid users"</a></li>
+        <li><a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude-code-puts-auto-mode-in-the-drivers-seat/5285326" target="_blank" rel="noopener">The Register — "Claude Code puts auto mode in the driver's seat"</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Code auto mode</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

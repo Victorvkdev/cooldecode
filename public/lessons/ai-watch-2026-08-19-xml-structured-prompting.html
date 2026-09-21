@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Structure beats cleverness — prompting Claude in 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ul { padding-left: 18px; margin: 0; }
+  .sources li { margin-bottom: 6px; font-size: 13px; color: var(--text-dim); }
+  .sources a { border-bottom: 1px solid rgba(124,58,237,0.3); font-size: 13px; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>Structure beats cleverness: prompting Claude in 2026</h1>
+      <p class="subtitle">Two earlier AI Watch lessons covered prompt engineering basics and context engineering. This one zooms into the single most concrete, provable technique for getting better output from Claude specifically: structuring a prompt with XML tags — plus a second technique, self-consistency, for when one answer isn't enough to trust.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#thesis">1. The core shift: style vs structure</a></li>
+        <li><a href="#xml">2. Why XML tags specifically</a></li>
+        <li><a href="#before-after">3. Before / after: an unstructured prompt vs a tagged one</a></li>
+        <li><a href="#ordering">4. Where each tag goes, and why order matters</a></li>
+        <li><a href="#self-consistency">5. A second technique: self-consistency for reasoning tasks</a></li>
+        <li><a href="#when-not">6. When structure is overkill</a></li>
+      </ol>
+    </div>
+
+    <h2 id="thesis">1. The core shift: style vs structure</h2>
+    <p>Some models respond well to creative or conversational phrasing — clever framing, unusual analogies, persona tricks. Claude's own prompt engineering documentation makes a different point: what actually moves output quality is <strong>structure</strong>, not style. Being unambiguous about what's an instruction, what's context, and what's the actual task matters more than how cleverly any of it is worded.</p>
+    <p>That's a practical distinction, not a philosophical one. A prompt that mixes background information, examples, and the actual request into one paragraph forces the model to infer which sentence is which. A prompt that separates those pieces explicitly removes that inference step entirely.</p>
+
+    <h2 id="xml">2. Why XML tags specifically</h2>
+    <p>XML tags — <code>&lt;role&gt;</code>, <code>&lt;context&gt;</code>, <code>&lt;instructions&gt;</code>, <code>&lt;examples&gt;</code>, <code>&lt;output_format&gt;</code> — give each part of a prompt an explicit, unambiguous label. Claude's documentation recommends this specifically for prompts that mix multiple types of content: background info, instructions, examples, and the variable input for the current request.</p>
+    <p>The tag names themselves aren't magic — there's no fixed vocabulary Claude requires. What matters is <strong>consistency</strong>: reuse the same tag name for the same kind of content across a prompt (and across a project, if you're building anything repeatable), and nest tags when the content has a natural hierarchy — multiple documents each inside their own <code>&lt;document index="n"&gt;</code>, for example.</p>
+    <div class="callout">
+      <strong>The mental model:</strong> XML tags do for a prompt what clear function signatures do for code. You could write a function that takes one big untyped blob and parses it internally — but naming and separating the arguments up front removes an entire category of misinterpretation before it can happen.
+    </div>
+
+    <h2 id="before-after">3. Before / after: an unstructured prompt vs a tagged one</h2>
+    <p><strong>Before</strong> — everything blended into one paragraph, forcing the model to guess which part is instruction and which is data:</p>
+    <pre><code>Here's info about an athlete: height 6'2", weight 180 lbs,
+goal is to build muscle, and they're vegetarian. Can you write
+a meal plan for them, keep it realistic, and don't use meat obviously.</code></pre>
+    <p><strong>After</strong> — the same request, with content separated by what role it plays:</p>
+    <pre><code>&lt;athlete_information&gt;
+- Height: 6'2"
+- Weight: 180 lbs
+- Goal: Build muscle
+- Dietary restrictions: Vegetarian
+&lt;/athlete_information&gt;
+
+&lt;task&gt;
+Generate a realistic one-week meal plan based on the athlete
+information above.
+&lt;/task&gt;</code></pre>
+    <p>Nothing about the underlying request changed. What changed is that the model no longer has to parse which words are data about the athlete versus which words are the instruction — that ambiguity is removed at the structure level, before generation even starts.</p>
+
+    <h2 id="ordering">4. Where each tag goes, and why order matters</h2>
+    <p>For longer, multi-part prompts, Claude's documentation suggests a rough ordering: <code>&lt;role&gt;</code> and <code>&lt;context&gt;</code> first, then <code>&lt;task&gt;</code>, then <code>&lt;instructions&gt;</code> and <code>&lt;output_format&gt;</code>. Claude reads the entire prompt before generating a response, so this isn't about "priming" the model the way position sometimes matters in older, more limited-context systems — it's about giving a human (or another agent debugging the prompt later) a predictable place to find each kind of content, and reducing the chance that a long block of context gets misread as part of the task itself.</p>
+
+    <h2 id="self-consistency">5. A second technique: self-consistency for reasoning tasks</h2>
+    <p>Structure fixes ambiguity in the prompt. It doesn't fix the model occasionally taking a wrong reasoning path on a genuinely hard multi-step problem. <strong>Self-consistency</strong> is the technique for that case: instead of asking once and taking the first answer, generate several independent reasoning attempts at the same problem (different sampling runs), then take the answer that shows up most often across them — a majority vote.</p>
+    <p>A simple illustration: if three independent attempts at a math problem produce 11, 11, and 10, the self-consistent answer is 11 — even though one of the three reasoning paths was internally flawed, the correct answer was still the majority outcome. This is specifically useful for arithmetic, logic, and multi-step reasoning tasks, where a single pass of chain-of-thought can occasionally follow a plausible-looking but wrong step.</p>
+    <div class="callout">
+      <strong>Trade-off:</strong> self-consistency costs more — you're running the same prompt multiple times and comparing results, instead of once. It's worth reaching for on a genuinely important, hard reasoning task, not as a default for every request.
+    </div>
+
+    <h2 id="when-not">6. When structure is overkill</h2>
+    <p>None of this is a rule to apply universally. For a short, simple, single-part question, plain text works fine — wrapping "what's the capital of Portugal" in <code>&lt;task&gt;</code> tags adds nothing. XML structuring earns its keep specifically when a prompt has multiple distinct sections (background context, several examples, formatting constraints) that could otherwise blur into each other. The test is simple: if you'd have trouble telling a colleague, out loud, which sentence in your prompt is an instruction versus which is data, that's the signal to add structure.</p>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ul>
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude by Anthropic — "Prompt engineering best practices for 2026"</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — Prompting best practices</a></li>
+        <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags" target="_blank" rel="noopener">Anthropic Docs — Using XML tags in prompts</a></li>
+        <li><a href="https://www.geeksforgeeks.org/artificial-intelligence/self-consistency-prompting/" target="_blank" rel="noopener">GeeksforGeeks — Self-Consistency Prompting</a></li>
+        <li><a href="https://appliedai.tools/prompt-engineering/what-is-self-consistency-prompting-examples-with-prompt-optimization-process/" target="_blank" rel="noopener">Applied AI Tools — Self-Consistency Prompting, with examples</a></li>
+      </ul>
+      <p style="font-size:12px; margin-top:12px; margin-bottom:0;">Information gathered via web search on 2026-08-19.</p>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>Estrutura vence criatividade: como fazer prompt pro Claude em 2026</h1>
+      <p class="subtitle">Duas lições anteriores de IA Watch cobriram o básico de prompt engineering e context engineering. Esta foca na técnica mais concreta e comprovável pra melhorar a saída do Claude especificamente: estruturar um prompt com tags XML — mais uma segunda técnica, self-consistency, pra quando uma resposta só não é confiável o bastante.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#thesis-pt">1. A virada central: estilo vs estrutura</a></li>
+        <li><a href="#xml-pt">2. Por que tags XML especificamente</a></li>
+        <li><a href="#before-after-pt">3. Antes / depois: um prompt sem estrutura vs um com tags</a></li>
+        <li><a href="#ordering-pt">4. Onde cada tag entra, e por que a ordem importa</a></li>
+        <li><a href="#self-consistency-pt">5. Uma segunda técnica: self-consistency pra raciocínio</a></li>
+        <li><a href="#when-not-pt">6. Quando estrutura é exagero</a></li>
+      </ol>
+    </div>
+
+    <h2 id="thesis-pt">1. A virada central: estilo vs estrutura</h2>
+    <p>Alguns modelos respondem bem a frases criativas ou conversacionais — enquadramentos espertos, analogias incomuns, truques de persona. A própria documentação de prompt engineering do Claude aponta pra algo diferente: o que realmente move a qualidade da saída é <strong>estrutura</strong>, não estilo. Ser inequívoco sobre o que é instrução, o que é contexto e o que é a tarefa em si importa mais do que quão esperto qualquer trecho está redigido.</p>
+    <p>É uma distinção prática, não filosófica. Um prompt que mistura informação de fundo, exemplos e o pedido em si num parágrafo só força o modelo a inferir qual frase é qual coisa. Um prompt que separa essas partes explicitamente remove essa etapa de inferência por completo.</p>
+
+    <h2 id="xml-pt">2. Por que tags XML especificamente</h2>
+    <p>Tags XML — <code>&lt;role&gt;</code>, <code>&lt;context&gt;</code>, <code>&lt;instructions&gt;</code>, <code>&lt;examples&gt;</code>, <code>&lt;output_format&gt;</code> — dão a cada parte de um prompt um rótulo explícito e inequívoco. A documentação do Claude recomenda isso especificamente pra prompts que misturam vários tipos de conteúdo: informação de fundo, instruções, exemplos e a entrada variável do pedido atual.</p>
+    <p>Os nomes das tags em si não têm mágica — não existe um vocabulário fixo que o Claude exija. O que importa é <strong>consistência</strong>: reuse o mesmo nome de tag pro mesmo tipo de conteúdo dentro de um prompt (e entre projetos, se você está construindo algo repetível), e aninhe tags quando o conteúdo tiver uma hierarquia natural — vários documentos, cada um dentro do próprio <code>&lt;document index="n"&gt;</code>, por exemplo.</p>
+    <div class="callout">
+      <strong>O modelo mental:</strong> tags XML fazem pra um prompt o que assinaturas de função claras fazem pra código. Você poderia escrever uma função que recebe um blob gigante sem tipo e parseia tudo internamente — mas nomear e separar os argumentos de antemão remove uma categoria inteira de má interpretação antes mesmo que ela aconteça.
+    </div>
+
+    <h2 id="before-after-pt">3. Antes / depois: um prompt sem estrutura vs um com tags</h2>
+    <p><strong>Antes</strong> — tudo misturado num parágrafo só, forçando o modelo a adivinhar qual parte é instrução e qual é dado:</p>
+    <pre><code>Aqui vai informação sobre um atleta: 1,88m de altura, 82kg,
+o objetivo é ganhar massa muscular, e é vegetariano. Você
+consegue escrever um plano alimentar pra ele, mantendo realista,
+e claro, sem usar carne?</code></pre>
+    <p><strong>Depois</strong> — o mesmo pedido, com o conteúdo separado pelo papel que ele exerce:</p>
+    <pre><code>&lt;informacoes_do_atleta&gt;
+- Altura: 1,88m
+- Peso: 82kg
+- Objetivo: Ganhar massa muscular
+- Restrição alimentar: Vegetariano
+&lt;/informacoes_do_atleta&gt;
+
+&lt;tarefa&gt;
+Gere um plano alimentar realista de uma semana com base nas
+informações do atleta acima.
+&lt;/tarefa&gt;</code></pre>
+    <p>Nada no pedido em si mudou. O que mudou é que o modelo não precisa mais interpretar quais palavras são dados sobre o atleta e quais são a instrução — essa ambiguidade é removida no nível da estrutura, antes mesmo da geração começar.</p>
+
+    <h2 id="ordering-pt">4. Onde cada tag entra, e por que a ordem importa</h2>
+    <p>Pra prompts mais longos e com várias partes, a documentação do Claude sugere uma ordem aproximada: <code>&lt;role&gt;</code> e <code>&lt;context&gt;</code> primeiro, depois <code>&lt;task&gt;</code>, depois <code>&lt;instructions&gt;</code> e <code>&lt;output_format&gt;</code>. O Claude lê o prompt inteiro antes de gerar uma resposta, então isso não é sobre "preparar" o modelo do jeito que a posição às vezes importava em sistemas mais antigos e com contexto mais limitado — é sobre dar a um humano (ou a outro agente depurando o prompt depois) um lugar previsível pra encontrar cada tipo de conteúdo, e reduzir a chance de um bloco longo de contexto ser lido erroneamente como parte da própria tarefa.</p>
+
+    <h2 id="self-consistency-pt">5. Uma segunda técnica: self-consistency pra raciocínio</h2>
+    <p>Estrutura resolve a ambiguidade do prompt. Não resolve o modelo ocasionalmente seguir um caminho de raciocínio errado num problema genuinamente difícil de várias etapas. <strong>Self-consistency</strong> é a técnica pra esse caso: em vez de perguntar uma vez e aceitar a primeira resposta, gere várias tentativas de raciocínio independentes pro mesmo problema (execuções de amostragem diferentes), e aceite a resposta que aparece com mais frequência entre elas — um voto majoritário.</p>
+    <p>Uma ilustração simples: se três tentativas independentes num problema de matemática produzem 11, 11 e 10, a resposta self-consistent é 11 — mesmo que um dos três caminhos de raciocínio estivesse internamente falho, a resposta correta ainda foi o resultado majoritário. Isso é especificamente útil pra tarefas de aritmética, lógica e raciocínio de várias etapas, onde uma única passada de chain-of-thought pode ocasionalmente seguir um passo que parece plausível mas está errado.</p>
+    <div class="callout">
+      <strong>Trade-off:</strong> self-consistency custa mais — você está rodando o mesmo prompt várias vezes e comparando resultados, em vez de uma vez só. Vale a pena usar numa tarefa de raciocínio genuinamente importante e difícil, não como padrão pra todo pedido.
+    </div>
+
+    <h2 id="when-not-pt">6. Quando estrutura é exagero</h2>
+    <p>Nada disso é uma regra pra aplicar universalmente. Pra uma pergunta curta, simples e de uma parte só, texto puro funciona bem — envolver "qual é a capital de Portugal" em tags <code>&lt;tarefa&gt;</code> não adiciona nada. A estruturação com XML se justifica especificamente quando um prompt tem várias seções distintas (contexto de fundo, vários exemplos, restrições de formatação) que de outra forma poderiam se misturar. O teste é simples: se você teria dificuldade de dizer a um colega, em voz alta, qual frase do seu prompt é instrução e qual é dado, esse é o sinal pra adicionar estrutura.</p>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ul>
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude by Anthropic — "Prompt engineering best practices for 2026"</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — Prompting best practices</a></li>
+        <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/use-xml-tags" target="_blank" rel="noopener">Anthropic Docs — Using XML tags in prompts</a></li>
+        <li><a href="https://www.geeksforgeeks.org/artificial-intelligence/self-consistency-prompting/" target="_blank" rel="noopener">GeeksforGeeks — Self-Consistency Prompting</a></li>
+        <li><a href="https://appliedai.tools/prompt-engineering/what-is-self-consistency-prompting-examples-with-prompt-optimization-process/" target="_blank" rel="noopener">Applied AI Tools — Self-Consistency Prompting, com exemplos</a></li>
+      </ul>
+      <p style="font-size:12px; margin-top:12px; margin-bottom:0;">Informações levantadas via busca na web em 19/08/2026.</p>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Structured prompting</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

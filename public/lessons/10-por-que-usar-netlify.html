@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Why use Netlify</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 2 · Lesson 10</span>
+      <h1>Why use Netlify</h1>
+      <p class="subtitle">The other major "git push to deploy" platform. Same core idea as Vercel, different bets on what should be built in versus bolted on.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">1. What Netlify is</a></li>
+        <li><a href="#why">2. Why it exists</a></li>
+        <li><a href="#builtin">3. What ships built in</a></li>
+        <li><a href="#functions">4. Functions and Edge Functions</a></li>
+        <li><a href="#pros-cons">5. Pros and cons</a></li>
+        <li><a href="#vs-vercel">6. Netlify vs Vercel</a></li>
+        <li><a href="#example">7. A practical example</a></li>
+        <li><a href="#when">8. When to actually pick it</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What Netlify is</h2>
+    <p>Netlify is a hosting platform built around the same workflow you already know from Vercel: connect a Git repository, and every push triggers a build and a deploy — a unique preview URL for every branch and pull request, and an automatic deploy to production when you merge to main.</p>
+    <p>It predates Vercel as a company built specifically around this "Jamstack" workflow (static sites plus JavaScript plus APIs), and it's framework-agnostic: it detects and builds Next.js, Astro, Hugo, Eleventy, plain static HTML, and dozens of others, without requiring you to use any particular framework it also happens to make.</p>
+
+    <h2 id="why">2. Why it exists</h2>
+    <p>The problem it solves is the same one every deploy platform in this space solves: before this workflow existed, shipping a static or server-rendered site meant configuring your own server, your own CI pipeline, your own CDN, and your own SSL certificates by hand. Netlify (and the category it helped popularize) packaged all of that into "push to git, get a URL" — no server to patch, no infrastructure to provision.</p>
+    <p>What makes Netlify specifically stand out in that category is that it doesn't stop at hosting: it also ships several product features — forms, identity/auth, A/B testing — as first-party parts of the platform, instead of leaving you to wire up separate services for each.</p>
+
+    <h2 id="builtin">3. What ships built in</h2>
+    <p>This is the single biggest philosophical difference with a platform like Vercel: Netlify treats several product-level needs as part of the core offering, not as an ecosystem of add-ons.</p>
+    <ul>
+      <li><strong>Forms</strong> — add a plain HTML <code>&lt;form&gt;</code> with a <code>data-netlify="true"</code> attribute, and Netlify captures submissions and shows them in a dashboard, no backend code required.</li>
+      <li><strong>Identity</strong> — built-in user authentication (signup, login, password reset) without standing up a separate auth provider.</li>
+      <li><strong>Split testing</strong> — native A/B testing across different deployed branches, routed by Netlify's edge layer.</li>
+      <li><strong>Redirects and headers</strong> — a single <code>netlify.toml</code> or <code>_redirects</code> file controls routing rules, without needing framework-specific config for simple cases.</li>
+    </ul>
+    <div class="callout"><strong>Why this matters:</strong> for a marketing site, a landing page, or a small project, "forms and auth just work" removes entire categories of third-party services you'd otherwise have to pick, pay for, and wire up separately.</div>
+
+    <h2 id="functions">4. Functions and Edge Functions</h2>
+    <p>Netlify offers two flavors of serverless code, mirroring the same split Vercel has:</p>
+    <table>
+      <tr><th>Type</th><th>Runs on</th><th>Best for</th></tr>
+      <tr><td><strong>Netlify Functions</strong></td><td>AWS Lambda, regional (Node.js runtime)</td><td>Regular backend/API work — database calls, sending emails, anything that needs full Node.js APIs and isn't latency-critical at the millisecond level.</td></tr>
+      <tr><td><strong>Netlify Edge Functions</strong></td><td>Deno, at the network edge, close to the visitor</td><td>Redirects, personalization, and streaming responses where you want logic to run before the page is served, geographically close to the user.</td></tr>
+    </table>
+    <p>Edge Functions running on Deno (rather than a custom V8 isolate runtime) means a richer standard library and more familiar Node-like APIs are available — at the cost of a slightly higher cold-start time compared to some competing edge runtimes.</p>
+
+    <h2 id="pros-cons">5. Pros and cons</h2>
+    <div class="card">
+      <div class="card-title">Where it wins</div>
+      <ul>
+        <li>Less opinionated about framework — supports a wider range of static site generators and frameworks out of the box, without favoring one.</li>
+        <li>Forms, identity, and split testing ship as first-party features — fewer separate services to glue together for content/marketing-heavy sites.</li>
+        <li>Generous free tier that has historically been friendly to side projects and static sites.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Where it loses</div>
+      <ul>
+        <li>Lower raw compute limits than Vercel — smaller memory allocation, shorter serverless function timeouts, and smaller payload sizes on comparable plans.</li>
+        <li>Because it isn't made by the same company as any one framework, deep framework-specific features (e.g. the newest Next.js rendering primitives) sometimes land there later than on Vercel.</li>
+        <li>Two different function runtimes (Lambda-based Functions vs Deno-based Edge Functions) to reason about, instead of one unified model.</li>
+      </ul>
+    </div>
+
+    <h2 id="vs-vercel">6. Netlify vs Vercel</h2>
+    <table>
+      <tr><th>Dimension</th><th>Netlify</th><th>Vercel</th></tr>
+      <tr><td>Framework support</td><td>Broad, less opinionated — many static generators and frameworks treated equally</td><td>Deepest integration specifically with Next.js (its own framework)</td></tr>
+      <tr><td>Built-in extras</td><td>Forms, identity, split testing shipped natively</td><td>Thinner core — expects you to bring or connect separate services for these</td></tr>
+      <tr><td>Compute limits</td><td>Lower memory/timeout/payload ceilings on comparable tiers</td><td>Notably higher ceilings — more headroom for heavier serverless workloads</td></tr>
+      <tr><td>Edge runtime</td><td>Deno-based, richer standard library, slightly slower cold starts</td><td>Minimal V8 isolate sandbox, very fast cold starts, more restricted API surface</td></tr>
+    </table>
+    <p>Neither one is strictly "better" — they optimize for different things. This mirrors a comparison worth remembering: the "best" tool in this category depends on whether your priority is deep framework integration and raw compute headroom (Vercel) or broad framework support with more product features included by default (Netlify).</p>
+
+    <h2 id="example">7. A practical example</h2>
+    <p>Imagine a small business site: a marketing homepage, a contact form, and a members-only area with login. Built on Netlify, that could be: a static site generator (or Next.js, since Netlify supports it too) for the pages, a plain HTML form with <code>data-netlify="true"</code> for the contact form (no backend code needed), and Netlify Identity for the members area — three needs covered without standing up a database, an auth provider, or a form-handling service. The same project on a platform without built-in forms/auth would mean picking and paying for at least two extra third-party services.</p>
+
+    <h2 id="when">8. When to actually pick it</h2>
+    <div class="callout"><strong>Reach for Netlify when:</strong> the project is content- or marketing-heavy, needs forms/auth/A/B testing without extra services, or uses a static site generator outside the Next.js/React world where you want a platform that treats every framework equally.</div>
+    <div class="callout"><strong>Reach for Vercel instead when:</strong> the project is Next.js-heavy and benefits from the tightest possible integration with that specific framework, or needs the highest serverless compute ceilings for heavier backend workloads.</div>
+    <p>In practice, plenty of teams have used both at different points — the migration cost between them is usually low, since both read from the same kind of Git repository and <code>build</code> command. The framework and product requirements should drive the choice, not brand loyalty.</p>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 2 · Lição 10</span>
+      <h1>Por que usar Netlify</h1>
+      <p class="subtitle">A outra grande plataforma de "git push pra fazer deploy". Mesma ideia central da Vercel, apostas diferentes sobre o que deveria vir embutido versus ser conectado por fora.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e">1. O que é a Netlify</a></li>
+        <li><a href="#por-que">2. Por que ela existe</a></li>
+        <li><a href="#embutido">3. O que já vem embutido</a></li>
+        <li><a href="#functions-pt">4. Functions e Edge Functions</a></li>
+        <li><a href="#pros-contras">5. Prós e contras</a></li>
+        <li><a href="#vs-vercel-pt">6. Netlify vs Vercel</a></li>
+        <li><a href="#exemplo">7. Um exemplo prático</a></li>
+        <li><a href="#quando">8. Quando escolher de verdade</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e">1. O que é a Netlify</h2>
+    <p>A Netlify é uma plataforma de hospedagem construída em volta do mesmo fluxo que você já conhece da Vercel: conecte um repositório Git, e cada push dispara um build e um deploy — uma URL de preview única pra cada branch e pull request, e deploy automático em produção quando você faz merge na main.</p>
+    <p>Ela é anterior à Vercel como empresa construída especificamente em volta desse fluxo "Jamstack" (sites estáticos mais JavaScript mais APIs), e é agnóstica de framework: ela detecta e builda Next.js, Astro, Hugo, Eleventy, HTML estático puro, e dezenas de outros, sem te obrigar a usar nenhum framework específico que ela também por acaso fabrica.</p>
+
+    <h2 id="por-que">2. Por que ela existe</h2>
+    <p>O problema que resolve é o mesmo que toda plataforma de deploy nesse espaço resolve: antes desse fluxo existir, publicar um site estático ou renderizado no servidor significava configurar seu próprio servidor, seu próprio pipeline de CI, seu próprio CDN e seus próprios certificados SSL na mão. A Netlify (e a categoria que ela ajudou a popularizar) empacotou tudo isso em "faça push pro git, ganhe uma URL" — sem servidor pra corrigir, sem infraestrutura pra provisionar.</p>
+    <p>O que faz a Netlify se destacar especificamente nessa categoria é que ela não para na hospedagem: ela também entrega vários recursos de produto — formulários, identidade/auth, testes A/B — como partes nativas da plataforma, em vez de deixar você conectar serviços separados pra cada um.</p>
+
+    <h2 id="embutido">3. O que já vem embutido</h2>
+    <p>Essa é a maior diferença filosófica em relação a uma plataforma como a Vercel: a Netlify trata várias necessidades de nível de produto como parte da oferta principal, não como um ecossistema de add-ons.</p>
+    <ul>
+      <li><strong>Formulários</strong> — adicione um <code>&lt;form&gt;</code> HTML puro com um atributo <code>data-netlify="true"</code>, e a Netlify captura os envios e mostra num painel, sem precisar de código de backend.</li>
+      <li><strong>Identity</strong> — autenticação de usuário embutida (cadastro, login, reset de senha) sem montar um provedor de auth separado.</li>
+      <li><strong>Split testing</strong> — teste A/B nativo entre diferentes branches publicadas, roteado pela camada de edge da própria Netlify.</li>
+      <li><strong>Redirects e headers</strong> — um único arquivo <code>netlify.toml</code> ou <code>_redirects</code> controla regras de roteamento, sem precisar de configuração específica de framework pra casos simples.</li>
+    </ul>
+    <div class="callout"><strong>Por que isso importa:</strong> pra um site institucional, uma landing page ou um projeto pequeno, "formulários e auth já funcionam" elimina categorias inteiras de serviços de terceiros que você teria que escolher, pagar e conectar separadamente.</div>
+
+    <h2 id="functions-pt">4. Functions e Edge Functions</h2>
+    <p>A Netlify oferece dois tipos de código serverless, espelhando a mesma divisão que a Vercel tem:</p>
+    <table>
+      <tr><th>Tipo</th><th>Roda em</th><th>Melhor pra</th></tr>
+      <tr><td><strong>Netlify Functions</strong></td><td>AWS Lambda, regional (runtime Node.js)</td><td>Trabalho de backend/API comum — chamadas a banco de dados, envio de e-mails, qualquer coisa que precise das APIs completas do Node.js e não seja crítica em termos de latência em milissegundos.</td></tr>
+      <tr><td><strong>Netlify Edge Functions</strong></td><td>Deno, na borda da rede, perto do visitante</td><td>Redirects, personalização e respostas em streaming, onde você quer que a lógica rode antes da página ser servida, geograficamente perto do usuário.</td></tr>
+    </table>
+    <p>Edge Functions rodando em Deno (em vez de um runtime de isolado V8 customizado) significa que uma biblioteca padrão mais rica e APIs mais parecidas com Node estão disponíveis — ao custo de um tempo de cold-start um pouco maior comparado a alguns runtimes de edge concorrentes.</p>
+
+    <h2 id="pros-contras">5. Prós e contras</h2>
+    <div class="card">
+      <div class="card-title">Onde ela ganha</div>
+      <ul>
+        <li>Menos opinativa sobre framework — suporta uma gama maior de geradores de site estático e frameworks de fábrica, sem favorecer nenhum.</li>
+        <li>Formulários, identidade e teste A/B vêm como recursos nativos — menos serviços separados pra juntar em sites de conteúdo/marketing.</li>
+        <li>Plano gratuito historicamente generoso e amigável a projetos pessoais e sites estáticos.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Onde ela perde</div>
+      <ul>
+        <li>Limites de computação brutos menores que a Vercel — menos memória alocada, timeouts de função serverless mais curtos e payloads menores em planos comparáveis.</li>
+        <li>Como não é feita pela mesma empresa de nenhum framework específico, recursos profundos e específicos de framework (ex: as primitivas de renderização mais novas do Next.js) às vezes chegam lá depois do que na Vercel.</li>
+        <li>Dois runtimes de função diferentes (Functions baseadas em Lambda vs Edge Functions baseadas em Deno) pra raciocinar sobre, em vez de um modelo unificado.</li>
+      </ul>
+    </div>
+
+    <h2 id="vs-vercel-pt">6. Netlify vs Vercel</h2>
+    <table>
+      <tr><th>Dimensão</th><th>Netlify</th><th>Vercel</th></tr>
+      <tr><td>Suporte a framework</td><td>Amplo, menos opinativo — vários geradores estáticos e frameworks tratados igualmente</td><td>Integração mais profunda especificamente com o Next.js (framework próprio)</td></tr>
+      <tr><td>Extras embutidos</td><td>Formulários, identidade e teste A/B nativos</td><td>Núcleo mais magro — espera que você traga ou conecte serviços separados pra isso</td></tr>
+      <tr><td>Limites de computação</td><td>Tetos de memória/timeout/payload mais baixos em planos comparáveis</td><td>Tetos notavelmente maiores — mais espaço pra cargas serverless mais pesadas</td></tr>
+      <tr><td>Runtime de edge</td><td>Baseado em Deno, biblioteca padrão mais rica, cold starts um pouco mais lentos</td><td>Sandbox de isolado V8 minimalista, cold starts muito rápidos, superfície de API mais restrita</td></tr>
+    </table>
+    <p>Nenhuma das duas é estritamente "melhor" — elas otimizam pra coisas diferentes. Isso espelha uma comparação que vale lembrar: a ferramenta "melhor" nessa categoria depende se sua prioridade é integração profunda com framework e espaço de computação (Vercel) ou suporte amplo a frameworks com mais recursos de produto incluídos por padrão (Netlify).</p>
+
+    <h2 id="exemplo">7. Um exemplo prático</h2>
+    <p>Imagine o site de um pequeno negócio: uma home institucional, um formulário de contato, e uma área de membros com login. Construído na Netlify, isso poderia ser: um gerador de site estático (ou Next.js, já que a Netlify também suporta) pras páginas, um formulário HTML puro com <code>data-netlify="true"</code> pro formulário de contato (sem precisar de código de backend), e a Netlify Identity pra área de membros — três necessidades cobertas sem montar um banco de dados, um provedor de auth ou um serviço de tratamento de formulários. O mesmo projeto numa plataforma sem formulários/auth embutidos significaria escolher e pagar por pelo menos dois serviços de terceiros extras.</p>
+
+    <h2 id="quando">8. Quando escolher de verdade</h2>
+    <div class="callout"><strong>Use a Netlify quando:</strong> o projeto é bem focado em conteúdo ou marketing, precisa de formulários/auth/teste A/B sem serviços extras, ou usa um gerador de site estático fora do universo Next.js/React onde você quer uma plataforma que trata todo framework igualmente.</div>
+    <div class="callout"><strong>Use a Vercel em vez disso quando:</strong> o projeto é bem baseado em Next.js e se beneficia da integração mais estreita possível com esse framework específico, ou precisa dos tetos de computação serverless mais altos pra cargas de backend mais pesadas.</div>
+    <p>Na prática, muitos times já usaram as duas em momentos diferentes — o custo de migração entre elas costuma ser baixo, já que ambas leem o mesmo tipo de repositório Git e comando de <code>build</code>. Os requisitos de framework e produto devem guiar a escolha, não fidelidade de marca.</p>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Week 2 · Lesson 10</span>
+  <span class="accent" id="footer-right">Why use Netlify</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Week 2 · Lesson 10';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Semana 2 · Lição 10';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

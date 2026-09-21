@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Claudeforce, when the model gets access to the CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { padding-left: 18px; }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Anthropic/Claude news</span>
+      <h1>Claudeforce: when a model gets a standing invitation into your CRM</h1>
+      <p class="subtitle">On August 26, 2026, Anthropic and Salesforce announced Claudeforce — a two-way integration that puts Claude inside Salesforce's workflows and puts Salesforce's live business data inside Claude. It's a useful case study in what "an AI agent with real permissions" looks like once you strip away the demo and look at the plumbing.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-was-announced">1. What was actually announced</a></li>
+        <li><a href="#two-directions">2. Two directions, one partnership</a></li>
+        <li><a href="#how-it-works">3. How it works under the hood: MCP, not a custom API</a></li>
+        <li><a href="#why-governed-action">4. Why "governed action" is the actual headline</a></li>
+        <li><a href="#availability">5. Availability, and what's still a pilot</a></li>
+        <li><a href="#why-it-matters">6. Why this matters beyond one partnership</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-was-announced">1. What was actually announced</h2>
+    <p>Salesforce and Anthropic announced <strong>Claudeforce</strong>, an expanded strategic partnership. The headline product inside it is <strong>Salesforce in Claude</strong>: a plugin with 37 prebuilt sales skills that let a seller (or an agent acting for one) reason over live revenue data — pipeline, deal health, account history — and take actions back in Salesforce, all without leaving the Claude interface. Marc Benioff and Dario Amodei both signed statements on the announcement, which is usually a sign of a partnership with real product investment behind it rather than a co-marketing press release.</p>
+    <p>It's not framed as one feature drop. It's three linked pieces: Salesforce data and actions surfaced inside Claude, Claude used as the reasoning model inside Salesforce's own Agentforce products, and Claude embedded as the default model inside Slack (which Salesforce owns).</p>
+
+    <h2 id="two-directions">2. Two directions, one partnership</h2>
+    <table>
+      <tr><th>Direction</th><th>What it means in practice</th></tr>
+      <tr><td><strong>Salesforce inside Claude</strong></td><td>A seller opens Claude and gets a dashboard built from their real Salesforce + Slack context. From there, Claude can prep for a meeting, review deal health, update a pipeline record, or draft next steps — with the write actions routed back through Salesforce so its existing business rules and permissions still apply.</td></tr>
+      <tr><td><strong>Claude inside Salesforce</strong></td><td>Claude becomes the reasoning model behind Salesforce's own agent products — Agentforce Coworker, Agentforce Vibes, and the "Atlas Reasoning Engine" that powers them. Through Amazon Bedrock, this can run inside Salesforce's own trust boundary, which matters for regulated customers who can't send data to an arbitrary third-party API.</td></tr>
+    </table>
+    <p>Slack sits in the middle of both directions: Claude becomes the default model powering Slackbot and Claude Tag inside Slack, so the same reasoning engine shows up whether you're chatting in Slack, working a deal in Claude, or letting an Agentforce agent run in the background.</p>
+
+    <h2 id="how-it-works">3. How it works under the hood: MCP, not a custom API</h2>
+    <p>The integration runs on the <strong>Model Context Protocol (MCP)</strong> — the same open standard covered in an earlier IA Watch lesson on its 2026-07-28 spec update. Salesforce added support for MCP Apps back in February 2026, and Claudeforce is a direct product of that groundwork: instead of Anthropic and Salesforce building a bespoke, one-off integration, Salesforce exposes its data, workflows, and business rules as MCP servers that any MCP-compatible model can call — Claude included.</p>
+    <div class="callout">
+      <strong>This is the pattern to notice, not just the partnership.</strong> Enterprise software vendors are increasingly choosing to expose themselves to AI models as MCP servers rather than building direct, closed integrations with a single AI company. That choice is what makes a partnership like this technically reversible — the same Salesforce MCP surface could, in principle, be called by a different model tomorrow. The lock-in here is commercial and product-level, not protocol-level.
+    </div>
+
+    <h2 id="why-governed-action">4. Why "governed action" is the actual headline</h2>
+    <p>The specific phrase both companies keep repeating is <strong>governed action</strong>: every write Claude makes back into Salesforce — updating a pipeline stage, logging a call, changing a deal — is routed <em>through</em> Salesforce, not bypassing it. That means Salesforce's existing validation rules, approval flows, and permission model still apply to whatever Claude does. Setup is centralized too: an admin connects Salesforce in Claude once, and every seller on the team inherits access under that same permission model — no per-user re-authorization, no separate audit trail to reconcile.</p>
+    <p>This is worth contrasting with a naive integration, where a model gets a raw API key and can write directly to a database with whatever permissions that key happens to carry. The governed-action model instead treats the model's output as a <em>proposed</em> action that still has to clear the same guardrails a human user would — which is the difference between "an AI that can technically touch your CRM" and "an AI you'd actually let touch your CRM in production."</p>
+
+    <h2 id="availability">5. Availability, and what's still a pilot</h2>
+    <table>
+      <tr><th>Piece</th><th>Status as of Aug 26, 2026</th></tr>
+      <tr><td>Salesforce in Claude (37 sales skills)</td><td>Available to select pilot customers now; open beta planned for September 2026</td></tr>
+      <tr><td>Additional prebuilt skills</td><td>Expected to begin rolling out later in 2026</td></tr>
+      <tr><td>Claude inside Agentforce / Slack</td><td>Already live in parts — Claude is described as the default model for Slackbot and several Agentforce products today</td></tr>
+    </table>
+    <p>So the partnership itself is announced and real, but the specific sales-skills product most people will actually touch is still pilot-stage — worth remembering before assuming this is fully shipped and generally available.</p>
+
+    <h2 id="why-it-matters">6. Why this matters beyond one partnership</h2>
+    <p>Two things worth taking away, independent of whether you use Salesforce:</p>
+    <ul>
+      <li><strong>"AI agent" is increasingly a permissions story, not a capability story.</strong> The interesting engineering problem in 2026 agent products has largely shifted from "can the model reason well enough to do the task" to "can the system route the model's actions through the same rules and audit trail a human would be bound by." Claudeforce's governed-action design is a concrete example of that shift — it's the enterprise version of the same agentic-loop pattern covered in the AI-agents concept lesson.</li>
+      <li><strong>MCP is becoming the connective tissue enterprise software chooses by default.</strong> A major CRM committing its data and workflows to MCP servers — rather than a proprietary Anthropic-only integration — reinforces the trend already flagged in this newsletter's MCP-ecosystem lesson: the protocol won the standards question, and partnerships like this one are what "surviving production" actually looks like in practice.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://www.salesforce.com/news/press-releases/2026/08/26/salesforce-and-anthropic-announce-claudeforce/" target="_blank" rel="noopener">Salesforce Newsroom — "Salesforce and Anthropic Announce Claudeforce: The #1 AI Meets the #1 AI CRM" (Aug 26, 2026)</a></li>
+        <li><a href="https://www.cnbc.com/2026/08/26/salesforce-anthropic-partnership-claudeforce.html" target="_blank" rel="noopener">CNBC — "Salesforce, Anthropic expand partnership as Benioff responds to 'SaaSpocalypse' concerns" (Aug 26, 2026)</a></li>
+        <li><a href="https://www.cio.com/article/4214458/salesforce-anthropic-partner-to-deliver-claudeforce.html" target="_blank" rel="noopener">CIO — "Salesforce, Anthropic partner to deliver Claudeforce" (Aug 26, 2026)</a></li>
+        <li><a href="https://www.salesforceben.com/salesforce-and-anthropic-announce-claudeforce-in-q2-27-earnings/" target="_blank" rel="noopener">Salesforce Ben — "Salesforce and Anthropic Announce 'Claudeforce' in Q2 '27 Earnings" (Aug 2026)</a></li>
+      </ol>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades Anthropic/Claude</span>
+      <h1>Claudeforce: quando um modelo ganha convite permanente pro seu CRM</h1>
+      <p class="subtitle">Em 26 de agosto de 2026, Anthropic e Salesforce anunciaram a Claudeforce — uma integração de mão dupla que coloca o Claude dentro dos fluxos do Salesforce e coloca os dados de negócio ao vivo do Salesforce dentro do Claude. É um bom estudo de caso do que "um agente de IA com permissões reais" parece de fato, quando se tira a demo e se olha o encanamento por trás.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-foi-anunciado">1. O que foi de fato anunciado</a></li>
+        <li><a href="#duas-direcoes">2. Duas direções, uma parceria só</a></li>
+        <li><a href="#como-funciona">3. Como funciona por baixo do capô: MCP, não uma API sob medida</a></li>
+        <li><a href="#acao-governada">4. Por que "ação governada" é a manchete de verdade</a></li>
+        <li><a href="#disponibilidade">5. Disponibilidade, e o que ainda é piloto</a></li>
+        <li><a href="#por-que-importa">6. Por que isso importa além de uma parceria só</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-foi-anunciado">1. O que foi de fato anunciado</h2>
+    <p>Salesforce e Anthropic anunciaram a <strong>Claudeforce</strong>, uma parceria estratégica ampliada. O produto principal dentro dela é o <strong>Salesforce in Claude</strong>: um plugin com 37 skills de vendas pré-construídas que deixam um vendedor (ou um agente agindo por ele) raciocinar sobre dados de receita ao vivo — pipeline, saúde de negócios, histórico de conta — e executar ações de volta no Salesforce, tudo sem sair da interface do Claude. Marc Benioff e Dario Amodei assinaram declarações no anúncio, o que costuma ser sinal de uma parceria com investimento real de produto por trás, não só um press release de co-marketing.</p>
+    <p>Não é apresentado como uma única feature. São três peças ligadas: dados e ações do Salesforce aparecendo dentro do Claude, o Claude usado como modelo de raciocínio dentro dos próprios produtos Agentforce do Salesforce, e o Claude embutido como modelo padrão dentro do Slack (que pertence ao Salesforce).</p>
+
+    <h2 id="duas-direcoes">2. Duas direções, uma parceria só</h2>
+    <table>
+      <tr><th>Direção</th><th>O que significa na prática</th></tr>
+      <tr><td><strong>Salesforce dentro do Claude</strong></td><td>Um vendedor abre o Claude e recebe um dashboard montado a partir do contexto real dele no Salesforce + Slack. A partir daí, o Claude pode preparar uma reunião, revisar a saúde de um negócio, atualizar um registro de pipeline ou rascunhar próximos passos — com as ações de escrita roteadas de volta pelo Salesforce, então as regras de negócio e permissões que já existem lá continuam valendo.</td></tr>
+      <tr><td><strong>Claude dentro do Salesforce</strong></td><td>O Claude vira o modelo de raciocínio por trás dos próprios produtos de agente do Salesforce — Agentforce Coworker, Agentforce Vibes, e o "Atlas Reasoning Engine" que os move. Via Amazon Bedrock, isso pode rodar dentro do trust boundary do próprio Salesforce, o que importa pra clientes de setores regulados que não podem mandar dados pra uma API de terceiro qualquer.</td></tr>
+    </table>
+    <p>O Slack fica no meio das duas direções: o Claude vira o modelo padrão que move o Slackbot e o Claude Tag dentro do Slack, então o mesmo motor de raciocínio aparece seja você conversando no Slack, trabalhando um negócio no Claude, ou deixando um agente do Agentforce rodar em segundo plano.</p>
+
+    <h2 id="como-funciona">3. Como funciona por baixo do capô: MCP, não uma API sob medida</h2>
+    <p>A integração roda em cima do <strong>Model Context Protocol (MCP)</strong> — o mesmo padrão aberto coberto numa lição anterior do IA Watch sobre a atualização de spec de 28/07/2026. O Salesforce adicionou suporte a MCP Apps ainda em fevereiro de 2026, e a Claudeforce é um produto direto desse trabalho de base: em vez de Anthropic e Salesforce construírem uma integração sob medida e isolada, o Salesforce expõe seus dados, fluxos e regras de negócio como servidores MCP que qualquer modelo compatível com MCP pode chamar — Claude incluído.</p>
+    <div class="callout">
+      <strong>Esse é o padrão a se notar, não só a parceria.</strong> Fornecedores de software corporativo estão cada vez mais optando por se expor a modelos de IA como servidores MCP, em vez de construir integrações diretas e fechadas com uma única empresa de IA. Essa escolha é o que torna uma parceria como essa tecnicamente reversível — a mesma superfície MCP do Salesforce poderia, em princípio, ser chamada por um modelo diferente amanhã. O lock-in aqui é comercial e de produto, não de protocolo.
+    </div>
+
+    <h2 id="acao-governada">4. Por que "ação governada" é a manchete de verdade</h2>
+    <p>A frase específica que as duas empresas repetem é <strong>ação governada</strong> ("governed action"): toda escrita que o Claude faz de volta no Salesforce — atualizar um estágio de pipeline, registrar uma ligação, mudar um negócio — é roteada <em>através</em> do Salesforce, não contornando ele. Isso significa que as regras de validação, fluxos de aprovação e modelo de permissão que já existem no Salesforce continuam valendo pra qualquer coisa que o Claude faça. A configuração também é centralizada: um admin conecta o Salesforce in Claude uma vez só, e cada vendedor do time herda acesso sob esse mesmo modelo de permissão — sem reautorização por usuário, sem trilha de auditoria separada pra reconciliar.</p>
+    <p>Vale contrastar isso com uma integração ingênua, onde um modelo recebe uma chave de API crua e pode escrever direto num banco de dados com quaisquer permissões que essa chave carregue. O modelo de ação governada trata a saída do modelo como uma ação <em>proposta</em>, que ainda precisa passar pelas mesmas barreiras que um usuário humano passaria — o que é a diferença entre "uma IA que tecnicamente consegue tocar no seu CRM" e "uma IA que você de fato deixaria tocar no seu CRM em produção."</p>
+
+    <h2 id="disponibilidade">5. Disponibilidade, e o que ainda é piloto</h2>
+    <table>
+      <tr><th>Peça</th><th>Status em 26/08/2026</th></tr>
+      <tr><td>Salesforce in Claude (37 skills de vendas)</td><td>Disponível pra clientes piloto selecionados agora; beta público planejado pra setembro de 2026</td></tr>
+      <tr><td>Skills pré-construídas adicionais</td><td>Previsão de começar a ser lançadas ainda em 2026</td></tr>
+      <tr><td>Claude dentro do Agentforce / Slack</td><td>Já ativo em partes — o Claude é descrito como modelo padrão do Slackbot e de vários produtos Agentforce hoje</td></tr>
+    </table>
+    <p>Ou seja: a parceria em si é anunciada e real, mas o produto específico de skills de vendas que a maioria das pessoas vai de fato usar ainda está em estágio de piloto — vale lembrar disso antes de assumir que já está totalmente lançado e disponível pra todo mundo.</p>
+
+    <h2 id="por-que-importa">6. Por que isso importa além de uma parceria só</h2>
+    <p>Duas coisas valem a pena levar dessa notícia, mesmo se você não usa Salesforce:</p>
+    <ul>
+      <li><strong>"Agente de IA" está virando cada vez mais uma questão de permissão, não de capacidade.</strong> O problema de engenharia interessante nos produtos de agente de 2026 mudou bastante de "o modelo raciocina bem o suficiente pra fazer a tarefa" pra "o sistema consegue rotear as ações do modelo pelas mesmas regras e trilha de auditoria a que um humano estaria sujeito." O design de ação governada da Claudeforce é um exemplo concreto dessa mudança — é a versão corporativa do mesmo padrão de loop agêntico coberto na lição de conceito sobre agentes de IA.</li>
+      <li><strong>O MCP está virando o tecido conectivo que o software corporativo escolhe por padrão.</strong> Um CRM grande comprometendo seus dados e fluxos com servidores MCP — em vez de uma integração proprietária exclusiva com a Anthropic — reforça a tendência já sinalizada na lição sobre o ecossistema MCP desta newsletter: o protocolo venceu a questão dos padrões, e parcerias como essa são o que "sobreviver à produção" de fato parece na prática.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://www.salesforce.com/news/press-releases/2026/08/26/salesforce-and-anthropic-announce-claudeforce/" target="_blank" rel="noopener">Salesforce Newsroom — "Salesforce and Anthropic Announce Claudeforce: The #1 AI Meets the #1 AI CRM" (26/08/2026)</a></li>
+        <li><a href="https://www.cnbc.com/2026/08/26/salesforce-anthropic-partnership-claudeforce.html" target="_blank" rel="noopener">CNBC — "Salesforce, Anthropic expand partnership as Benioff responds to 'SaaSpocalypse' concerns" (26/08/2026)</a></li>
+        <li><a href="https://www.cio.com/article/4214458/salesforce-anthropic-partner-to-deliver-claudeforce.html" target="_blank" rel="noopener">CIO — "Salesforce, Anthropic partner to deliver Claudeforce" (26/08/2026)</a></li>
+        <li><a href="https://www.salesforceben.com/salesforce-and-anthropic-announce-claudeforce-in-q2-27-earnings/" target="_blank" rel="noopener">Salesforce Ben — "Salesforce and Anthropic Announce 'Claudeforce' in Q2 '27 Earnings" (08/2026)</a></li>
+      </ol>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span>
+  <span class="accent" id="footer-right">Claudeforce</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

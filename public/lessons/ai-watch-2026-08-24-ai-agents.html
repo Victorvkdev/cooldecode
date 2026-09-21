@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: What actually makes something an "AI agent"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 12px; }
+  .sources ul { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-24-ai-agents.html">
+<meta property="og:title" content="Cooldecode — AI Watch: What actually makes something an &quot;AI agent&quot;">
+<meta property="og:description" content="Chatbot vs agent isn't marketing — it's one architectural difference: a loop. Perceive, decide, act, observe, repeat. Here's what's actually inside it, and why 2026's biggest Claude releases are all this same loop wearing different clothes.">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-24-ai-agents.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: What actually makes something an &quot;AI agent&quot;">
+<meta name="twitter:description" content="Chatbot vs agent isn't marketing — it's one architectural difference: a loop. Here's what's actually inside it.">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM fundamentals</span>
+      <h1>What actually makes something an "AI agent"</h1>
+      <p class="subtitle">"Agent" got slapped onto every product this year, but underneath the marketing there's one real architectural difference between a chatbot and an agent: a loop. Here's what's inside it, and why nearly everything Anthropic shipped in August 2026 — auto mode, computer use, the browser tool — is that same loop wearing different clothes.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#chatbot-vs-agent">Chatbot vs. agent: the one real difference</a></li>
+        <li><a href="#the-loop">The loop: perceive, decide, act, observe</a></li>
+        <li><a href="#tool-use">Why tool use is the key ingredient</a></li>
+        <li><a href="#single-vs-multi">Single agent vs. multi-agent orchestration</a></li>
+        <li><a href="#in-the-wild">Where this shows up right now, concretely</a></li>
+        <li><a href="#limits">What can still go wrong</a></li>
+      </ol>
+    </div>
+
+    <h2 id="chatbot-vs-agent">1. Chatbot vs. agent: the one real difference</h2>
+    <p>A chatbot takes your message, produces a reply, and stops. Every "turn" is one round trip: you write, it writes back, the conversation waits for you again. Nothing happens in between except the model generating tokens.</p>
+    <p>An <strong>agent</strong> is the same underlying model, but wired into a loop that doesn't need you between steps. Give it a goal — "find the three cheapest flights next Friday and book the best one" — and it can search, read results, compare, decide it's missing information, search again, and only come back to you once the goal is actually done (or it needs a decision only you can make, like a credit card number).</p>
+    <p>That's the whole distinction. Not a bigger model, not more "intelligence" in the abstract sense — a different control structure wrapped around the same kind of model that powers a chatbot.</p>
+
+    <h2 id="the-loop">2. The loop: perceive, decide, act, observe</h2>
+    <p>Every agent, regardless of vendor or framework, runs some version of the same four-step cycle:</p>
+    <ul>
+      <li><strong>Perceive</strong> — read the current state: the user's goal, a screenshot, a file, a database row, the result of the last action.</li>
+      <li><strong>Decide</strong> — the model reasons about what to do next given the goal and what it just perceived. This is the step people call "the agentic loop" or "reasoning-action cycle" — it's genuinely just the model picking the next move.</li>
+      <li><strong>Act</strong> — the model calls a tool: run a search, click a button, execute code, write a file, query a database.</li>
+      <li><strong>Observe</strong> — the result of that action becomes new input, and the loop goes back to step 1.</li>
+    </ul>
+    <p>A chatbot runs this loop <strong>once</strong> and prints text. An agent runs it as many times as the goal requires — sometimes twice, sometimes forty times — revising its plan at every pass based on what actually happened, not just what it expected to happen.</p>
+    <div class="card">
+      <div class="card-title">Worked example</div>
+      <p style="margin-bottom:0;">Goal: "Summarize the top cited paper on agent memory from this year." The agent reasons it needs a search tool, calls it with a query, gets back 15 results with citation counts, picks the one with the most citations, calls a document-retrieval tool to pull the abstract, decides that's enough context, and writes the summary. Four loop passes, three tool calls, zero human intervention after the initial goal.</p>
+    </div>
+
+    <h2 id="tool-use">3. Why tool use is the key ingredient</h2>
+    <p>None of this works without a standard way for the model to call tools. In practice that means: a tool gets defined with a name, a description, and a schema for its parameters — the model doesn't need custom code per tool, it just needs to see the schema and decide when to use it.</p>
+    <p>This is exactly the gap the <strong>Model Context Protocol (MCP)</strong> was built to close — standardizing how an agent discovers and calls tools and data sources instead of every app writing bespoke integration code for every model. It's why MCP adoption exploded through 2026 alongside the agent boom: more agents needing tools means more demand for one shared way to plug tools in.</p>
+    <p>Anthropic's own <strong>computer use</strong> and <strong>browser use</strong> tools, which went generally available on the Claude Platform on August 20, 2026, are a direct expression of this idea taken further: instead of the model only calling narrow, purpose-built tools, it can act on software that has no API at all — clicking, typing, and scrolling a screenshot the way a person would, or reading a webpage's actual structure and acting on a specific field or button rather than a pixel coordinate.</p>
+
+    <h2 id="single-vs-multi">4. Single agent vs. multi-agent orchestration</h2>
+    <p>Simple tasks fit inside one agent running one loop. But once a goal has genuinely independent sub-parts — research one thing while drafting another, or verify a claim while a separate step keeps working — a single loop becomes a bottleneck: everything is serialized through one line of reasoning.</p>
+    <p>The pattern that's become standard by mid-2026 is <strong>multi-agent orchestration</strong>: a lead agent breaks the goal into sub-tasks and hands each one to a specialized sub-agent (a "researcher," a "coder," a "verifier"), then merges their outputs. This isn't just parallelism for speed — it also isolates context, so one sub-agent's noisy exploration doesn't pollute the reasoning of another.</p>
+    <div class="callout">
+      <strong>Trade-off to keep in mind:</strong> multi-agent setups cost more (every sub-agent burns its own tokens) and add coordination overhead (someone has to reconcile disagreeing sub-agent outputs). They're worth it when sub-tasks are genuinely independent — not as a default for everything.
+    </div>
+
+    <h2 id="in-the-wild">5. Where this shows up right now, concretely</h2>
+    <p>You don't need an exotic example — three things Anthropic shipped or changed in the last few weeks are this same loop in production, at different scopes:</p>
+    <table>
+      <tr><th>Product</th><th>What the loop acts on</th></tr>
+      <tr><td><strong>Claude Code auto mode</strong> (default since Aug 14, 2026)</td><td>Files and shell commands in a codebase — the loop reads code, decides what to change, edits/runs commands, observes the result (tests pass or fail), repeats.</td></tr>
+      <tr><td><strong>Computer use tool</strong> (GA Aug 20, 2026)</td><td>Any desktop application via screenshots — click, type, scroll, screenshot again, decide next move, without one round trip per single action like the earlier version required.</td></tr>
+      <tr><td><strong>Browser use tool</strong> (GA Aug 20, 2026)</td><td>Web pages via their actual DOM structure, not just pixels — acts on a named field or button, observes the page's new state, continues.</td></tr>
+    </table>
+    <p>Different targets — code, a desktop app, a webpage — same four-step architecture underneath all three.</p>
+
+    <h2 id="limits">6. What can still go wrong</h2>
+    <p>The loop is powerful precisely because it removes a human checkpoint between steps — which is also where the risk concentrates:</p>
+    <ul>
+      <li><strong>Compounding errors.</strong> A wrong decision early in the loop doesn't just waste one step — every downstream tool call inherits it, and the agent may confidently keep building on a bad premise.</li>
+      <li><strong>Cost and runaway loops.</strong> More passes through the loop means more tokens and more tool calls; a poorly bounded goal can spin far longer (and cost far more) than a human would expect.</li>
+      <li><strong>Tool trust.</strong> An agent that calls tools is only as safe as the tools it's allowed to call — a malicious or compromised tool description can manipulate what the model decides to do next, the exact class of problem the MCP ecosystem is still working through in production.</li>
+    </ul>
+    <p>None of this is a reason to avoid agents — it's why every serious agent deployment in 2026 pairs the loop with guardrails: scoped permissions, spend/step limits, and a human approval point for anything irreversible.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ul>
+        <li><a href="https://claude.com/blog/computer-use-skills-api-files-api" target="_blank" rel="noopener">Claude — "Build production agents with computer use, the Skills API, and the Files API"</a> (claude.com, Aug 20, 2026)</li>
+        <li><a href="https://www.nxcode.io/resources/news/claude-platform-agent-tools-ga-browser-skills-files-2026" target="_blank" rel="noopener">NxCode — "Claude's Agent Stack Is GA. The Runtime Is Still Yours"</a> (Aug 2026)</li>
+        <li><a href="https://decodethefuture.org/en/ai-agents-explained/" target="_blank" rel="noopener">Decode the Future — "AI Agents Explained: How Autonomous AI Works in 2026"</a></li>
+        <li><a href="https://www.lyzr.ai/blog/agentic-reasoning/" target="_blank" rel="noopener">Lyzr — "Agentic Reasoning: How AI Agents Plan, Act, and Adapt in 2026"</a></li>
+        <li><a href="https://datasciencedojo.com/blog/agentic-loops-explained-from-react-to-loop-engineering-2026-guide/" target="_blank" rel="noopener">Data Science Dojo — "Agentic loops explained: From ReAct to loop engineering (2026 guide)"</a></li>
+        <li><a href="https://blogs.oracle.com/developers/what-is-the-ai-agent-loop-the-core-architecture-behind-autonomous-ai-systems" target="_blank" rel="noopener">Oracle Developers — "What Is the AI Agent Loop?"</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Fundamentos de LLMs</span>
+      <h1>O que realmente faz de algo um "agente de IA"</h1>
+      <p class="subtitle">A palavra "agente" foi colada em todo produto de IA neste ano, mas por baixo do marketing existe uma única diferença arquitetural real entre um chatbot e um agente: um loop. Aqui está o que tem dentro dele, e por que quase tudo que a Anthropic lançou em agosto de 2026 — modo automático, computer use, a ferramenta de navegador — é esse mesmo loop com roupas diferentes.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#chatbot-vs-agente">Chatbot vs. agente: a única diferença real</a></li>
+        <li><a href="#o-loop">O loop: perceber, decidir, agir, observar</a></li>
+        <li><a href="#uso-de-ferramentas">Por que uso de ferramentas é o ingrediente-chave</a></li>
+        <li><a href="#unico-vs-multi">Um agente só vs. orquestração multi-agente</a></li>
+        <li><a href="#na-pratica">Onde isso aparece agora, concretamente</a></li>
+        <li><a href="#limites">O que ainda pode dar errado</a></li>
+      </ol>
+    </div>
+
+    <h2 id="chatbot-vs-agente">1. Chatbot vs. agente: a única diferença real</h2>
+    <p>Um chatbot recebe sua mensagem, produz uma resposta e para. Cada "turno" é uma ida e volta: você escreve, ele responde, a conversa espera por você de novo. Nada acontece no meio além do modelo gerando tokens.</p>
+    <p>Um <strong>agente</strong> é o mesmo modelo por baixo, mas ligado a um loop que não precisa de você entre os passos. Dê a ele um objetivo — "encontre os três voos mais baratos pra sexta-feira que vem e reserve o melhor" — e ele pode buscar, ler resultados, comparar, perceber que falta informação, buscar de novo, e só voltar pra você quando o objetivo estiver realmente concluído (ou quando precisar de uma decisão que só você pode tomar, tipo um número de cartão de crédito).</p>
+    <p>Essa é a distinção inteira. Não é um modelo maior, não é mais "inteligência" no sentido abstrato — é uma estrutura de controle diferente, envolvendo o mesmo tipo de modelo que dá vida a um chatbot.</p>
+
+    <h2 id="o-loop">2. O loop: perceber, decidir, agir, observar</h2>
+    <p>Todo agente, independente de fornecedor ou framework, roda alguma versão do mesmo ciclo de quatro passos:</p>
+    <ul>
+      <li><strong>Perceber</strong> — ler o estado atual: o objetivo do usuário, uma captura de tela, um arquivo, uma linha de banco de dados, o resultado da última ação.</li>
+      <li><strong>Decidir</strong> — o modelo raciocina sobre o que fazer a seguir, dado o objetivo e o que acabou de perceber. Esse é o passo que as pessoas chamam de "loop agêntico" ou "ciclo de raciocínio-ação" — é literalmente o modelo escolhendo o próximo movimento.</li>
+      <li><strong>Agir</strong> — o modelo chama uma ferramenta: rodar uma busca, clicar num botão, executar código, escrever um arquivo, consultar um banco.</li>
+      <li><strong>Observar</strong> — o resultado dessa ação vira nova entrada, e o loop volta pro passo 1.</li>
+    </ul>
+    <p>Um chatbot roda esse loop <strong>uma vez</strong> e imprime texto. Um agente roda quantas vezes o objetivo exigir — às vezes duas, às vezes quarenta — revisando o plano a cada passagem com base no que de fato aconteceu, não só no que ele esperava que acontecesse.</p>
+    <div class="card">
+      <div class="card-title">Exemplo resolvido</div>
+      <p style="margin-bottom:0;">Objetivo: "Resuma o artigo mais citado sobre memória de agentes deste ano." O agente raciocina que precisa de uma ferramenta de busca, chama ela com uma query, recebe 15 resultados com contagem de citações, escolhe o mais citado, chama uma ferramenta de recuperação de documento pra pegar o resumo, decide que já tem contexto suficiente, e escreve o resumo. Quatro passagens de loop, três chamadas de ferramenta, zero intervenção humana depois do objetivo inicial.</p>
+    </div>
+
+    <h2 id="uso-de-ferramentas">3. Por que uso de ferramentas é o ingrediente-chave</h2>
+    <p>Nada disso funciona sem uma forma padronizada do modelo chamar ferramentas. Na prática isso significa: uma ferramenta é definida com um nome, uma descrição e um schema pros seus parâmetros — o modelo não precisa de código sob medida pra cada ferramenta, só precisa ver o schema e decidir quando usá-la.</p>
+    <p>Essa é exatamente a lacuna que o <strong>Model Context Protocol (MCP)</strong> foi criado pra fechar — padronizando como um agente descobre e chama ferramentas e fontes de dados, em vez de cada app escrever código de integração sob medida pra cada modelo. É por isso que a adoção do MCP explodiu ao longo de 2026 junto com o boom de agentes: mais agentes precisando de ferramentas significa mais demanda por uma forma compartilhada de plugar ferramentas.</p>
+    <p>As próprias ferramentas de <strong>computer use</strong> e <strong>browser use</strong> da Anthropic, que ficaram disponíveis de forma geral na Claude Platform em 20 de agosto de 2026, são uma expressão direta dessa ideia levada adiante: em vez do modelo só chamar ferramentas estreitas e feitas sob medida, ele consegue agir sobre software que não tem API nenhuma — clicando, digitando e rolando uma captura de tela do jeito que uma pessoa faria, ou lendo a estrutura real de uma página web e agindo sobre um campo ou botão específico em vez de uma coordenada de pixel.</p>
+
+    <h2 id="unico-vs-multi">4. Um agente só vs. orquestração multi-agente</h2>
+    <p>Tarefas simples cabem dentro de um agente só rodando um loop. Mas quando um objetivo tem sub-partes genuinamente independentes — pesquisar uma coisa enquanto rascunha outra, ou verificar uma afirmação enquanto um passo separado continua trabalhando — um loop único vira um gargalo: tudo fica serializado numa única linha de raciocínio.</p>
+    <p>O padrão que virou comum em meados de 2026 é a <strong>orquestração multi-agente</strong>: um agente líder quebra o objetivo em sub-tarefas e entrega cada uma a um sub-agente especializado (um "pesquisador", um "programador", um "verificador"), depois junta as saídas. Isso não é só paralelismo por velocidade — também isola o contexto, então a exploração barulhenta de um sub-agente não polui o raciocínio de outro.</p>
+    <div class="callout">
+      <strong>Trade-off pra ter em mente:</strong> configurações multi-agente custam mais (cada sub-agente consome seus próprios tokens) e adicionam overhead de coordenação (alguém tem que reconciliar saídas divergentes dos sub-agentes). Valem a pena quando as sub-tarefas são genuinamente independentes — não como padrão pra tudo.
+    </div>
+
+    <h2 id="na-pratica">5. Onde isso aparece agora, concretamente</h2>
+    <p>Não precisa de um exemplo exótico — três coisas que a Anthropic lançou ou mudou nas últimas semanas são esse mesmo loop em produção, em escopos diferentes:</p>
+    <table>
+      <tr><th>Produto</th><th>Sobre o que o loop age</th></tr>
+      <tr><td><strong>Modo automático do Claude Code</strong> (padrão desde 14/08/2026)</td><td>Arquivos e comandos de shell num codebase — o loop lê código, decide o que mudar, edita/roda comandos, observa o resultado (testes passam ou falham), repete.</td></tr>
+      <tr><td><strong>Ferramenta computer use</strong> (GA em 20/08/2026)</td><td>Qualquer aplicativo desktop via capturas de tela — clica, digita, rola, captura de novo, decide o próximo movimento, sem uma ida-e-volta por ação única como a versão anterior exigia.</td></tr>
+      <tr><td><strong>Ferramenta browser use</strong> (GA em 20/08/2026)</td><td>Páginas web via sua estrutura real de DOM, não só pixels — age sobre um campo ou botão nomeado, observa o novo estado da página, continua.</td></tr>
+    </table>
+    <p>Alvos diferentes — código, um app desktop, uma página web — a mesma arquitetura de quatro passos por baixo dos três.</p>
+
+    <h2 id="limites">6. O que ainda pode dar errado</h2>
+    <p>O loop é poderoso justamente porque remove um checkpoint humano entre os passos — que é também onde o risco se concentra:</p>
+    <ul>
+      <li><strong>Erros que se acumulam.</strong> Uma decisão errada no início do loop não desperdiça só um passo — toda chamada de ferramenta seguinte herda esse erro, e o agente pode continuar construindo com confiança sobre uma premissa ruim.</li>
+      <li><strong>Custo e loops descontrolados.</strong> Mais passagens pelo loop significam mais tokens e mais chamadas de ferramenta; um objetivo mal delimitado pode rodar bem mais tempo (e custar bem mais) do que um humano esperaria.</li>
+      <li><strong>Confiança na ferramenta.</strong> Um agente que chama ferramentas só é tão seguro quanto as ferramentas que ele tem permissão de chamar — uma descrição de ferramenta maliciosa ou comprometida pode manipular o que o modelo decide fazer a seguir, exatamente a classe de problema que o ecossistema MCP ainda está resolvendo em produção.</li>
+    </ul>
+    <p>Nada disso é motivo pra evitar agentes — é por isso que todo deployment sério de agente em 2026 combina o loop com salvaguardas: permissões delimitadas, limites de gasto/passos, e um ponto de aprovação humana pra qualquer coisa irreversível.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ul>
+        <li><a href="https://claude.com/blog/computer-use-skills-api-files-api" target="_blank" rel="noopener">Claude — "Build production agents with computer use, the Skills API, and the Files API"</a> (claude.com, 20/08/2026)</li>
+        <li><a href="https://www.nxcode.io/resources/news/claude-platform-agent-tools-ga-browser-skills-files-2026" target="_blank" rel="noopener">NxCode — "Claude's Agent Stack Is GA. The Runtime Is Still Yours"</a> (ago/2026)</li>
+        <li><a href="https://decodethefuture.org/en/ai-agents-explained/" target="_blank" rel="noopener">Decode the Future — "AI Agents Explained: How Autonomous AI Works in 2026"</a></li>
+        <li><a href="https://www.lyzr.ai/blog/agentic-reasoning/" target="_blank" rel="noopener">Lyzr — "Agentic Reasoning: How AI Agents Plan, Act, and Adapt in 2026"</a></li>
+        <li><a href="https://datasciencedojo.com/blog/agentic-loops-explained-from-react-to-loop-engineering-2026-guide/" target="_blank" rel="noopener">Data Science Dojo — "Agentic loops explained: From ReAct to loop engineering (2026 guide)"</a></li>
+        <li><a href="https://blogs.oracle.com/developers/what-is-the-ai-agent-loop-the-core-architecture-behind-autonomous-ai-systems" target="_blank" rel="noopener">Oracle Developers — "What Is the AI Agent Loop?"</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">AI agents, explained</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'AI agents, explained';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Agentes de IA, explicados';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 15: Supabase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 3 · Data &amp; backend · Lesson 15</span>
+      <h1>Supabase: what it is, and why people reach for it</h1>
+      <p class="subtitle">A managed Postgres database with auth, storage, realtime, and edge functions bolted on — built so a small team can skip writing most of a backend by hand.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What Supabase actually is</a></li>
+        <li><a href="#why">Why it exists / why people use it</a></li>
+        <li><a href="#hood">What's under the hood</a></li>
+        <li><a href="#pros">Pros</a></li>
+        <li><a href="#cons">Cons</a></li>
+        <li><a href="#compare">Compared to the alternatives</a></li>
+        <li><a href="#example">A practical example</a></li>
+        <li><a href="#choose">How to actually decide</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What Supabase actually is</h2>
+    <p>Supabase is a hosted platform built around a real PostgreSQL database. Every project you create gets a full Postgres instance — not a proprietary abstraction on top of one — and Supabase wraps it with the handful of services almost every application ends up needing anyway: user authentication, file storage, realtime subscriptions to data changes, and serverless edge functions.</p>
+    <p>It's usually described as "the open-source Firebase alternative", which is a fair shorthand: it targets the same job (give a small team a backend without hand-rolling one) but swaps Firebase's proprietary NoSQL document store for a standard relational database you could, in principle, export and run anywhere.</p>
+
+    <h2 id="why">2. Why it exists / why people use it</h2>
+    <p>Before tools like this existed, shipping even a simple app with logins and a database meant standing up a database server, an auth service (or rolling your own password hashing and session handling), a place to store uploaded files, and — if you wanted live updates — a WebSocket layer on top of all of it. That's a lot of infrastructure before you've written a single line of actual product logic.</p>
+    <p>Supabase's pitch is to collapse all of that into one dashboard and one client library: <code>createClient()</code>, then call <code>.from('table').select()</code>, <code>.auth.signIn()</code>, or <code>.storage.upload()</code> and the backend is already there. For solo developers, small teams, and early-stage products, that trade of "some flexibility" for "weeks of setup time saved" is usually a clear win.</p>
+
+    <h2 id="hood">3. What's under the hood</h2>
+    <p>The reason Supabase can move this fast without turning into a black box is that almost every piece is a well-known open-source project, glued together rather than reinvented:</p>
+    <ul>
+      <li><strong>Database:</strong> stock PostgreSQL — the same engine covered in Lesson 14, with all its extensions (including <code>pgvector</code> for embeddings) available.</li>
+      <li><strong>Auth:</strong> a dedicated auth service that issues JWTs and integrates directly with Postgres <strong>row-level security (RLS)</strong>, so access rules live as policies on the database itself instead of scattered across application code.</li>
+      <li><strong>Storage:</strong> S3-compatible object storage with a CDN in front, for files and uploads, governed by the same RLS policies as the database.</li>
+      <li><strong>Realtime:</strong> a layer that listens to Postgres's write-ahead log and pushes changes to subscribed clients over WebSockets — live updates without polling.</li>
+      <li><strong>Edge Functions:</strong> small serverless functions (Deno-based) for logic that shouldn't live in the client, like calling a third-party API with a secret key.</li>
+    </ul>
+    <div class="callout">
+      <strong>The one feature people mention most:</strong> generated TypeScript types straight from your database schema. Every table and column becomes a real type in your code, so a schema change surfaces as a type error at build time instead of a runtime surprise in production.
+    </div>
+
+    <h2 id="pros">4. Pros</h2>
+    <div class="card">
+      <div class="card-title">What it gets right</div>
+      <ul>
+        <li>Real Postgres underneath — you keep access to the full SQL feature set, extensions, and a well-known query language instead of a proprietary data model.</li>
+        <li>Auth, storage, and realtime are already wired together and enforce the same permission model (RLS), instead of three separate services with three separate access-control systems to keep in sync.</li>
+        <li>Open-source core, with a documented path to self-host the entire stack if you ever need to leave the managed service — genuinely lower lock-in than most "backend-as-a-service" competitors.</li>
+        <li>A generous free tier and predictable paid plans make it realistic to start a side project without committing to real spend on day one.</li>
+      </ul>
+    </div>
+
+    <h2 id="cons">5. Cons</h2>
+    <div class="card">
+      <div class="card-title">Where it gets uncomfortable</div>
+      <ul>
+        <li>Row-level security is powerful but has a real learning curve — writing correct RLS policies is closer to writing small pieces of application logic in SQL than flipping a switch, and getting one wrong quietly leaks or blocks data.</li>
+        <li>Because everything is layered on one Postgres instance, very large or unusual scaling needs (extreme write throughput, multi-region active-active) eventually run into limits that a purpose-built combination of separate services might not.</li>
+        <li>Vendor dependency in practice is lower than most alternatives but not zero — self-hosting the full stack (Auth, Storage, Realtime, Studio) is possible but meaningfully more operational work than just using the managed product.</li>
+        <li>Edge Functions run on Deno, which is a smaller ecosystem than Node's — some npm packages need workarounds or aren't available at all.</li>
+      </ul>
+    </div>
+
+    <h2 id="compare">6. Compared to the alternatives</h2>
+    <table>
+      <tr><th>Option</th><th>Core model</th><th>Best fit</th><th>Watch out for</th></tr>
+      <tr><td><strong>Supabase</strong></td><td>Managed Postgres + bundled services</td><td>Teams that want a relational database and are fine writing SQL-flavored access rules</td><td>RLS learning curve; Deno-based functions</td></tr>
+      <tr><td><strong>Firebase</strong></td><td>Proprietary NoSQL (Firestore) + bundled services</td><td>Mobile-first apps, teams that prefer a document model over relational tables</td><td>No SQL, heavier vendor lock-in, harder to self-host or migrate away from</td></tr>
+      <tr><td><strong>Roll your own</strong> (Postgres + Auth0/Clerk + S3 + a WebSocket server)</td><td>Separate best-in-class services, wired together yourself</td><td>Teams with specific requirements each piece must meet individually, or that need to swap one piece later without touching the rest</td><td>Real integration work; nothing enforces one shared permission model across the pieces</td></tr>
+      <tr><td><strong>PocketBase</strong></td><td>Single-binary SQLite-backed backend, auth + realtime built in</td><td>Small projects, self-hosted personal tools, situations where "one binary, no cloud dependency" matters more than scale</td><td>SQLite's single-writer limits (Lesson 13) apply; smaller ecosystem than Supabase's</td></tr>
+    </table>
+
+    <h2 id="example">7. A practical example</h2>
+    <p>Picture a small internal tool: a form where employees submit expense reports, with a manager who needs to see and approve them. With Supabase, the whole backend for that tool looks roughly like this:</p>
+    <ul>
+      <li>One <code>expenses</code> table in Postgres, with columns for amount, description, status, and the submitting user's ID.</li>
+      <li>Two RLS policies: one letting each user read/insert only their own rows, another letting anyone with a <code>role = 'manager'</code> claim read and update any row.</li>
+      <li>Auth handles the login screen and issues the JWT that carries the user's ID and role into every request.</li>
+      <li>Storage holds the uploaded receipt images, with a policy mirroring the same "own rows only, unless you're a manager" rule.</li>
+      <li>A Realtime subscription on the manager's dashboard means a new submission shows up instantly, with no manual refresh or polling.</li>
+    </ul>
+    <p>None of that requires writing a dedicated auth server, a file upload endpoint, or a notifications system — it's mostly table design and a couple of SQL policies, which is exactly the class of problem Supabase is built to shrink.</p>
+
+    <h2 id="choose">8. How to actually decide</h2>
+    <div class="callout">
+      <strong>Reach for Supabase when:</strong> the project needs a relational database anyway, the team is comfortable with (or willing to learn) SQL-based access rules, and shipping fast matters more than having every service be independently swappable.
+    </div>
+    <div class="callout">
+      <strong>Reach for Firebase instead when:</strong> the data genuinely fits a document/NoSQL shape better than tables, or the team is mobile-first and already deep in Google's ecosystem (FCM push notifications, Crashlytics, etc.).
+    </div>
+    <div class="callout">
+      <strong>Roll your own instead when:</strong> the project has a real requirement one specific service must satisfy (a particular auth provider mandated by a client, a storage provider already paid for at the company level) that a bundled platform can't flex around.
+    </div>
+    <p>For most small-to-medium products starting from zero today, Supabase is a reasonable default: it gives up very little relative to assembling the pieces by hand, and the underlying Postgres means the "what if I outgrow this" question has a real answer instead of a rewrite.</p>
+
+    <div class="card">
+      <div class="card-title">Sources / further reading</div>
+      <p style="margin-bottom:0; font-size:14px;"><a href="https://supabase.com/docs" target="_blank" rel="noopener">Official Supabase docs</a>; <a href="https://supabase.com/features" target="_blank" rel="noopener">Supabase features overview</a>.</p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 3 · Dados e backend · Lição 15</span>
+      <h1>Supabase: o que é, e por que as pessoas usam</h1>
+      <p class="subtitle">Um Postgres gerenciado com auth, storage, realtime e edge functions acoplados — feito pra um time pequeno pular a parte de escrever a maior parte de um backend na mão.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#what-pt">O que é o Supabase de fato</a></li>
+        <li><a href="#why-pt">Por que existe / por que as pessoas usam</a></li>
+        <li><a href="#hood-pt">O que tem por debaixo do capô</a></li>
+        <li><a href="#pros-pt">Prós</a></li>
+        <li><a href="#cons-pt">Contras</a></li>
+        <li><a href="#compare-pt">Comparado às alternativas</a></li>
+        <li><a href="#example-pt">Um exemplo prático</a></li>
+        <li><a href="#choose-pt">Como decidir, na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que é o Supabase de fato</h2>
+    <p>O Supabase é uma plataforma hospedada construída em volta de um PostgreSQL de verdade. Todo projeto que você cria recebe uma instância Postgres completa — não uma abstração proprietária em cima de um — e o Supabase envolve isso com o punhado de serviços que quase toda aplicação acaba precisando de qualquer forma: autenticação de usuário, armazenamento de arquivos, assinaturas em tempo real de mudanças nos dados, e funções serverless na edge.</p>
+    <p>Geralmente é descrito como "a alternativa open-source ao Firebase", o que é um resumo justo: ele tem o mesmo objetivo (dar a um time pequeno um backend sem construir um na mão) mas troca o banco de documentos NoSQL proprietário do Firebase por um banco relacional padrão que você poderia, em teoria, exportar e rodar em qualquer lugar.</p>
+
+    <h2 id="why-pt">2. Por que existe / por que as pessoas usam</h2>
+    <p>Antes de ferramentas como essa existirem, lançar até um app simples com login e banco de dados significava montar um servidor de banco, um serviço de auth (ou fazer você mesmo o hash de senha e a gestão de sessão), um lugar pra guardar arquivos enviados e, se você quisesse atualizações em tempo real, uma camada WebSocket em cima de tudo isso. Isso é muita infraestrutura antes de você escrever uma linha de lógica de produto de fato.</p>
+    <p>A proposta do Supabase é colapsar tudo isso num painel só e numa biblioteca de cliente só: <code>createClient()</code>, e depois <code>.from('tabela').select()</code>, <code>.auth.signIn()</code> ou <code>.storage.upload()</code> e o backend já está lá. Pra devs solo, times pequenos e produtos em estágio inicial, essa troca de "um pouco de flexibilidade" por "semanas de configuração economizadas" costuma ser uma vitória clara.</p>
+
+    <h2 id="hood-pt">3. O que tem por debaixo do capô</h2>
+    <p>O motivo do Supabase conseguir andar tão rápido sem virar uma caixa preta é que quase toda peça é um projeto open-source conhecido, colado nos outros em vez de reinventado:</p>
+    <ul>
+      <li><strong>Banco de dados:</strong> PostgreSQL padrão — o mesmo motor visto na Lição 14, com todas as suas extensões disponíveis (incluindo <code>pgvector</code> pra embeddings).</li>
+      <li><strong>Auth:</strong> um serviço de autenticação dedicado que emite JWTs e se integra direto com <strong>row-level security (RLS)</strong> do Postgres, então as regras de acesso vivem como políticas no próprio banco em vez de espalhadas pelo código da aplicação.</li>
+      <li><strong>Storage:</strong> armazenamento de objetos compatível com S3, com CDN na frente, pra arquivos e uploads, governado pelas mesmas políticas de RLS do banco.</li>
+      <li><strong>Realtime:</strong> uma camada que escuta o write-ahead log do Postgres e envia mudanças pros clientes inscritos via WebSockets — atualizações em tempo real sem polling.</li>
+      <li><strong>Edge Functions:</strong> funções serverless pequenas (baseadas em Deno) pra lógica que não deveria viver no cliente, como chamar uma API de terceiro com uma chave secreta.</li>
+    </ul>
+    <div class="callout">
+      <strong>O recurso mais citado:</strong> tipos TypeScript gerados direto do esquema do seu banco. Cada tabela e coluna vira um tipo real no seu código, então uma mudança de esquema aparece como erro de compilação em vez de surpresa em produção.
+    </div>
+
+    <h2 id="pros-pt">4. Prós</h2>
+    <div class="card">
+      <div class="card-title">O que ele acerta</div>
+      <ul>
+        <li>Postgres de verdade por debaixo — você mantém acesso a todo o conjunto de recursos SQL, extensões e uma linguagem de query bem conhecida, em vez de um modelo de dados proprietário.</li>
+        <li>Auth, storage e realtime já vêm conectados e aplicam o mesmo modelo de permissão (RLS), em vez de três serviços separados com três sistemas de controle de acesso separados pra manter sincronizados.</li>
+        <li>Núcleo open-source, com um caminho documentado pra auto-hospedar a stack inteira se você um dia precisar sair do serviço gerenciado — lock-in genuinamente menor que a maioria dos concorrentes de "backend-as-a-service".</li>
+        <li>Um plano gratuito generoso e planos pagos previsíveis tornam realista começar um projeto paralelo sem se comprometer com gasto real no primeiro dia.</li>
+      </ul>
+    </div>
+
+    <h2 id="cons-pt">5. Contras</h2>
+    <div class="card">
+      <div class="card-title">Onde fica desconfortável</div>
+      <ul>
+        <li>Row-level security é poderoso mas tem uma curva de aprendizado real — escrever políticas de RLS corretas é mais parecido com escrever pequenos pedaços de lógica de aplicação em SQL do que apertar um botão, e errar uma silenciosamente vaza ou bloqueia dados.</li>
+        <li>Como tudo fica em camadas sobre uma instância Postgres só, necessidades de escala muito grandes ou fora do comum (throughput de escrita extremo, multi-região ativo-ativo) eventualmente batem em limites que uma combinação de serviços separados feita sob medida talvez não bata.</li>
+        <li>Dependência de fornecedor na prática é menor que a maioria das alternativas mas não é zero — auto-hospedar a stack inteira (Auth, Storage, Realtime, Studio) é possível mas dá bem mais trabalho operacional do que simplesmente usar o produto gerenciado.</li>
+        <li>Edge Functions rodam em Deno, um ecossistema menor que o do Node — alguns pacotes npm precisam de contornos ou simplesmente não estão disponíveis.</li>
+      </ul>
+    </div>
+
+    <h2 id="compare-pt">6. Comparado às alternativas</h2>
+    <table>
+      <tr><th>Opção</th><th>Modelo central</th><th>Melhor encaixe</th><th>Atenção a</th></tr>
+      <tr><td><strong>Supabase</strong></td><td>Postgres gerenciado + serviços empacotados</td><td>Times que querem um banco relacional e não têm problema em escrever regras de acesso em estilo SQL</td><td>Curva de aprendizado do RLS; funções baseadas em Deno</td></tr>
+      <tr><td><strong>Firebase</strong></td><td>NoSQL proprietário (Firestore) + serviços empacotados</td><td>Apps mobile-first, times que preferem um modelo de documento a tabelas relacionais</td><td>Sem SQL, lock-in de fornecedor mais pesado, mais difícil de auto-hospedar ou migrar</td></tr>
+      <tr><td><strong>Fazer na mão</strong> (Postgres + Auth0/Clerk + S3 + um servidor WebSocket)</td><td>Serviços separados, cada um o melhor da categoria, conectados por você</td><td>Times com requisitos específicos que cada peça precisa cumprir individualmente, ou que precisam trocar uma peça depois sem tocar no resto</td><td>Trabalho de integração de verdade; nada aplica um modelo de permissão único compartilhado entre as peças</td></tr>
+      <tr><td><strong>PocketBase</strong></td><td>Backend de binário único baseado em SQLite, com auth + realtime embutidos</td><td>Projetos pequenos, ferramentas pessoais auto-hospedadas, situações onde "um binário só, sem dependência de nuvem" importa mais que escala</td><td>Os limites de escritor único do SQLite (Lição 13) se aplicam; ecossistema menor que o do Supabase</td></tr>
+    </table>
+
+    <h2 id="example-pt">7. Um exemplo prático</h2>
+    <p>Imagine uma ferramenta interna pequena: um formulário onde funcionários enviam relatórios de despesas, com um gestor que precisa ver e aprovar cada um. Com o Supabase, o backend inteiro dessa ferramenta fica mais ou menos assim:</p>
+    <ul>
+      <li>Uma tabela <code>despesas</code> no Postgres, com colunas pra valor, descrição, status e o ID do usuário que enviou.</li>
+      <li>Duas políticas de RLS: uma deixando cada usuário ler/inserir só as próprias linhas, outra deixando qualquer um com <code>role = 'gestor'</code> ler e atualizar qualquer linha.</li>
+      <li>O Auth cuida da tela de login e emite o JWT que leva o ID e o papel do usuário pra cada requisição.</li>
+      <li>O Storage guarda as imagens de recibo enviadas, com uma política espelhando a mesma regra "só as próprias linhas, a menos que seja gestor".</li>
+      <li>Uma assinatura Realtime no painel do gestor faz um novo envio aparecer instantaneamente, sem refresh manual nem polling.</li>
+    </ul>
+    <p>Nada disso exige escrever um servidor de auth dedicado, um endpoint de upload de arquivo ou um sistema de notificações — é majoritariamente design de tabela e um par de políticas SQL, exatamente a classe de problema que o Supabase foi feito pra encolher.</p>
+
+    <h2 id="choose-pt">8. Como decidir, na prática</h2>
+    <div class="callout">
+      <strong>Use o Supabase quando:</strong> o projeto precisa de um banco relacional de qualquer forma, o time está confortável (ou dispensado a aprender) regras de acesso baseadas em SQL, e lançar rápido importa mais que ter cada serviço independentemente trocável.
+    </div>
+    <div class="callout">
+      <strong>Use o Firebase no lugar quando:</strong> os dados de fato se encaixam melhor num formato de documento/NoSQL do que em tabelas, ou o time é mobile-first e já está profundo no ecossistema do Google (notificações push via FCM, Crashlytics, etc.).
+    </div>
+    <div class="callout">
+      <strong>Faça na mão no lugar quando:</strong> o projeto tem um requisito real que um serviço específico precisa cumprir (um provedor de auth específico exigido por um cliente, um provedor de storage já pago no nível da empresa) que uma plataforma empacotada não consegue flexibilizar.
+    </div>
+    <p>Pra maioria dos produtos pequenos e médios começando do zero hoje, o Supabase é um padrão razoável: ele cede muito pouco em relação a montar as peças na mão, e o Postgres por debaixo faz a pergunta "e se eu crescer demais pra isso" ter uma resposta real em vez de uma reescrita.</p>
+
+    <div class="card">
+      <div class="card-title">Fontes / leitura complementar</div>
+      <p style="margin-bottom:0; font-size:14px;"><a href="https://supabase.com/docs" target="_blank" rel="noopener">Documentação oficial do Supabase</a>; <a href="https://supabase.com/features" target="_blank" rel="noopener">Visão geral de recursos do Supabase</a>.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lesson 15</span>
+  <span class="accent" id="footer-right">Supabase</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 15' : 'Cooldecode · Lição 15';
+  }
+</script>
+
+</body>
+</html>

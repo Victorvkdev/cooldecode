@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Claude Fable 5.1 and Mythos 5.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Anthropic/Claude news</span>
+      <h1>Claude Fable 5.1 and Mythos 5.1: one model, two levels of safeguard</h1>
+      <p class="subtitle">On September 2, 2026, Anthropic introduced Claude Fable 5.1 and Claude Mythos 5.1 — its most advanced models for coding and knowledge work yet. The twist isn't a new architecture: it's that Anthropic is now shipping the same model twice, at two different safety settings, and using the gap between them to make both cheaper and less annoying to use.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#same-model">1. Same model, two names — why that split exists</a></li>
+        <li><a href="#numbers">2. What actually got better</a></li>
+        <li><a href="#price">3. Cheaper, mostly because of caching</a></li>
+        <li><a href="#safeguards">4. Fewer false positives, on purpose</a></li>
+        <li><a href="#data">5. Data retention: a customer-controlled middle ground</a></li>
+        <li><a href="#science">6. The science angle: proteins, Venus, and GPU kernels</a></li>
+        <li><a href="#why-matters">7. Why this matters beyond the benchmarks</a></li>
+      </ol>
+    </div>
+
+    <h2 id="same-model">1. Same model, two names — why that split exists</h2>
+    <p>Claude Fable 5.1 and Claude Mythos 5.1 are, according to Anthropic, <strong>literally the same underlying model</strong>. What differs is which safety filters sit in front of it. Fable 5.1 is generally available to everyone; Mythos 5.1 runs with more permissive safeguards and is only reachable through vetted, trusted-access programs aimed at two specific fields where the default safeguards get in the way of legitimate work: cybersecurity defense and life sciences research.</p>
+    <p>This "one model, two safety profiles" approach isn't brand new for Anthropic — Fable 5 and Mythos 5 already worked this way — but 5.1 leans into it harder, explicitly framing the gap between the two as something the company is actively trying to shrink by making Fable's own safeguards more precise, rather than just routing more traffic to the more permissive twin.</p>
+    <div class="callout"><strong>Who actually gets Mythos access:</strong> the Cyber Verification Program (CVP) for defensive security researchers, and a new Life Sciences Verification Program (LSVP) built in partnership with the US government, currently limited to a small set of vetted US organizations while enrollment expands.</div>
+
+    <h2 id="numbers">2. What actually got better</h2>
+    <p>Anthropic's own benchmark table shows Fable 5.1 beating both its predecessor (Fable 5) and the larger Opus 5 model on most measured tasks — unusual, since the "mid-tier" model in a lineup doesn't typically outscore the flagship:</p>
+    <table>
+      <tr><th>Benchmark</th><th>Fable 5.1</th><th>Fable 5</th><th>Opus 5</th></tr>
+      <tr><td>Agentic scientific research (Terminal-Bench-Science 0.1)</td><td>52.6%</td><td>24.7%</td><td>29.0%</td></tr>
+      <tr><td>Agentic coding (Terminal-Bench 4.0)</td><td>55.8%</td><td>42.0%</td><td>52.3%</td></tr>
+      <tr><td>Knowledge work (GDPval-AA v2)</td><td>1853</td><td>1723</td><td>1824</td></tr>
+      <tr><td>Multidisciplinary reasoning (Humanity's Last Exam, w/ tools)</td><td>65.0%</td><td>63.8%</td><td>63.6%</td></tr>
+      <tr><td>Business workflows (AutomationBench)</td><td>31.4%</td><td>17.1%</td><td>26.9%</td></tr>
+    </table>
+    <p>Beyond the numbers, several early-access partners (Cognition, MongoDB, Datadog, Canva, among others) reported qualitative gains: better readability over long multi-step runs, stronger root-cause debugging on bugs other models missed, and — in one striking case from the trading firm Millennium — finding the cause of a crash that had eluded that company's own engineers for years by disassembling a vendor library and matching it against a core dump.</p>
+
+    <h2 id="price">3. Cheaper, mostly because of caching</h2>
+    <p>Fable 5.1 costs roughly <strong>25% less</strong> than Fable 5 for typical workloads, and up to <strong>45% less</strong> for highly agentic work. The mechanism is specific: Anthropic cut the price of <strong>cache reads</strong> — reusing context the model already processed and stored — by 75%, down to $0.25 per million tokens. Everything else about pricing stayed the same ($10/million input tokens, $50/million output tokens).</p>
+    <p>This matters because agentic workloads (an agent looping through a task, re-reading the same growing context on every step) are dominated by cache reads, not fresh input tokens. Cutting that specific cost lever moves the needle much more for long-running agents than a flat price cut would.</p>
+
+    <h2 id="safeguards">4. Fewer false positives, on purpose</h2>
+    <p>A recurring complaint about safety filters is that they're overly cautious: they block or redirect things that were never actually dangerous, just because they resemble a risky pattern. Anthropic reports concrete reductions here — cybersecurity safeguards now trigger roughly <strong>60% fewer false positives</strong>, in part because Fable 5.1 is now allowed to help find software vulnerabilities defensively (though not to build exploits for them), and biology safeguards fire <strong>85% less often</strong> on benign questions like basic medical queries.</p>
+    <p>The line that doesn't move: dual-use tasks like penetration testing, exploit generation, or research-grade biology work still get redirected to Opus-class models or require Mythos-level trusted access — the reduction is in over-blocking harmless requests, not in loosening the actual restrictions on higher-risk categories.</p>
+
+    <h2 id="data">5. Data retention: a customer-controlled middle ground</h2>
+    <p>Enterprise customers have historically faced a trade-off: get full privacy (zero data retention) and lose Anthropic's ability to detect misuse, or allow retention and gain that detection. Anthropic's new <strong>Enterprise Frontier Safeguards (EFS)</strong>, developed with over 100 customers and cloud partners AWS, Google Cloud, and Microsoft Azure, tries to remove that trade-off: customer data lives on infrastructure the customer controls, not Anthropic's, and misuse review defaults to being done by the customer itself. It rolls out in phases starting this fall; until then, eligible customers can use Fable 5.1 with plain zero data retention.</p>
+
+    <h2 id="science">6. The science angle: proteins, Venus, and GPU kernels</h2>
+    <p>Alongside the coding benchmarks, Anthropic published research results meant to demonstrate real scientific capability, not just synthetic test scores:</p>
+    <ul>
+      <li><strong>Molecular design:</strong> Mythos 5.1, given open-source protein design tools, produced binder designs that were experimentally validated by external labs — on three targets, binding affinity 10x higher than the best entries in a public protein-design competition, with a near-50% hit rate against a typical 10-15% for the field.</li>
+      <li><strong>Planetary mapping:</strong> Fable 5.1 built a new high-resolution elevation map covering a third of the surface of Venus from 30-year-old NASA radar data, improving resolution from 10-20km down to 2-3km — released under a Creative Commons license ahead of upcoming NASA and ESA missions.</li>
+      <li><strong>Computational biology tooling:</strong> Mythos 5.1 wrote custom GPU kernels that sped up seven open-source genomics/protein models by up to 2.5x with identical outputs, cutting estimated cloud costs for large genome-wide analyses by 30-60% — the kind of optimization that normally requires a dedicated performance-engineering team.</li>
+    </ul>
+    <p>None of this makes Claude a scientist on its own, but it's a concrete signal of where "AI for science" claims are heading beyond marketing language: real designs sent to real labs for real validation.</p>
+
+    <h2 id="why-matters">7. Why this matters beyond the benchmarks</h2>
+    <p>Three things stand out from this release, independent of the raw scores. First, the Fable/Mythos split formalizes something the industry has been doing informally for a while: separating "how capable is the model" from "how much of that capability can the general public reach directly" — and Anthropic is betting that narrowing that gap over time, rather than keeping it wide indefinitely, is the safer long-term path. Second, the price cut is a reminder that agentic workloads have their own cost structure, dominated by context reuse rather than raw token volume — which is a lever every team building agents should understand, not just Anthropic. Third, pairing a capability announcement with a same-week alignment and security report (covered in this newsletter on September 3) signals that Anthropic is trying to make "here's what's more capable" and "here's what we did to keep it safe" a single habit, not two separate conversations.</p>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/claude-fable-and-mythos-5-1" target="_blank" rel="noopener">Anthropic — "Introducing Claude Fable 5.1 and Claude Mythos 5.1" (Sep 2, 2026)</a></li>
+        <li><a href="https://www.macrumors.com/2026/09/01/anthropic-claude-fable-5-1/" target="_blank" rel="noopener">MacRumors — "Anthropic Launches Claude Fable 5.1 With Lower Costs and Fewer False Positives" (Sep 1, 2026)</a></li>
+        <li><a href="https://venturebeat.com/technology/anthropics-claude-fable-5-1-and-mythos-5-1-arrive-with-a-75-cost-reduction-for-fable-cache-reads" target="_blank" rel="noopener">VentureBeat — "Anthropic's Claude Fable 5.1 and Mythos 5.1 arrive with a 75% cost reduction for Fable cache reads"</a></li>
+        <li><a href="https://9to5mac.com/2026/09/01/anthropic-upgrades-claude-with-new-fable-5-1-model-details-here/" target="_blank" rel="noopener">9to5Mac — "Anthropic upgrades Claude with new Fable 5.1 model, details here" (Sep 1, 2026)</a></li>
+        <li><a href="https://aws.amazon.com/about-aws/whats-new/2026/09/claude-fable-5-1-aws/" target="_blank" rel="noopener">AWS — "Claude Fable 5.1, Anthropic's new frontier model is now available on AWS"</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude Fable 5.1 e Mythos 5.1: o mesmo modelo, dois níveis de salvaguarda</h1>
+      <p class="subtitle">Em 2 de setembro de 2026, a Anthropic apresentou o Claude Fable 5.1 e o Claude Mythos 5.1 — seus modelos mais avançados até agora pra código e trabalho de conhecimento. A virada não é uma arquitetura nova: é que a Anthropic passou a lançar o mesmo modelo duas vezes, com dois níveis diferentes de segurança, e usa a diferença entre eles pra deixar os dois mais baratos e menos travados de usar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#mesmo-modelo">1. Mesmo modelo, dois nomes — por que essa divisão existe</a></li>
+        <li><a href="#numeros">2. O que de fato melhorou</a></li>
+        <li><a href="#preco">3. Mais barato, principalmente por causa do cache</a></li>
+        <li><a href="#salvaguardas">4. Menos falsos positivos, de propósito</a></li>
+        <li><a href="#dados">5. Retenção de dados: um meio-termo controlado pelo cliente</a></li>
+        <li><a href="#ciencia">6. O lado científico: proteínas, Vênus e kernels de GPU</a></li>
+        <li><a href="#por-que-importa">7. Por que isso importa além dos benchmarks</a></li>
+      </ol>
+    </div>
+
+    <h2 id="mesmo-modelo">1. Mesmo modelo, dois nomes — por que essa divisão existe</h2>
+    <p>Claude Fable 5.1 e Claude Mythos 5.1 são, segundo a Anthropic, <strong>literalmente o mesmo modelo por baixo</strong>. O que muda é qual filtro de segurança fica na frente dele. O Fable 5.1 é de acesso geral, pra qualquer pessoa; o Mythos 5.1 roda com salvaguardas mais permissivas e só é acessível por programas de acesso confiável e verificado, voltados a duas áreas específicas onde as salvaguardas padrão acabam travando trabalho legítimo: defesa em cibersegurança e pesquisa em ciências da vida.</p>
+    <p>Essa abordagem de "um modelo, dois perfis de segurança" não é exatamente nova pra Anthropic — o Fable 5 e o Mythos 5 já funcionavam assim — mas a versão 5.1 aposta mais forte nisso, enquadrando explicitamente a diferença entre os dois como algo que a empresa está tentando encolher ao longo do tempo, tornando as próprias salvaguardas do Fable mais precisas, em vez de simplesmente mandar mais tráfego pro gêmeo mais permissivo.</p>
+    <div class="callout"><strong>Quem de fato tem acesso ao Mythos:</strong> o Cyber Verification Program (CVP), pra pesquisadores de segurança defensiva, e um novo Life Sciences Verification Program (LSVP), construído em parceria com o governo dos EUA, hoje limitado a um pequeno grupo de organizações americanas verificadas enquanto a inscrição se expande.</div>
+
+    <h2 id="numeros">2. O que de fato melhorou</h2>
+    <p>A própria tabela de benchmarks da Anthropic mostra o Fable 5.1 superando tanto seu antecessor (Fable 5) quanto o modelo maior Opus 5 na maioria das tarefas medidas — algo fora do comum, já que o modelo "intermediário" de uma linha normalmente não supera o carro-chefe:</p>
+    <table>
+      <tr><th>Benchmark</th><th>Fable 5.1</th><th>Fable 5</th><th>Opus 5</th></tr>
+      <tr><td>Pesquisa científica agêntica (Terminal-Bench-Science 0.1)</td><td>52,6%</td><td>24,7%</td><td>29,0%</td></tr>
+      <tr><td>Código agêntico (Terminal-Bench 4.0)</td><td>55,8%</td><td>42,0%</td><td>52,3%</td></tr>
+      <tr><td>Trabalho de conhecimento (GDPval-AA v2)</td><td>1853</td><td>1723</td><td>1824</td></tr>
+      <tr><td>Raciocínio multidisciplinar (Humanity's Last Exam, com ferramentas)</td><td>65,0%</td><td>63,8%</td><td>63,6%</td></tr>
+      <tr><td>Fluxos de trabalho de negócio (AutomationBench)</td><td>31,4%</td><td>17,1%</td><td>26,9%</td></tr>
+    </table>
+    <p>Além dos números, vários parceiros de acesso antecipado (Cognition, MongoDB, Datadog, Canva, entre outros) relataram ganhos qualitativos: melhor legibilidade em execuções longas de múltiplas etapas, depuração de causa-raiz mais forte em bugs que outros modelos não pegaram e — num caso marcante da empresa de trading Millennium — encontrar a causa de um crash que havia escapado dos próprios engenheiros da empresa por anos, desmontando uma biblioteca de terceiros e comparando com um core dump.</p>
+
+    <h2 id="preco">3. Mais barato, principalmente por causa do cache</h2>
+    <p>O Fable 5.1 custa cerca de <strong>25% menos</strong> que o Fable 5 pra cargas de trabalho típicas, e até <strong>45% menos</strong> pra trabalho altamente agêntico. O mecanismo é específico: a Anthropic cortou o preço das <strong>leituras de cache</strong> — reaproveitar contexto que o modelo já processou e guardou — em 75%, pra US$ 0,25 por milhão de tokens. O resto do preço ficou igual (US$ 10/milhão de tokens de entrada, US$ 50/milhão de saída).</p>
+    <p>Isso importa porque cargas de trabalho agênticas (um agente repetindo um loop numa tarefa, relendo o mesmo contexto crescente a cada passo) são dominadas por leituras de cache, não por tokens de entrada novos. Cortar essa palanca específica de custo move o ponteiro muito mais pra agentes de execução longa do que um corte de preço genérico moveria.</p>
+
+    <h2 id="salvaguardas">4. Menos falsos positivos, de propósito</h2>
+    <p>Uma reclamação recorrente sobre filtros de segurança é que eles são excessivamente cautelosos: bloqueiam ou redirecionam coisas que nunca foram de fato perigosas, só porque se parecem com um padrão de risco. A Anthropic relata reduções concretas aqui — as salvaguardas de cibersegurança agora disparam cerca de <strong>60% menos falsos positivos</strong>, em parte porque o Fable 5.1 agora pode ajudar a encontrar vulnerabilidades de software de forma defensiva (mas não construir exploits pra elas), e as salvaguardas de biologia disparam <strong>85% menos</strong> em perguntas benignas, como dúvidas médicas básicas.</p>
+    <p>O que não muda: tarefas de uso duplo, como teste de penetração, geração de exploit ou pesquisa biológica de ponta, continuam sendo redirecionadas pra modelos da classe Opus ou exigem acesso de confiança nível Mythos — a redução está em parar de bloquear demais pedidos inofensivos, não em afrouxar as restrições reais sobre categorias de risco mais alto.</p>
+
+    <h2 id="dados">5. Retenção de dados: um meio-termo controlado pelo cliente</h2>
+    <p>Clientes corporativos historicamente enfrentavam um trade-off: ter privacidade total (retenção zero de dados) e perder a capacidade da Anthropic de detectar uso indevido, ou permitir retenção e ganhar essa detecção. O novo <strong>Enterprise Frontier Safeguards (EFS)</strong> da Anthropic, desenvolvido com mais de 100 clientes e os parceiros de nuvem AWS, Google Cloud e Microsoft Azure, tenta eliminar esse trade-off: os dados do cliente ficam numa infraestrutura que o próprio cliente controla, não a da Anthropic, e a revisão de uso indevido passa a ser feita, por padrão, pelo próprio cliente. A liberação é em fases a partir deste outono (do hemisfério norte); até então, clientes elegíveis podem usar o Fable 5.1 com retenção zero de dados simples.</p>
+
+    <h2 id="ciencia">6. O lado científico: proteínas, Vênus e kernels de GPU</h2>
+    <p>Junto dos benchmarks de código, a Anthropic publicou resultados de pesquisa pra demonstrar capacidade científica real, não só pontuações de teste sintéticas:</p>
+    <ul>
+      <li><strong>Design molecular:</strong> o Mythos 5.1, com acesso a ferramentas open-source de design de proteínas, produziu desenhos de ligantes validados experimentalmente por laboratórios externos — em três alvos, afinidade de ligação 10x maior que as melhores submissões de uma competição pública de design de proteínas, com taxa de acerto próxima de 50% contra os 10-15% típicos da área.</li>
+      <li><strong>Mapeamento planetário:</strong> o Fable 5.1 construiu um novo mapa de elevação de alta resolução cobrindo um terço da superfície de Vênus, a partir de dados de radar da NASA com 30 anos, melhorando a resolução de 10-20km pra 2-3km — liberado sob licença Creative Commons antes das próximas missões da NASA e da ESA.</li>
+      <li><strong>Ferramental de biologia computacional:</strong> o Mythos 5.1 escreveu kernels de GPU customizados que aceleraram sete modelos open-source de genômica/proteínas em até 2,5x com resultados idênticos, cortando custos estimados de nuvem em análises genômicas grandes em 30-60% — o tipo de otimização que normalmente exige um time dedicado de engenharia de performance.</li>
+    </ul>
+    <p>Nada disso torna o Claude um cientista por conta própria, mas é um sinal concreto de pra onde as afirmações de "IA pra ciência" estão indo além do discurso de marketing: designs reais enviados a laboratórios reais pra validação real.</p>
+
+    <h2 id="por-que-importa">7. Por que isso importa além dos benchmarks</h2>
+    <p>Três coisas se destacam nesse lançamento, independente dos números brutos. Primeiro, a divisão Fable/Mythos formaliza algo que a indústria já vinha fazendo informalmente: separar "quão capaz é o modelo" de "quanto dessa capacidade o público geral pode acessar diretamente" — e a Anthropic está apostando que estreitar essa diferença ao longo do tempo, em vez de mantê-la larga indefinidamente, é o caminho mais seguro no longo prazo. Segundo, o corte de preço é um lembrete de que cargas de trabalho agênticas têm sua própria estrutura de custo, dominada por reaproveitamento de contexto e não por volume bruto de tokens — uma palanca que qualquer time construindo agentes deveria entender, não só a Anthropic. Terceiro, emparelhar um anúncio de capacidade com um relatório de alinhamento e segurança na mesma semana (coberto nesta newsletter em 3 de setembro) sinaliza que a Anthropic está tentando fazer de "aqui está o que ficou mais capaz" e "aqui está o que fizemos pra manter isso seguro" um hábito único, não duas conversas separadas.</p>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/claude-fable-and-mythos-5-1" target="_blank" rel="noopener">Anthropic — "Introducing Claude Fable 5.1 and Claude Mythos 5.1" (02/09/2026)</a></li>
+        <li><a href="https://www.macrumors.com/2026/09/01/anthropic-claude-fable-5-1/" target="_blank" rel="noopener">MacRumors — "Anthropic Launches Claude Fable 5.1 With Lower Costs and Fewer False Positives" (01/09/2026)</a></li>
+        <li><a href="https://venturebeat.com/technology/anthropics-claude-fable-5-1-and-mythos-5-1-arrive-with-a-75-cost-reduction-for-fable-cache-reads" target="_blank" rel="noopener">VentureBeat — "Anthropic's Claude Fable 5.1 and Mythos 5.1 arrive with a 75% cost reduction for Fable cache reads"</a></li>
+        <li><a href="https://9to5mac.com/2026/09/01/anthropic-upgrades-claude-with-new-fable-5-1-model-details-here/" target="_blank" rel="noopener">9to5Mac — "Anthropic upgrades Claude with new Fable 5.1 model, details here" (01/09/2026)</a></li>
+        <li><a href="https://aws.amazon.com/about-aws/whats-new/2026/09/claude-fable-5-1-aws/" target="_blank" rel="noopener">AWS — "Claude Fable 5.1, Anthropic's new frontier model is now available on AWS"</a></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> · <span class="accent" id="footer-right">Claude Fable 5.1 &amp; Mythos 5.1</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Claude Fable 5.1 & Mythos 5.1';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Claude Fable 5.1 & Mythos 5.1';
+    }
+  }
+</script>
+
+</body>
+</html>

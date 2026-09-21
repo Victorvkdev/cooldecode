@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: RAG (Retrieval-Augmented Generation) explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 4px; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Core LLM concepts</span>
+      <h1>RAG: how a model answers with things it was never trained on</h1>
+      <p class="subtitle">Retrieval-Augmented Generation is the mechanism behind "ask your documents" chatbots and most enterprise AI assistants. It doesn't make the model smarter — it changes what the model gets to read before it answers.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#the-problem">1. The problem RAG solves</a></li>
+        <li><a href="#three-stages">2. The three stages: indexing, retrieval, generation</a></li>
+        <li><a href="#embeddings-link">3. Where embeddings fit in</a></li>
+        <li><a href="#why-not-finetune">4. Why not just fine-tune or use a bigger context window?</a></li>
+        <li><a href="#pros-cons">5. Pros, cons, and failure modes</a></li>
+        <li><a href="#example">6. A generic example</a></li>
+        <li><a href="#takeaway">7. The actual takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="the-problem">1. The problem RAG solves</h2>
+    <p>A language model's knowledge is frozen at training time and limited to whatever fit in its training data. Ask it about a company's internal policy document, a codebase it never saw, or news from after its cutoff, and it either says it doesn't know or — worse — confidently makes something up. Retraining the model every time new information shows up is slow and expensive, and it still wouldn't give a clean way to point at exactly which document an answer came from.</p>
+    <p><strong>Retrieval-Augmented Generation (RAG)</strong> takes a different approach: instead of trying to bake the knowledge into the model's weights, it searches a separate collection of documents for the most relevant pieces of text right when a question comes in, and hands those pieces to the model as part of the prompt. The model then answers using both what it already knows and what it was just handed — with the added benefit that it can cite where the answer came from.</p>
+
+    <h2 id="three-stages">2. The three stages: indexing, retrieval, generation</h2>
+    <ol>
+      <li><strong>Indexing (done ahead of time).</strong> Source documents — PDFs, wiki pages, support tickets, whatever the knowledge base is — get split into smaller chunks, and each chunk is converted into a vector representation (an embedding) that captures its meaning. These vectors get stored in a searchable index, often a dedicated vector database.</li>
+      <li><strong>Retrieval (happens per query).</strong> The incoming question also gets converted into a vector using the same embedding model, and the system searches the index for the chunks whose vectors are closest to the question's vector — meaning, closest in <em>meaning</em>, not just keyword overlap.</li>
+      <li><strong>Generation.</strong> The retrieved chunks get inserted into the prompt alongside the original question, and the language model generates its answer grounded in that retrieved text instead of purely from memory.</li>
+    </ol>
+
+    <h2 id="embeddings-link">3. Where embeddings fit in</h2>
+    <p>Embeddings are the piece that makes the "search by meaning" part of retrieval possible — the same idea covered in an earlier AI Watch lesson on embeddings. A RAG pipeline is essentially: embeddings for search, plus a generation step layered on top of whatever the search returns. If the embedding model is weak or mismatched to the domain (say, using a general-purpose embedding model on dense legal text), retrieval quality suffers no matter how good the language model itself is — the model can only answer as well as the material it was actually given.</p>
+
+    <h2 id="why-not-finetune">4. Why not just fine-tune or use a bigger context window?</h2>
+    <table>
+      <tr><th>Approach</th><th>What it does well</th><th>Where it falls short</th></tr>
+      <tr><td><strong>Fine-tuning</strong></td><td>Teaches the model a style, format, or behavior pattern well.</td><td>Expensive and slow to update; poor fit for facts that change often, and doesn't give a clean citation trail.</td></tr>
+      <tr><td><strong>Larger context window</strong> (stuffing everything into the prompt)</td><td>Simple, no separate retrieval system needed for small knowledge bases.</td><td>Doesn't scale to large document collections; costs more tokens per query; models can still lose track of details buried in the middle of a very long context.</td></tr>
+      <tr><td><strong>RAG</strong></td><td>Scales to large, frequently-updated knowledge bases; answers stay traceable to a source document; no retraining needed when documents change.</td><td>Only as good as the retrieval step — irrelevant or missing chunks lead to wrong or incomplete answers regardless of how good the model is.</td></tr>
+    </table>
+
+    <h2 id="pros-cons">5. Pros, cons, and failure modes</h2>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Keeps answers grounded in an actual, inspectable source instead of the model's internal (and sometimes wrong) memory.</li>
+        <li>Updating the knowledge base just means re-indexing documents — no retraining.</li>
+        <li>Reduces hallucination on domain-specific or fast-changing information, when retrieval works well.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons / failure modes</div>
+      <ul>
+        <li>Garbage in, garbage out: if the retrieval step returns irrelevant chunks, the model will often still try to answer using them, producing a confidently wrong response.</li>
+        <li>Chunking strategy matters — split documents too small and you lose context, too large and irrelevant text dilutes what actually matters in the prompt.</li>
+        <li>It doesn't eliminate hallucination entirely; the model can still misread or misapply retrieved text, especially when multiple retrieved chunks conflict.</li>
+      </ul>
+    </div>
+
+    <h2 id="example">6. A generic example</h2>
+    <p>Imagine an internal support assistant for a generic software product. Instead of fine-tuning a model on every help article ever written, the team indexes all the help articles as embeddings. When a user asks "why does my export keep failing," the system embeds that question, retrieves the two or three help articles whose content is closest in meaning to it (maybe one about file size limits, one about permissions), and passes those into the model's prompt. The model answers using those specific articles and can point back to them — instead of guessing from whatever it happened to learn about "export errors in general" during training.</p>
+
+    <h2 id="takeaway">7. The actual takeaway</h2>
+    <div class="callout">
+      <strong>The core idea:</strong> RAG doesn't make a model more knowledgeable in general — it makes the model's answer only as good as what gets retrieved for that specific question. The quality of a RAG system lives almost entirely in the retrieval step (chunking, embedding quality, search relevance), not in swapping to a smarter language model.
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sources</div>
+      <ul class="sources">
+        <li>Databricks — "What is Retrieval Augmented Generation (RAG)?" (accessed August 2026)</li>
+        <li>IBM — "What is RAG (Retrieval Augmented Generation)?" (accessed August 2026)</li>
+        <li>Medium (Sahin Ahmed) — "What is Retrieval-Augmented Generation (RAG) in LLM and How it works?" (accessed August 2026)</li>
+      </ul>
+    </div>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Conceitos fundamentais de LLMs</span>
+      <h1>RAG: como um modelo responde com coisas que ele nunca aprendeu</h1>
+      <p class="subtitle">Retrieval-Augmented Generation é o mecanismo por trás de chatbots do tipo "pergunte aos seus documentos" e da maioria dos assistentes de IA corporativos. Ele não torna o modelo mais inteligente — muda o que o modelo tem pra ler antes de responder.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-problema">1. O problema que o RAG resolve</a></li>
+        <li><a href="#tres-etapas">2. As três etapas: indexação, busca, geração</a></li>
+        <li><a href="#embeddings-relacao">3. Onde os embeddings entram</a></li>
+        <li><a href="#por-que-nao-finetune">4. Por que não simplesmente fazer fine-tuning ou usar uma janela de contexto maior?</a></li>
+        <li><a href="#pros-contras-pt">5. Prós, contras e modos de falha</a></li>
+        <li><a href="#exemplo-pt">6. Um exemplo genérico</a></li>
+        <li><a href="#conclusao-pt">7. O ponto principal</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-problema">1. O problema que o RAG resolve</h2>
+    <p>O conhecimento de um modelo de linguagem fica congelado no momento do treinamento e é limitado ao que coube nos dados de treino. Pergunte a ele sobre o documento de política interna de uma empresa, uma base de código que ele nunca viu, ou notícias depois do seu corte de conhecimento, e ele ou diz que não sabe ou — pior — inventa algo com confiança. Retreinar o modelo toda vez que uma informação nova aparece é lento e caro, e ainda assim não daria uma forma limpa de apontar exatamente de qual documento uma resposta veio.</p>
+    <p><strong>Retrieval-Augmented Generation (RAG)</strong> usa uma abordagem diferente: em vez de tentar embutir o conhecimento nos pesos do modelo, ele busca numa coleção separada de documentos os trechos mais relevantes no momento em que a pergunta chega, e entrega esses trechos ao modelo como parte do prompt. O modelo então responde usando tanto o que ele já sabe quanto o que acabou de receber — com o benefício extra de poder citar de onde a resposta veio.</p>
+
+    <h2 id="tres-etapas">2. As três etapas: indexação, busca, geração</h2>
+    <ol>
+      <li><strong>Indexação (feita com antecedência).</strong> Os documentos de origem — PDFs, páginas de wiki, chamados de suporte, seja o que for a base de conhecimento — são divididos em pedaços menores, e cada pedaço é convertido numa representação vetorial (um embedding) que captura seu significado. Esses vetores ficam armazenados num índice pesquisável, geralmente um banco de dados vetorial dedicado.</li>
+      <li><strong>Busca (acontece a cada pergunta).</strong> A pergunta recebida também é convertida num vetor usando o mesmo modelo de embedding, e o sistema busca no índice os pedaços cujos vetores estão mais próximos do vetor da pergunta — ou seja, mais próximos em <em>significado</em>, não só em sobreposição de palavras-chave.</li>
+      <li><strong>Geração.</strong> Os pedaços recuperados são inseridos no prompt junto com a pergunta original, e o modelo de linguagem gera sua resposta ancorada nesse texto recuperado em vez de puramente na memória.</li>
+    </ol>
+
+    <h2 id="embeddings-relacao">3. Onde os embeddings entram</h2>
+    <p>Embeddings são a peça que torna possível a parte de "busca por significado" da recuperação — a mesma ideia coberta numa lição anterior de IA Watch sobre embeddings. Um pipeline de RAG é essencialmente: embeddings pra busca, mais uma etapa de geração em cima do que a busca retornar. Se o modelo de embedding for fraco ou mal ajustado ao domínio (por exemplo, usar um modelo de embedding genérico em texto jurídico denso), a qualidade da busca sofre não importa quão bom seja o modelo de linguagem em si — o modelo só consegue responder tão bem quanto o material que de fato recebeu.</p>
+
+    <h2 id="por-que-nao-finetune">4. Por que não simplesmente fazer fine-tuning ou usar uma janela de contexto maior?</h2>
+    <table>
+      <tr><th>Abordagem</th><th>O que faz bem</th><th>Onde falha</th></tr>
+      <tr><td><strong>Fine-tuning</strong></td><td>Ensina bem um estilo, formato ou padrão de comportamento ao modelo.</td><td>Caro e lento pra atualizar; se ajusta mal a fatos que mudam com frequência, e não dá um caminho limpo de citação.</td></tr>
+      <tr><td><strong>Janela de contexto maior</strong> (colocar tudo no prompt)</td><td>Simples, não precisa de sistema de busca separado pra bases de conhecimento pequenas.</td><td>Não escala pra coleções grandes de documentos; custa mais tokens por pergunta; modelos ainda podem perder detalhes enterrados no meio de um contexto muito longo.</td></tr>
+      <tr><td><strong>RAG</strong></td><td>Escala pra bases de conhecimento grandes e atualizadas com frequência; respostas continuam rastreáveis até um documento de origem; não precisa retreinar quando documentos mudam.</td><td>Só é tão bom quanto a etapa de busca — pedaços irrelevantes ou ausentes levam a respostas erradas ou incompletas, não importa quão bom seja o modelo.</td></tr>
+    </table>
+
+    <h2 id="pros-contras-pt">5. Prós, contras e modos de falha</h2>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Mantém respostas ancoradas numa fonte real e inspecionável em vez da memória interna (e às vezes errada) do modelo.</li>
+        <li>Atualizar a base de conhecimento significa só reindexar documentos — sem retreinar.</li>
+        <li>Reduz alucinação em informação específica de domínio ou que muda rápido, quando a busca funciona bem.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras / modos de falha</div>
+      <ul>
+        <li>Lixo entra, lixo sai: se a etapa de busca retorna pedaços irrelevantes, o modelo frequentemente ainda vai tentar responder usando eles, produzindo uma resposta errada com confiança.</li>
+        <li>A estratégia de divisão em pedaços importa — divida demais e você perde contexto, divida muito grande e texto irrelevante dilui o que de fato importa no prompt.</li>
+        <li>Não elimina a alucinação por completo; o modelo ainda pode ler mal ou aplicar mal o texto recuperado, especialmente quando pedaços recuperados diferentes se contradizem.</li>
+      </ul>
+    </div>
+
+    <h2 id="exemplo-pt">6. Um exemplo genérico</h2>
+    <p>Imagine um assistente de suporte interno pra um produto de software genérico. Em vez de fazer fine-tuning de um modelo em cada artigo de ajuda já escrito, o time indexa todos os artigos de ajuda como embeddings. Quando um usuário pergunta "por que minha exportação continua falhando", o sistema transforma essa pergunta em embedding, recupera os dois ou três artigos de ajuda cujo conteúdo está mais próximo em significado (talvez um sobre limite de tamanho de arquivo, outro sobre permissões), e passa isso pro prompt do modelo. O modelo responde usando esses artigos específicos e pode apontar de volta pra eles — em vez de chutar a partir do que ele por acaso aprendeu sobre "erros de exportação em geral" durante o treinamento.</p>
+
+    <h2 id="conclusao-pt">7. O ponto principal</h2>
+    <div class="callout">
+      <strong>A ideia central:</strong> RAG não torna um modelo mais conhecedor em geral — ele torna a resposta do modelo só tão boa quanto o que foi recuperado pra aquela pergunta específica. A qualidade de um sistema de RAG vive quase inteiramente na etapa de busca (divisão em pedaços, qualidade do embedding, relevância da busca), não em trocar pra um modelo de linguagem mais inteligente.
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fontes</div>
+      <ul class="sources">
+        <li>Databricks — "What is Retrieval Augmented Generation (RAG)?" (acessado em agosto de 2026)</li>
+        <li>IBM — "What is RAG (Retrieval Augmented Generation)?" (acessado em agosto de 2026)</li>
+        <li>Medium (Sahin Ahmed) — "What is Retrieval-Augmented Generation (RAG) in LLM and How it works?" (acessado em agosto de 2026)</li>
+      </ul>
+    </div>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">RAG explained</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

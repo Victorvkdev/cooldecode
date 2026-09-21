@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Claude, a fluid dynamics breakthrough, and a credit fight with OpenAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Anthropic/Claude news</span>
+      <h1>Claude helped crack a century-old fluid dynamics problem — then OpenAI allegedly tried to erase a coauthor</h1>
+      <p class="subtitle">On September 8, 2026, NYU mathematician Tristan Buckmaster published new results on singularities in the Euler, Boussinesq and porous-media equations, produced with heavy help from Claude and Lean-verified formal proofs. He also went public with allegations that OpenAI pressured him to strip his Anthropic-employed collaborator from the credit. Here's what was actually proved, what Claude's role really was, and why the fight over authorship might end up mattering as much as the math.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">1. What happened, in one paragraph</a></li>
+        <li><a href="#what-was-proved">2. What was actually proved — and what wasn't</a></li>
+        <li><a href="#claudes-role">3. Claude's specific role in the proof</a></li>
+        <li><a href="#the-dispute">4. The allegations against OpenAI</a></li>
+        <li><a href="#why-it-matters">5. Why this matters beyond the drama</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What happened, in one paragraph</h2>
+    <p>Tristan Buckmaster, a Clay Research Award-winning mathematician at NYU's Courant Institute, and Levent Alpöge, a mathematician who works at Anthropic, spent roughly the past year on a personal research project — not an official Anthropic initiative. Working with heavy assistance from Claude and, at points, OpenAI's Codex, they extended an existing research program (started by mathematicians Diego Córdoba and Luis Martínez-Zoroa) to prove that three related fluid-dynamics equations — Euler, Boussinesq, and incompressible porous media (IPM) — can develop a "singularity" (a value shooting to infinity in finite time) even under smooth, physically realistic external forcing. The core results were checked in Lean, a proof assistant that machine-verifies each logical step. Then, once word of a possible breakthrough started circulating on social media, Buckmaster alleges an OpenAI researcher tried to pressure him into an arrangement that would have dropped Alpöge from the paper — reportedly citing his employment at a competitor as the reason.</p>
+
+    <h2 id="what-was-proved">2. What was actually proved — and what wasn't</h2>
+    <p>It's easy to read a headline like this as "AI solves century-old math problem" and wildly overstate it. Here's the precise scope, because the distinctions carry the whole story:</p>
+    <table>
+      <tr><th>Equation</th><th>What was shown</th><th>Millennium Prize relevance</th></tr>
+      <tr><td><strong>Euler (3D, forced)</strong></td><td>Smooth initial data plus a smooth external force lead to a solution that blows up in finite time. 112-page preprint, public Lean formalization.</td><td>Not the prize equation, but the same family and a meaningfully harder, more realistic version than prior "rough forcing" results.</td></tr>
+      <tr><td><strong>Boussinesq &amp; incompressible porous media (IPM)</strong></td><td>Same style of blow-up result for two related, somewhat simpler equations. Builds directly on Córdoba and Martínez-Zoroa's multi-year program.</td><td>Supporting results, not the headline equation.</td></tr>
+      <tr><td><strong>Navier–Stokes (the actual $1M problem)</strong></td><td><strong>Not solved and not publicly proved by anyone in this story.</strong> Buckmaster says he and Alpöge have an unreleased, unfinished "hypo-dissipative" partial result. The reported OpenAI proof has not been made public or independently examined by anyone outside OpenAI.</td><td>This is the one with the Clay Institute's $1 million prize attached — and it remains formally unsolved.</td></tr>
+    </table>
+    <div class="callout"><strong>The rule that matters:</strong> the Clay Millennium Prize's own problem statement allows a "forced" version of Navier-Stokes (with specific conditions on the force) to count toward a solution — which is exactly why extending these results from Euler to forced Navier-Stokes, if it holds up, would be significant. Nobody has published that extension yet.</div>
+    <p>Fields Medalist Terence Tao reviewed the public work and called it a "remarkable achievement," saying he sees a plausible route toward Navier-Stokes with the same methods — but he was explicit that this is a judgment about a promising research direction, not a claim that the full problem is close to solved.</p>
+
+    <h2 id="claudes-role">3. Claude's specific role in the proof</h2>
+    <p>This wasn't "Claude proved a theorem end to end." According to the released papers and their documentation, the workflow looked like a human-AI division of labor:</p>
+    <ul>
+      <li><strong>Literature and drafting:</strong> the IPM paper describes using Claude to work through prior research and using both Claude and Codex for drafting proof text and the tedious bookkeeping of constants and inductive arguments — all under human mathematical direction.</li>
+      <li><strong>Lean formalization:</strong> the public Euler formalization's own documentation states plainly that Claude wrote the Lean verification code, under Alpöge's direction — echoing the same "AI writes the machine-checkable proof, a human directs and checks the target statement" pattern from Anthropic's Fermat's Last Theorem formalization covered here on September 7.</li>
+      <li><strong>Human judgment stayed load-bearing:</strong> Buckmaster is candid that the papers are rough — he describes the Euler write-up as "AI slop" that didn't get the polish a human-authored paper normally would, specifically because he felt rushed by the unfolding dispute with OpenAI.</li>
+    </ul>
+    <p>That mix — a mathematician and an AI-lab researcher directing the mathematics, with Claude doing the heavy mechanical lifting of drafting and formal verification — is the same shape as the Fermat story, just with far less institutional polish and a live, contested backstory instead of a clean Anthropic blog post.</p>
+
+    <h2 id="the-dispute">4. The allegations against OpenAI</h2>
+    <p>Buckmaster's account, published in his own statement alongside the papers: after a rumor started circulating that Claude might have solved a Millennium Prize problem, he reached out privately to an OpenAI-affiliated mathematician to clarify his work was independent and had no institutional backing. He alleges he was then told OpenAI had an internal model produce a roughly 100-page proof of blow-up for <em>forced Navier-Stokes</em> — using, he says, essentially the same specialized route through smooth forcing that he and Alpöge had quietly been pursuing for most of a year.</p>
+    <p>In two subsequent calls — which Buckmaster says included OpenAI researcher Sébastien Bubeck (known for co-authoring the widely discussed 2023 "Sparks of AGI" paper) — he alleges the initial claim that OpenAI's model solved the problem with "very little human input" fell apart under questioning, revealing a full team working the problem with heavy compute instead. He alleges he was presented two options: a coordinated joint announcement, or writing up the Navier-Stokes result alone while crediting an OpenAI model — with Bubeck reportedly pushing, twice, to leave Alpöge off the paper because of his Anthropic employment. Buckmaster says he rejected both, and that when he said he'd go public otherwise, he was told "why would you ruin your career?" — a remark he read as an implicit threat.</p>
+    <div class="callout"><strong>What's confirmed vs. contested:</strong> Buckmaster is explicit that he has not personally seen any OpenAI proof and doesn't know what data or techniques it used — he's not accusing anyone of a specific technical violation, just describing the private conversations as he experienced them. Bubeck has publicly called the circulating allegations "false and inflammatory" and said he acted according to normal academic norms, promising further comment. Neither Anthropic nor OpenAI has issued an official statement addressing the specifics as of this writing. Treat this as a live, disputed story, not a settled account.</div>
+
+    <h2 id="why-it-matters">5. Why this matters beyond the drama</h2>
+    <ul>
+      <li><strong>Formal verification keeps showing up as the trust layer.</strong> Just like the Fermat's Last Theorem story two days ago, the credible part of this claim rests on Lean — a proof checker that doesn't care who or what wrote the proof, only whether every logical step holds. As AI-assisted math output accelerates, machine-checkable verification is becoming the thing that lets anyone believe a result without trusting the author's word.</li>
+      <li><strong>Authorship and credit rules haven't caught up with AI-assisted research.</strong> This is arguably the first widely public dispute over who gets named on a paper when frontier AI models from competing labs did substantial parts of the intellectual labor — and the answer, right now, seems to be "whatever the humans involved can privately negotiate," which is exactly the kind of ambiguity that invites pressure tactics.</li>
+      <li><strong>It's a live story, deliberately.</strong> Independent outlets tracking this are explicitly labeling it a developing situation and updating on a schedule rather than declaring a verdict — a useful reminder that "AI solved X" headlines from a single day's news cycle deserve the same scrutiny as any other unverified claim, regardless of which lab is involved.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://officechai.com/ai/mathematician-tristan-buckmaster-says-he-cracked-a-fluid-dynamics-problem-with-ai-accuses-openai-of-trying-to-take-credit/" target="_blank" rel="noopener">OfficeChai — "Mathematician Tristan Buckmaster Says He Cracked a Fluid Dynamics Problem With AI, Accuses OpenAI of Trying to Take Credit" (08/09/2026)</a></li>
+        <li><a href="https://kingy.ai/blog/navier-stokes-ai-proof-claims-dispute/" target="_blank" rel="noopener">Kingy AI — "Navier–Stokes and AI: What Is Proved, Claimed and Unknown" (08/09/2026, live-updated)</a></li>
+        <li><a href="https://terrytao.wordpress.com/2026/09/07/finite-time-blowup-with-smooth-forcing-term-for-the-incompressible-porous-medium-boussinesq-and-incompressible-euler-equations/" target="_blank" rel="noopener">Terence Tao — "Finite time blowup with smooth forcing term..." (07/09/2026)</a></li>
+        <li><a href="https://www.scientificamerican.com/article/ai-may-have-just-solved-a-million-dollar-math-problem-the-field-will-never-be-the-same/" target="_blank" rel="noopener">Scientific American — "AI may have just solved a million-dollar math problem. The field will never be the same"</a></li>
+        <li><a href="https://www.claymath.org/millennium-problems/rules/" target="_blank" rel="noopener">Clay Mathematics Institute — Millennium Prize rules</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude ajudou a resolver um problema centenário de dinâmica de fluidos — e a OpenAI teria tentado apagar um coautor</h1>
+      <p class="subtitle">Em 8 de setembro de 2026, o matemático da NYU Tristan Buckmaster publicou novos resultados sobre singularidades nas equações de Euler, Boussinesq e meio poroso, produzidos com ajuda pesada do Claude e provas formais verificadas em Lean. Ele também tornou públicas alegações de que a OpenAI pressionou ele a tirar de cena um colaborador que trabalha na Anthropic. Veja o que de fato foi provado, qual foi o papel real do Claude, e por que a briga sobre autoria pode acabar importando tanto quanto a matemática.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu-pt">1. O que aconteceu, em um parágrafo</a></li>
+        <li><a href="#o-que-foi-provado">2. O que de fato foi provado — e o que não foi</a></li>
+        <li><a href="#papel-claude">3. O papel específico do Claude na prova</a></li>
+        <li><a href="#disputa">4. As alegações contra a OpenAI</a></li>
+        <li><a href="#por-que-importa-pt">5. Por que isso importa além do drama</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu-pt">1. O que aconteceu, em um parágrafo</h2>
+    <p>Tristan Buckmaster, matemático do Courant Institute da NYU e vencedor do Clay Research Award, e Levent Alpöge, matemático que trabalha na Anthropic, passaram cerca do último ano num projeto de pesquisa pessoal — não uma iniciativa oficial da Anthropic. Trabalhando com ajuda pesada do Claude e, em alguns pontos, do Codex da OpenAI, eles estenderam um programa de pesquisa já existente (iniciado pelos matemáticos Diego Córdoba e Luis Martínez-Zoroa) pra provar que três equações relacionadas de dinâmica de fluidos — Euler, Boussinesq e meio poroso incompressível (IPM) — podem desenvolver uma "singularidade" (um valor disparando pro infinito em tempo finito) mesmo sob forçamento externo suave e fisicamente realista. Os resultados centrais foram checados em Lean, um assistente de prova que verifica mecanicamente cada passo lógico. Depois, quando um boato de possível avanço começou a circular nas redes sociais, Buckmaster alega que um pesquisador da OpenAI tentou pressioná-lo a aceitar um arranjo que tiraria Alpöge do artigo — supostamente citando o emprego dele numa concorrente como o motivo.</p>
+
+    <h2 id="o-que-foi-provado">2. O que de fato foi provado — e o que não foi</h2>
+    <p>É fácil ler uma manchete assim como "IA resolve problema matemático centenário" e exagerar bastante o feito. Aqui está o escopo preciso, porque as distinções sustentam a história inteira:</p>
+    <table>
+      <tr><th>Equação</th><th>O que foi mostrado</th><th>Relevância pro Prêmio do Milênio</th></tr>
+      <tr><td><strong>Euler (3D, forçada)</strong></td><td>Dados iniciais suaves mais uma força externa suave levam a uma solução que explode em tempo finito. Preprint de 112 páginas, formalização pública em Lean.</td><td>Não é a equação do prêmio, mas é da mesma família e uma versão significativamente mais difícil e realista que resultados anteriores de "forçamento rugoso".</td></tr>
+      <tr><td><strong>Boussinesq e meio poroso incompressível (IPM)</strong></td><td>Mesmo tipo de resultado de explosão pra duas equações relacionadas, um pouco mais simples. Constrói direto em cima do programa de vários anos de Córdoba e Martínez-Zoroa.</td><td>Resultados de apoio, não a equação principal da manchete.</td></tr>
+      <tr><td><strong>Navier-Stokes (o problema de fato de US$ 1 milhão)</strong></td><td><strong>Não foi resolvido e não foi provado publicamente por ninguém nessa história.</strong> Buckmaster diz que ele e Alpöge têm um resultado parcial "hipo-dissipativo" não divulgado e inacabado. A prova reportada da OpenAI não foi tornada pública nem examinada de forma independente por ninguém fora da OpenAI.</td><td>É esse que carrega o prêmio de US$ 1 milhão do Clay Institute — e continua formalmente não resolvido.</td></tr>
+    </table>
+    <div class="callout"><strong>A regra que importa:</strong> o próprio enunciado do Prêmio do Milênio do Clay Institute permite que uma versão "forçada" de Navier-Stokes (com condições específicas sobre a força) conte como solução — e é exatamente por isso que estender esses resultados de Euler pra Navier-Stokes forçado, se se confirmar, seria significativo. Ninguém publicou essa extensão ainda.</div>
+    <p>O medalhista Fields Terence Tao revisou o trabalho público e chamou de "feito notável", dizendo que enxerga um caminho plausível rumo a Navier-Stokes com os mesmos métodos — mas foi explícito que isso é um julgamento sobre uma direção de pesquisa promissora, não uma afirmação de que o problema completo está perto de ser resolvido.</p>
+
+    <h2 id="papel-claude">3. O papel específico do Claude na prova</h2>
+    <p>Isso não foi "o Claude provou um teorema do início ao fim". Segundo os artigos publicados e sua documentação, o fluxo de trabalho pareceu uma divisão de tarefas entre humano e IA:</p>
+    <ul>
+      <li><strong>Literatura e rascunho:</strong> o artigo do IPM descreve o uso do Claude pra vasculhar pesquisa anterior, e o uso de Claude e Codex pra redigir o texto da prova e fazer a contabilidade tediosa de constantes e argumentos indutivos — tudo sob direção matemática humana.</li>
+      <li><strong>Formalização em Lean:</strong> a própria documentação da formalização pública de Euler afirma claramente que o Claude escreveu o código de verificação em Lean, sob direção de Alpöge — ecoando o mesmo padrão "IA escreve a prova checável por máquina, humano dirige e confere o enunciado-alvo" da formalização do Último Teorema de Fermat pela Anthropic, coberta aqui em 7 de setembro.</li>
+      <li><strong>O julgamento humano continuou central:</strong> Buckmaster é franco que os artigos são brutos — ele descreve o texto de Euler como "lixo de IA" que não recebeu o polimento que um artigo escrito por humano normalmente teria, especificamente porque se sentiu pressionado pela disputa em andamento com a OpenAI.</li>
+    </ul>
+    <p>Essa combinação — um matemático e um pesquisador de laboratório de IA dirigindo a matemática, com o Claude fazendo o trabalho pesado e mecânico de redigir e verificar formalmente — tem o mesmo formato da história do Fermat, só que com bem menos polimento institucional e um pano de fundo contestado e ao vivo, em vez de um post de blog limpo da Anthropic.</p>
+
+    <h2 id="disputa">4. As alegações contra a OpenAI</h2>
+    <p>O relato de Buckmaster, publicado em sua própria declaração junto com os artigos: depois que um boato começou a circular de que o Claude poderia ter resolvido um problema do Prêmio do Milênio, ele procurou em particular um matemático ligado à OpenAI pra esclarecer que seu trabalho era independente e sem apoio institucional. Ele alega que foi informado, então, que a OpenAI tinha um modelo interno produzindo uma prova de cerca de 100 páginas de explosão pra <em>Navier-Stokes forçado</em> — usando, segundo ele, essencialmente a mesma rota técnica especializada via forçamento suave que ele e Alpöge vinham perseguindo silenciosamente por quase um ano.</p>
+    <p>Em duas ligações seguintes — que Buckmaster diz ter incluído o pesquisador da OpenAI Sébastien Bubeck (conhecido por coautorar o bastante discutido artigo "Sparks of AGI" de 2023) — ele alega que a afirmação inicial de que o modelo da OpenAI resolveu o problema com "muito pouco input humano" desmoronou sob questionamento, revelando em vez disso um time inteiro trabalhando no problema com bastante poder computacional. Ele alega que recebeu duas propostas: um anúncio conjunto coordenado, ou escrever sozinho o resultado de Navier-Stokes creditando um modelo da OpenAI — com Bubeck supostamente insistindo, duas vezes, pra deixar Alpöge de fora do artigo por causa do emprego dele na Anthropic. Buckmaster diz ter rejeitado as duas, e que, ao dizer que tornaria tudo público caso contrário, ouviu "por que você estragaria sua carreira?" — um comentário que ele interpretou como uma ameaça implícita.</p>
+    <div class="callout"><strong>O que está confirmado vs. contestado:</strong> Buckmaster é explícito que não viu pessoalmente nenhuma prova da OpenAI e não sabe quais dados ou técnicas ela usou — ele não está acusando ninguém de uma violação técnica específica, só descrevendo as conversas privadas como as viveu. Bubeck chamou publicamente as alegações que circulam de "falsas e inflamatórias" e disse ter agido segundo normas acadêmicas normais, prometendo mais comentários. Nem Anthropic nem OpenAI emitiram um posicionamento oficial sobre os detalhes até o momento desta publicação. Trate isso como uma história ao vivo e contestada, não um relato encerrado.</div>
+
+    <h2 id="por-que-importa-pt">5. Por que isso importa além do drama</h2>
+    <ul>
+      <li><strong>Verificação formal continua aparecendo como a camada de confiança.</strong> Assim como na história do Último Teorema de Fermat de dois dias atrás, a parte crível dessa alegação se apoia no Lean — um verificador de provas que não se importa com quem ou o quê escreveu a prova, só se cada passo lógico se sustenta. Conforme a produção matemática assistida por IA acelera, a verificação checável por máquina está virando o que permite acreditar num resultado sem confiar na palavra do autor.</li>
+      <li><strong>As regras de autoria e crédito não acompanharam a pesquisa assistida por IA.</strong> Esse é possivelmente o primeiro conflito amplamente público sobre quem entra como autor de um artigo quando modelos de IA de ponta de laboratórios concorrentes fizeram partes substanciais do trabalho intelectual — e a resposta, por enquanto, parece ser "o que os humanos envolvidos conseguirem negociar em particular", exatamente o tipo de ambiguidade que convida tática de pressão.</li>
+      <li><strong>É uma história ao vivo, deliberadamente.</strong> Veículos independentes que acompanham isso estão rotulando explicitamente como uma situação em desenvolvimento e atualizando num cronograma em vez de declarar um veredito — um lembrete útil de que manchetes tipo "IA resolveu X" de um único dia de noticiário merecem o mesmo escrutínio que qualquer outra alegação não verificada, não importa qual laboratório esteja envolvido.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://officechai.com/ai/mathematician-tristan-buckmaster-says-he-cracked-a-fluid-dynamics-problem-with-ai-accuses-openai-of-trying-to-take-credit/" target="_blank" rel="noopener">OfficeChai — "Mathematician Tristan Buckmaster Says He Cracked a Fluid Dynamics Problem With AI, Accuses OpenAI of Trying to Take Credit" (08/09/2026)</a></li>
+        <li><a href="https://kingy.ai/blog/navier-stokes-ai-proof-claims-dispute/" target="_blank" rel="noopener">Kingy AI — "Navier–Stokes and AI: What Is Proved, Claimed and Unknown" (08/09/2026, atualizado ao vivo)</a></li>
+        <li><a href="https://terrytao.wordpress.com/2026/09/07/finite-time-blowup-with-smooth-forcing-term-for-the-incompressible-porous-medium-boussinesq-and-incompressible-euler-equations/" target="_blank" rel="noopener">Terence Tao — "Finite time blowup with smooth forcing term..." (07/09/2026)</a></li>
+        <li><a href="https://www.scientificamerican.com/article/ai-may-have-just-solved-a-million-dollar-math-problem-the-field-will-never-be-the-same/" target="_blank" rel="noopener">Scientific American — "AI may have just solved a million-dollar math problem. The field will never be the same"</a></li>
+        <li><a href="https://www.claymath.org/millennium-problems/rules/" target="_blank" rel="noopener">Clay Mathematics Institute — regras do Prêmio do Milênio</a></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> · <span class="accent" id="footer-right">Euler blow-up & credit dispute</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Euler blow-up & credit dispute';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Disputa de crédito e a equação de Euler';
+    }
+  }
+</script>
+
+</body>
+</html>

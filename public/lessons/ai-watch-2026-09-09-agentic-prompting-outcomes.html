@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Agentic prompting — describe outcomes, not steps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering in practice</span>
+      <h1>Stop writing steps. Start describing outcomes.</h1>
+      <p class="subtitle">The prompting advice that worked for a single-turn chatbot actively hurts an agent that can use tools across many turns. Here's what changed once models started running multi-step loops on their own — and how to write prompts for that instead.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#shift">1. The shift: from instructions to policy</a></li>
+        <li><a href="#outcomes">2. Why micro-instructions backfire on agents</a></li>
+        <li><a href="#effort">3. Effort and extended thinking: let the model calibrate</a></li>
+        <li><a href="#verification">4. Build in self-verification, don't assume it</a></li>
+        <li><a href="#checklist">5. A practical checklist</a></li>
+      </ol>
+    </div>
+
+    <h2 id="shift">1. The shift: from instructions to policy</h2>
+    <p>Classic prompt engineering treats a prompt like a recipe: step 1, step 2, step 3, done. That model made sense when a prompt produced one response and the conversation ended. It breaks down for agents — systems that read a system prompt once, then run an open-ended loop of reasoning, tool calls, and follow-up decisions across many turns without a human re-typing instructions each time.</p>
+    <p>For an agent, the system prompt isn't a recipe anymore — it's closer to <strong>operating policy</strong>. It has to tell the model what role it's playing, what "done" looks like, which tools exist and when to reach for them, when to stop and ask versus keep going, and what boundaries it can't cross. That's a fundamentally different writing job: less like copywriting a single request, more like writing a spec a colleague will apply judgment against for the next twenty minutes.</p>
+
+    <h2 id="outcomes">2. Why micro-instructions backfire on agents</h2>
+    <p>A list of tightly-sequenced steps ("first do X, then do Y, then check Z") feels like it should produce more reliable behavior. In practice it narrows the model's options at exactly the moments when the situation on the ground doesn't match what you imagined when you wrote the prompt — a file that doesn't exist, a test that was already passing, an API that returned something unexpected.</p>
+    <div class="callout"><strong>The better pattern:</strong> describe the outcome you want ("get the checkout page's load time under 2 seconds") instead of the steps to get there ("open the network tab, find the largest asset, compress it, re-run Lighthouse"). An agent with tool access can figure out the steps, and — critically — can adapt them when the first approach doesn't work. Steps you hand-wrote in advance can't adapt; they just fail.</p>
+    <p>This doesn't mean prompts should be vague. It means the specificity should live in the definition of success and the constraints, not in a rigid procedure. "Reduce load time below 2 seconds without breaking any existing test" is specific. "Open dev tools, click the Network tab..." is brittle.</p>
+
+    <h2 id="effort">3. Effort and extended thinking: let the model calibrate</h2>
+    <p>Modern Claude models expose an effort/thinking parameter that scales how much internal reasoning the model does before acting, and the model itself already adjusts this based on how complex a query looks — a simple lookup gets a fast, direct answer; a gnarly multi-file refactor gets more deliberation first. That's useful, but it doesn't replace explicit chain-of-thought instructions for genuinely complex tasks — the two are complementary. Extended thinking helps the model plan; telling it explicitly to reason step by step before committing to an action still helps on tasks where the plan itself is the hard part (ambiguous requirements, competing constraints, multi-file architectural decisions).</p>
+    <p>For agentic workloads specifically — multistep tool use, long-horizon loops, coding tasks that span several files — the advice converging across current guidance is to lean into higher-effort/adaptive thinking modes rather than fight them, and to spend prompt real estate on what "good" looks like rather than trying to out-plan the model turn by turn.</p>
+
+    <h2 id="verification">4. Build in self-verification, don't assume it</h2>
+    <p>An agent that can act without supervision needs a way to catch its own mistakes before declaring victory. The pattern showing up repeatedly in current agentic-prompting guidance: explicitly instruct the model to close its own loop — reproduce the reported bug first, apply a fix, then run the test suite to confirm the fix actually worked, rather than assuming a plausible-looking diff is a correct one.</p>
+    <table>
+      <tr><th>Without self-verification</th><th>With self-verification</th></tr>
+      <tr><td>Model proposes a fix, states it should work, stops.</td><td>Model reproduces the bug, applies a fix, runs tests, and only then reports success or failure.</td></tr>
+      <tr><td>Confidence in the output is the model's own narrative.</td><td>Confidence in the output is backed by an executed check the model performed itself.</td></tr>
+    </table>
+    <p>This costs more tokens and more turns per task. For anything an agent will run unattended, it's worth the cost — the alternative is a plausible-sounding answer nobody actually checked.</p>
+
+    <h2 id="checklist">5. A practical checklist</h2>
+    <ul>
+      <li><strong>Define success, not procedure.</strong> State the end condition and the constraints; leave the path to the agent.</li>
+      <li><strong>Name the tools and the boundaries.</strong> What can it call, what's off-limits, when should it stop and ask a human.</li>
+      <li><strong>Use higher effort/thinking for genuinely hard steps</strong> and let the model calibrate on the easy ones instead of forcing uniform verbosity.</li>
+      <li><strong>Demand a checkable close.</strong> "Run the tests and report the result" beats "I've made the fix."</li>
+      <li><strong>Treat the system prompt like code.</strong> Version it, review changes to it, and expect to iterate — it's the one piece of context present on every single turn.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude by Anthropic — "Prompt engineering best practices for 2026"</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — "Prompting best practices"</a></li>
+        <li><a href="https://www.inflectra.com/Ideas/Topic/AI-Agent-Prompt-Engineering.aspx" target="_blank" rel="noopener">Inflectra — "Prompt Engineering for AI Agents: 2026 Guide"</a></li>
+        <li><a href="https://blckalpaca.at/en/knowledge-base/ai-agents/prompt-engineering-for-agents" target="_blank" rel="noopener">Blck Alpaca — "Prompt Engineering for AI Agents"</a></li>
+        <li><a href="https://www.zignuts.com/blog/prompt-engineering-guide" target="_blank" rel="noopener">Zignuts — "Prompt Engineering Guide 2026: Master AI Agent Orchestration"</a> (setembro de 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>Pare de escrever passos. Comece a descrever resultados.</h1>
+      <p class="subtitle">O conselho de prompting que funcionava pra um chatbot de uma resposta só prejudica ativamente um agente que usa ferramentas ao longo de várias rodadas. Aqui está o que mudou desde que os modelos passaram a rodar loops de vários passos por conta própria — e como escrever prompts pra isso.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#virada">1. A virada: de instrução pra política</a></li>
+        <li><a href="#resultados">2. Por que micro-instruções saem pela culatra em agentes</a></li>
+        <li><a href="#esforco">3. Esforço e extended thinking: deixe o modelo calibrar</a></li>
+        <li><a href="#verificacao">4. Construa autoverificação, não presuma ela</a></li>
+        <li><a href="#checklist-pt">5. Um checklist prático</a></li>
+      </ol>
+    </div>
+
+    <h2 id="virada">1. A virada: de instrução pra política</h2>
+    <p>Prompt engineering clássico trata um prompt como receita: passo 1, passo 2, passo 3, pronto. Isso fazia sentido quando um prompt gerava uma resposta e a conversa acabava ali. O modelo quebra pra agentes — sistemas que leem um system prompt uma vez e então rodam um loop aberto de raciocínio, chamadas de ferramenta e decisões seguintes ao longo de várias rodadas, sem um humano redigitando instruções a cada passo.</p>
+    <p>Pra um agente, o system prompt não é mais uma receita — é mais parecido com <strong>política operacional</strong>. Ele precisa dizer que papel o modelo está desempenhando, o que "concluído" significa, quais ferramentas existem e quando usá-las, quando parar e perguntar em vez de continuar, e quais limites não pode cruzar. É um trabalho de escrita fundamentalmente diferente — menos copywriting de um pedido único, mais uma spec que um colega vai aplicar com julgamento próprio pelos próximos vinte minutos.</p>
+
+    <h2 id="resultados">2. Por que micro-instruções saem pela culatra em agentes</h2>
+    <p>Uma lista de passos rigidamente sequenciados ("primeiro faça X, depois Y, depois confira Z") parece que deveria gerar comportamento mais confiável. Na prática, ela estreita as opções do modelo exatamente nos momentos em que a situação real não bate com o que você imaginou ao escrever o prompt — um arquivo que não existe, um teste que já estava passando, uma API que devolveu algo inesperado.</p>
+    <div class="callout"><strong>O padrão melhor:</strong> descreva o resultado que você quer ("deixar o tempo de carregamento da página de checkout abaixo de 2 segundos") em vez dos passos pra chegar lá ("abra a aba Network, encontre o maior asset, comprima, rode o Lighthouse de novo"). Um agente com acesso a ferramentas consegue descobrir os passos e, criticamente, consegue se adaptar quando a primeira abordagem não funciona. Passos escritos à mão de antemão não se adaptam — só falham.</div>
+    <p>Isso não significa que prompts devam ser vagos. Significa que a especificidade deve estar na definição de sucesso e nas restrições, não num procedimento rígido. "Reduza o tempo de carregamento pra abaixo de 2 segundos sem quebrar nenhum teste existente" é específico. "Abra as devtools, clique na aba Network..." é frágil.</p>
+
+    <h2 id="esforco">3. Esforço e extended thinking: deixe o modelo calibrar</h2>
+    <p>Os modelos Claude atuais expõem um parâmetro de esforço/thinking que escala quanto raciocínio interno o modelo faz antes de agir, e o próprio modelo já ajusta isso com base em quão complexa a consulta parece — uma busca simples recebe uma resposta rápida e direta; um refactor complicado envolvendo vários arquivos recebe mais deliberação antes. Isso é útil, mas não substitui instruções explícitas de raciocínio passo a passo em tarefas genuinamente complexas — as duas coisas são complementares. Extended thinking ajuda o modelo a planejar; pedir explicitamente pra ele raciocinar passo a passo antes de se comprometer com uma ação ainda ajuda em tarefas onde o próprio plano é a parte difícil (requisitos ambíguos, restrições concorrentes, decisões de arquitetura envolvendo vários arquivos).</p>
+    <p>Especificamente pra cargas de trabalho agênticas — uso de ferramenta em múltiplos passos, loops de longo horizonte, tarefas de código que atravessam vários arquivos — o conselho que converge nos guias atuais é apoiar os modos de esforço/thinking mais alto/adaptativo em vez de lutar contra eles, e gastar o espaço do prompt definindo o que é "bom" em vez de tentar planejar o modelo passo a passo.</p>
+
+    <h2 id="verificacao">4. Construa autoverificação, não presuma ela</h2>
+    <p>Um agente que age sem supervisão precisa de um jeito de pegar os próprios erros antes de declarar vitória. O padrão que aparece repetidamente nos guias atuais de prompting agêntico: instrua explicitamente o modelo a fechar o próprio loop — reproduzir primeiro o bug relatado, aplicar uma correção, depois rodar a suíte de testes pra confirmar que a correção realmente funcionou, em vez de presumir que um diff com cara plausível é um diff correto.</p>
+    <table>
+      <tr><th>Sem autoverificação</th><th>Com autoverificação</th></tr>
+      <tr><td>Modelo propõe uma correção, afirma que deveria funcionar, para.</td><td>Modelo reproduz o bug, aplica uma correção, roda os testes, e só então relata sucesso ou falha.</td></tr>
+      <tr><td>A confiança na resposta é a própria narrativa do modelo.</td><td>A confiança na resposta é apoiada numa checagem executada que o próprio modelo realizou.</td></tr>
+    </table>
+    <p>Isso custa mais tokens e mais rodadas por tarefa. Pra qualquer coisa que um agente vai rodar sem supervisão, vale o custo — a alternativa é uma resposta com cara plausível que ninguém de fato conferiu.</p>
+
+    <h2 id="checklist-pt">5. Um checklist prático</h2>
+    <ul>
+      <li><strong>Defina sucesso, não procedimento.</strong> Diga a condição final e as restrições; deixe o caminho pro agente.</li>
+      <li><strong>Nomeie as ferramentas e os limites.</strong> O que ele pode chamar, o que está fora dos limites, quando deve parar e perguntar pra um humano.</li>
+      <li><strong>Use esforço/thinking mais alto nos passos genuinamente difíceis</strong> e deixe o modelo calibrar nos fáceis, em vez de forçar verbosidade uniforme.</li>
+      <li><strong>Exija um fechamento verificável.</strong> "Rode os testes e relate o resultado" é melhor que "eu fiz a correção".</li>
+      <li><strong>Trate o system prompt como código.</strong> Versione, revise mudanças nele, e espere iterar — é a única parte do contexto presente em toda rodada.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://claude.com/blog/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude by Anthropic — "Prompt engineering best practices for 2026"</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — "Prompting best practices"</a></li>
+        <li><a href="https://www.inflectra.com/Ideas/Topic/AI-Agent-Prompt-Engineering.aspx" target="_blank" rel="noopener">Inflectra — "Prompt Engineering for AI Agents: 2026 Guide"</a></li>
+        <li><a href="https://blckalpaca.at/en/knowledge-base/ai-agents/prompt-engineering-for-agents" target="_blank" rel="noopener">Blck Alpaca — "Prompt Engineering for AI Agents"</a></li>
+        <li><a href="https://www.zignuts.com/blog/prompt-engineering-guide" target="_blank" rel="noopener">Zignuts — "Prompt Engineering Guide 2026: Master AI Agent Orchestration"</a> (setembro de 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> · <span class="accent" id="footer-right">Agentic prompting: outcomes over steps</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Agentic prompting: outcomes over steps';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Prompting agêntico: resultados, não passos';
+    }
+  }
+</script>
+
+</body>
+</html>

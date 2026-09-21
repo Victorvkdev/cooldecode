@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: The agent skills ecosystem in 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 12px; padding-left: 18px; }
+  .sources li { margin-bottom: 6px; font-size: 12.5px; }
+  .sources a { border-bottom: none; word-break: break-all; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Tools & AI ecosystem</span>
+      <h1>Skills became AI's universal plug — and almost nobody checks what's inside</h1>
+      <p class="subtitle">In under a year, "Agent Skills" went from a single Claude feature to a standard running across ~40 platforms and millions of published packages. The distribution problem is solved. The trust problem just started.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What is an "agent skill", exactly</a></li>
+        <li><a href="#why-fast">Why this spread so fast</a></li>
+        <li><a href="#marketplaces">The marketplace landscape</a></li>
+        <li><a href="#quality">The uncomfortable number: 6.2 out of 12</a></li>
+        <li><a href="#distinctions">Skills vs. subagents vs. hooks</a></li>
+        <li><a href="#practical">What this means if you use Claude Code or Cowork</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What is an "agent skill", exactly</h2>
+    <p>An agent skill is a folder with a <code>SKILL.md</code> file inside — plain markdown instructions, plus optional scripts and reference files — that teaches an AI agent how to do one specific job well and consistently. Think of it as a small, reusable "how-to" that the model reads only when it needs it, instead of a wall of instructions the model has to hold in its head at all times.</p>
+    <p>The mechanism that makes this cheap is called <strong>progressive disclosure</strong>: the agent first sees only the skill's name and a one-line description. If a task matches, it then loads the full instructions. A library of hundreds of skills barely costs any context, because 99% of them stay unopened at any given moment.</p>
+    <p>Anthropic introduced Agent Skills in October 2025, then did something it had already done once before with the Model Context Protocol (MCP): it gave the format away. On December 18, 2025, the specification was published as an open standard at <code>agentskills.io</code>, so any vendor could build support for it without asking permission.</p>
+
+    <h2 id="why-fast">2. Why this spread so fast</h2>
+    <p>MCP solved how an agent connects to a tool. Skills solve how an agent learns a procedure. They are complementary layers, not competitors — and because the format is "just markdown in folders", it was trivial for other companies to adopt.</p>
+    <p>The result: as of mid-2026, agent skills are portable across roughly <strong>40 products</strong> on the official showcase, including OpenAI Codex, GitHub Copilot, Cursor, Gemini CLI, VS Code, and several open-source coding agents. A skill written once for Claude Code can run, unmodified, inside a competitor's tool — which is the clearest sign a format has stopped being one vendor's feature and become shared infrastructure.</p>
+    <p>Scale followed immediately. Community catalogs now index staggering numbers: one directory alone (SkillsMP) lists close to <strong>1.9 million</strong> public skills scraped from GitHub, and over <strong>2,500 Claude Code plugin marketplaces</strong> are registered on a single tracking site — ranging from polished, maintained collections to abandoned repos nobody updates anymore.</p>
+
+    <h2 id="marketplaces">3. The marketplace landscape</h2>
+    <p>Not all skill sources work the same way. The trade-off is consistent everywhere: the bigger and more open a catalog is, the less anyone has actually reviewed what's in it.</p>
+    <table>
+      <tr><th>Source</th><th>Rough catalog size</th><th>Who reviews it</th></tr>
+      <tr><td><strong>Anthropic's official directory</strong></td><td>Small, curated</td><td>Anthropic itself — everything listed is reviewed</td></tr>
+      <tr><td><strong>Vercel skills.sh</strong></td><td>~600,000 (open-source)</td><td>Open submission, builder-side auditing only</td></tr>
+      <tr><td><strong>SkillsMP</strong></td><td>~1.9 million</td><td>None — scraped from public GitHub, inspect before installing</td></tr>
+      <tr><td><strong>MCP server ecosystem</strong> (Smithery, LobeHub, etc.)</td><td>Hundreds of thousands, across registries</td><td>Varies by registry — mostly none</td></tr>
+    </table>
+    <div class="callout">
+      <strong>The pattern to notice:</strong> discovery is a solved problem in 2026 — there are more skills than anyone could ever need. Judgment about which ones are safe and good is not solved at all, and it's now the actual bottleneck.
+    </div>
+
+    <h2 id="quality">4. The uncomfortable number: 6.2 out of 12</h2>
+    <p>The first peer-reviewed benchmark of this ecosystem — SkillsBench, built by researchers from Stanford, CMU, Berkeley, and Oxford — tested how much skills actually help, across 84 tasks, 11 domains, and over 7,000 trajectories. Two numbers from that study matter more than any hype:</p>
+    <ul>
+      <li><strong>Curated, well-built skills raised task pass rates by an average of 16.2 percentage points</strong> — in regulated, expertise-heavy domains like healthcare, the gain reached <strong>51.9 points</strong>. Skills genuinely work when they're good.</li>
+      <li><strong>The average quality of publicly available skills was just 6.2 out of 12</strong>, after scoring 47,150 real public skills. The benchmark's own tests only used the top quartile (9+), because most of what's out there isn't good enough to help.</li>
+    </ul>
+    <p>Security compounds the problem. A separate audit of over 22,000 skills found more than 140,000 issues combined — roughly 6 per skill — and dedicated research into prompt injection found it present in <strong>36% of tested skills</strong>. A skill isn't just instructions; it can also bundle scripts that execute with real permissions. An unreviewed skill is an unreviewed dependency with code-execution rights, in exactly the same sense as an unreviewed npm package.</p>
+
+    <h2 id="distinctions">5. Skills vs. subagents vs. hooks — a distinction worth having straight</h2>
+    <p>These three terms get mixed up constantly, and they answer different questions:</p>
+    <ul>
+      <li><strong>Skills</strong> answer "what should the agent know how to do" — a reusable procedure defined in <code>SKILL.md</code>.</li>
+      <li><strong>Subagents</strong> answer "who does the work" — a separate worker context spawned to handle a sub-task, often in isolation from the main conversation.</li>
+      <li><strong>Hooks</strong> answer "when does something happen" — event handlers that fire automatically at specific points (before a tool runs, after it finishes, and so on).</li>
+    </ul>
+    <p>Put simply: skills are what gets called, subagents are who calls it, and hooks are what fires around the whole thing.</p>
+
+    <h2 id="practical">6. What this means in practice</h2>
+    <div class="callout">
+      <strong>If you install a community skill or plugin</strong> — whether from a Claude Code marketplace, a general skills directory, or an MCP server catalog — open the <code>SKILL.md</code> and any bundled scripts before running it, the same way you'd review an unfamiliar package before adding it to a project. Curation beats catalog size every time; a smaller, reviewed set of skills will outperform a giant unaudited one.
+    </div>
+    <p>The ecosystem's own trajectory points the same way: the next phase of competition isn't about who has more skills, it's about who can prove theirs are safe. Security scanning, quality scores, and clearer governance of the open standard are what separates a directory worth trusting from one that's just a pile of markdown files with a search bar on top.</p>
+
+    <div class="card">
+      <div class="card-title">Sources</div>
+      <ul class="sources">
+        <li><a href="https://agentman.ai/blog/agent-skills-ecosystem-report-2026" target="_blank" rel="noopener">Agentman — "The Agent Skills Ecosystem in 2026" (June 25, 2026)</a></li>
+        <li><a href="https://www.totalum.app/blog/agent-skills-marketplaces-2026" target="_blank" rel="noopener">Totalum — "Agent Skills Marketplace in 2026: Anthropic vs Vercel vs OpenAI vs Cline vs MCP Compared" (June 7, 2026)</a></li>
+        <li><a href="https://www.totalum.app/blog/claude-skills-vs-agent-skills" target="_blank" rel="noopener">Totalum — "Claude Skills vs Agent Skills" (July 6, 2026)</a></li>
+        <li><a href="https://blockchain.news/ainews/claude-marketplace-accelerates-agent-setup" target="_blank" rel="noopener">Blockchain.News — "Claude marketplace accelerates agent setup" (2026)</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema de IA</span>
+      <h1>Skills viraram o plugue universal da IA — e quase ninguém confere o que tem dentro</h1>
+      <p class="subtitle">Em menos de um ano, os "Agent Skills" saíram de uma feature isolada do Claude pra um padrão rodando em ~40 plataformas e milhões de pacotes publicados. O problema de distribuição está resolvido. O de confiança está só começando.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e">O que é, de fato, um "agent skill"</a></li>
+        <li><a href="#por-que-rapido">Por que isso se espalhou tão rápido</a></li>
+        <li><a href="#marketplaces-pt">O panorama dos marketplaces</a></li>
+        <li><a href="#qualidade">O número desconfortável: 6,2 de 12</a></li>
+        <li><a href="#distincoes">Skills vs. subagents vs. hooks</a></li>
+        <li><a href="#pratico">O que isso significa se você usa Claude Code ou Cowork</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e">1. O que é, de fato, um "agent skill"</h2>
+    <p>Um agent skill é uma pasta com um arquivo <code>SKILL.md</code> dentro — instruções em markdown puro, mais scripts e arquivos de referência opcionais — que ensina um agente de IA a fazer um trabalho específico bem e de forma consistente. Pense nisso como um "manual de instruções" pequeno e reutilizável que o modelo só lê quando precisa, em vez de uma parede de instruções que ele teria que carregar na cabeça o tempo todo.</p>
+    <p>O mecanismo que torna isso barato se chama <strong>progressive disclosure</strong> (divulgação progressiva): o agente primeiro vê só o nome do skill e uma descrição de uma linha. Se uma tarefa combina com aquilo, aí sim ele carrega as instruções completas. Uma biblioteca com centenas de skills quase não custa contexto nenhum, porque 99% deles ficam fechados a qualquer momento.</p>
+    <p>A Anthropic introduziu os Agent Skills em outubro de 2025 e, em seguida, fez algo que já tinha feito uma vez com o Model Context Protocol (MCP): abriu mão do formato. Em 18 de dezembro de 2025, a especificação foi publicada como padrão aberto em <code>agentskills.io</code>, permitindo que qualquer empresa construísse suporte a ele sem pedir permissão.</p>
+
+    <h2 id="por-que-rapido">2. Por que isso se espalhou tão rápido</h2>
+    <p>O MCP resolveu como um agente se conecta a uma ferramenta. Os skills resolvem como um agente aprende um procedimento. São camadas complementares, não concorrentes — e como o formato é "só markdown em pastas", foi trivial pra outras empresas adotarem.</p>
+    <p>O resultado: em meados de 2026, os agent skills já são portáveis entre aproximadamente <strong>40 produtos</strong> na vitrine oficial, incluindo OpenAI Codex, GitHub Copilot, Cursor, Gemini CLI, VS Code e vários agentes de código open source. Um skill escrito uma vez pro Claude Code roda, sem modificação nenhuma, dentro da ferramenta de um concorrente — o sinal mais claro de que um formato deixou de ser feature de uma empresa e virou infraestrutura compartilhada.</p>
+    <p>A escala acompanhou de perto. Catálogos comunitários hoje indexam números impressionantes: só um diretório (SkillsMP) lista perto de <strong>1,9 milhão</strong> de skills públicos raspados do GitHub, e mais de <strong>2.500 marketplaces de plugins do Claude Code</strong> estão registrados num único site de monitoramento — indo de coleções bem cuidadas e mantidas até repositórios abandonados que ninguém mais atualiza.</p>
+
+    <h2 id="marketplaces-pt">3. O panorama dos marketplaces</h2>
+    <p>Nem toda fonte de skill funciona do mesmo jeito. O trade-off se repete em todo lugar: quanto maior e mais aberto o catálogo, menos alguém de fato revisou o que tem dentro dele.</p>
+    <table>
+      <tr><th>Fonte</th><th>Tamanho aproximado</th><th>Quem revisa</th></tr>
+      <tr><td><strong>Diretório oficial da Anthropic</strong></td><td>Pequeno, curado</td><td>A própria Anthropic — tudo listado é revisado</td></tr>
+      <tr><td><strong>Vercel skills.sh</strong></td><td>~600 mil (open source)</td><td>Submissão aberta, só auditoria por parte de quem publica</td></tr>
+      <tr><td><strong>SkillsMP</strong></td><td>~1,9 milhão</td><td>Nenhuma — raspado do GitHub público, inspecione antes de instalar</td></tr>
+      <tr><td><strong>Ecossistema de servidores MCP</strong> (Smithery, LobeHub etc.)</td><td>Centenas de milhares, entre registros</td><td>Varia por registro — na maioria, nenhuma</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Padrão pra notar:</strong> em 2026, descoberta é um problema resolvido — existem mais skills do que qualquer um vai precisar. Julgamento sobre quais são seguros e bons não está resolvido de jeito nenhum, e virou o gargalo real.
+    </div>
+
+    <h2 id="qualidade">4. O número desconfortável: 6,2 de 12</h2>
+    <p>O primeiro benchmark revisado por pares desse ecossistema — o SkillsBench, feito por pesquisadores de Stanford, CMU, Berkeley e Oxford — testou o quanto skills realmente ajudam, em 84 tarefas, 11 domínios e mais de 7.000 trajetórias. Dois números desse estudo importam mais que qualquer hype:</p>
+    <ul>
+      <li><strong>Skills curados e bem construídos elevaram a taxa de sucesso das tarefas em 16,2 pontos percentuais, em média</strong> — em domínios regulados e exigentes como saúde, o ganho chegou a <strong>51,9 pontos</strong>. Skills funcionam de verdade quando são bons.</li>
+      <li><strong>A qualidade média dos skills disponíveis publicamente foi de apenas 6,2 de 12</strong>, depois de pontuar 47.150 skills públicos reais. Os próprios testes do benchmark usaram só o quartil superior (9+), porque a maior parte do que existe por aí não é boa o suficiente pra ajudar.</li>
+    </ul>
+    <p>Segurança agrava o problema. Uma auditoria separada em mais de 22 mil skills encontrou mais de 140 mil problemas somados — cerca de 6 por skill — e uma pesquisa dedicada a prompt injection encontrou o problema em <strong>36% dos skills testados</strong>. Um skill não é só instrução; ele também pode empacotar scripts que executam com permissões reais. Um skill não revisado é uma dependência não revisada com direito a executar código, exatamente no mesmo sentido que um pacote npm não revisado.</p>
+
+    <h2 id="distincoes">5. Skills vs. subagents vs. hooks — uma distinção que vale ter clara</h2>
+    <p>Esses três termos se confundem o tempo todo, e cada um responde uma pergunta diferente:</p>
+    <ul>
+      <li><strong>Skills</strong> respondem "o que o agente deveria saber fazer" — um procedimento reutilizável definido no <code>SKILL.md</code>.</li>
+      <li><strong>Subagents</strong> respondem "quem faz o trabalho" — um contexto de trabalho separado, disparado pra lidar com uma subtarefa, muitas vezes isolado da conversa principal.</li>
+      <li><strong>Hooks</strong> respondem "quando algo acontece" — manipuladores de evento que disparam automaticamente em pontos específicos (antes de uma ferramenta rodar, depois que ela termina, e por aí vai).</li>
+    </ul>
+    <p>Resumindo: skill é o que é chamado, subagent é quem chama, e hook é o que dispara em volta de tudo isso.</p>
+
+    <h2 id="pratico">6. O que isso significa na prática</h2>
+    <div class="callout">
+      <strong>Se você instala um skill ou plugin da comunidade</strong> — seja de um marketplace do Claude Code, um diretório geral de skills, ou um catálogo de servidores MCP — abra o <code>SKILL.md</code> e qualquer script empacotado antes de rodar, do mesmo jeito que você revisaria um pacote desconhecido antes de adicionar num projeto. Curadoria vence tamanho de catálogo sempre; um conjunto menor e revisado de skills supera um catálogo gigante e não auditado.
+    </div>
+    <p>A trajetória do próprio ecossistema aponta na mesma direção: a próxima fase da competição não é sobre quem tem mais skills, é sobre quem consegue provar que os seus são seguros. Verificação de segurança, notas de qualidade e uma governança mais clara do padrão aberto são o que separa um diretório confiável de uma pilha de arquivos markdown com uma barra de busca em cima.</p>
+
+    <div class="card">
+      <div class="card-title">Fontes</div>
+      <ul class="sources">
+        <li><a href="https://agentman.ai/blog/agent-skills-ecosystem-report-2026" target="_blank" rel="noopener">Agentman — "The Agent Skills Ecosystem in 2026" (25/06/2026)</a></li>
+        <li><a href="https://www.totalum.app/blog/agent-skills-marketplaces-2026" target="_blank" rel="noopener">Totalum — "Agent Skills Marketplace in 2026: Anthropic vs Vercel vs OpenAI vs Cline vs MCP Compared" (07/06/2026)</a></li>
+        <li><a href="https://www.totalum.app/blog/claude-skills-vs-agent-skills" target="_blank" rel="noopener">Totalum — "Claude Skills vs Agent Skills" (06/07/2026)</a></li>
+        <li><a href="https://blockchain.news/ainews/claude-marketplace-accelerates-agent-setup" target="_blank" rel="noopener">Blockchain.News — "Claude marketplace accelerates agent setup" (2026)</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> ·
+  <span class="accent" id="footer-right">Tools & AI ecosystem</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Tools & AI ecosystem';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Ferramentas e ecossistema de IA';
+    }
+  }
+</script>
+
+</body>
+</html>

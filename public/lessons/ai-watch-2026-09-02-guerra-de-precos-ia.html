@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: The AI industry's real fight is over price</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .sources { list-style: none; padding-left: 0; margin: 0; }
+  .sources li { margin-bottom: 10px; font-size: 13.5px; color: var(--text-dim); }
+  .sources a { border-bottom: 1px solid rgba(124,58,237,0.4); }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Industry landscape</span>
+      <h1>The AI industry's real fight right now is over price, not intelligence</h1>
+      <p class="subtitle">Chinese open-weight models now pull more than 4x the weekly token volume of American ones on OpenRouter, at 60-90% lower prices. OpenAI just cut prices up to 80% in response, and Google is rushing out a coding-focused Gemini update today. None of this is really about who's smartest anymore.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#the-number">1. The number that matters: 4x token volume</a></li>
+        <li><a href="#why-cheaper-wins">2. Why cheaper is winning</a></li>
+        <li><a href="#openai-response">3. OpenAI's response: an 80% price cut</a></li>
+        <li><a href="#google-response">4. Google's response: a coding-focused Gemini update, today</a></li>
+        <li><a href="#release-cadence">5. China's release cadence: a same-day update</a></li>
+        <li><a href="#open-weight-debate">6. The open-weight debate</a></li>
+        <li><a href="#practice">7. What this means in practice</a></li>
+      </ol>
+    </div>
+
+    <h2 id="the-number">1. The number that matters: 4x token volume</h2>
+    <p>Since February 2026, Chinese AI models have overtaken American ones in weekly token usage on OpenRouter — a popular aggregator that routes API calls across many model providers — and the gap keeps widening. Chinese models now account for more than <strong>4x the token volume</strong> of American ones on that platform.</p>
+    <p>OpenRouter isn't the whole market — it skews toward developers who shop around for the best price/performance ratio rather than enterprises locked into a single vendor contract. But that's exactly what makes it a useful early signal: it shows where price-sensitive, technically literate buyers are actually voting with their usage, before the trend shows up anywhere else.</p>
+
+    <h2 id="why-cheaper-wins">2. Why cheaper is winning</h2>
+    <p>The headline driver is blunt: open-weight Chinese models can be <strong>60% to 90% cheaper</strong> than the leading Anthropic and OpenAI models, while remaining competitive on many everyday tasks. Two examples anchor the story:</p>
+    <ul>
+      <li><strong>Moonshot AI's Kimi K3</strong> — a 2.8-trillion-parameter model with full weights released for free on July 27, 2026, rivaling top closed US systems on several benchmarks.</li>
+      <li><strong>Alibaba's Qwen3.8-Max</strong> — a 2.4-trillion-parameter Mixture-of-Experts model (95B active parameters per query), 1M-token context window, multimodal (text, image, video), priced at $2 per million input tokens and $6 per million output tokens — a fraction of frontier closed-model pricing.</li>
+    </ul>
+    <p>For a large share of production workloads — summarization, extraction, routine coding, classification — the capability gap between a $2/M-token open-weight model and a frontier closed model has narrowed enough that price becomes the deciding factor, not raw benchmark position.</p>
+
+    <h2 id="openai-response">3. OpenAI's response: an 80% price cut</h2>
+    <p>OpenAI's counter-move was direct: it slashed pricing on parts of its GPT-5.6 lineup by <strong>up to 80%</strong>, explicitly framed by observers as a defensive reaction to Chinese open-weight competition rather than a routine pricing update. When a market leader cuts prices by that much in one move, it's usually a signal that a competitive threat has already changed customer behavior — not that it's coming.</p>
+
+    <h2 id="google-response">4. Google's response: a coding-focused Gemini update, today</h2>
+    <p>Google is preparing to ship <strong>Gemini 3.8 Flash</strong> — internally codenamed "Skimaki" — as early as today, targeting a specific weak spot: coding performance, where Google has trailed OpenAI and Anthropic. The model finished testing on Google's internal "Jetski" developer platform through August, and in head-to-head internal comparisons, some Google engineers reportedly preferred it over Anthropic's Claude Opus — worth noting this is an internal, non-independent comparison, not a published benchmark.</p>
+    <p>What's more telling than the model itself is the cadence: the gap between Gemini 3.7 Flash and 3.8 Flash was brief, reflecting a broader shift toward frequent, targeted "micro-updates" instead of waiting months for a full retrain. Early tester feedback frames 3.8 Flash as a refinement — mainly less verbose output — rather than a leap.</p>
+
+    <h2 id="release-cadence">5. China's release cadence: a same-day update</h2>
+    <p>On the same day this piece was written, Alibaba's Qwen team pushed <strong>Qwen3.8-Max-0902</strong> — a dated, further post-trained snapshot of Qwen3.8-Max specifically tuned for coding and professional work. Dated snapshots like this (the <code>-0902</code> suffix marks the release date) are becoming the norm across both Chinese and US labs: instead of a big versioned launch every few months, providers ship smaller, frequent updates and let the date stamp do the versioning.</p>
+
+    <h2 id="open-weight-debate">6. The open-weight debate</h2>
+    <p>The rise of cheap, capable open-weight models has triggered a policy fight. A coalition including <strong>NVIDIA, Meta, Microsoft, and Hugging Face</strong> published an open letter in late July 2026 urging policymakers not to broadly restrict open-weight models. Their argument: banning or heavily restricting them would concentrate power in a handful of closed providers and push model development to jurisdictions with fewer safeguards, rather than making AI safer.</p>
+    <div class="callout">
+      <strong>Worth separating:</strong> "open-weight" (you can download and run the model yourself) is not the same as "open-source" in the classic software sense — most of these releases don't include training data or full training code. It's openness of the artifact, not full reproducibility.
+    </div>
+
+    <h2 id="practice">7. What this means in practice</h2>
+    <div class="callout">
+      <strong>The market is segmenting by task and price point, not consolidating around one winner.</strong> A cost-sensitive, high-volume workload (bulk classification, first-pass extraction, routine code generation) increasingly makes sense on a cheap open-weight model. A workload that needs the deepest reasoning, the most reliable agentic behavior, or the strongest safety/compliance guarantees still tends to favor frontier closed models — the gap there hasn't closed nearly as much as the price gap has.
+    </div>
+    <p>The practical takeaway for anyone building on top of these models: evaluate per-task cost-performance, not leaderboard position. The right model for a $0.002-per-request classification job and the right model for an autonomous coding agent are very likely not the same model anymore — and increasingly, they don't even come from the same country.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Sources</div>
+      <ul class="sources">
+        <li><a href="https://www.cnbc.com/2026/07/07/chinese-ai-models-costs-us-openai-anthropic.html" target="_blank" rel="noopener">CNBC — "Chinese AI models are gaining ground with U.S. companies as OpenAI, Anthropic costs surge" (July 7, 2026)</a></li>
+        <li><a href="https://www.scmp.com/tech/tech-trends/article/3362568/openai-blinks-face-chinese-rivals-drops-pricing-some-models-80" target="_blank" rel="noopener">South China Morning Post — "OpenAI blinks in face-off with Chinese rivals, drops pricing for some models up to 80%" (2026)</a></li>
+        <li><a href="https://www.theregister.com/ai-and-ml/2026/08/03/china-turns-up-the-heat-with-open-model-blitz-as-us-model-makers-panic/5282526" target="_blank" rel="noopener">The Register — "China turns up the heat with open model blitz as US model makers panic" (August 3, 2026)</a></li>
+        <li><a href="https://www.yottalabs.ai/post/qwen-3-8-max-release-date-specs-how-to-access-2026" target="_blank" rel="noopener">Yotta Labs — "Qwen 3.8-Max: Specs, Pricing, Benchmark Status, and How to Access It" (2026)</a></li>
+        <li><a href="https://finance.yahoo.com/technology/ai/articles/google-prepares-gemini-3-8-222338004.html" target="_blank" rel="noopener">Yahoo Finance / WSJ — "Google prepares Gemini 3.8 Flash to narrow AI coding gap" (September 2, 2026)</a></li>
+        <li><a href="https://www.itechpost.com/articles/237205/20260902/google-reportedly-nears-launch-gemini-38-flash-new-coding-focused-deepmind-ai-model.htm" target="_blank" rel="noopener">iTech Post — "Google Reportedly Nears Launch of Gemini 3.8 Flash" (September 2, 2026)</a></li>
+        <li><a href="https://benchlm.ai/models/qwen3-8-max" target="_blank" rel="noopener">BenchLM.ai — "Qwen3.8 Max Benchmarks & Speed" (September 2026, notes the qwen3.8-max-0902 snapshot)</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Panorama da indústria</span>
+      <h1>A briga real da IA agora é sobre preço, não inteligência</h1>
+      <p class="subtitle">Modelos chineses de peso aberto já puxam mais de 4x o volume semanal de tokens dos modelos americanos no OpenRouter, com preços 60-90% mais baixos. A OpenAI acabou de cortar preços em até 80% em resposta, e o Google corre pra lançar hoje uma atualização do Gemini focada em código. Nada disso é mais, de fato, sobre quem é mais inteligente.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-numero">1. O número que importa: 4x de volume de tokens</a></li>
+        <li><a href="#por-que-barato-ganha">2. Por que o mais barato está ganhando</a></li>
+        <li><a href="#resposta-openai">3. A resposta da OpenAI: corte de preço de 80%</a></li>
+        <li><a href="#resposta-google">4. A resposta do Google: atualização do Gemini focada em código, hoje</a></li>
+        <li><a href="#cadencia-china">5. O ritmo de lançamento da China: atualização no mesmo dia</a></li>
+        <li><a href="#debate-peso-aberto">6. O debate sobre peso aberto</a></li>
+        <li><a href="#pratica-pt">7. O que isso significa na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-numero">1. O número que importa: 4x de volume de tokens</h2>
+    <p>Desde fevereiro de 2026, modelos de IA chineses ultrapassaram os americanos em uso semanal de tokens no OpenRouter — um agregador popular que roteia chamadas de API entre vários provedores de modelo — e a diferença só cresce. Modelos chineses hoje respondem por mais de <strong>4x o volume de tokens</strong> dos modelos americanos nessa plataforma.</p>
+    <p>O OpenRouter não é o mercado inteiro — ele pende pra desenvolvedores que pesquisam a melhor relação preço/performance em vez de empresas presas a um contrato fechado com um único fornecedor. Mas é exatamente isso que o torna um sinal antecipado útil: mostra onde compradores sensíveis a preço e tecnicamente informados estão de fato votando com o próprio uso, antes que a tendência apareça em qualquer outro lugar.</p>
+
+    <h2 id="por-que-barato-ganha">2. Por que o mais barato está ganhando</h2>
+    <p>O motivo principal é direto: modelos chineses de peso aberto podem ser <strong>60% a 90% mais baratos</strong> que os modelos líderes da Anthropic e da OpenAI, permanecendo competitivos em muitas tarefas do dia a dia. Dois exemplos ancoram essa história:</p>
+    <ul>
+      <li><strong>Kimi K3, da Moonshot AI</strong> — um modelo de 2,8 trilhões de parâmetros com pesos completos liberados de graça em 27 de julho de 2026, rivalizando com os principais sistemas fechados americanos em vários benchmarks.</li>
+      <li><strong>Qwen3.8-Max, da Alibaba</strong> — um modelo Mixture-of-Experts de 2,4 trilhões de parâmetros (95 bilhões ativos por consulta), janela de contexto de 1 milhão de tokens, multimodal (texto, imagem, vídeo), com preço de US$ 2 por milhão de tokens de entrada e US$ 6 por milhão de saída — uma fração do preço dos modelos fechados de ponta.</li>
+    </ul>
+    <p>Pra boa parte das cargas de trabalho em produção — resumo, extração, geração de código rotineira, classificação — a diferença de capacidade entre um modelo de peso aberto a US$ 2/M tokens e um modelo fechado de ponta encolheu o suficiente pra que preço vire o fator decisivo, não a posição em benchmark.</p>
+
+    <h2 id="resposta-openai">3. A resposta da OpenAI: corte de preço de 80%</h2>
+    <p>A resposta da OpenAI foi direta: cortou o preço de parte da linha GPT-5.6 em <strong>até 80%</strong>, algo que observadores enquadraram explicitamente como reação defensiva à concorrência chinesa de peso aberto, não como um ajuste de preço de rotina. Quando um líder de mercado corta preço nessa magnitude de uma vez só, geralmente é sinal de que uma ameaça competitiva já mudou o comportamento dos clientes — não de que ela está chegando.</p>
+
+    <h2 id="resposta-google">4. A resposta do Google: atualização do Gemini focada em código, hoje</h2>
+    <p>O Google está se preparando pra lançar o <strong>Gemini 3.8 Flash</strong> — codinome interno "Skimaki" — já hoje, mirando um ponto fraco específico: performance em código, onde o Google ficou atrás da OpenAI e da Anthropic. O modelo terminou os testes na plataforma interna de desenvolvedores do Google, a "Jetski", ao longo de agosto, e em comparações internas lado a lado, alguns engenheiros do Google teriam preferido ele ao Claude Opus da Anthropic — vale notar que essa é uma comparação interna e não-independente, não um benchmark publicado.</p>
+    <p>Mais revelador que o modelo em si é o ritmo: o intervalo entre o Gemini 3.7 Flash e o 3.8 Flash foi curto, refletindo uma mudança mais ampla rumo a "micro-atualizações" frequentes e direcionadas, em vez de esperar meses por um retreinamento completo. O feedback inicial de testadores descreve o 3.8 Flash como um refinamento — principalmente saída menos verbosa — e não um salto.</p>
+
+    <h2 id="cadencia-china">5. O ritmo de lançamento da China: atualização no mesmo dia</h2>
+    <p>No mesmo dia em que este texto foi escrito, o time do Qwen, da Alibaba, lançou o <strong>Qwen3.8-Max-0902</strong> — um snapshot datado, com pós-treinamento adicional do Qwen3.8-Max, ajustado especificamente pra código e trabalho profissional. Snapshots datados como esse (o sufixo <code>-0902</code> marca a data de lançamento) estão virando norma tanto em laboratórios chineses quanto americanos: em vez de um grande lançamento versionado a cada poucos meses, os provedores lançam atualizações menores e frequentes e deixam o carimbo de data fazer o versionamento.</p>
+
+    <h2 id="debate-peso-aberto">6. O debate sobre peso aberto</h2>
+    <p>A ascensão de modelos de peso aberto baratos e capazes disparou uma briga regulatória. Uma coalizão que inclui <strong>NVIDIA, Meta, Microsoft e Hugging Face</strong> publicou uma carta aberta no fim de julho de 2026 pedindo que formuladores de política não restrinjam amplamente modelos de peso aberto. O argumento: proibir ou restringir pesadamente esses modelos concentraria poder num punhado de provedores fechados e empurraria o desenvolvimento de modelos pra jurisdições com menos salvaguardas, em vez de tornar a IA mais segura.</p>
+    <div class="callout">
+      <strong>Vale separar:</strong> "peso aberto" (você pode baixar e rodar o modelo você mesmo) não é a mesma coisa que "código aberto" no sentido clássico de software — a maioria desses lançamentos não inclui dados de treinamento nem o código de treinamento completo. É abertura do artefato, não reprodutibilidade total.
+    </div>
+
+    <h2 id="pratica-pt">7. O que isso significa na prática</h2>
+    <div class="callout">
+      <strong>O mercado está se segmentando por tarefa e faixa de preço, não se consolidando em torno de um vencedor só.</strong> Uma carga de trabalho sensível a custo e de alto volume (classificação em massa, extração de primeira passada, geração de código rotineira) cada vez mais faz sentido num modelo barato de peso aberto. Uma carga que precisa do raciocínio mais profundo, do comportamento agentic mais confiável, ou das garantias mais fortes de segurança/compliance ainda tende a favorecer modelos fechados de ponta — essa diferença não encolheu nem de longe tanto quanto a diferença de preço.
+    </div>
+    <p>A lição prática pra quem constrói em cima desses modelos: avalie custo-benefício por tarefa, não posição em ranking. O modelo certo pra uma tarefa de classificação de US$ 0,002 por chamada e o modelo certo pra um agente de código autônomo muito provavelmente já não são o mesmo modelo — e, cada vez mais, nem vêm do mesmo país.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Fontes</div>
+      <ul class="sources">
+        <li><a href="https://www.cnbc.com/2026/07/07/chinese-ai-models-costs-us-openai-anthropic.html" target="_blank" rel="noopener">CNBC — "Chinese AI models are gaining ground with U.S. companies as OpenAI, Anthropic costs surge" (07/07/2026)</a></li>
+        <li><a href="https://www.scmp.com/tech/tech-trends/article/3362568/openai-blinks-face-chinese-rivals-drops-pricing-some-models-80" target="_blank" rel="noopener">South China Morning Post — "OpenAI blinks in face-off with Chinese rivals, drops pricing for some models up to 80%" (2026)</a></li>
+        <li><a href="https://www.theregister.com/ai-and-ml/2026/08/03/china-turns-up-the-heat-with-open-model-blitz-as-us-model-makers-panic/5282526" target="_blank" rel="noopener">The Register — "China turns up the heat with open model blitz as US model makers panic" (03/08/2026)</a></li>
+        <li><a href="https://www.yottalabs.ai/post/qwen-3-8-max-release-date-specs-how-to-access-2026" target="_blank" rel="noopener">Yotta Labs — "Qwen 3.8-Max: Specs, Pricing, Benchmark Status, and How to Access It" (2026)</a></li>
+        <li><a href="https://finance.yahoo.com/technology/ai/articles/google-prepares-gemini-3-8-222338004.html" target="_blank" rel="noopener">Yahoo Finance / WSJ — "Google prepares Gemini 3.8 Flash to narrow AI coding gap" (02/09/2026)</a></li>
+        <li><a href="https://www.itechpost.com/articles/237205/20260902/google-reportedly-nears-launch-gemini-38-flash-new-coding-focused-deepmind-ai-model.htm" target="_blank" rel="noopener">iTech Post — "Google Reportedly Nears Launch of Gemini 3.8 Flash" (02/09/2026)</a></li>
+        <li><a href="https://benchlm.ai/models/qwen3-8-max" target="_blank" rel="noopener">BenchLM.ai — "Qwen3.8 Max Benchmarks & Speed" (setembro de 2026, cita o snapshot qwen3.8-max-0902)</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> ·
+  <span class="accent" id="footer-right">Industry landscape</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Industry landscape';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Panorama da indústria';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

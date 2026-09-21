@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 17: Integrating Figma with Claude (Code Connect, MCP, design-to-code)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 4 · Lesson 17</span>
+      <h1>Integrating Figma with Claude: Code Connect, the Figma MCP server, and the design-to-code flow</h1>
+      <p class="subtitle">Design specs used to travel from Figma to code as screenshots and guesswork. Now there's a structured pipe — Figma's MCP server plus Code Connect — that lets an AI agent read a design as data instead of as a picture. Here's what that actually means, and where it still falls short.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#the-gap">1. The gap this closes: screenshots vs. structured design data</a></li>
+        <li><a href="#mcp-server">2. What the Figma MCP server actually exposes</a></li>
+        <li><a href="#code-connect">3. Code Connect: telling the agent which real component to use</a></li>
+        <li><a href="#workflow">4. The end-to-end workflow, step by step</a></li>
+        <li><a href="#bidirectional">5. It goes both ways: code-to-design too</a></li>
+        <li><a href="#pros-cons">6. Pros, cons, and where it breaks down</a></li>
+        <li><a href="#alternatives">7. How this compares to other design-to-code approaches</a></li>
+        <li><a href="#example">8. A generic worked example</a></li>
+        <li><a href="#takeaway">9. The actual takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="the-gap">1. The gap this closes: screenshots vs. structured design data</h2>
+    <p>Before this kind of integration existed, "AI-assisted design-to-code" mostly meant one thing: paste a screenshot of a Figma frame into a chat and ask a model to recreate it in code. That works up to a point, but the model is guessing — it infers spacing, color values, and component boundaries from pixels, the same way a human would eyeballing a mockup. Small inconsistencies (an 8px vs 10px gap, a slightly-off shade of gray) get baked in because the model never had access to the actual underlying values.</p>
+    <p>A Figma <strong>MCP (Model Context Protocol) server</strong> changes that by giving the agent structured access to the file itself — layout data, variables, styles, component metadata — instead of forcing it to reverse-engineer that information from an image. It's the difference between describing a house from a photo and being handed the blueprint.</p>
+
+    <h2 id="mcp-server">2. What the Figma MCP server actually exposes</h2>
+    <p>MCP itself is a general standard (covered in a previous IA Watch lesson) for letting an AI application talk to external systems through a common protocol, instead of everything being pasted into a prompt by hand. Figma ships an MCP server that speaks this protocol specifically for design files. Once connected, an agent like Claude can call tools that return:</p>
+    <ul>
+      <li><strong>Design context</strong> — the layout, sizing, and structure of a selected frame or node, translated into something closer to code (positions, auto-layout rules, constraints) instead of raw pixels.</li>
+      <li><strong>Variables and styles</strong> — the design tokens behind the file: color variables, spacing scales, typography styles — the same values a design system would define.</li>
+      <li><strong>Metadata</strong> — component names, instance relationships, which node is a variant of which component.</li>
+      <li><strong>Screenshots</strong> — still available as a fallback/visual check, but now paired with the structured data rather than being the only source of truth.</li>
+      <li><strong>Code Connect mappings</strong> — the piece that turns "this is a button-shaped rectangle" into "this is literally your <code>&lt;Button /&gt;</code> component" (more on this below).</li>
+    </ul>
+    <div class="callout">
+      <strong>Why this matters:</strong> an agent that can read variables and constraints directly produces code that references your actual design tokens (<code>var(--spacing-4)</code>, a theme color) instead of hardcoding whatever value it guessed from a screenshot — which is exactly the kind of drift that makes a codebase's CSS harder to maintain over time.
+    </div>
+
+    <h2 id="code-connect">3. Code Connect: telling the agent which real component to use</h2>
+    <p>Structured layout data alone still leaves a gap: the MCP server can tell an agent "this is a component called Button, in the state 'primary/large'" — but it doesn't automatically know that your codebase already has a <code>Button</code> component at <code>src/components/Button.tsx</code> with a <code>variant</code> and <code>size</code> prop. Without that link, the agent would just generate a new, disconnected chunk of HTML/CSS that happens to look like your button.</p>
+    <p><strong>Code Connect</strong> closes that gap. It's a small template file (<code>.figma.tsx</code>/<code>.figma.js</code>, or the equivalent for other stacks) that explicitly maps a Figma component to the real code component and its props. Once that mapping exists for a piece of your design system, the MCP server can hand the agent the actual import statement and prop values to use — not a re-implementation, but a reference to the component that already exists and is already tested, themed, and accessible.</p>
+    <table>
+      <tr><th>Without Code Connect</th><th>With Code Connect</th></tr>
+      <tr><td>Agent infers a button from shape, color, and text — writes new markup/CSS from scratch.</td><td>Agent is told: this node maps to <code>&lt;Button variant="primary" size="lg"&gt;</code> from your own component library.</td></tr>
+      <tr><td>Output drifts from your design system over time — every generation is a fresh guess.</td><td>Output stays consistent with your design system because it reuses the same components everywhere.</td></tr>
+      <tr><td>Works reasonably for one-off landing pages with no existing component library.</td><td>Pays off specifically when there's a real design system on both sides (Figma library + code component library) to connect.</td></tr>
+    </table>
+
+    <h2 id="workflow">4. The end-to-end workflow, step by step</h2>
+    <ol>
+      <li><strong>Set up the MCP server.</strong> Typically via the Figma desktop app (the browser version doesn't support the desktop MCP server) or a plugin that exposes MCP server settings alongside the relevant agent skills.</li>
+      <li><strong>Connect the agent</strong> (Claude Code, Cowork, or another MCP-aware client) to that server as an MCP tool source.</li>
+      <li><strong>Select a frame or component</strong> in Figma — this becomes the scope the agent will read from.</li>
+      <li><strong>The agent requests design context</strong> — layout, variables, and (if configured) Code Connect mappings for that selection.</li>
+      <li><strong>Write or update Code Connect files</strong> for the components in your library that don't have a mapping yet, so future runs resolve to real components instead of guesses.</li>
+      <li><strong>The agent generates code</strong> that uses your actual tokens and components where mappings exist, and reasonable approximations where they don't.</li>
+      <li><strong>Review like any other AI-generated diff</strong> — this shortens the trip from design to a rough implementation, it doesn't remove the need for a human check on the result.</li>
+    </ol>
+
+    <h2 id="bidirectional">5. It goes both ways: code-to-design too</h2>
+    <p>The same bridge works in reverse. An agent can take an existing page or component built in code and push it into Figma as native, editable nodes — using the same design tokens and library components rather than a flattened image. This is useful when code was written first (a quick prototype, an internal tool) and a designer now needs an editable Figma version to iterate on, or when a team wants Figma to stay in sync with what's actually shipped rather than drifting into its own stale version of the truth.</p>
+
+    <h2 id="pros-cons">6. Pros, cons, and where it breaks down</h2>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Generated code references real design tokens and real components instead of reinventing them per generation.</li>
+        <li>Cuts a lot of the manual "eyeball the Figma frame and translate spacing by hand" work in the handoff.</li>
+        <li>Bidirectional — keeps design and code from drifting apart in either direction if used consistently.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons / limits</div>
+      <ul>
+        <li>The payoff is proportional to how mature your design system already is. A messy, inconsistent Figma file with no shared components produces messy, inconsistent output — the tool amplifies what's already there, in either direction.</li>
+        <li>Code Connect mappings have to be written and maintained by someone; they don't appear automatically the first time.</li>
+        <li>Running more than one MCP server that touches the same Figma data at once tends to confuse the agent and produce inconsistent results — pick one integration path per project.</li>
+        <li>It still requires review. Structured data reduces guessing, but doesn't guarantee the generated code matches your actual conventions, accessibility requirements, or performance constraints.</li>
+      </ul>
+    </div>
+
+    <h2 id="alternatives">7. How this compares to other design-to-code approaches</h2>
+    <table>
+      <tr><th>Approach</th><th>What it's good for</th><th>Main weakness</th></tr>
+      <tr><td><strong>Screenshot-to-code (no MCP)</strong></td><td>Fast, zero setup — paste an image, get a rough draft.</td><td>Model is guessing at every value; drifts from your real design tokens and components.</td></tr>
+      <tr><td><strong>Figma MCP + Code Connect</strong></td><td>Precise reuse of existing tokens/components; scales well once set up.</td><td>Setup and maintenance cost; only pays off with an organized design system.</td></tr>
+      <tr><td><strong>Manual developer handoff</strong> (specs, redlines, a designer writing notes)</td><td>Full human judgment on every detail; no tooling dependency.</td><td>Slow, repetitive, and exactly the kind of work that scales badly across many screens.</td></tr>
+      <tr><td><strong>Design token pipelines</strong> (e.g. exporting tokens as JSON, transforming them into code variables) without an AI agent involved</td><td>Keeps colors/spacing/typography in sync automatically.</td><td>Doesn't generate layout or component code — only the token values, not the assembly.</td></tr>
+    </table>
+    <p>In practice, these aren't mutually exclusive — a token pipeline keeping values in sync, plus Code Connect mapping components, plus an agent assembling layout from structured context, is a reasonable combination rather than a choice between one and the others.</p>
+
+    <h2 id="example">8. A generic worked example</h2>
+    <p>Imagine a generic internal dashboard project. The design team ships a new "Settings" screen in Figma, built entirely from existing library components: a page header, a couple of form sections, and a save button — all already mapped via Code Connect from earlier work.</p>
+    <ol>
+      <li>A developer selects the Settings frame in Figma and asks the agent to implement it.</li>
+      <li>The agent pulls layout data (a two-column grid, specific spacing) and resolves each component instance to its Code Connect mapping — the header becomes <code>&lt;PageHeader title="Settings" /&gt;</code>, the button becomes <code>&lt;Button variant="primary"&gt;Save&lt;/Button&gt;</code>, and so on.</li>
+      <li>The only genuinely new code is the layout wiring and any copy/text specific to this screen — the components themselves are reused, not reinvented.</li>
+      <li>A developer reviews the diff, adjusts anything that doesn't match project conventions, and ships it — faster than building the screen from a static screenshot, but still with a human in the loop.</li>
+    </ol>
+
+    <h2 id="takeaway">9. The actual takeaway</h2>
+    <div class="callout">
+      <strong>The core idea:</strong> the value of Figma-to-Claude integration scales with how much structure already exists on both sides — a real Figma component library, and a real code component library, connected explicitly through Code Connect. Without that structure, it's not much better than pasting a screenshot. With it, it turns design handoff from "translate this by hand" into "point the agent at the frame and review the diff."
+    </div>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 4 · Lição 17</span>
+      <h1>Integrando o Figma com o Claude: Code Connect, o MCP do Figma e o fluxo design-to-code</h1>
+      <p class="subtitle">Specs de design costumavam viajar do Figma pro código como print e chute. Agora existe um canal estruturado — o MCP do Figma mais o Code Connect — que deixa um agente de IA ler um design como dado, não como imagem. Eis o que isso significa de fato, e onde ainda falha.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#a-lacuna">1. A lacuna que isso fecha: print vs. dado estruturado de design</a></li>
+        <li><a href="#servidor-mcp">2. O que o MCP do Figma realmente expõe</a></li>
+        <li><a href="#code-connect-pt">3. Code Connect: dizendo ao agente qual componente real usar</a></li>
+        <li><a href="#fluxo">4. O fluxo de ponta a ponta, passo a passo</a></li>
+        <li><a href="#bidirecional">5. Funciona nos dois sentidos: código pra design também</a></li>
+        <li><a href="#pros-contras">6. Prós, contras e onde quebra</a></li>
+        <li><a href="#alternativas">7. Como isso se compara a outras abordagens de design-to-code</a></li>
+        <li><a href="#exemplo">8. Um exemplo prático genérico</a></li>
+        <li><a href="#conclusao">9. O ponto principal</a></li>
+      </ol>
+    </div>
+
+    <h2 id="a-lacuna">1. A lacuna que isso fecha: print vs. dado estruturado de design</h2>
+    <p>Antes desse tipo de integração existir, "design-to-code com IA" geralmente significava uma coisa: colar um print de um frame do Figma num chat e pedir pro modelo recriar aquilo em código. Isso funciona até certo ponto, mas o modelo está chutando — ele infere espaçamento, valores de cor e limites de componente a partir de pixels, do mesmo jeito que um humano faria olhando um mockup. Pequenas inconsistências (um gap de 8px em vez de 10px, um tom de cinza levemente errado) acabam entrando porque o modelo nunca teve acesso aos valores reais por trás.</p>
+    <p>Um servidor <strong>MCP (Model Context Protocol)</strong> do Figma muda isso ao dar ao agente acesso estruturado ao próprio arquivo — dados de layout, variáveis, estilos, metadados de componente — em vez de forçá-lo a fazer engenharia reversa dessa informação a partir de uma imagem. É a diferença entre descrever uma casa a partir de uma foto e receber a planta.</p>
+
+    <h2 id="servidor-mcp">2. O que o MCP do Figma realmente expõe</h2>
+    <p>O MCP em si é um padrão geral (visto numa lição anterior de IA Watch) pra deixar uma aplicação de IA falar com sistemas externos por um protocolo comum, em vez de tudo ser colado manualmente num prompt. O Figma disponibiliza um servidor MCP que fala esse protocolo especificamente pra arquivos de design. Uma vez conectado, um agente como o Claude pode chamar ferramentas que retornam:</p>
+    <ul>
+      <li><strong>Contexto de design</strong> — o layout, tamanho e estrutura de um frame ou node selecionado, traduzido pra algo mais parecido com código (posições, regras de auto-layout, constraints) em vez de pixels crus.</li>
+      <li><strong>Variáveis e estilos</strong> — os design tokens por trás do arquivo: variáveis de cor, escalas de espaçamento, estilos de tipografia — os mesmos valores que um design system definiria.</li>
+      <li><strong>Metadados</strong> — nomes de componente, relações de instância, qual node é variante de qual componente.</li>
+      <li><strong>Screenshots</strong> — ainda disponíveis como verificação visual/fallback, mas agora acompanhados do dado estruturado em vez de serem a única fonte de verdade.</li>
+      <li><strong>Mapeamentos do Code Connect</strong> — a peça que transforma "isso é um retângulo com formato de botão" em "isso é literalmente o seu componente <code>&lt;Button /&gt;</code>" (mais sobre isso abaixo).</li>
+    </ul>
+    <div class="callout">
+      <strong>Por que isso importa:</strong> um agente que lê variáveis e constraints diretamente produz código que referencia seus tokens de design reais (<code>var(--spacing-4)</code>, uma cor de tema) em vez de fixar qualquer valor que ele tenha chutado a partir de um print — que é exatamente o tipo de deriva que torna o CSS de uma base de código mais difícil de manter com o tempo.
+    </div>
+
+    <h2 id="code-connect-pt">3. Code Connect: dizendo ao agente qual componente real usar</h2>
+    <p>Só o dado estruturado de layout ainda deixa uma lacuna: o servidor MCP pode dizer ao agente "isso é um componente chamado Button, no estado 'primary/large'" — mas ele não sabe automaticamente que sua base de código já tem um componente <code>Button</code> em <code>src/components/Button.tsx</code> com props <code>variant</code> e <code>size</code>. Sem esse vínculo, o agente simplesmente geraria um pedaço novo e desconectado de HTML/CSS que por acaso se parece com seu botão.</p>
+    <p>O <strong>Code Connect</strong> fecha essa lacuna. É um arquivo de template pequeno (<code>.figma.tsx</code>/<code>.figma.js</code>, ou o equivalente pra outros stacks) que mapeia explicitamente um componente do Figma pro componente de código real e suas props. Uma vez que esse mapeamento existe pra uma peça do seu design system, o servidor MCP pode entregar ao agente o import e os valores de prop reais a usar — não uma reimplementação, mas uma referência ao componente que já existe e já é testado, temado e acessível.</p>
+    <table>
+      <tr><th>Sem Code Connect</th><th>Com Code Connect</th></tr>
+      <tr><td>Agente infere um botão a partir de forma, cor e texto — escreve markup/CSS novo do zero.</td><td>Agente é informado: esse node mapeia pra <code>&lt;Button variant="primary" size="lg"&gt;</code> da sua própria biblioteca de componentes.</td></tr>
+      <tr><td>Resultado se afasta do seu design system com o tempo — cada geração é um chute novo.</td><td>Resultado permanece consistente com seu design system porque reusa os mesmos componentes em todo lugar.</td></tr>
+      <tr><td>Funciona razoavelmente pra landing pages pontuais sem biblioteca de componentes existente.</td><td>Compensa especificamente quando existe um design system real dos dois lados (biblioteca no Figma + biblioteca de componentes no código) pra conectar.</td></tr>
+    </table>
+
+    <h2 id="fluxo">4. O fluxo de ponta a ponta, passo a passo</h2>
+    <ol>
+      <li><strong>Configurar o servidor MCP.</strong> Geralmente via o app desktop do Figma (a versão de navegador não suporta o servidor MCP desktop) ou um plugin que expõe as configurações do servidor MCP junto com as agent skills relevantes.</li>
+      <li><strong>Conectar o agente</strong> (Claude Code, Cowork, ou outro cliente compatível com MCP) a esse servidor como fonte de ferramenta MCP.</li>
+      <li><strong>Selecionar um frame ou componente</strong> no Figma — isso se torna o escopo de onde o agente vai ler.</li>
+      <li><strong>O agente pede contexto de design</strong> — layout, variáveis e (se configurado) os mapeamentos do Code Connect pra essa seleção.</li>
+      <li><strong>Escrever ou atualizar arquivos de Code Connect</strong> pros componentes da sua biblioteca que ainda não têm mapeamento, pra que execuções futuras resolvam pra componentes reais em vez de chutes.</li>
+      <li><strong>O agente gera código</strong> que usa seus tokens e componentes reais onde existe mapeamento, e aproximações razoáveis onde não existe.</li>
+      <li><strong>Revisar como qualquer outro diff gerado por IA</strong> — isso encurta o trajeto do design até uma implementação inicial, não elimina a necessidade de uma checagem humana no resultado.</li>
+    </ol>
+
+    <h2 id="bidirecional">5. Funciona nos dois sentidos: código pra design também</h2>
+    <p>A mesma ponte funciona ao contrário. Um agente pode pegar uma página ou componente já construído em código e publicá-lo no Figma como nodes nativos e editáveis — usando os mesmos design tokens e componentes de biblioteca em vez de uma imagem achatada. Isso é útil quando o código foi escrito primeiro (um prototipo rápido, uma ferramenta interna) e agora um designer precisa de uma versão editável no Figma pra iterar, ou quando um time quer que o Figma se mantenha sincronizado com o que realmente está no ar em vez de derivar pra sua própria versão desatualizada da verdade.</p>
+
+    <h2 id="pros-contras">6. Prós, contras e onde quebra</h2>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Código gerado referencia tokens de design e componentes reais em vez de reinventá-los a cada geração.</li>
+        <li>Corta boa parte do trabalho manual de "olhar o frame do Figma e traduzir espaçamento na mão" no handoff.</li>
+        <li>Bidirecional — evita que design e código se afastem em qualquer direção, se usado de forma consistente.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras / limites</div>
+      <ul>
+        <li>O ganho é proporcional a quão maduro já é o seu design system. Um arquivo Figma desorganizado e inconsistente, sem componentes compartilhados, produz saída desorganizada e inconsistente — a ferramenta amplifica o que já existe, nos dois sentidos.</li>
+        <li>Os mapeamentos do Code Connect precisam ser escritos e mantidos por alguém; eles não aparecem automaticamente na primeira vez.</li>
+        <li>Rodar mais de um servidor MCP que toca no mesmo dado do Figma ao mesmo tempo tende a confundir o agente e produzir resultados inconsistentes — escolha um caminho de integração por projeto.</li>
+        <li>Ainda exige revisão. Dado estruturado reduz o chute, mas não garante que o código gerado bata com suas convenções reais, requisitos de acessibilidade ou restrições de performance.</li>
+      </ul>
+    </div>
+
+    <h2 id="alternativas">7. Como isso se compara a outras abordagens de design-to-code</h2>
+    <table>
+      <tr><th>Abordagem</th><th>Pra que serve bem</th><th>Principal fraqueza</th></tr>
+      <tr><td><strong>Print-pra-código (sem MCP)</strong></td><td>Rápido, zero configuração — cola uma imagem, recebe um rascunho.</td><td>Modelo está chutando cada valor; se afasta dos seus tokens e componentes reais.</td></tr>
+      <tr><td><strong>MCP do Figma + Code Connect</strong></td><td>Reuso preciso de tokens/componentes existentes; escala bem depois de configurado.</td><td>Custo de configuração e manutenção; só compensa com um design system organizado.</td></tr>
+      <tr><td><strong>Handoff manual de desenvolvedor</strong> (specs, redlines, um designer escrevendo notas)</td><td>Julgamento humano completo em cada detalhe; nenhuma dependência de ferramenta.</td><td>Lento, repetitivo e exatamente o tipo de trabalho que escala mal em muitas telas.</td></tr>
+      <tr><td><strong>Pipelines de design token</strong> (ex: exportar tokens como JSON, transformá-los em variáveis de código) sem um agente de IA envolvido</td><td>Mantém cores/espaçamento/tipografia sincronizados automaticamente.</td><td>Não gera código de layout ou componente — só os valores dos tokens, não a montagem.</td></tr>
+    </table>
+    <p>Na prática, essas abordagens não são mutuamente exclusivas — um pipeline de tokens mantendo valores sincronizados, mais o Code Connect mapeando componentes, mais um agente montando o layout a partir de contexto estruturado, é uma combinação razoável em vez de uma escolha entre uma e as outras.</p>
+
+    <h2 id="exemplo">8. Um exemplo prático genérico</h2>
+    <p>Imagine um projeto genérico de dashboard interno. O time de design entrega uma tela nova de "Configurações" no Figma, construída inteiramente a partir de componentes de biblioteca já existentes: um cabeçalho de página, algumas seções de formulário e um botão de salvar — todos já mapeados via Code Connect em trabalhos anteriores.</p>
+    <ol>
+      <li>Um desenvolvedor seleciona o frame de Configurações no Figma e pede pro agente implementá-lo.</li>
+      <li>O agente puxa o dado de layout (uma grade de duas colunas, espaçamentos específicos) e resolve cada instância de componente pro seu mapeamento do Code Connect — o cabeçalho se torna <code>&lt;PageHeader title="Settings" /&gt;</code>, o botão se torna <code>&lt;Button variant="primary"&gt;Save&lt;/Button&gt;</code>, e assim por diante.</li>
+      <li>O único código genuinamente novo é a montagem do layout e qualquer texto específico dessa tela — os componentes em si são reusados, não reinventados.</li>
+      <li>Um desenvolvedor revisa o diff, ajusta o que não bater com as convenções do projeto, e publica — mais rápido do que construir a tela a partir de um print estático, mas ainda com um humano no processo.</li>
+    </ol>
+
+    <h2 id="conclusao">9. O ponto principal</h2>
+    <div class="callout">
+      <strong>A ideia central:</strong> o valor da integração Figma-Claude escala com quanta estrutura já existe dos dois lados — uma biblioteca de componentes real no Figma, e uma biblioteca de componentes real no código, conectadas explicitamente via Code Connect. Sem essa estrutura, não é muito melhor que colar um print. Com ela, transforma o handoff de design de "traduza isso na mão" pra "aponte o agente pro frame e revise o diff".
+    </div>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lesson 17</span>
+  <span class="accent" id="footer-right">Figma + Claude: Code Connect &amp; MCP</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Lesson 17';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Lição 17';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>
