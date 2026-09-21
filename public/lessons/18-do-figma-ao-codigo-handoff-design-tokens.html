@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 18: From Figma to code — handoff and design tokens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 4 · Lesson 18</span>
+      <h1>From Figma to code: handoff and design tokens</h1>
+      <p class="subtitle">Yesterday's lesson covered how an agent reads a Figma file. Today: how a whole team keeps design and code in sync over time — without redlines, screenshots, or "just eyeball it".</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#gap">1. The gap handoff exists to close</a></li>
+        <li><a href="#old-way">2. The old way: redlines and screenshots</a></li>
+        <li><a href="#tokens">3. Design tokens: the actual fix</a></li>
+        <li><a href="#pipeline">4. How tokens travel from Figma to code</a></li>
+        <li><a href="#example">5. A worked example: one button, three layers</a></li>
+        <li><a href="#failures">6. Where token systems break in practice</a></li>
+        <li><a href="#spec">7. What a good handoff spec includes</a></li>
+      </ol>
+    </div>
+
+    <h2 id="gap">1. The gap handoff exists to close</h2>
+    <p>A designer works in a tool that thinks in shapes, layers, and pixels. A developer works in a tool that thinks in components, variables, and constraints. Handoff is the process — and the artifacts — that translate one into the other without losing intent along the way.</p>
+    <p>Done badly, handoff means a developer squinting at a static image, guessing at a hex code, and shipping something that's "close enough." Multiply that by every button, spacing value, and font size in a product, and small drifts compound into a UI that visibly doesn't match the design file anymore — the classic complaint of "design debt."</p>
+
+    <h2 id="old-way">2. The old way: redlines and screenshots</h2>
+    <p>For years, handoff meant a designer manually annotating a screenshot: arrows pointing at spacing values, a callout box with a hex code, a note saying "16px padding, this exact blue." Tools like Zeplin and Figma's own older inspect panel formalized this into auto-generated redlines — still just numbers on top of a static image.</p>
+    <table>
+      <tr><th>Problem</th><th>Why it happens</th></tr>
+      <tr><td>Values go stale</td><td>The design file gets updated; the redline screenshot doesn't. Nobody remembers to regenerate it.</td></tr>
+      <tr><td>No source of truth</td><td>The same blue might get typed as <code>#1a73e8</code> in one component and <code>#1A73E8</code> (or a slightly different shade) in another — both "correct" by eye, both wrong in practice.</td></tr>
+      <tr><td>States are invisible</td><td>A screenshot shows one state (usually default). Hover, focus, disabled, error — all left to the developer's imagination.</td></tr>
+      <tr><td>Doesn't scale</td><td>Fine for five screens. Falls apart for a product with hundreds of components across multiple platforms.</td></tr>
+    </table>
+
+    <h2 id="tokens">3. Design tokens: the actual fix</h2>
+    <p>A design token is a named, platform-agnostic value that stands in for a raw design decision — a color, a spacing unit, a font size, a border radius, an animation duration. Instead of a component using <code>#7c3aed</code> directly, it uses a token like <code>color.accent.default</code>, which resolves to that hex value in one single place.</p>
+    <p>The point isn't the naming convention — it's the indirection. Change the token's definition once, and every component referencing it updates automatically, in both the design file and the codebase, without hunting down every occurrence.</p>
+    <div class="callout">
+      <strong>The mental model:</strong> tokens are to design what environment variables are to code. You don't hardcode a database URL in twenty files — you reference <code>DATABASE_URL</code> once and let it resolve differently per environment. Tokens do the same for visual decisions, and can resolve differently per theme (light/dark) or per brand.
+    </div>
+
+    <h2 id="pipeline">4. How tokens travel from Figma to code</h2>
+    <p>Figma's native <strong>Variables</strong> feature (colors, numbers, strings, booleans) is the design-side half of a token system. The pipeline that turns those into usable code generally looks like this:</p>
+    <ol>
+      <li><strong>Define</strong> — a designer sets up variables in Figma: <code>color/bg/primary</code>, <code>space/md</code>, <code>radius/sm</code>, organized into collections, often with light/dark modes as different values of the same variable.</li>
+      <li><strong>Extract</strong> — variables get pulled out of Figma, either via the REST API, a plugin (Tokens Studio is the most established one), or — as covered in yesterday's lesson — an MCP server that an agent can query directly (<code>get_variable_defs</code> in Figma's MCP tools returns exactly this).</li>
+      <li><strong>Transform</strong> — a tool like <strong>Style Dictionary</strong> takes that raw token data (usually JSON) and generates platform-specific output: CSS custom properties for web, a Tailwind config, XML for Android, Swift constants for iOS — all from one source.</li>
+      <li><strong>Consume</strong> — components reference the generated tokens (<code>var(--color-accent)</code>, or a Tailwind class backed by the token), never a raw value.</li>
+    </ol>
+
+    <h2 id="example">5. A worked example: one button, three layers</h2>
+    <p>Take a primary button. In Figma, its fill is bound to a variable called <code>color/accent/default</code>, its corner radius to <code>radius/md</code>, its horizontal padding to <code>space/lg</code>.</p>
+    <p>Style Dictionary transforms that token set into CSS:</p>
+    <pre><code>:root {
+  --color-accent-default: #7c3aed;
+  --radius-md: 8px;
+  --space-lg: 20px;
+}</code></pre>
+    <p>And the component consumes it, never the raw value:</p>
+    <pre><code>.button-primary {
+  background: var(--color-accent-default);
+  border-radius: var(--radius-md);
+  padding: 10px var(--space-lg);
+}</code></pre>
+    <p>Now when the designer nudges the accent color in Figma — say, for a rebrand — updating that one variable regenerates the CSS, and every button, badge, and link across the entire product shifts color at once. No hunting through components, no drift.</p>
+
+    <h2 id="failures">6. Where token systems break in practice</h2>
+    <table>
+      <tr><th>Failure mode</th><th>What causes it</th></tr>
+      <tr><td>Token sprawl</td><td>Someone creates <code>color/blue/2</code> instead of reusing an existing token, because they didn't know it existed. Without governance, the token list grows as messy as raw hex codes ever were.</td></tr>
+      <tr><td>Semantic vs primitive confusion</td><td>Primitive tokens (<code>blue-500</code>) describe a raw value; semantic tokens (<code>color/accent/default</code>) describe intent. Skipping the semantic layer and wiring components straight to primitives means a rebrand requires touching every component again — the exact problem tokens were meant to solve.</td></tr>
+      <tr><td>One-way sync</td><td>Tokens get extracted from Figma into code once, then the two drift apart as each side gets edited independently with no pipeline keeping them aligned.</td></tr>
+      <tr><td>Missing responsive/state variants</td><td>A token system covering only default states still leaves hover, focus, disabled, and breakpoint behavior to guesswork — tokens solve the value problem, not the completeness problem.</td></tr>
+    </table>
+
+    <h2 id="spec">7. What a good handoff spec includes</h2>
+    <p>Tokens solve the "what's this color" problem. A complete handoff spec still needs to cover everything tokens don't:</p>
+    <ul>
+      <li><strong>Layout</strong> — spacing, alignment, and how the component behaves in its container (fixed width vs fill vs hug).</li>
+      <li><strong>Design tokens used</strong> — which color, spacing, radius, and typography tokens this specific component consumes.</li>
+      <li><strong>Component props</strong> — the variants that exist (size, tone, disabled) and how each maps to a visual change.</li>
+      <li><strong>Interaction states</strong> — default, hover, focus, active, disabled, loading, error — each one, not just the happy path.</li>
+      <li><strong>Responsive breakpoints</strong> — what changes at each screen size, not just "it's responsive."</li>
+      <li><strong>Edge cases</strong> — empty states, overflow/truncation behavior, extremely long text.</li>
+      <li><strong>Animation details</strong> — duration, easing curve, what triggers it.</li>
+    </ul>
+    <p>A token system without this layer still leaves a developer guessing at behavior. A handoff spec without a token system still leaves colors and spacing drifting over time. The two are complementary — not a choice between one or the other.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 4 · Lição 18</span>
+      <h1>Do Figma ao código: handoff e design tokens</h1>
+      <p class="subtitle">A lição de ontem cobriu como um agente lê um arquivo do Figma. Hoje: como um time inteiro mantém design e código sincronizados ao longo do tempo — sem redline, sem print de tela, sem "olhometro".</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#gap-pt">1. O buraco que o handoff existe pra fechar</a></li>
+        <li><a href="#old-way-pt">2. O jeito antigo: redlines e prints</a></li>
+        <li><a href="#tokens-pt">3. Design tokens: a solução de verdade</a></li>
+        <li><a href="#pipeline-pt">4. Como os tokens viajam do Figma pro código</a></li>
+        <li><a href="#example-pt">5. Um exemplo prático: um botão, três camadas</a></li>
+        <li><a href="#failures-pt">6. Onde sistemas de token quebram na prática</a></li>
+        <li><a href="#spec-pt">7. O que uma boa spec de handoff inclui</a></li>
+      </ol>
+    </div>
+
+    <h2 id="gap-pt">1. O buraco que o handoff existe pra fechar</h2>
+    <p>Um designer trabalha numa ferramenta que pensa em formas, camadas e pixels. Um desenvolvedor trabalha numa ferramenta que pensa em componentes, variáveis e restrições. Handoff é o processo — e os artefatos — que traduzem um pro outro sem perder a intenção pelo caminho.</p>
+    <p>Feito mal, handoff significa um desenvolvedor apertando os olhos pra uma imagem estática, chutando um código hexadecimal, e entregando algo "próximo o suficiente". Multiplique isso por cada botão, valor de espaçamento e tamanho de fonte de um produto, e pequenos desvios se acumulam até a UI visivelmente não bater mais com o arquivo de design — a clássica "dívida de design".</p>
+
+    <h2 id="old-way-pt">2. O jeito antigo: redlines e prints</h2>
+    <p>Por anos, handoff significava um designer anotando manualmente um print de tela: setas apontando pra valores de espaçamento, uma caixa de anotação com um código hex, uma nota dizendo "16px de padding, esse azul exato". Ferramentas como Zeplin e o antigo painel de inspeção do próprio Figma formalizaram isso em redlines gerados automaticamente — mas ainda são só números em cima de uma imagem estática.</p>
+    <table>
+      <tr><th>Problema</th><th>Por que acontece</th></tr>
+      <tr><td>Valores ficam desatualizados</td><td>O arquivo de design é atualizado; o print do redline não. Ninguém lembra de regerar.</td></tr>
+      <tr><td>Sem fonte única de verdade</td><td>O mesmo azul pode acabar digitado como <code>#1a73e8</code> num componente e <code>#1A73E8</code> (ou um tom ligeiramente diferente) em outro — ambos "corretos" a olho nu, ambos errados na prática.</td></tr>
+      <tr><td>Estados ficam invisíveis</td><td>Um print mostra um estado (geralmente o padrão). Hover, foco, desabilitado, erro — tudo deixado pra imaginação do desenvolvedor.</td></tr>
+      <tr><td>Não escala</td><td>Funciona bem pra cinco telas. Desmorona pra um produto com centenas de componentes em múltiplas plataformas.</td></tr>
+    </table>
+
+    <h2 id="tokens-pt">3. Design tokens: a solução de verdade</h2>
+    <p>Um design token é um valor nomeado e agnóstico de plataforma que substitui uma decisão de design crua — uma cor, uma unidade de espaçamento, um tamanho de fonte, um raio de borda, uma duração de animação. Em vez de um componente usar <code>#7c3aed</code> diretamente, ele usa um token como <code>color.accent.default</code>, que resolve pra esse valor hex num único lugar.</p>
+    <p>O ponto não é a convenção de nome — é a indireção. Mude a definição do token uma vez, e todo componente que referencia ele é atualizado automaticamente, tanto no arquivo de design quanto no código, sem precisar caçar cada ocorrência.</p>
+    <div class="callout">
+      <strong>O modelo mental:</strong> tokens estão pro design assim como variáveis de ambiente estão pro código. Você não hardcoda uma URL de banco de dados em vinte arquivos — você referencia <code>DATABASE_URL</code> uma vez e deixa ela resolver diferente por ambiente. Tokens fazem o mesmo pra decisões visuais, e podem resolver diferente por tema (claro/escuro) ou por marca.
+    </div>
+
+    <h2 id="pipeline-pt">4. Como os tokens viajam do Figma pro código</h2>
+    <p>O recurso nativo de <strong>Variables</strong> do Figma (cores, números, strings, booleanos) é a metade do lado do design de um sistema de tokens. O pipeline que transforma isso em código utilizável geralmente é assim:</p>
+    <ol>
+      <li><strong>Definir</strong> — um designer configura variáveis no Figma: <code>color/bg/primary</code>, <code>space/md</code>, <code>radius/sm</code>, organizadas em coleções, muitas vezes com modos claro/escuro como valores diferentes da mesma variável.</li>
+      <li><strong>Extrair</strong> — as variáveis são puxadas do Figma, seja via API REST, um plugin (o Tokens Studio é o mais consolidado), ou — como visto na lição de ontem — um servidor MCP que um agente consegue consultar diretamente (<code>get_variable_defs</code> nas ferramentas MCP do Figma retorna exatamente isso).</li>
+      <li><strong>Transformar</strong> — uma ferramenta como o <strong>Style Dictionary</strong> pega esses dados brutos de token (geralmente JSON) e gera saída específica de plataforma: custom properties de CSS pra web, um config do Tailwind, XML pro Android, constantes Swift pro iOS — tudo a partir de uma fonte só.</li>
+      <li><strong>Consumir</strong> — os componentes referenciam os tokens gerados (<code>var(--color-accent)</code>, ou uma classe do Tailwind apoiada no token), nunca um valor cru.</li>
+    </ol>
+
+    <h2 id="example-pt">5. Um exemplo prático: um botão, três camadas</h2>
+    <p>Pegue um botão primário. No Figma, o preenchimento dele está vinculado a uma variável chamada <code>color/accent/default</code>, o raio da borda a <code>radius/md</code>, o padding horizontal a <code>space/lg</code>.</p>
+    <p>O Style Dictionary transforma esse conjunto de tokens em CSS:</p>
+    <pre><code>:root {
+  --color-accent-default: #7c3aed;
+  --radius-md: 8px;
+  --space-lg: 20px;
+}</code></pre>
+    <p>E o componente consome isso, nunca o valor cru:</p>
+    <pre><code>.button-primary {
+  background: var(--color-accent-default);
+  border-radius: var(--radius-md);
+  padding: 10px var(--space-lg);
+}</code></pre>
+    <p>Agora, quando o designer ajusta a cor de destaque no Figma — digamos, pra um rebranding — atualizar essa única variável regera o CSS, e todo botão, badge e link do produto inteiro muda de cor de uma vez. Sem caçar componente por componente, sem desvio.</p>
+
+    <h2 id="failures-pt">6. Onde sistemas de token quebram na prática</h2>
+    <table>
+      <tr><th>Modo de falha</th><th>O que causa</th></tr>
+      <tr><td>Explosão de tokens</td><td>Alguém cria <code>color/blue/2</code> em vez de reusar um token existente, porque não sabia que ele existia. Sem governança, a lista de tokens cresce tão bagunçada quanto os códigos hex crus eram antes.</td></tr>
+      <tr><td>Confusão entre semântico e primitivo</td><td>Tokens primitivos (<code>blue-500</code>) descrevem um valor cru; tokens semânticos (<code>color/accent/default</code>) descrevem intenção. Pular a camada semântica e ligar componentes direto nos primitivos significa que um rebranding exige mexer em todo componente de novo — exatamente o problema que os tokens deveriam resolver.</td></tr>
+      <tr><td>Sincronização de mão única</td><td>Os tokens são extraídos do Figma pro código uma vez, e depois os dois se distanciam conforme cada lado é editado independentemente, sem um pipeline mantendo os dois alinhados.</td></tr>
+      <tr><td>Faltam variantes responsivas/de estado</td><td>Um sistema de tokens que cobre só o estado padrão ainda deixa hover, foco, desabilitado e comportamento por breakpoint no chute — tokens resolvem o problema do valor, não o da completude.</td></tr>
+    </table>
+
+    <h2 id="spec-pt">7. O que uma boa spec de handoff inclui</h2>
+    <p>Tokens resolvem o problema de "qual é essa cor". Uma spec de handoff completa ainda precisa cobrir tudo que os tokens não cobrem:</p>
+    <ul>
+      <li><strong>Layout</strong> — espaçamento, alinhamento, e como o componente se comporta dentro do container (largura fixa vs preencher vs abraçar o conteúdo).</li>
+      <li><strong>Tokens de design usados</strong> — quais tokens de cor, espaçamento, raio e tipografia esse componente específico consome.</li>
+      <li><strong>Props do componente</strong> — as variantes que existem (tamanho, tom, desabilitado) e como cada uma mapeia pra uma mudança visual.</li>
+      <li><strong>Estados de interação</strong> — padrão, hover, foco, ativo, desabilitado, carregando, erro — cada um deles, não só o caminho feliz.</li>
+      <li><strong>Breakpoints responsivos</strong> — o que muda em cada tamanho de tela, não só "é responsivo".</li>
+      <li><strong>Casos extremos</strong> — estados vazios, comportamento de overflow/truncamento, texto extremamente longo.</li>
+      <li><strong>Detalhes de animação</strong> — duração, curva de easing, o que dispara.</li>
+    </ul>
+    <p>Um sistema de tokens sem essa camada ainda deixa um desenvolvedor chutando comportamento. Uma spec de handoff sem sistema de tokens ainda deixa cores e espaçamentos se desviando com o tempo. Os dois são complementares — não uma escolha entre um ou outro.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Week 4 · Lesson 18</span>
+  <span class="accent" id="footer-right">Figma handoff &amp; design tokens</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · Week 4 · Lesson 18';
+    } else {
+      footerLeft.textContent = 'Cooldecode · Semana 4 · Lição 18';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

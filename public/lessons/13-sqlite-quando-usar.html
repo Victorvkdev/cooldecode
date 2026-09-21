@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — SQLite: when it fits, when it doesn't</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 3 · Lesson 13</span>
+      <h1>SQLite: when it fits, and when it really doesn't</h1>
+      <p class="subtitle">A full relational database that ships as a single file with no server process. That single design choice explains almost everything about where it shines and where it breaks.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">1. What SQLite actually is</a></li>
+        <li><a href="#why">2. Why it exists — and why "serverless database" is the right way to think about it</a></li>
+        <li><a href="#pros">3. What it's genuinely good at</a></li>
+        <li><a href="#cons">4. Where it breaks down</a></li>
+        <li><a href="#concurrency">5. The concurrency question, in detail</a></li>
+        <li><a href="#compare">6. How it compares to a "real" server database</a></li>
+        <li><a href="#example">7. A practical example</a></li>
+        <li><a href="#rule">8. The rule of thumb</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What SQLite actually is</h2>
+    <p>Every database you've likely heard of before this — Postgres, MySQL, SQL Server — is a <strong>client-server</strong> system: a separate process (the database server) runs somewhere, listens on a network port, and your app connects to it as a client, even if that server is running on the same machine.</p>
+    <p>SQLite throws that model away. There is no server process. The "database" is just a single file on disk (commonly ending in <code>.db</code> or <code>.sqlite</code>), and SQLite is a C library that gets linked directly into whatever program wants to read or write that file. When your app calls a SQL query, it isn't talking to another process over a socket — it's calling a function in its own process that reads and writes the file directly.</p>
+    <p>It still speaks real SQL (most of the standard: <code>SELECT</code>, <code>JOIN</code>, transactions, indexes, foreign keys) and is fully ACID-compliant. It's not a toy or a "lite" subset of relational features — the name refers to the lightweight, embedded nature of the engine, not a lightweight feature set.</p>
+
+    <h2 id="why">2. Why it exists — and why "serverless database" is the right way to think about it</h2>
+    <p>SQLite was built for the case where running and maintaining a separate database server is pure overhead: no process to start, no port to expose, no credentials to manage, no network round-trip for every query. It is, by shipped volume, probably the most widely deployed database engine in the world — it's embedded in every major web browser, most mobile operating systems, and countless desktop apps, usually invisibly.</p>
+    <p>The mental shift worth making: SQLite isn't "a smaller Postgres." It's a different category of tool — an <strong>embedded storage engine</strong> that happens to expose itself through SQL, aimed at a single application owning a file, not multiple applications sharing a service.</p>
+
+    <h2 id="pros">3. What it's genuinely good at</h2>
+    <ul>
+      <li><strong>Zero setup.</strong> No install, no server to configure, no connection string beyond a file path. A prototype can have real SQL and real transactions in the time it takes to write one line of code.</li>
+      <li><strong>Portability.</strong> The entire database is one file. Back it up by copying it. Ship it inside a mobile app bundle. Attach it to a bug report.</li>
+      <li><strong>Speed for single-process workloads.</strong> No network hop, no serialization over a socket — for an app that owns its data and doesn't need to share it, SQLite can outperform a network-bound server database.</li>
+      <li><strong>Reliability at small-to-medium scale.</strong> It's one of the most tested pieces of software in existence, with an enormous automated test suite; the file format itself is stable enough that the SQLite project guarantees long-term backward compatibility.</li>
+      <li><strong>Great for read-heavy, single-writer workloads</strong> — content sites, local caches, config storage, analytics snapshots, edge/CDN deployments where each region gets its own read replica of a file.</li>
+    </ul>
+
+    <h2 id="cons">4. Where it breaks down</h2>
+    <ul>
+      <li><strong>No built-in networking.</strong> If two different servers (two separate machines) need to read and write the same data, SQLite has no answer — the file lives on one disk. You'd need a shared filesystem hack or a completely different tool.</li>
+      <li><strong>Limited to one host's disk.</strong> It doesn't horizontally scale the way a managed cloud database does. Growth beyond a single machine's storage and I/O ceiling means migrating away.</li>
+      <li><strong>No user/permission system.</strong> Anyone with file access to the <code>.db</code> file has full access — there's no login, no per-user grants like a server database has. Access control has to happen at the application or OS-file level instead.</li>
+      <li><strong>Weaker for heavy concurrent writes.</strong> Covered in depth below — this is the single biggest reason teams outgrow it.</li>
+    </ul>
+
+    <h2 id="concurrency">5. The concurrency question, in detail</h2>
+    <p>This is the part that actually matters in production decisions, so it's worth being precise instead of just saying "SQLite can't handle concurrency" (which overstates the problem).</p>
+    <p>SQLite supports <strong>unlimited simultaneous readers</strong>. Where it differs from a server database is on writes: by default, only <strong>one write transaction</strong> can be in progress at any instant. If a second write comes in while the first is running, it queues and waits — it doesn't fail outright, but it does block.</p>
+    <p>In practice, this matters less than it sounds: writes in most apps are quick (a few milliseconds), so a queue of writers rarely becomes a bottleneck for low-to-moderate traffic. SQLite also ships a <strong>Write-Ahead Log (WAL)</strong> mode, which lets reads keep happening concurrently with an in-progress write and generally improves throughput over the older rollback-journal mode — most modern SQLite deployments (including popular tools like PocketBase) run in WAL mode by default for exactly this reason.</p>
+    <div class="callout">
+      <strong>Where it actually breaks:</strong> a genuinely high write-concurrency workload — many independent processes or many parallel requests all writing at once, sustained — will start queuing noticeably and become a real bottleneck. That's the point where "just use SQLite" stops being obviously true. Newer projects like Turso have specifically tried to relax the single-writer limitation, which itself is a signal of how real the limitation is in practice.
+    </div>
+
+    <h2 id="compare">6. How it compares to a "real" server database</h2>
+    <table>
+      <tr><th>Dimension</th><th>SQLite</th><th>Postgres / MySQL (server)</th></tr>
+      <tr><td>Deployment</td><td>Embedded, single file, no server process</td><td>Separate server process, network protocol</td></tr>
+      <tr><td>Concurrent writers</td><td>One at a time (queued)</td><td>Many, handled by the engine's concurrency control</td></tr>
+      <tr><td>Multi-machine access</td><td>Not supported natively</td><td>Core use case — many app servers, one database</td></tr>
+      <tr><td>Setup cost</td><td>Effectively zero</td><td>Requires provisioning, credentials, networking</td></tr>
+      <tr><td>User/permission system</td><td>None — file-level only</td><td>Full role-based access control</td></tr>
+      <tr><td>Best fit</td><td>Single app owning its data, embedded/local/edge use</td><td>Multiple clients or services sharing one dataset</td></tr>
+    </table>
+
+    <h2 id="example">7. A practical example</h2>
+    <p>Picture a small internal tool: a single Node.js or Python process serving a handful of teammates a dashboard, backed by a few thousand rows of data that update occasionally. SQLite is a strong default here — one file, no infrastructure, trivial backups (copy the file), and the write load is low enough that the single-writer limitation never surfaces.</p>
+    <p>Now picture the same dashboard, but it grows into a multi-region SaaS product with dozens of backend instances all writing to the same dataset simultaneously, and a requirement that any instance, anywhere, can read the latest write immediately. That's the point SQLite was never designed for — the correct move is a managed server database (or one of the newer "SQLite-compatible but networked" services covered in the next lesson).</p>
+
+    <h2 id="rule">8. The rule of thumb</h2>
+    <div class="callout">
+      <strong>Use SQLite when</strong> one process (or a small number of processes on one machine) owns the data, write volume is light-to-moderate, and you want zero infrastructure. <strong>Move to a server database when</strong> multiple machines need to write concurrently, you need real user-level permissions, or sustained write concurrency starts queuing noticeably.
+    </div>
+    <p>The official SQLite documentation puts it plainly: it's a great fit for embedded devices, local caches, prototypes, and the "device/edge" side of computing — and a poor fit for anything that looks like a shared, multi-writer client-server workload at real scale. Next lesson covers the alternatives that pick up exactly where that line gets crossed: Postgres, MySQL, Turso, and PlanetScale.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 3 · Lição 13</span>
+      <h1>SQLite: quando faz sentido, e quando realmente não faz</h1>
+      <p class="subtitle">Um banco relacional completo que roda como um único arquivo, sem processo de servidor. Essa única escolha de design explica quase tudo sobre onde ele brilha e onde ele quebra.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-pt">1. O que o SQLite realmente é</a></li>
+        <li><a href="#porque-pt">2. Por que ele existe — e por que "banco serverless" é a forma certa de pensar nele</a></li>
+        <li><a href="#pros-pt">3. No que ele é genuinamente bom</a></li>
+        <li><a href="#contras-pt">4. Onde ele quebra</a></li>
+        <li><a href="#concorrencia-pt">5. A questão da concorrência, em detalhe</a></li>
+        <li><a href="#comparar-pt">6. Como ele se compara a um banco de servidor "de verdade"</a></li>
+        <li><a href="#exemplo-pt">7. Um exemplo prático</a></li>
+        <li><a href="#regra-pt">8. A regra prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-pt">1. O que o SQLite realmente é</h2>
+    <p>Todo banco de dados que você provavelmente já ouviu falar antes deste — Postgres, MySQL, SQL Server — é um sistema <strong>cliente-servidor</strong>: um processo separado (o servidor do banco) roda em algum lugar, escuta numa porta de rede, e sua aplicação se conecta a ele como cliente, mesmo que esse servidor rode na mesma máquina.</p>
+    <p>O SQLite descarta esse modelo. Não existe processo de servidor. O "banco de dados" é só um arquivo único em disco (geralmente terminando em <code>.db</code> ou <code>.sqlite</code>), e o SQLite é uma biblioteca em C que é linkada direto no programa que quer ler ou escrever esse arquivo. Quando sua aplicação faz uma query SQL, ela não está falando com outro processo por um socket — está chamando uma função no próprio processo dela que lê e escreve o arquivo diretamente.</p>
+    <p>Ainda assim ele fala SQL de verdade (a maior parte do padrão: <code>SELECT</code>, <code>JOIN</code>, transações, índices, foreign keys) e é totalmente ACID. Não é um brinquedo nem um subconjunto "lite" de recursos relacionais — o nome se refere à natureza leve e embarcada do motor, não a um conjunto reduzido de funcionalidades.</p>
+
+    <h2 id="porque-pt">2. Por que ele existe — e por que "banco serverless" é a forma certa de pensar nele</h2>
+    <p>O SQLite foi construído pro caso em que rodar e manter um servidor de banco separado é pura sobrecarga: nenhum processo pra iniciar, nenhuma porta pra expor, nenhuma credencial pra gerenciar, nenhuma ida-e-volta de rede pra cada query. É, em volume de instalações, provavelmente o motor de banco de dados mais distribuído do mundo — está embarcado em todo navegador web importante, na maioria dos sistemas operacionais mobile, e em inúmeros apps desktop, geralmente de forma invisível.</p>
+    <p>A mudança de mentalidade que vale a pena fazer: o SQLite não é "um Postgres menor". É uma categoria diferente de ferramenta — um <strong>motor de armazenamento embarcado</strong> que por acaso se expõe via SQL, voltado a uma única aplicação que é dona de um arquivo, não a múltiplas aplicações compartilhando um serviço.</p>
+
+    <h2 id="pros-pt">3. No que ele é genuinamente bom</h2>
+    <ul>
+      <li><strong>Configuração zero.</strong> Sem instalação, sem servidor pra configurar, sem connection string além de um caminho de arquivo. Um prototipo pode ter SQL de verdade e transações de verdade no tempo que leva pra escrever uma linha de código.</li>
+      <li><strong>Portabilidade.</strong> O banco inteiro é um arquivo só. Faça backup copiando o arquivo. Empacote dentro de um app mobile. Anexe a um bug report.</li>
+      <li><strong>Velocidade pra cargas de trabalho de processo único.</strong> Sem salto de rede, sem serialização por socket — pra uma aplicação dona dos próprios dados e que não precisa compartilhá-los, o SQLite pode superar um banco de servidor limitado pela rede.</li>
+      <li><strong>Confiabilidade em escala pequena a média.</strong> É um dos softwares mais testados que existem, com uma suíte de testes automatizados enorme; o próprio formato de arquivo é estável o suficiente pra que o projeto SQLite garanta compatibilidade retroativa de longo prazo.</li>
+      <li><strong>Ótimo pra cargas com muita leitura e um só escritor</strong> — sites de conteúdo, cache local, armazenamento de config, snapshots de analytics, deploys edge/CDN onde cada região tem sua própria réplica de leitura de um arquivo.</li>
+    </ul>
+
+    <h2 id="contras-pt">4. Onde ele quebra</h2>
+    <ul>
+      <li><strong>Sem rede embutida.</strong> Se dois servidores diferentes (duas máquinas separadas) precisam ler e escrever os mesmos dados, o SQLite não tem resposta — o arquivo vive num disco só. Você precisaria de um sistema de arquivos compartilhado (gambiarra) ou de uma ferramenta completamente diferente.</li>
+      <li><strong>Limitado ao disco de uma máquina.</strong> Ele não escala horizontalmente como um banco de nuvem gerenciado. Crescer além do teto de armazenamento e I/O de uma única máquina significa migrar pra outra coisa.</li>
+      <li><strong>Sem sistema de usuários/permissões.</strong> Qualquer um com acesso ao arquivo <code>.db</code> tem acesso total — não existe login, não existem grants por usuário como num banco de servidor. Controle de acesso precisa acontecer no nível da aplicação ou do arquivo do sistema operacional.</li>
+      <li><strong>Mais fraco pra muita escrita concorrente.</strong> Detalhado abaixo — é o maior motivo pelo qual times acabam saindo dele.</li>
+    </ul>
+
+    <h2 id="concorrencia-pt">5. A questão da concorrência, em detalhe</h2>
+    <p>Essa é a parte que realmente importa em decisões de produção, então vale ser preciso em vez de só dizer "SQLite não lida com concorrência" (o que exagera o problema).</p>
+    <p>O SQLite suporta <strong>leitores simultâneos ilimitados</strong>. Onde ele difere de um banco de servidor é na escrita: por padrão, só <strong>uma transação de escrita</strong> pode estar em andamento a cada instante. Se uma segunda escrita chega enquanto a primeira está rodando, ela entra na fila e espera — não falha de imediato, mas bloqueia.</p>
+    <p>Na prática, isso importa menos do que parece: escritas na maioria das aplicações são rápidas (poucos milissegundos), então uma fila de escritores raramente se torna um gargalo pra tráfego baixo a moderado. O SQLite também traz um modo <strong>Write-Ahead Log (WAL)</strong>, que permite que leituras continuem acontecendo em paralelo com uma escrita em andamento e geralmente melhora a vazão em relação ao modo mais antigo de rollback journal — a maioria dos deploys modernos de SQLite (incluindo ferramentas populares como o PocketBase) roda em modo WAL por padrão exatamente por isso.</p>
+    <div class="callout">
+      <strong>Onde ele realmente quebra:</strong> uma carga de trabalho com concorrência de escrita genuinamente alta — muitos processos independentes ou muitas requisições paralelas escrevendo ao mesmo tempo, de forma sustentada — vai começar a filar visivelmente e se tornar um gargalo real. É o ponto em que "só usa SQLite" deixa de ser obviamente verdade. Projetos mais novos como o Turso tentaram especificamente relaxar a limitação de escritor único, o que por si só é um sinal de quão real essa limitação é na prática.
+    </div>
+
+    <h2 id="comparar-pt">6. Como ele se compara a um banco de servidor "de verdade"</h2>
+    <table>
+      <tr><th>Dimensão</th><th>SQLite</th><th>Postgres / MySQL (servidor)</th></tr>
+      <tr><td>Deploy</td><td>Embarcado, arquivo único, sem processo de servidor</td><td>Processo de servidor separado, protocolo de rede</td></tr>
+      <tr><td>Escritores concorrentes</td><td>Um por vez (em fila)</td><td>Muitos, controlados pelo mecanismo de concorrência do motor</td></tr>
+      <tr><td>Acesso multi-máquina</td><td>Não suportado nativamente</td><td>Caso de uso central — muitos servidores de app, um banco</td></tr>
+      <tr><td>Custo de configuração</td><td>Praticamente zero</td><td>Exige provisionamento, credenciais, rede</td></tr>
+      <tr><td>Sistema de usuários/permissões</td><td>Nenhum — só nível de arquivo</td><td>Controle de acesso completo baseado em papéis</td></tr>
+      <tr><td>Melhor uso</td><td>Uma aplicação dona dos próprios dados, uso embarcado/local/edge</td><td>Múltiplos clientes ou serviços compartilhando um conjunto de dados</td></tr>
+    </table>
+
+    <h2 id="exemplo-pt">7. Um exemplo prático</h2>
+    <p>Imagine uma ferramenta interna pequena: um único processo Node.js ou Python servindo um dashboard pra um punhado de colegas, com uns poucos milhares de linhas de dados que mudam ocasionalmente. O SQLite é uma escolha forte aqui — um arquivo só, sem infraestrutura, backup trivial (copiar o arquivo), e a carga de escrita é baixa o suficiente pra que a limitação de escritor único nunca apareça.</p>
+    <p>Agora imagine o mesmo dashboard, mas ele cresce pra um produto SaaS multi-região com dezenas de instâncias de backend todas escrevendo no mesmo conjunto de dados simultaneamente, e um requisito de que qualquer instância, em qualquer lugar, consiga ler a última escrita imediatamente. Esse é o ponto pro qual o SQLite nunca foi desenhado — a decisão certa é um banco de servidor gerenciado (ou um dos serviços mais novos "compatíveis com SQLite mas em rede" cobertos na próxima lição).</p>
+
+    <h2 id="regra-pt">8. A regra prática</h2>
+    <div class="callout">
+      <strong>Use SQLite quando</strong> um processo (ou um número pequeno de processos numa única máquina) é dono dos dados, o volume de escrita é leve a moderado, e você quer infraestrutura zero. <strong>Migre pra um banco de servidor quando</strong> múltiplas máquinas precisam escrever concorrentemente, você precisa de permissões reais por usuário, ou a concorrência de escrita sustentada começa a filar visivelmente.
+    </div>
+    <p>A documentação oficial do SQLite coloca isso de forma direta: é uma ótima escolha pra dispositivos embarcados, cache local, prototipagem, e o lado "dispositivo/edge" da computação — e uma escolha ruim pra qualquer coisa que se pareça com uma carga de trabalho cliente-servidor compartilhada, com múltiplos escritores, em escala real. A próxima lição cobre as alternativas que assumem exatamente a partir desse ponto: Postgres, MySQL, Turso e PlanetScale.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lição 13</span>
+  <span class="accent" id="footer-right">SQLite</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 13' : 'Cooldecode · Lição 13';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Claude formalizes Fermat's Last Theorem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Anthropic/Claude news</span>
+      <h1>Claude formalized Fermat's Last Theorem — which is not the same as proving it</h1>
+      <p class="subtitle">On September 4, 2026, Anthropic published the first complete, computer-checked proof of Fermat's Last Theorem in the Lean programming language. Claude wrote it, largely on its own, in 11 days. The eye-catching part isn't that a 350-year-old theorem got a new proof — it's what "formalizing" actually means, and why turning a proof into something a machine can check is a different, and in some ways harder-to-trust, problem than writing the proof in the first place.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">1. What actually happened</a></li>
+        <li><a href="#not-new-math">2. Formalizing is not the same as discovering</a></li>
+        <li><a href="#why-hard">3. Why verification is normally the slow part</a></li>
+        <li><a href="#how">4. How a team of Claude agents pulled it off</a></li>
+        <li><a href="#numbers">5. The numbers, and what they're hiding</a></li>
+        <li><a href="#why-matters">6. Why this matters beyond mathematics</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What actually happened</h2>
+    <p>Fermat's Last Theorem (FLT) states that no positive integers <code>a, b, c</code> satisfy <code>aⁿ + bⁿ = cⁿ</code> for any whole number <code>n</code> greater than 2. Pierre de Fermat scribbled the claim in a book margin around 1637, famously claiming to have "a truly marvelous proof" that the margin was too narrow to contain. No correct proof surfaced for 358 years, until Andrew Wiles published one in 1995 — 129 dense pages that took the mathematical community months to verify.</p>
+    <p>Anthropic's news isn't a new proof of FLT. It's a <strong>formalization</strong> of Wiles's proof: a rewrite of the entire logical chain into <strong>Lean</strong>, a "proof assistant" programming language that can mechanically check every single logical step, with zero trust required in any human reviewer. Tianyi Peng, an Anthropic researcher who also runs an AI-for-formalization lab at Columbia, set Claude loose on the problem mostly to see how far it would get. Over 11 days, largely autonomous, it wrote 13 million lines of Lean code and proved 30,300 intermediate theorems (29,500 of which made it into the final proof) — a feat outside mathematician Kevin Buzzard called "extraordinary," noting the resulting proof needs no assumptions beyond the basic axioms of mathematics itself.</p>
+
+    <h2 id="not-new-math">2. Formalizing is not the same as discovering</h2>
+    <p>It's worth being precise here, because it's easy to read this as "AI proves famous 350-year-old math problem," which overstates it. Claude did not discover a new proof of FLT and did not do what Wiles did. It followed an existing, published, simplified route through Wiles's argument (from a well-known exposition by Darmon, Diamond and Taylor) and translated that route, step by trivial step, into a language a computer can verify with certainty.</p>
+    <p>That distinction matters because the two tasks — discovering a proof and formalizing one — put very different demands on rigor. A human proof, written for other humans, is allowed to skip "obvious" steps and trust the reader's background knowledge. Lean accepts none of that: every single inference has to be spelled out, all the way down to axioms that have already been formally verified. Anthropic contrasts this explicitly with an earlier, separate result where Claude helped produce genuinely novel mathematics on the Riemann hypothesis — this time, the novelty is entirely in the checking, not in the math itself.</p>
+
+    <h2 id="why-hard">3. Why verification is normally the slow part</h2>
+    <p>The reason this distinction is worth a full section: verifying a hard proof has historically been slower and more failure-prone than writing one. Wiles first presented his FLT proof in June 1993. Two months into the community's review, a mathematician spotted a gap serious enough that Wiles spent a year fixing it — almost giving up before finding the repair that let him publish the corrected version in 1995.</p>
+    <p>FLT isn't an outlier. Thomas Hales's 1998 proof of the Kepler conjecture spent four years in front of a 12-referee panel that eventually settled for "99% certain" rather than fully confirmed (Hales later spent 20 person-years formalizing it properly). Grigori Perelman's 2002 proof of the Poincaré conjecture took roughly four years and three separate 300-page expository write-ups before the community accepted it. And in 1908, a 100,000-mark prize for a correct FLT proof drew 621 <em>incorrect</em> submissions in its first year alone.</p>
+    <div class="callout"><strong>The pattern:</strong> checking a complex mathematical argument by hand doesn't scale — expert attention is scarce, and a single broken link anywhere in a long logical chain can silently invalidate everything built on top of it. That's exactly the problem automated formalization is aimed at.</div>
+
+    <h2 id="how">4. How a team of Claude agents pulled it off</h2>
+    <p>The formalization effort didn't succeed on the first attempt. Early runs of Claude agents made some early progress but "lost track of the project's state" over time and stopped collaborating effectively — their discarded work still contributed roughly 7% of the final proof's non-boilerplate lines, but the approach didn't scale on its own.</p>
+    <p>What changed the outcome was pairing Claude with <strong>Prove2Me</strong>, an open collaborative formalization platform built by Peng's team at Columbia. Prove2Me contributed three things a raw multi-agent setup was missing:</p>
+    <ul>
+      <li><strong>A shared map of the problem</strong> — a directed acyclic graph (DAG) of theorem statements that every agent could consult to decide what to prove next, which kept dozens of agents from duplicating work or losing the thread over multi-day runs.</li>
+      <li><strong>Faster compilation</strong> — separating theorem statements from their proofs into different files, so Lean didn't have to recompile huge blocks of code for small changes.</li>
+      <li><strong>Reusable context</strong> — a plain-language description attached to every formal theorem, so agents could search for and reuse existing work instead of reproving the same lemma from scratch.</li>
+    </ul>
+    <p>With that scaffold in place, a swarm of Claude agents (running on a general-purpose internal research model roughly comparable to Claude Fable 5.1) closed out the proof in under two weeks, consuming about six billion output tokens. Human involvement was limited to occasional prioritization nudges from Peng — messages like "push the Mazur theorem to be done soon" — not mathematical problem-solving. The finished proof was checked using only Lean's three standard axioms, and an automated comparator confirmed its final statement matches the standard formulation of FLT already in Lean's community math library, Mathlib.</p>
+
+    <h2 id="numbers">5. The numbers, and what they're hiding</h2>
+    <table>
+      <tr><th>Metric</th><th>Value</th></tr>
+      <tr><td>Time to complete</td><td>11 days (agents), under 2 weeks including setup</td></tr>
+      <tr><td>Lean code written</td><td>13 million lines — about 5x the size of Mathlib itself</td></tr>
+      <tr><td>Intermediate theorems proved</td><td>30,300 (29,500 used in the final proof)</td></tr>
+      <tr><td>Output tokens consumed</td><td>~6 billion</td></tr>
+      <tr><td>Human mathematical input</td><td>High-level prioritization only, no proof steps</td></tr>
+    </table>
+    <p>The 13-million-line figure is less impressive than it sounds: Anthropic itself notes the proof is likely far longer than necessary, partly because Mathlib is unusually concise and well-reviewed while a first-pass automated proof isn't optimized for brevity. A separate, smaller experiment is more telling of where things are headed: using just three personal Claude subscriptions (not an internal research cluster), a team formalized Vinogradov's Three Primes Theorem — a genuinely hard analytic number theory result — in three days using the same Prove2Me approach.</p>
+
+    <h2 id="why-matters">6. Why this matters beyond mathematics</h2>
+    <p>Three things carry over from this story to anything involving AI-generated work that needs trust, not just math:</p>
+    <ul>
+      <li><strong>Verification is a bottleneck that scales worse than generation.</strong> AI systems (including Claude) are already producing more claims, code and results than any team of humans can carefully check. Formal, machine-checkable verification is one of the few approaches that scales with the flood rather than against it — this is the same underlying problem as trusting AI-written code without reading every line, just posed in a domain where "checking" has a mathematically precise meaning.</li>
+      <li><strong>The DAG-plus-multi-agent pattern is the real engineering story.</strong> The breakthrough wasn't a smarter model sitting alone in a chat window — it was giving many agent instances a shared, structured map of a large problem and a way to avoid duplicating or losing each other's work over an 11-day run. That's the same shape of problem as coordinating multiple coding agents on a large codebase, just in a domain where success or failure is unambiguous.</li>
+      <li><strong>Anthropic is explicit that this doesn't replace human mathematicians</strong> — Kevin Buzzard's own comment frames it as a tool that "lightens the burden of referees" and helps check the flood of AI-generated math and code now arriving faster than humans can review it, not as a replacement for mathematical understanding or exposition aimed at people.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/research/formalizing-fermats-last-theorem" target="_blank" rel="noopener">Anthropic — "Formalizing Fermat's Last Theorem" (Sep 4, 2026)</a></li>
+        <li><a href="https://dataconomy.com/2026/09/07/claude-completes-computer-checked-proof-fermat-last-theorem/" target="_blank" rel="noopener">Dataconomy — "Claude Completes First Computer-checked Proof Of Fermat's Last Theorem" (Sep 7, 2026)</a></li>
+        <li><a href="https://techbriefly.com/2026/09/07/claude-completes-computer-checked-proof-fermat-last-theorem/" target="_blank" rel="noopener">TechBriefly — "Claude creates first complete computer-checked proof of Fermat's Last Theorem" (Sep 7, 2026)</a></li>
+        <li><a href="https://aiweekly.co/alerts/anthropics-claude-formalizes-fermats-last-theorem-in-lean" target="_blank" rel="noopener">AI Weekly — "Anthropic's Claude Formalizes Fermat's Last Theorem in Lean"</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude formalizou o Último Teorema de Fermat — o que não é a mesma coisa que prová-lo</h1>
+      <p class="subtitle">Em 4 de setembro de 2026, a Anthropic publicou a primeira prova completa e verificada por computador do Último Teorema de Fermat, escrita na linguagem Lean. O Claude escreveu ela, quase sozinho, em 11 dias. A parte chamativa não é que um teorema de 350 anos ganhou uma prova nova — é o que "formalizar" realmente significa, e por que transformar uma prova em algo que uma máquina consegue checar é um problema diferente, e em certos aspectos mais difícil de confiar, do que escrever a prova em si.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">1. O que de fato aconteceu</a></li>
+        <li><a href="#nao-e-matematica-nova">2. Formalizar não é a mesma coisa que descobrir</a></li>
+        <li><a href="#por-que-dificil">3. Por que a verificação costuma ser a parte lenta</a></li>
+        <li><a href="#como">4. Como um time de agentes Claude conseguiu isso</a></li>
+        <li><a href="#numeros">5. Os números, e o que eles escondem</a></li>
+        <li><a href="#por-que-importa">6. Por que isso importa além da matemática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que de fato aconteceu</h2>
+    <p>O Último Teorema de Fermat (FLT, na sigla em inglês) afirma que nenhum trio de inteiros positivos <code>a, b, c</code> satisfaz <code>aⁿ + bⁿ = cⁿ</code> pra qualquer número inteiro <code>n</code> maior que 2. Pierre de Fermat rabiscou essa afirmação na margem de um livro por volta de 1637, alegando ter "uma prova verdadeiramente maravilhosa" que a margem era estreita demais pra conter. Nenhuma prova correta surgiu por 358 anos, até Andrew Wiles publicar uma em 1995 — 129 páginas densas que levaram meses pra comunidade matemática verificar.</p>
+    <p>A novidade da Anthropic não é uma prova nova do FLT. É uma <strong>formalização</strong> da prova de Wiles: reescrever toda a cadeia lógica em <strong>Lean</strong>, uma linguagem de programação de "assistente de prova" que consegue checar mecanicamente cada passo lógico, sem precisar confiar em revisor humano nenhum. Tianyi Peng, pesquisador da Anthropic que também toca um laboratório de IA pra formalização na Columbia, soltou o Claude no problema principalmente pra ver até onde ele chegaria. Em 11 dias, majoritariamente de forma autônoma, o Claude escreveu 13 milhões de linhas de código Lean e provou 30.300 teoremas intermediários (29.500 dos quais entraram na prova final) — um feito que o matemático Kevin Buzzard chamou de "extraordinário", notando que a prova resultante não precisa de nenhuma suposição além dos axiomas básicos da própria matemática.</p>
+
+    <h2 id="nao-e-matematica-nova">2. Formalizar não é a mesma coisa que descobrir</h2>
+    <p>Vale ser preciso aqui, porque é fácil ler isso como "IA prova problema matemático famoso de 350 anos", o que exagera o feito. O Claude não descobriu uma prova nova do FLT e não fez o que Wiles fez. Ele seguiu um caminho já existente, publicado e simplificado através do argumento de Wiles (de uma exposição conhecida de Darmon, Diamond e Taylor) e traduziu esse caminho, passo a passo trivial, pra uma linguagem que um computador consegue verificar com certeza.</p>
+    <p>Essa distinção importa porque as duas tarefas — descobrir uma prova e formalizar uma — exigem níveis de rigor bem diferentes. Uma prova humana, escrita pra outros humanos, pode pular passos "óbvios" e confiar no conhecimento de fundo do leitor. O Lean não aceita nada disso: cada inferência precisa ser escrita por extenso, até chegar em axiomas que já foram formalmente verificados. A própria Anthropic contrasta isso com um resultado anterior e separado, em que o Claude ajudou a produzir matemática genuinamente nova sobre a hipótese de Riemann — dessa vez, a novidade está inteiramente na checagem, não na matemática em si.</p>
+
+    <h2 id="por-que-dificil">3. Por que a verificação costuma ser a parte lenta</h2>
+    <p>O motivo dessa distinção merecer uma seção inteira: verificar uma prova difícil historicamente tem sido mais lento e mais sujeito a falhas do que escrevê-la. Wiles apresentou sua prova do FLT pela primeira vez em junho de 1993. Dois meses dentro da revisão da comunidade, um matemático encontrou uma lacuna grave o suficiente pra Wiles passar um ano consertando — quase desistindo antes de encontrar o reparo que permitiu publicar a versão corrigida em 1995.</p>
+    <p>O FLT não é exceção. A prova de Thomas Hales de 1998 pra conjectura de Kepler passou quatro anos na frente de um painel de 12 revisores que no fim se contentou com "99% de certeza" em vez de confirmação total (Hales depois passou 20 pessoas-ano formalizando ela direito). A prova de Grigori Perelman de 2002 pra conjectura de Poincaré levou cerca de quatro anos e três exposições separadas de 300 páginas até a comunidade aceitar. E em 1908, um prêmio de 100 mil marcos por uma prova correta do FLT atraiu 621 submissões <em>incorretas</em> só no primeiro ano.</p>
+    <div class="callout"><strong>O padrão:</strong> checar um argumento matemático complexo à mão não escala — atenção especializada é escassa, e um único elo quebrado em qualquer ponto de uma cadeia lógica longa pode invalidar silenciosamente tudo que foi construído em cima dele. É exatamente esse problema que a formalização automatizada tenta resolver.</div>
+
+    <h2 id="como">4. Como um time de agentes Claude conseguiu isso</h2>
+    <p>O esforço de formalização não deu certo na primeira tentativa. As primeiras execuções de agentes Claude fizeram algum progresso inicial mas "perderam o rastro do estado do projeto" com o tempo e pararam de colaborar de forma eficaz — o trabalho descartado deles ainda contribuiu com cerca de 7% das linhas não-repetitivas da prova final, mas a abordagem não escalava sozinha.</p>
+    <p>O que mudou o resultado foi combinar o Claude com o <strong>Prove2Me</strong>, uma plataforma colaborativa aberta de formalização construída pelo time de Peng na Columbia. O Prove2Me contribuiu com três coisas que faltavam numa configuração multi-agente crua:</p>
+    <ul>
+      <li><strong>Um mapa compartilhado do problema</strong> — um grafo acíclico dirigido (DAG) de enunciados de teoremas que qualquer agente podia consultar pra decidir o que provar em seguida, o que evitou que dezenas de agentes duplicassem trabalho ou perdessem o fio da meada em execuções de vários dias.</li>
+      <li><strong>Compilação mais rápida</strong> — separando enunciados de teoremas das suas provas em arquivos diferentes, pra o Lean não precisar recompilar blocos enormes de código a cada mudança pequena.</li>
+      <li><strong>Contexto reaproveitável</strong> — uma descrição em linguagem natural anexada a cada teorema formal, pra os agentes conseguirem buscar e reaproveitar trabalho já feito em vez de reprovar o mesmo lema do zero.</li>
+    </ul>
+    <p>Com essa estrutura em pé, um enxame de agentes Claude (rodando num modelo de pesquisa interno de propósito geral, aproximadamente comparável ao Claude Fable 5.1) fechou a prova em menos de duas semanas, consumindo cerca de seis bilhões de tokens de saída. A participação humana se limitou a empurrões ocasionais de priorização de Peng — mensagens como "priorizar o teorema de Mazur em breve" — não resolução de problemas matemáticos. A prova final foi checada usando só os três axiomas padrão do Lean, e um comparador automatizado confirmou que o enunciado final bate com a formulação padrão do FLT já presente na biblioteca matemática da comunidade Lean, a Mathlib.</p>
+
+    <h2 id="numeros">5. Os números, e o que eles escondem</h2>
+    <table>
+      <tr><th>Métrica</th><th>Valor</th></tr>
+      <tr><td>Tempo até a conclusão</td><td>11 dias (agentes), menos de 2 semanas incluindo preparação</td></tr>
+      <tr><td>Código Lean escrito</td><td>13 milhões de linhas — cerca de 5x o tamanho da própria Mathlib</td></tr>
+      <tr><td>Teoremas intermediários provados</td><td>30.300 (29.500 usados na prova final)</td></tr>
+      <tr><td>Tokens de saída consumidos</td><td>~6 bilhões</td></tr>
+      <tr><td>Contribuição matemática humana</td><td>Só priorização de alto nível, nenhum passo de prova</td></tr>
+    </table>
+    <p>O número de 13 milhões de linhas é menos impressionante do que parece: a própria Anthropic nota que a prova provavelmente é bem mais longa do que precisaria ser, em parte porque a Mathlib é incomumente concisa e bem revisada enquanto uma prova automatizada de primeira passagem não é otimizada pra brevidade. Um experimento separado e menor é mais revelador de pra onde as coisas estão indo: usando só três assinaturas pessoais do Claude (não um cluster de pesquisa interno), um time formalizou o Teorema dos Três Primos de Vinogradov — um resultado genuinamente difícil de teoria analítica dos números — em três dias, usando a mesma abordagem do Prove2Me.</p>
+
+    <h2 id="por-que-importa">6. Por que isso importa além da matemática</h2>
+    <p>Três coisas dessa história valem pra qualquer trabalho gerado por IA que precise de confiança, não só pra matemática:</p>
+    <ul>
+      <li><strong>Verificação é um gargalo que escala pior do que geração.</strong> Sistemas de IA (o Claude incluído) já produzem mais afirmações, código e resultados do que qualquer time de humanos consegue checar com cuidado. Verificação formal, checável por máquina, é uma das poucas abordagens que escala junto com a enchente em vez de contra ela — é o mesmo problema de fundo de confiar em código escrito por IA sem ler cada linha, só que num domínio onde "checar" tem um significado matematicamente preciso.</li>
+      <li><strong>O padrão DAG + multi-agente é a história de engenharia real aqui.</strong> O avanço não foi um modelo mais esperto sozinho numa janela de chat — foi dar a muitas instâncias de agente um mapa compartilhado e estruturado de um problema grande, e uma forma de evitar duplicar ou perder o trabalho umas das outras ao longo de uma execução de 11 dias. É o mesmo tipo de problema de coordenar múltiplos agentes de código numa base de código grande, só que num domínio onde sucesso ou fracasso é inequívoco.</li>
+      <li><strong>A própria Anthropic é explícita que isso não substitui matemáticos humanos</strong> — o comentário do próprio Kevin Buzzard enquadra isso como uma ferramenta que "alivia a carga dos revisores" e ajuda a checar a enchente de matemática e código gerados por IA que já chega mais rápido do que humanos conseguem revisar, não como substituto do entendimento matemático ou de exposições voltadas a pessoas.</li>
+    </ul>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/research/formalizing-fermats-last-theorem" target="_blank" rel="noopener">Anthropic — "Formalizing Fermat's Last Theorem" (04/09/2026)</a></li>
+        <li><a href="https://dataconomy.com/2026/09/07/claude-completes-computer-checked-proof-fermat-last-theorem/" target="_blank" rel="noopener">Dataconomy — "Claude Completes First Computer-checked Proof Of Fermat's Last Theorem" (07/09/2026)</a></li>
+        <li><a href="https://techbriefly.com/2026/09/07/claude-completes-computer-checked-proof-fermat-last-theorem/" target="_blank" rel="noopener">TechBriefly — "Claude creates first complete computer-checked proof of Fermat's Last Theorem" (07/09/2026)</a></li>
+        <li><a href="https://aiweekly.co/alerts/anthropics-claude-formalizes-fermats-last-theorem-in-lean" target="_blank" rel="noopener">AI Weekly — "Anthropic's Claude Formalizes Fermat's Last Theorem in Lean"</a></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span> · <span class="accent" id="footer-right">Fermat's Last Theorem</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = "Fermat's Last Theorem";
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Último Teorema de Fermat';
+    }
+  }
+</script>
+
+</body>
+</html>

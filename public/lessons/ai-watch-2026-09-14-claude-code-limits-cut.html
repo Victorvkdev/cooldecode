@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: A 25% increase that's actually a 17% cut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>A "25% increase" that's actually a 17% cut</h1>
+      <p class="subtitle">Starting today, Anthropic is permanently raising Claude Code's standard weekly limits by 25% over the original baseline — while quietly ending a temporary 50% boost that's been in place since May. Net effect for most subscribers: less usage than they had yesterday. Here's how to read an announcement like this.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What changed, exactly, today</a></li>
+        <li><a href="#math">The math behind two "true" numbers</a></li>
+        <li><a href="#why">Why Anthropic says this is happening</a></li>
+        <li><a href="#pattern">This isn't new — it's how usage-based AI pricing works</a></li>
+        <li><a href="#takeaway">How to read the next "capacity" announcement</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What changed, exactly, today</h2>
+    <p>Since May 2026, Claude Code subscribers on Pro, Max, Team and seat-based Enterprise plans have been running on a <strong>temporary 50% boost</strong> above their plan's original weekly usage baseline — extra headroom Anthropic added, reportedly to keep up with surging demand and competitive pressure from cheaper Chinese open-weight models. That boost expired today, September 14, 2026.</p>
+    <p>In its place, Anthropic is rolling out a <strong>permanent 25% increase</strong> over the same original baseline. Anthropic's own framing emphasizes the permanent 25% figure as a net win for users. Independent coverage instead compared it to what subscribers actually had access to <em>yesterday</em> — the 150%-of-baseline level under the temporary boost — and arrived at a 17% cut.</p>
+    <div class="callout">
+      <strong>Both numbers are correct.</strong> They're just measured from different starting points. That's the whole story, and it's worth sitting with, because this exact pattern — a change that's simultaneously an "increase" and a "cut" depending on the reference point — shows up constantly in how tech companies announce pricing and capacity changes.
+    </div>
+
+    <h2 id="math">2. The math behind two "true" numbers</h2>
+    <p>Call the original weekly limit <code>100</code> (an index, not real units — Anthropic doesn't publish exact token counts per plan tier).</p>
+    <table>
+      <tr><th>Moment</th><th>Limit (index)</th><th>Framed as</th></tr>
+      <tr><td>Before May 2026 (original baseline)</td><td>100</td><td>—</td></tr>
+      <tr><td>May–September 13, 2026 (temporary boost)</td><td>150</td><td>+50% above baseline</td></tr>
+      <tr><td>From September 14, 2026 (new permanent limit)</td><td>125</td><td>Anthropic: +25% above baseline · Press: −17% vs. yesterday</td></tr>
+    </table>
+    <p><code>125</code> is indeed 25% above the original <code>100</code>. It is also roughly 17% below the <code>150</code> subscribers had access to the day before (125/150 ≈ 0.833, i.e. an ~17% drop). Neither side is lying — they're just anchoring the percentage to a different denominator, and each denominator happens to favor a different narrative.</p>
+
+    <h2 id="why">3. Why Anthropic says this is happening</h2>
+    <p>Anthropic's stated reason is straightforward: the company says it can't reliably source enough compute to sustain the temporary 150%-of-baseline level as a permanent feature, given how fast Claude Code adoption has grown since the boost started. Coverage of the change ties it to the same broader capacity crunch behind other recent moves — Anthropic reportedly finalizing a large pre-IPO credit facility and continuing to build out data center capacity through multiple cloud partners.</p>
+    <p>In other words: usage grew faster than Anthropic's compute supply could comfortably absorb at the boosted level, so the "temporary" label on the original boost turned out to be doing real work — it really was temporary, and the permanent number landed lower than the promotional one, as promotional numbers often do.</p>
+
+    <h2 id="pattern">4. This isn't new — it's how usage-based AI pricing works</h2>
+    <p>If this feels familiar, it should. AI products built on genuinely expensive compute tend to follow a recognizable cycle: launch or expand with generous introductory limits to drive adoption and compete on convenience, then dial those limits back toward a level that's sustainable for the provider once the promotional period ends and real usage patterns are visible. The same basic shape has played out before with other model providers' free tiers, rate limits, and "unlimited" plans that later grew fine print.</p>
+    <p>None of this makes the change dishonest — Anthropic did call the boost "temporary" from the start, and the 25%-over-original-baseline number is real and represents genuine net growth in what most users can do compared to a year ago. But it's a useful reminder that "increase" and "decrease" are both accurate descriptions of the same change; the headline number a company chooses to lead with is a communications decision, not just a factual one.</p>
+
+    <h2 id="takeaway">5. How to read the next "capacity" announcement</h2>
+    <p>Whenever a platform — any platform, not just Claude Code — announces a limit change framed as a percentage, the one question worth asking before reacting is: <strong>percentage of what, measured from when?</strong> A number with no fixed reference point can be technically true and still tell you almost nothing about whether your day-to-day experience is getting better or worse. If you're a Claude Code subscriber, the practical takeaway is simpler still: check your actual weekly usage dashboard against your real workflow, rather than trusting either the "+25%" or the "−17%" headline on its own.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Sources</h2>
+    <ul class="sources">
+      <li>Digital Applied — <a href="https://www.digitalapplied.com/blog/claude-code-weekly-limit-reduction-september-14" target="_blank" rel="noopener">"Claude Code's Weekly Limits Drop 17% on September 14"</a>, September 2026.</li>
+      <li>BleepingComputer — <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-is-cutting-claude-codes-current-weekly-limits-by-17-percent/" target="_blank" rel="noopener">"Anthropic is cutting Claude Code's current weekly limits by 17%"</a>, September 2026.</li>
+      <li>Enterprise DNA — <a href="https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-08-30-anthropic-s-25-increase-to-claude-code-limits-is-really-a-17/" target="_blank" rel="noopener">"Anthropic's '25% increase' to Claude Code limits is really a 17% cut"</a>, August 30, 2026.</li>
+      <li>MindStudio — <a href="https://www.mindstudio.ai/blog/claude-code-weekly-rate-limit-changes" target="_blank" rel="noopener">"Claude Code's September Rate Limit Change Is a Cut Dressed as an Increase"</a>, September 2026.</li>
+      <li>TechJack Solutions — <a href="https://techjacksolutions.com/ai-brief/anthropic-cuts-claude-code-weekly-quota-17-percent-september/" target="_blank" rel="noopener">"Anthropic's September 14 Claude Code Quota Change Is Effectively a 17% Cut"</a>, September 2026.</li>
+      <li>explainx.ai — <a href="https://explainx.ai/blog/anthropic-claude-code-limits-17-percent-cut-september-2026-august-2026" target="_blank" rel="noopener">"Claude Code Limits Cut 17% Sept 14 (2026 Math)"</a>, September 2026.</li>
+    </ul>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Um "aumento de 25%" que na prática é um corte de 17%</h1>
+      <p class="subtitle">A partir de hoje, a Anthropic está elevando permanentemente os limites semanais padrão do Claude Code em 25% sobre a linha de base original — enquanto encerra discretamente um reforço temporário de 50% que estava em vigor desde maio. Efeito líquido pra maioria dos assinantes: menos uso do que tinham ontem. Veja como ler um anúncio desses.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#o-que-mudou">O que mudou, exatamente, hoje</a></li>
+        <li><a href="#matematica">A matemática por trás de dois números "verdadeiros"</a></li>
+        <li><a href="#porque-pt">Por que a Anthropic diz que isso está acontecendo</a></li>
+        <li><a href="#padrao-pt">Isso não é novo — é assim que funciona o preço baseado em uso de IA</a></li>
+        <li><a href="#conclusao-pt">Como ler o próximo anúncio de "capacidade"</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-mudou">1. O que mudou, exatamente, hoje</h2>
+    <p>Desde maio de 2026, assinantes do Claude Code nos planos Pro, Max, Team e Enterprise por assento vinham operando com um <strong>reforço temporário de 50%</strong> acima da linha de base semanal original de cada plano — uma folga extra que a Anthropic adicionou, segundo relatos, pra acompanhar a demanda crescente e a pressão competitiva de modelos chineses de peso aberto mais baratos. Esse reforço expirou hoje, 14 de setembro de 2026.</p>
+    <p>No lugar dele, a Anthropic está lançando um <strong>aumento permanente de 25%</strong> sobre a mesma linha de base original. O próprio posicionamento da Anthropic destaca o número de 25% permanente como um ganho líquido pros usuários. A cobertura independente, em vez disso, comparou com o que os assinantes realmente tinham acesso <em>ontem</em> — o patamar de 150% da linha de base sob o reforço temporário — e chegou a um corte de 17%.</p>
+    <div class="callout">
+      <strong>Os dois números estão corretos.</strong> Eles só são medidos a partir de pontos de partida diferentes. Essa é a história inteira, e vale a pena parar pra pensar nela, porque esse padrão exato — uma mudança que é simultaneamente um "aumento" e um "corte" dependendo do ponto de referência — aparece o tempo todo em como empresas de tecnologia anunciam mudanças de preço e capacidade.
+    </div>
+
+    <h2 id="matematica">2. A matemática por trás de dois números "verdadeiros"</h2>
+    <p>Chame o limite semanal original de <code>100</code> (um índice, não uma unidade real — a Anthropic não publica a contagem exata de tokens por nível de plano).</p>
+    <table>
+      <tr><th>Momento</th><th>Limite (índice)</th><th>Como foi apresentado</th></tr>
+      <tr><td>Antes de maio de 2026 (linha de base original)</td><td>100</td><td>—</td></tr>
+      <tr><td>Maio–13 de setembro de 2026 (reforço temporário)</td><td>150</td><td>+50% acima da linha de base</td></tr>
+      <tr><td>A partir de 14 de setembro de 2026 (novo limite permanente)</td><td>125</td><td>Anthropic: +25% acima da linha de base · Imprensa: −17% vs. ontem</td></tr>
+    </table>
+    <p><code>125</code> é, de fato, 25% acima do <code>100</code> original. Também é, aproximadamente, 17% abaixo do <code>150</code> que os assinantes tinham acesso no dia anterior (125/150 ≈ 0,833, ou seja, uma queda de ~17%). Nenhum dos dois lados está mentindo — eles só estão ancorando a porcentagem em um denominador diferente, e cada denominador favorece uma narrativa diferente.</p>
+
+    <h2 id="porque-pt">3. Por que a Anthropic diz que isso está acontecendo</h2>
+    <p>A razão declarada pela Anthropic é direta: a empresa diz que não consegue garantir compute suficiente de forma confiável pra sustentar o patamar temporário de 150% da linha de base como um recurso permanente, dado o quão rápido a adoção do Claude Code cresceu desde que o reforço começou. A cobertura da mudança liga isso ao aperto de capacidade mais amplo por trás de outros movimentos recentes — a Anthropic supostamente fechando uma grande linha de crédito pré-IPO e continuando a expandir capacidade de data center por meio de múltiplos parceiros de nuvem.</p>
+    <p>Em outras palavras: o uso cresceu mais rápido do que a oferta de compute da Anthropic conseguia absorver confortavelmente no patamar reforçado, então o rótulo "temporário" no reforço original acabou fazendo trabalho de verdade — ele era mesmo temporário, e o número permanente ficou abaixo do promocional, como números promocionais costumam ficar.</p>
+
+    <h2 id="padrao-pt">4. Isso não é novo — é assim que funciona o preço baseado em uso de IA</h2>
+    <p>Se isso parece familiar, deveria parecer mesmo. Produtos de IA construídos sobre compute genuinamente caro tendem a seguir um ciclo reconhecível: lançar ou expandir com limites introdutórios generosos pra impulsionar adoção e competir em conveniência, depois recalibrar esses limites pra um patamar sustentável pro provedor assim que o período promocional termina e os padrões reais de uso ficam visíveis. A mesma forma básica já aconteceu antes com camadas gratuitas, limites de taxa e planos "ilimitados" de outros provedores de modelo que depois ganharam letras miúdas.</p>
+    <p>Nada disso torna a mudança desonesta — a Anthropic chamou o reforço de "temporário" desde o início, e o número de 25% acima da linha de base original é real e representa crescimento líquido genuíno no que a maioria dos usuários consegue fazer em comparação a um ano atrás. Mas é um lembrete útil de que "aumento" e "diminuição" são as duas descrições precisas da mesma mudança; o número de destaque que uma empresa escolhe pra liderar o anúncio é uma decisão de comunicação, não só um fato.</p>
+
+    <h2 id="conclusao-pt">5. Como ler o próximo anúncio de "capacidade"</h2>
+    <p>Sempre que uma plataforma — qualquer plataforma, não só o Claude Code — anuncia uma mudança de limite apresentada como porcentagem, a única pergunta que vale a pena fazer antes de reagir é: <strong>porcentagem de quê, medida a partir de quando?</strong> Um número sem ponto de referência fixo pode ser tecnicamente verdadeiro e ainda assim não dizer quase nada sobre se a sua experiência no dia a dia está melhorando ou piorando. Se você é assinante do Claude Code, a lição prática é ainda mais simples: confira seu painel real de uso semanal contra o seu fluxo de trabalho de verdade, em vez de confiar isoladamente na manchete de "+25%" ou de "−17%".</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Aprenda o que a IA está criando pra você. Não fique pra trás.</p>
+      <p style="margin-bottom:14px;">Receba um aviso quando uma nova imersão ou lição sair. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Fontes</h2>
+    <ul class="sources">
+      <li>Digital Applied — <a href="https://www.digitalapplied.com/blog/claude-code-weekly-limit-reduction-september-14" target="_blank" rel="noopener">"Claude Code's Weekly Limits Drop 17% on September 14"</a>, setembro de 2026.</li>
+      <li>BleepingComputer — <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-is-cutting-claude-codes-current-weekly-limits-by-17-percent/" target="_blank" rel="noopener">"Anthropic is cutting Claude Code's current weekly limits by 17%"</a>, setembro de 2026.</li>
+      <li>Enterprise DNA — <a href="https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-08-30-anthropic-s-25-increase-to-claude-code-limits-is-really-a-17/" target="_blank" rel="noopener">"Anthropic's '25% increase' to Claude Code limits is really a 17% cut"</a>, 30 de agosto de 2026.</li>
+      <li>MindStudio — <a href="https://www.mindstudio.ai/blog/claude-code-weekly-rate-limit-changes" target="_blank" rel="noopener">"Claude Code's September Rate Limit Change Is a Cut Dressed as an Increase"</a>, setembro de 2026.</li>
+      <li>TechJack Solutions — <a href="https://techjacksolutions.com/ai-brief/anthropic-cuts-claude-code-weekly-quota-17-percent-september/" target="_blank" rel="noopener">"Anthropic's September 14 Claude Code Quota Change Is Effectively a 17% Cut"</a>, setembro de 2026.</li>
+      <li>explainx.ai — <a href="https://explainx.ai/blog/anthropic-claude-code-limits-17-percent-cut-september-2026-august-2026" target="_blank" rel="noopener">"Claude Code Limits Cut 17% Sept 14 (2026 Math)"</a>, setembro de 2026.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Code weekly limits, Sept 14 2026</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Claude Code weekly limits, Sept 14 2026';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Limites semanais do Claude Code, 14/09/2026';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

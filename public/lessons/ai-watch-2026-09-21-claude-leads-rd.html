@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude now leads 26% of Anthropic's own R&amp;D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude now leads 26% of Anthropic's own research and development</h1>
+      <p class="subtitle">Zero in February, a quarter of the workload six months later. Anthropic just put a number on something that used to be a thought experiment: an AI model helping build its own successor.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What Anthropic actually announced</a></li>
+        <li><a href="#leads-vs-collaborates">"Leads" vs. "collaborates": the two numbers that matter</a></li>
+        <li><a href="#how-fast">How fast this moved</a></li>
+        <li><a href="#why-it-matters">Why this is different from "AI writes code"</a></li>
+        <li><a href="#safety-angle">The safety angle Anthropic is leaning on</a></li>
+        <li><a href="#reality-check">What this doesn't mean yet</a></li>
+        <li><a href="#takeaway">The takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What Anthropic actually announced</h2>
+    <p>On Thursday, September 17, 2026, Anthropic said that its Claude models are now directly involved in building the next, more capable generation of Claude. Specifically: Claude <strong>leads 26% of the company's model research and development work</strong>, measured for August 2026. "Leads" here has a precise meaning — the model can take a high-level prompt and carry a task through to completion largely on its own, while a human stays in a supervisory role rather than directing every step.</p>
+    <p>This isn't a vague PR claim about "AI helping engineers." It's Anthropic publishing an internal metric about its own R&amp;D pipeline — the same pipeline that produces the next Claude model — and saying a quarter of that work is now led by Claude itself.</p>
+
+    <h2 id="leads-vs-collaborates">2. "Leads" vs. "collaborates": the two numbers that matter</h2>
+    <p>Anthropic's announcement uses two different tiers of AI involvement, and the gap between them is the whole story:</p>
+    <table>
+      <tr><th>Tier</th><th>What it means</th><th>Share of R&amp;D work (Aug 2026)</th></tr>
+      <tr><td><strong>AI leads</strong></td><td>Claude completes most of a task end-to-end from a high-level prompt, under human supervision — not micromanagement.</td><td>26%</td></tr>
+      <tr><td><strong>AI collaborates</strong></td><td>Claude handles substantial chunks of a task under close human direction — the human is still driving, but Claude is doing real work, not just autocomplete.</td><td>~90% (combined with "leads")</td></tr>
+    </table>
+    <p>In other words: on 9 out of 10 R&amp;D tasks at Anthropic, a Claude model is doing meaningful work of some kind. On roughly 1 in 4, it's doing most of that work with a human checking in rather than steering.</p>
+
+    <h2 id="how-fast">3. How fast this moved</h2>
+    <p>The number that should actually catch your attention isn't 26% — it's the slope. Anthropic says the share of R&amp;D work Claude "leads" was effectively <strong>zero in February 2026</strong>. Six months later, in August, it had reached a quarter. That's not a gradual rollout of a feature; that's a capability curve that went from "doesn't exist" to "a quarter of the workload" in two quarters.</p>
+    <p>Reporting also puts a number on the scale behind this: as of August 2026, Anthropic had roughly <strong>30,000 agents</strong> running research and engineering work in parallel. That's the infrastructure context for the 26% figure — it's not one impressive demo, it's a production pipeline.</p>
+
+    <h2 id="why-it-matters">4. Why this is different from "AI writes code"</h2>
+    <p>Coding assistants that autocomplete functions or fix a failing test are old news by September 2026 — most developers already work alongside a tool like that. What Anthropic is describing is one level up:</p>
+    <ul>
+      <li>It's not one engineer using an assistant. It's a metric across Anthropic's <em>entire</em> model R&amp;D process — the research that decides what the next Claude looks like.</li>
+      <li>"Leads... end-to-end from a high-level prompt" implies task decomposition, running experiments, evaluating results, and deciding next steps — not just producing a diff for a human to review line by line.</li>
+      <li>The subject and the object are the same system: Claude is doing work whose output is a better Claude. That's the recursive part people mean when they talk about AI accelerating AI development — this is Anthropic saying it's already happening inside their own building, with a percentage attached.</li>
+    </ul>
+
+    <h2 id="safety-angle">5. The safety angle Anthropic is leaning on</h2>
+    <p>Anthropic didn't publish this number in isolation — it came bundled with safety framing, and that's deliberate. The company has recently:</p>
+    <ul>
+      <li>Committed to bringing in <strong>external third-party evaluators</strong>, embedded within Anthropic, to monitor safety efforts around exactly this kind of work.</li>
+      <li>Been explicit that Claude is "not yet working completely autonomously" — the human supervision layer is presented as a hard boundary, not a formality.</li>
+    </ul>
+    <p>There's real tension worth naming here: Anthropic's own CEO, Dario Amodei, has been one of the most vocal industry voices calling for the pace of AI development to slow down over safety concerns — while his company is simultaneously the one disclosing the fastest documented jump in AI-led AI R&amp;D. Both things are true at once, and Anthropic's bet is that publishing the number, with an external audit layer attached, is safer than not measuring it at all.</p>
+
+    <h2 id="reality-check">6. What this doesn't mean yet</h2>
+    <div class="callout">
+      <strong>Not fully autonomous.</strong> "Leads" still means a human is in the loop reviewing outcomes, not that Claude is deciding Anthropic's research roadmap unsupervised. The company is explicit about this distinction.
+    </div>
+    <div class="callout">
+      <strong>Not evenly distributed.</strong> A 26% average across R&amp;D almost certainly hides huge variance — some task types (running standard evals, generating candidate implementations) are probably far more automated than others (novel architecture decisions, safety-critical judgment calls).
+    </div>
+    <div class="callout">
+      <strong>Not independently verified.</strong> This is Anthropic's own internal metric about its own process. It's a meaningful data point, not a peer-reviewed study — worth tracking how it's defined and measured over the next few disclosures.
+    </div>
+
+    <h2 id="takeaway">7. The takeaway</h2>
+    <p>Whether or not you touch Claude Code day to day, this is a useful number to keep in your head: the company building one of the leading frontier models says that model already leads a quarter of the work of building its own successor, up from nothing two quarters earlier. That's a concrete, dated data point in a conversation that's usually all speculation — and it's exactly the kind of "AI building AI" claim worth watching closely as the next disclosures come in, since the trend line matters a lot more than any single snapshot.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://abcnews.com/US/wireStory/anthropic-model-claude-helping-build-version-136547096" target="_blank" rel="noopener">ABC News — "Anthropic says its model Claude is helping to build the next version of itself" (Sept 17, 2026)</a></li>
+      <li><a href="https://www.usnews.com/news/business/articles/2026-09-17/anthropic-says-its-model-claude-is-helping-to-build-the-next-version-of-itself" target="_blank" rel="noopener">U.S. News (AP wire) — same announcement, Sept 17, 2026</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-09-17/anthropic-says-claude-drives-26-of-its-research-and-development" target="_blank" rel="noopener">Bloomberg — "Anthropic Says Claude Drives 26% of Its Research and Development" (Sept 17, 2026)</a></li>
+      <li><a href="https://www.fastcompany.com/91609568/claude-anthropics-ai-model-helping-develop-next-version-itself" target="_blank" rel="noopener">Fast Company — coverage of the announcement, Sept 2026</a></li>
+      <li><a href="https://betanews.com/article/claude-ai-rd-development/" target="_blank" rel="noopener">BetaNews — "Anthropic says Claude now leads 26% of its AI research and development," incl. February baseline and ~30,000 agents figure</a></li>
+    </ul>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude já lidera 26% da pesquisa e desenvolvimento da própria Anthropic</h1>
+      <p class="subtitle">Zero em fevereiro, um quarto da carga de trabalho seis meses depois. A Anthropic acaba de colocar um número em algo que até pouco tempo era só um experimento mental: um modelo de IA ajudando a construir seu próprio sucessor.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">O que a Anthropic anunciou, de fato</a></li>
+        <li><a href="#lidera-vs-colabora">"Lidera" vs. "colabora": os dois números que importam</a></li>
+        <li><a href="#velocidade">A velocidade dessa mudança</a></li>
+        <li><a href="#por-que-importa">Por que isso é diferente de "IA escreve código"</a></li>
+        <li><a href="#angulo-seguranca">O ângulo de segurança que a Anthropic está usando</a></li>
+        <li><a href="#o-que-nao-significa">O que isso ainda não significa</a></li>
+        <li><a href="#conclusao">A conclusão</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que a Anthropic anunciou, de fato</h2>
+    <p>Na quinta-feira, 17 de setembro de 2026, a Anthropic disse que seus modelos Claude agora estão diretamente envolvidos na construção da próxima geração, mais capaz, do próprio Claude. Especificamente: o Claude <strong>lidera 26% do trabalho de pesquisa e desenvolvimento de modelos da empresa</strong>, medido em agosto de 2026. "Lidera" aqui tem um significado preciso — o modelo consegue pegar um prompt de alto nível e levar uma tarefa até o fim praticamente sozinho, enquanto um humano fica numa posição de supervisão em vez de dirigir cada passo.</p>
+    <p>Não é uma afirmação vaga de marketing sobre "IA ajudando engenheiros". É a Anthropic publicando uma métrica interna sobre o próprio pipeline de P&amp;D — o mesmo pipeline que produz o próximo Claude — e dizendo que um quarto desse trabalho já é liderado pelo próprio Claude.</p>
+
+    <h2 id="lidera-vs-colabora">2. "Lidera" vs. "colabora": os dois números que importam</h2>
+    <p>O anúncio da Anthropic usa dois níveis diferentes de envolvimento de IA, e a diferença entre eles é a história inteira:</p>
+    <table>
+      <tr><th>Nível</th><th>O que significa</th><th>Fatia do P&amp;D (ago/2026)</th></tr>
+      <tr><td><strong>IA lidera</strong></td><td>O Claude completa a maior parte de uma tarefa de ponta a ponta a partir de um prompt de alto nível, sob supervisão humana — não microgerenciamento.</td><td>26%</td></tr>
+      <tr><td><strong>IA colabora</strong></td><td>O Claude cuida de partes substanciais de uma tarefa sob direção humana próxima — o humano ainda está no comando, mas o Claude faz trabalho de verdade, não só autocomplete.</td><td>~90% (somando com "lidera")</td></tr>
+    </table>
+    <p>Em outras palavras: em 9 de cada 10 tarefas de P&amp;D na Anthropic, um modelo Claude está fazendo algum tipo de trabalho relevante. Em aproximadamente 1 de cada 4, ele está fazendo a maior parte desse trabalho com um humano conferindo, não guiando.</p>
+
+    <h2 id="velocidade">3. A velocidade dessa mudança</h2>
+    <p>O número que deveria realmente chamar sua atenção não é o 26% — é a inclinação da curva. A Anthropic diz que a fatia do trabalho de P&amp;D que o Claude "lidera" era efetivamente <strong>zero em fevereiro de 2026</strong>. Seis meses depois, em agosto, já tinha chegado a um quarto. Isso não é o lançamento gradual de uma feature; é uma curva de capacidade que foi de "não existe" a "um quarto da carga de trabalho" em dois trimestres.</p>
+    <p>A cobertura da imprensa também coloca um número na escala por trás disso: em agosto de 2026, a Anthropic tinha aproximadamente <strong>30 mil agentes</strong> rodando trabalho de pesquisa e engenharia em paralelo. Esse é o contexto de infraestrutura por trás do número de 26% — não é uma demo impressionante isolada, é um pipeline de produção.</p>
+
+    <h2 id="por-que-importa">4. Por que isso é diferente de "IA escreve código"</h2>
+    <p>Assistentes de código que completam funções ou corrigem um teste que falhou já são notícia velha em setembro de 2026 — a maioria dos desenvolvedores já trabalha ao lado de uma ferramenta assim. O que a Anthropic está descrevendo é um nível acima:</p>
+    <ul>
+      <li>Não é um engenheiro usando um assistente. É uma métrica sobre <em>todo</em> o processo de P&amp;D de modelos da Anthropic — a pesquisa que decide como vai ser o próximo Claude.</li>
+      <li>"Lidera... de ponta a ponta a partir de um prompt de alto nível" implica decompor a tarefa, rodar experimentos, avaliar resultados e decidir os próximos passos — não só produzir um diff pra um humano revisar linha por linha.</li>
+      <li>O sujeito e o objeto são o mesmo sistema: o Claude está fazendo um trabalho cujo resultado é um Claude melhor. Essa é a parte recursiva que as pessoas querem dizer quando falam de IA acelerando o desenvolvimento de IA — isso é a Anthropic dizendo que isso já está acontecendo dentro da própria empresa, com um percentual associado.</li>
+    </ul>
+
+    <h2 id="angulo-seguranca">5. O ângulo de segurança que a Anthropic está usando</h2>
+    <p>A Anthropic não publicou esse número isolado — ele veio junto com um enquadramento de segurança, e isso é deliberado. A empresa recentemente:</p>
+    <ul>
+      <li>Se comprometeu a trazer <strong>avaliadores externos independentes</strong>, embutidos dentro da Anthropic, pra monitorar os esforços de segurança exatamente em torno desse tipo de trabalho.</li>
+      <li>Foi explícita ao dizer que o Claude "ainda não está trabalhando de forma totalmente autônoma" — a camada de supervisão humana é apresentada como um limite duro, não uma formalidade.</li>
+    </ul>
+    <p>Há uma tensão real que vale nomear aqui: o próprio CEO da Anthropic, Dario Amodei, tem sido uma das vozes mais ativas do setor pedindo que o ritmo do desenvolvimento de IA desacelere por preocupações de segurança — enquanto sua empresa é, ao mesmo tempo, quem divulga o salto mais rápido já documentado de P&amp;D de IA liderado por IA. As duas coisas são verdadeiras ao mesmo tempo, e a aposta da Anthropic é que publicar o número, com uma camada de auditoria externa junto, é mais seguro do que simplesmente não medir isso.</p>
+
+    <h2 id="o-que-nao-significa">6. O que isso ainda não significa</h2>
+    <div class="callout">
+      <strong>Não é totalmente autônomo.</strong> "Lidera" ainda significa que há um humano no loop revisando resultados, não que o Claude está decidindo o roteiro de pesquisa da Anthropic sem supervisão. A empresa é explícita sobre essa distinção.
+    </div>
+    <div class="callout">
+      <strong>Não é distribuído de forma uniforme.</strong> Uma média de 26% no P&amp;D quase certamente esconde uma variância enorme — alguns tipos de tarefa (rodar avaliações padrão, gerar implementações candidatas) provavelmente são muito mais automatizados que outros (decisões de arquitetura inéditas, julgamentos críticos de segurança).
+    </div>
+    <div class="callout">
+      <strong>Não é verificado de forma independente.</strong> Essa é uma métrica interna da própria Anthropic sobre o próprio processo dela. É um dado relevante, não um estudo revisado por pares — vale acompanhar como ele é definido e medido nas próximas divulgações.
+    </div>
+
+    <h2 id="conclusao">7. A conclusão</h2>
+    <p>Você usando ou não o Claude no dia a dia, esse é um número útil pra guardar: a empresa que constrói um dos modelos de fronteira mais avançados diz que esse modelo já lidera um quarto do trabalho de construir seu próprio sucessor, partindo de praticamente nada dois trimestres antes. É um dado concreto e datado numa conversa que normalmente é só especulação — e é exatamente o tipo de afirmação de "IA construindo IA" que vale a pena acompanhar de perto conforme novas divulgações chegarem, já que a tendência da curva importa muito mais do que qualquer captura isolada.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://abcnews.com/US/wireStory/anthropic-model-claude-helping-build-version-136547096" target="_blank" rel="noopener">ABC News — "Anthropic says its model Claude is helping to build the next version of itself" (17/09/2026)</a></li>
+      <li><a href="https://www.usnews.com/news/business/articles/2026-09-17/anthropic-says-its-model-claude-is-helping-to-build-the-next-version-of-itself" target="_blank" rel="noopener">U.S. News (agência AP) — mesmo anúncio, 17/09/2026</a></li>
+      <li><a href="https://www.bloomberg.com/news/articles/2026-09-17/anthropic-says-claude-drives-26-of-its-research-and-development" target="_blank" rel="noopener">Bloomberg — "Anthropic Says Claude Drives 26% of Its Research and Development" (17/09/2026)</a></li>
+      <li><a href="https://www.fastcompany.com/91609568/claude-anthropics-ai-model-helping-develop-next-version-itself" target="_blank" rel="noopener">Fast Company — cobertura do anúncio, setembro/2026</a></li>
+      <li><a href="https://betanews.com/article/claude-ai-rd-development/" target="_blank" rel="noopener">BetaNews — "Anthropic says Claude now leads 26% of its AI research and development", com a linha de base de fevereiro e o número de ~30 mil agentes</a></li>
+    </ul>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude leads 26% of Anthropic's R&amp;D</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = "Claude leads 26% of Anthropic's R&D";
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Claude lidera 26% do P&D da Anthropic';
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Context engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 20px; font-size: 12.5px; color: var(--text-dim); }
+  .sources li { margin-bottom: 4px; }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>From prompt engineering to context engineering</h1>
+      <p class="subtitle">The same skill got a new, more accurate name in 2026 — and the shift in framing changes what actually matters when you write for an LLM or build an agent.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-changed">1. What changed</a></li>
+        <li><a href="#definitions">2. Prompt engineering vs context engineering</a></li>
+        <li><a href="#four-moves">3. The four moves: write, select, compress, isolate</a></li>
+        <li><a href="#claude-practice">4. What this looks like with Claude specifically</a></li>
+        <li><a href="#agents">5. Why this matters more for agents</a></li>
+        <li><a href="#takeaway">6. The practical takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-changed">1. What changed</h2>
+    <p>For the past few years, "prompt engineering" was the umbrella term for the entire skill of getting good output from a language model: wording, examples, formatting, everything. Through 2026, the field has been splitting that umbrella into two distinct layers — and Anthropic's own prompting guidance now reflects that split explicitly.</p>
+    <p>The distinction isn't cosmetic. It changes where you should spend your effort when a prompt isn't working: is the wording actually the problem, or is it that the model never had the right information in front of it in the first place?</p>
+
+    <h2 id="definitions">2. Prompt engineering vs context engineering</h2>
+    <p><strong>Prompt engineering</strong> is now used more narrowly: it's about wording a single request well — phrasing, tone, specifying the desired style, giving direct instructions.</p>
+    <p><strong>Context engineering</strong> is the broader discipline that prompt engineering sits inside of: managing everything the model sees before it generates anything — system prompt, retrieved documents, tool outputs, conversation history, examples, and the instructions themselves.</p>
+    <div class="callout"><strong>Why the split matters:</strong> a perfectly worded prompt still fails if the model is missing the one document it needed, or if its context window is cluttered with fifteen previous tool calls it doesn't need anymore. As models have gotten better at following instructions, the wording matters less than what surrounds it.</div>
+
+    <h2 id="four-moves">3. The four moves: write, select, compress, isolate</h2>
+    <p>Current guidance on context engineering (echoed across Anthropic's own materials and independent write-ups this year) organizes the discipline into four recurring moves:</p>
+    <table>
+      <tr><th>Move</th><th>What it means</th></tr>
+      <tr><td><strong>Write</strong></td><td>Authoring the instructions and system prompt clearly — the part that overlaps with classic prompt engineering.</td></tr>
+      <tr><td><strong>Select</strong></td><td>Choosing which context is actually relevant to include — not dumping every available document or tool result into the window.</td></tr>
+      <tr><td><strong>Compress</strong></td><td>Reducing token waste — summarizing long history, trimming redundant tool outputs, keeping only what's load-bearing.</td></tr>
+      <tr><td><strong>Isolate</strong></td><td>Keeping unrelated context separate — for example, giving a sub-agent its own clean context instead of inheriting the parent's entire history.</td></tr>
+    </table>
+
+    <h2 id="claude-practice">4. What this looks like with Claude specifically</h2>
+    <p>Anthropic's current best-practice guidance for Claude models pairs the context-engineering mindset with a handful of concrete techniques that hold up across Claude 4.x and newer:</p>
+    <ul>
+      <li><strong>XML-tagged structure</strong> — for any prompt longer than a few sentences, wrapping source material and instructions in XML tags removes ambiguity about where context ends and the actual task begins.</li>
+      <li><strong>Context-first ordering</strong> — putting reference material before the instruction, rather than after, tends to produce more consistent results.</li>
+      <li><strong>Explicit success criteria</strong> — a contract-style system prompt that states what "done" looks like reduces the need for follow-up corrections.</li>
+      <li><strong>Permission to express uncertainty</strong> — explicitly telling the model it's allowed to say "I don't know" rather than guess measurably reduces confident-sounding wrong answers.</li>
+    </ul>
+    <p>A noted behavioral shift since Claude Sonnet 5: newer models tend to take instructions more literally — doing exactly what's asked, without over-extrapolating intent. That raises the cost of an under-specified prompt, and raises the value of the "write" and "select" moves above.</p>
+
+    <h2 id="agents">5. Why this matters more for agents</h2>
+    <p>The context-engineering framing matters even more once a model is acting as an agent across multiple steps rather than answering a single question. An agent has to decide when to call a tool, how to react when a tool's output doesn't match what it expected, when to ask for clarification instead of guessing, and when to simply refuse. None of that is solved by wording a single prompt better — it's solved by managing what the agent sees at each step of a multi-turn process, which is exactly what context engineering is about.</p>
+    <p>Current guidance for agentic prompts leans toward describing the desired outcome and giving testable success criteria, rather than scripting every step — leaving the "how" to the model while keeping the "what does success look like" explicit and checkable.</p>
+
+    <h2 id="takeaway">6. The practical takeaway</h2>
+    <div class="callout"><strong>If a prompt isn't working:</strong> before rewriting the wording for the fifth time, ask whether the model actually has the right information in front of it, in the right order, without unrelated clutter. That question is context engineering — and in 2026 it's usually the higher-leverage fix.</div>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <strong>Sources (accessed August 7, 2026):</strong>
+      <ul>
+        <li>Claude by Anthropic — "Prompt engineering best practices for 2026" (claude.com/blog)</li>
+        <li>mem0.ai — "Context Engineering AI: How To Build Smarter LLM Agents In 2026"</li>
+        <li>skillscouter.com — "Context Engineering in 2026: A Practical Guide"</li>
+        <li>promptbuilder.cc — "Claude Prompt Engineering Best Practices 2026: Checklist + Templates"</li>
+        <li>aiforanything.io — "Claude Prompt Engineering Best Practices: The Definitive 2026 Guide"</li>
+        <li>the-ai-corner.com — "Claude best practices 2026: the complete power user guide"</li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>De prompt engineering pra context engineering</h1>
+      <p class="subtitle">A mesma habilidade ganhou um nome novo e mais preciso em 2026 — e essa mudança de enquadramento muda o que realmente importa quando você escreve pra um LLM ou constrói um agente.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-mudou">1. O que mudou</a></li>
+        <li><a href="#definicoes">2. Prompt engineering vs context engineering</a></li>
+        <li><a href="#quatro-movimentos">3. Os quatro movimentos: escrever, selecionar, comprimir, isolar</a></li>
+        <li><a href="#claude-pratica">4. Como isso funciona com o Claude especificamente</a></li>
+        <li><a href="#agentes">5. Por que isso importa mais pra agentes</a></li>
+        <li><a href="#conclusao">6. O que levar pra prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-mudou">1. O que mudou</h2>
+    <p>Nos últimos anos, "prompt engineering" era o termo guarda-chuva pra habilidade inteira de tirar uma boa resposta de um modelo de linguagem: redação, exemplos, formatação, tudo. Ao longo de 2026, a área tem dividido esse guarda-chuva em duas camadas distintas — e o próprio guia de prompting da Anthropic já reflete essa divisão explicitamente.</p>
+    <p>A distinção não é só estética. Ela muda onde você deveria colocar esforço quando um prompt não funciona: o problema é realmente a redação, ou é que o modelo nunca teve a informação certa na frente dele, pra começar?</p>
+
+    <h2 id="definicoes">2. Prompt engineering vs context engineering</h2>
+    <p><strong>Prompt engineering</strong> agora é usado de forma mais restrita: é sobre redigir bem um pedido único — fraseado, tom, especificar o estilo desejado, dar instruções diretas.</p>
+    <p><strong>Context engineering</strong> é a disciplina mais ampla dentro da qual o prompt engineering se encaixa: gerenciar tudo que o modelo vê antes de gerar qualquer coisa — system prompt, documentos recuperados, resultados de ferramentas, histórico de conversa, exemplos e as próprias instruções.</p>
+    <div class="callout"><strong>Por que a divisão importa:</strong> um prompt redigido perfeitamente ainda falha se o modelo estiver sem o único documento que precisava, ou se sua janela de contexto estiver cheia de quinze chamadas de ferramenta anteriores que ele não precisa mais. Conforme os modelos ficaram melhores em seguir instruções, o fraseado importa menos do que o que está em volta dele.</div>
+
+    <h2 id="quatro-movimentos">3. Os quatro movimentos: escrever, selecionar, comprimir, isolar</h2>
+    <p>O guia atual sobre context engineering (repetido tanto em materiais da própria Anthropic quanto em artigos independentes este ano) organiza a disciplina em quatro movimentos recorrentes:</p>
+    <table>
+      <tr><th>Movimento</th><th>O que significa</th></tr>
+      <tr><td><strong>Escrever (write)</strong></td><td>Redigir claramente as instruções e o system prompt — a parte que se sobrepõe ao prompt engineering clássico.</td></tr>
+      <tr><td><strong>Selecionar (select)</strong></td><td>Escolher qual contexto é realmente relevante pra incluir — em vez de despejar todo documento ou resultado de ferramenta disponível na janela.</td></tr>
+      <tr><td><strong>Comprimir (compress)</strong></td><td>Reduzir desperdício de tokens — resumir histórico longo, cortar resultados de ferramenta redundantes, manter só o que sustenta a tarefa.</td></tr>
+      <tr><td><strong>Isolar (isolate)</strong></td><td>Manter contexto não relacionado separado — por exemplo, dar a um sub-agente seu próprio contexto limpo em vez de herdar todo o histórico do agente pai.</td></tr>
+    </table>
+
+    <h2 id="claude-pratica">4. Como isso funciona com o Claude especificamente</h2>
+    <p>O guia atual de boas práticas da Anthropic pra modelos Claude combina a mentalidade de context engineering com um punhado de técnicas concretas que se sustentam nas versões Claude 4.x e mais novas:</p>
+    <ul>
+      <li><strong>Estrutura com tags XML</strong> — pra qualquer prompt mais longo que algumas frases, envolver o material de referência e as instruções em tags XML remove a ambiguidade sobre onde o contexto termina e a tarefa de fato começa.</li>
+      <li><strong>Ordem com contexto primeiro</strong> — colocar o material de referência antes da instrução, em vez de depois, tende a produzir resultados mais consistentes.</li>
+      <li><strong>Critérios de sucesso explícitos</strong> — um system prompt no estilo de contrato que declara o que "pronto" significa reduz a necessidade de correções posteriores.</li>
+      <li><strong>Permissão pra expressar incerteza</strong> — dizer explicitamente ao modelo que ele pode responder "eu não sei" em vez de chutar reduz de forma mensurável respostas erradas ditas com confiança.</li>
+    </ul>
+    <p>Uma mudança de comportamento notada desde o Claude Sonnet 5: modelos mais novos tendem a seguir instruções de forma mais literal — fazendo exatamente o que foi pedido, sem extrapolar demais a intenção. Isso aumenta o custo de um prompt sub-especificado, e aumenta o valor dos movimentos de "escrever" e "selecionar" acima.</p>
+
+    <h2 id="agentes">5. Por que isso importa mais pra agentes</h2>
+    <p>O enquadramento de context engineering importa ainda mais quando um modelo age como agente em várias etapas em vez de responder uma pergunta única. Um agente precisa decidir quando chamar uma ferramenta, como reagir quando o resultado de uma ferramenta não corresponde ao esperado, quando pedir esclarecimento em vez de chutar, e quando simplesmente recusar. Nada disso se resolve redigindo melhor um único prompt — se resolve gerenciando o que o agente vê em cada etapa de um processo de várias interações, que é exatamente o que context engineering trata.</p>
+    <p>O guia atual pra prompts de agentes tende a favorecer descrever o resultado desejado e dar critérios de sucesso testáveis, em vez de roteirizar cada etapa — deixando o "como" a cargo do modelo, mas mantendo explícito e verificável o que "sucesso" significa.</p>
+
+    <h2 id="conclusao">6. O que levar pra prática</h2>
+    <div class="callout"><strong>Se um prompt não está funcionando:</strong> antes de reescrever o fraseado pela quinta vez, pergunte se o modelo realmente tem a informação certa na frente dele, na ordem certa, sem ruído desnecessário. Essa pergunta é context engineering — e em 2026 costuma ser o ajuste de maior impacto.</div>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <strong>Fontes (acessadas em 7 de agosto de 2026):</strong>
+      <ul>
+        <li>Claude by Anthropic — "Prompt engineering best practices for 2026" (claude.com/blog)</li>
+        <li>mem0.ai — "Context Engineering AI: How To Build Smarter LLM Agents In 2026"</li>
+        <li>skillscouter.com — "Context Engineering in 2026: A Practical Guide"</li>
+        <li>promptbuilder.cc — "Claude Prompt Engineering Best Practices 2026: Checklist + Templates"</li>
+        <li>aiforanything.io — "Claude Prompt Engineering Best Practices: The Definitive 2026 Guide"</li>
+        <li>the-ai-corner.com — "Claude best practices 2026: the complete power user guide"</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Context engineering</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

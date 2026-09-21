@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Prompt caching, the cost/latency lever most people skip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 12px; }
+  .sources ul { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-31-prompt-caching.html">
+<meta property="og:title" content="Cooldecode — AI Watch: Prompt caching, the cost/latency lever most people skip">
+<meta property="og:description" content="Every repeated call sends the same giant system prompt, the same tool definitions, the same reference document — and pays full price for it, every single time. Prompt caching fixes that. Here's how it actually works, and where it quietly breaks.">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-31-prompt-caching.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: Prompt caching, the cost/latency lever most people skip">
+<meta name="twitter:description" content="Every repeated call pays full price for the same system prompt and tool definitions. Prompt caching fixes that — here's how, and where it breaks.">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>Prompt caching: the cost/latency lever most people never flip</h1>
+      <p class="subtitle">Every call to a model that reuses a big system prompt, a pile of tool definitions, or a reference document sends all of it again, from scratch, and pays full price — every single time. Prompt caching lets the model skip re-processing what it has already seen. Here's what it actually does, how to set it up, and the gotchas that silently turn it off.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-it-is">What prompt caching actually is</a></li>
+        <li><a href="#why">The problem it exists to solve</a></li>
+        <li><a href="#how">How it works: breakpoints, prefixes, TTLs</a></li>
+        <li><a href="#numbers">The actual numbers: cost and latency</a></li>
+        <li><a href="#gotchas">What silently breaks the cache</a></li>
+        <li><a href="#practical">Where it's worth setting up</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-it-is">1. What prompt caching actually is</h2>
+    <p>Every time you send a request to a model, the model has to process — technically, run inference over — the entire input from the first token to the last, even if 90% of that input is identical to the request you sent a minute ago. <strong>Prompt caching</strong> lets the API store the internal representation of a prefix of your prompt after the first time it's processed, so a later request that starts with that exact same prefix can reuse the stored computation instead of redoing it.</p>
+    <p>The part that gets cached is a <strong>prefix</strong>, not an arbitrary chunk — everything from the start of the prompt up to a point you mark. That point is called a <strong>cache breakpoint</strong>, set explicitly with a <code>cache_control</code> field in the request. Anything before the breakpoint can be reused; anything after it is processed fresh, as normal.</p>
+    <div class="card">
+      <div class="card-title">Mental model</div>
+      <p style="margin-bottom:0;">Think of it less like a generic web cache and more like a bookmark: "everything up to here, I've already read — start from this page next time." If the next request starts with the exact same text up to that bookmark, the model skips straight to the new part.</p>
+    </div>
+
+    <h2 id="why">2. The problem it exists to solve</h2>
+    <p>The pattern that makes caching worth it shows up constantly in real usage: a long, mostly-static system prompt (role instructions, style guide, few-shot examples), a large set of tool/function definitions for an agent, or a reference document (codebase context, a policy manual, a support KB) that gets attached to every single call in a session. None of that content changes turn to turn — only the user's new message does.</p>
+    <p>Without caching, every one of those calls reprocesses the entire static block from zero, paying full input-token price and full processing time for content the model has already "read" seconds earlier in the same conversation. In multi-turn agent loops — the exact shape of tools like Claude Code, or any coding/research agent that calls the model dozens of times per task — that repeated cost adds up fast, in both dollars and wait time.</p>
+
+    <h2 id="how">3. How it works: breakpoints, prefixes, TTLs</h2>
+    <p>Caching is opt-in and explicit — you mark where the cacheable prefix ends by attaching <code>cache_control</code> to a content block, and the API takes it from there:</p>
+    <ul>
+      <li><strong>Prefix matching.</strong> The API checks whether an earlier request already cached a prefix that exactly matches the start of the new request. Any difference — one added word, one moved sentence — before the breakpoint means no match, and the whole prefix reprocesses normally.</li>
+      <li><strong>Minimum cacheable size.</strong> A cache block needs to be reasonably large to be worth it — the platform documentation sets minimums in the range of roughly 1,024 tokens for smaller/faster models and 2,048 tokens for larger ones. A shorter block than that isn't cached; you pay the small write overhead for nothing.</li>
+      <li><strong>Time-to-live (TTL).</strong> A cached prefix isn't permanent — it expires after a set window, commonly a short default (around 5 minutes) or a longer optional one (around 1 hour) for workloads with slower turn-taking. Every cache hit refreshes the countdown, so an active back-and-forth session keeps its cache alive; a long pause lets it expire.</li>
+      <li><strong>Multiple breakpoints.</strong> A single request can mark more than one breakpoint — for example, one after the system prompt and tool definitions, and another after a large reference document — so different parts of the prompt can be reused independently depending on what changes between calls.</li>
+    </ul>
+
+    <h2 id="numbers">4. The actual numbers: cost and latency</h2>
+    <p>The two effects caching produces are the two things that matter most in production: money and time.</p>
+    <table>
+      <tr><th>Effect</th><th>Typical impact</th></tr>
+      <tr><td><strong>Input cost on a cache hit</strong></td><td>Roughly a 90% discount versus processing that same content fresh — cached tokens are billed at a small fraction of the normal input-token rate.</td></tr>
+      <tr><td><strong>Latency on a cache hit</strong></td><td>Commonly cited reductions of 2x or more for time-to-first-token, since the model skips re-running the heaviest part of the input.</td></tr>
+      <tr><td><strong>Writing the cache (first call)</strong></td><td>Slightly more expensive than a normal, uncached call — you pay a small write premium the first time a given prefix is cached, then reap the discount on every hit after that.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Where the win compounds:</strong> the savings aren't per-call, they're per-session. An agent that calls a model 30 times in one task, all sharing the same system prompt and tool definitions, pays the write premium once and the 90%-off rate 29 times — that's the shape of workload prompt caching was built for.
+    </div>
+
+    <h2 id="gotchas">5. What silently breaks the cache</h2>
+    <p>Caching fails quietly — there's no error, the request just falls back to full-price processing — which makes these worth knowing before they cost you money for weeks without anyone noticing:</p>
+    <ul>
+      <li><strong>Anything before the breakpoint that changes.</strong> A timestamp embedded in a system prompt, a dynamically inserted user name, or even reordering the same tool definitions invalidates the whole prefix match — the fix is to push anything that varies to <em>after</em> the cache breakpoint, keeping the static part perfectly identical call to call.</li>
+      <li><strong>Adding or removing a tool mid-session.</strong> Tool/function definitions are part of the prefix; changing the toolset available to the model changes the prefix and forces a full recompute.</li>
+      <li><strong>Switching models.</strong> A cached prefix from one model does not carry over to a different model — each model's cache is its own, so a cache built on one model provides zero benefit if a later call in the same workflow switches to another.</li>
+      <li><strong>Waiting past the TTL.</strong> A session that goes idle longer than the cache window (5 minutes on the short default) simply loses the cache and pays the write premium again on the next call — this is expected behavior, not a bug, but it matters for scheduling retries or batch jobs.</li>
+    </ul>
+
+    <h2 id="practical">6. Where it's worth setting up</h2>
+    <p>Caching pays off specifically when a large, static block of content gets reused across many calls in a short window: coding agents replaying the same system prompt and tool schema dozens of times per task, RAG-style setups that attach the same reference document to every question in a session, chat products with a long, fixed persona/style prompt, and any few-shot prompting setup where the examples themselves are large and never change. It's not worth the setup complexity for one-off calls or prompts that are mostly unique content already — the discount only exists on the part that repeats.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ul>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Claude Platform Docs — "Prompt caching"</a></li>
+        <li><a href="https://www.mager.co/blog/2026-04-29-claude-prompt-caching/" target="_blank" rel="noopener">Mager — "Claude: How prompt caching actually works"</a></li>
+        <li><a href="https://www.aimagicx.com/blog/prompt-caching-claude-api-cost-optimization-2026" target="_blank" rel="noopener">AI Magicx — "Prompt Caching for Claude: Cut Your API Bill 60% in Production" (2026)</a></li>
+        <li><a href="https://www.respan.ai/articles/claude-prompt-caching" target="_blank" rel="noopener">Respan — "Claude Prompt Caching Pricing: 5-Min vs 1-Hour Cache" (2026)</a></li>
+        <li><a href="https://pecollective.com/tools/claude-pricing-guide/" target="_blank" rel="noopener">PE Collective — "Claude Cost Optimization 2026: Batch API and Prompt Caching"</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>Prompt caching: a alavanca de custo/latência que quase ninguém usa</h1>
+      <p class="subtitle">Toda chamada a um modelo que reaproveita um system prompt grande, uma pilha de definições de ferramentas, ou um documento de referência, manda tudo isso de novo, do zero, e paga o preço cheio — toda vez. O prompt caching deixa o modelo pular o reprocessamento do que ele já viu. Aqui está o que ele faz de verdade, como configurar, e as pegadinhas que desligam o cache sem avisar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e-pt">O que é prompt caching, de fato</a></li>
+        <li><a href="#por-que-pt">O problema que ele resolve</a></li>
+        <li><a href="#como-pt">Como funciona: breakpoints, prefixos, TTLs</a></li>
+        <li><a href="#numeros-pt">Os números de verdade: custo e latência</a></li>
+        <li><a href="#pegadinhas-pt">O que desliga o cache sem avisar</a></li>
+        <li><a href="#pratica-pt">Onde vale a pena configurar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e-pt">1. O que é prompt caching, de fato</h2>
+    <p>Toda vez que você manda uma requisição pra um modelo, ele precisa processar — tecnicamente, rodar inferência sobre — a entrada inteira, do primeiro ao último token, mesmo que 90% dessa entrada seja idêntica à requisição que você mandou um minuto atrás. O <strong>prompt caching</strong> deixa a API guardar a representação interna de um prefixo do seu prompt depois da primeira vez que ele é processado, pra que uma requisição posterior que comece com esse mesmo prefixo exato reaproveite o cálculo já feito em vez de refazer tudo.</p>
+    <p>A parte que entra em cache é um <strong>prefixo</strong>, não um pedaço qualquer — tudo desde o início do prompt até um ponto que você marca. Esse ponto é chamado de <strong>cache breakpoint</strong>, definido explicitamente com um campo <code>cache_control</code> na requisição. Tudo antes do breakpoint pode ser reaproveitado; tudo depois é processado do zero, normalmente.</p>
+    <div class="card">
+      <div class="card-title">Modelo mental</div>
+      <p style="margin-bottom:0;">Pense nisso menos como um cache genérico de web e mais como um marcador de página: "tudo até aqui eu já li — na próxima vez, começa dessa página". Se a próxima requisição começar com o mesmo texto exato até esse marcador, o modelo pula direto pra parte nova.</p>
+    </div>
+
+    <h2 id="por-que-pt">2. O problema que ele resolve</h2>
+    <p>O padrão que torna o caching valioso aparece o tempo todo no uso real: um system prompt longo e majoritariamente estático (instruções de papel, guia de estilo, exemplos few-shot), um conjunto grande de definições de ferramentas/funções pra um agente, ou um documento de referência (contexto de código, um manual de política, uma base de conhecimento de suporte) anexado a toda chamada de uma sessão. Nada disso muda de turno pra turno — só a nova mensagem do usuário muda.</p>
+    <p>Sem caching, cada uma dessas chamadas reprocessa o bloco estático inteiro do zero, pagando preço cheio de tokens de entrada e tempo de processamento cheio por um conteúdo que o modelo já "leu" segundos antes, na mesma conversa. Em loops de agente com múltiplos turnos — exatamente o formato de ferramentas como o Claude Code, ou qualquer agente de código/pesquisa que chama o modelo dezenas de vezes por tarefa — esse custo repetido soma rápido, tanto em dinheiro quanto em tempo de espera.</p>
+
+    <h2 id="como-pt">3. Como funciona: breakpoints, prefixos, TTLs</h2>
+    <p>O caching é opt-in e explícito — você marca onde o prefixo cacheável termina anexando <code>cache_control</code> a um bloco de conteúdo, e a API cuida do resto:</p>
+    <ul>
+      <li><strong>Casamento de prefixo.</strong> A API verifica se uma requisição anterior já colocou em cache um prefixo que bate exatamente com o início da nova requisição. Qualquer diferença — uma palavra a mais, uma frase movida — antes do breakpoint significa que não há correspondência, e o prefixo inteiro é reprocessado normalmente.</li>
+      <li><strong>Tamanho mínimo cacheável.</strong> Um bloco de cache precisa ser razoavelmente grande pra valer a pena — a documentação da plataforma define mínimos na faixa de cerca de 1.024 tokens pra modelos menores/mais rápidos e 2.048 tokens pra modelos maiores. Um bloco menor que isso não entra em cache; você paga o pequeno custo extra de escrita à toa.</li>
+      <li><strong>Tempo de vida (TTL).</strong> Um prefixo em cache não é permanente — ele expira depois de uma janela definida, comumente um padrão curto (cerca de 5 minutos) ou um opcional mais longo (cerca de 1 hora) pra cargas de trabalho com turnos mais espaçados. Todo acerto de cache renova a contagem, então uma sessão ativa de ida e volta mantém o cache vivo; uma pausa longa deixa ele expirar.</li>
+      <li><strong>Múltiplos breakpoints.</strong> Uma única requisição pode marcar mais de um breakpoint — por exemplo, um depois do system prompt e das definições de ferramentas, e outro depois de um documento de referência grande — pra que partes diferentes do prompt possam ser reaproveitadas de forma independente, dependendo do que muda entre as chamadas.</li>
+    </ul>
+
+    <h2 id="numeros-pt">4. Os números de verdade: custo e latência</h2>
+    <p>Os dois efeitos que o caching produz são exatamente as duas coisas que mais importam em produção: dinheiro e tempo.</p>
+    <table>
+      <tr><th>Efeito</th><th>Impacto típico</th></tr>
+      <tr><td><strong>Custo de entrada num acerto de cache</strong></td><td>Cerca de 90% de desconto em relação a processar esse mesmo conteúdo do zero — tokens em cache são cobrados por uma pequena fração da taxa normal de token de entrada.</td></tr>
+      <tr><td><strong>Latência num acerto de cache</strong></td><td>Reduções comumente citadas de 2x ou mais no tempo até o primeiro token, já que o modelo pula a reexecução da parte mais pesada da entrada.</td></tr>
+      <tr><td><strong>Escrever o cache (primeira chamada)</strong></td><td>Um pouco mais cara que uma chamada normal sem cache — você paga um pequeno prêmio de escrita na primeira vez que um prefixo entra em cache, e colhe o desconto em todo acerto depois disso.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Onde o ganho se acumula:</strong> a economia não é por chamada, é por sessão. Um agente que chama um modelo 30 vezes numa tarefa, todas compartilhando o mesmo system prompt e definições de ferramentas, paga o prêmio de escrita uma vez e a taxa com 90% de desconto 29 vezes — esse é exatamente o formato de carga de trabalho pro qual o prompt caching foi feito.
+    </div>
+
+    <h2 id="pegadinhas-pt">5. O que desliga o cache sem avisar</h2>
+    <p>O caching falha silenciosamente — não há erro, a requisição simplesmente volta a ser processada a preço cheio — o que torna estes pontos importantes de saber antes que custem dinheiro por semanas sem ninguém perceber:</p>
+    <ul>
+      <li><strong>Qualquer coisa antes do breakpoint que muda.</strong> Um timestamp embutido num system prompt, um nome de usuário inserido dinamicamente, ou até reordenar as mesmas definições de ferramentas invalida o casamento do prefixo inteiro — a correção é empurrar tudo que varia pra <em>depois</em> do breakpoint de cache, mantendo a parte estática perfeitamente idêntica de chamada pra chamada.</li>
+      <li><strong>Adicionar ou remover uma ferramenta no meio da sessão.</strong> Definições de ferramentas/funções fazem parte do prefixo; mudar o conjunto de ferramentas disponível pro modelo muda o prefixo e força um recálculo completo.</li>
+      <li><strong>Trocar de modelo.</strong> Um prefixo em cache de um modelo não vale para um modelo diferente — o cache de cada modelo é próprio, então um cache construído num modelo não dá nenhum benefício se uma chamada posterior no mesmo fluxo trocar para outro.</li>
+      <li><strong>Esperar além do TTL.</strong> Uma sessão que fica ociosa por mais tempo que a janela de cache (5 minutos no padrão curto) simplesmente perde o cache e paga o prêmio de escrita de novo na próxima chamada — isso é comportamento esperado, não um bug, mas importa pra agendar retries ou jobs em lote.</li>
+    </ul>
+
+    <h2 id="pratica-pt">6. Onde vale a pena configurar</h2>
+    <p>O caching compensa especificamente quando um bloco de conteúdo grande e estático é reaproveitado em muitas chamadas numa janela curta de tempo: agentes de código repetindo o mesmo system prompt e schema de ferramentas dezenas de vezes por tarefa, setups estilo RAG que anexam o mesmo documento de referência a toda pergunta de uma sessão, produtos de chat com um prompt de persona/estilo longo e fixo, e qualquer setup de prompting com few-shot onde os exemplos em si são grandes e nunca mudam. Não vale a complexidade de configurar pra chamadas avulsas ou prompts que já são majoritariamente conteúdo único — o desconto só existe na parte que se repete.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ul>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching" target="_blank" rel="noopener">Claude Platform Docs — "Prompt caching"</a></li>
+        <li><a href="https://www.mager.co/blog/2026-04-29-claude-prompt-caching/" target="_blank" rel="noopener">Mager — "Claude: How prompt caching actually works"</a></li>
+        <li><a href="https://www.aimagicx.com/blog/prompt-caching-claude-api-cost-optimization-2026" target="_blank" rel="noopener">AI Magicx — "Prompt Caching for Claude: Cut Your API Bill 60% in Production" (2026)</a></li>
+        <li><a href="https://www.respan.ai/articles/claude-prompt-caching" target="_blank" rel="noopener">Respan — "Claude Prompt Caching Pricing: 5-Min vs 1-Hour Cache" (2026)</a></li>
+        <li><a href="https://pecollective.com/tools/claude-pricing-guide/" target="_blank" rel="noopener">PE Collective — "Claude Cost Optimization 2026: Batch API and Prompt Caching"</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Prompt caching</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

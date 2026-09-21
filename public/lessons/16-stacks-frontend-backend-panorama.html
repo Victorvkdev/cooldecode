@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 16: Comparing full stacks (Next.js+Vercel, Remix, Astro, SvelteKit)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 4 · Lesson 16</span>
+      <h1>Comparing full stacks: Next.js+Vercel, Remix, Astro, SvelteKit</h1>
+      <p class="subtitle">You already know the individual pieces — meta-frameworks, rendering strategies, hosting platforms, databases. This lesson zooms out: how do four common "pick this and go" stacks actually compare when you have to choose one for a real project?</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-is-a-stack">What "a stack" actually bundles together</a></li>
+        <li><a href="#four-stacks">The four stacks, side by side</a></li>
+        <li><a href="#dimension-rendering">Dimension 1: rendering model</a></li>
+        <li><a href="#dimension-learning">Dimension 2: learning curve and mental model</a></li>
+        <li><a href="#dimension-hosting">Dimension 3: hosting story</a></li>
+        <li><a href="#dimension-ecosystem">Dimension 4: ecosystem and hiring</a></li>
+        <li><a href="#worked-example">Worked example: picking a stack for a generic project</a></li>
+        <li><a href="#takeaway">The actual takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-is-a-stack">1. What "a stack" actually bundles together</h2>
+    <p>So far this track has covered meta-frameworks (Next.js), rendering strategies (SSR/SSG/ISR), and hosting platforms (Vercel, Netlify) as separate pieces you assemble yourself. In practice, though, most teams don't assemble from scratch — they pick a named combination that already has default answers for routing, rendering, data fetching, and deployment baked in. That combination is what "a stack" means here: a meta-framework plus its idiomatic hosting target plus the conventions the community around it has settled on.</p>
+    <p>Picking a stack is really picking a starting set of defaults you'll live with for the life of the project. Every one of the four below can technically do almost anything the others can — the differences that matter are in what's easy by default versus what requires fighting the framework.</p>
+
+    <h2 id="four-stacks">2. The four stacks, side by side</h2>
+    <table>
+      <tr><th>Stack</th><th>UI library</th><th>Default rendering</th><th>Natural home</th></tr>
+      <tr><td><strong>Next.js + Vercel</strong></td><td>React</td><td>Mixed: SSR, SSG, ISR, and Server Components, chosen per route/component</td><td>Vercel (same company builds both)</td></tr>
+      <tr><td><strong>Remix</strong> (now the framework mode of React Router)</td><td>React</td><td>SSR by default, built around HTTP fundamentals (loaders, actions, forms)</td><td>Any Node host — no single "home" platform</td></tr>
+      <tr><td><strong>Astro</strong></td><td>Any (React, Vue, Svelte, or none) via "islands"</td><td>Static by default, zero JS shipped unless a component opts into hydration</td><td>Any static host, plus adapters for SSR on Vercel/Netlify/Node</td></tr>
+      <tr><td><strong>SvelteKit</strong></td><td>Svelte (compiles away, no virtual DOM)</td><td>SSR by default, SSG available per-route</td><td>Any host via adapters (Vercel, Netlify, Node, static)</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Notice the pattern:</strong> only Next.js has a single platform it's "from" — Vercel builds the framework and the hosting platform together, so the integration is deepest there. Remix, Astro, and SvelteKit were all designed to be host-agnostic from day one, which is a real trade-off, not just a footnote (more on that in the hosting section).
+    </div>
+
+    <h2 id="dimension-rendering">3. Dimension 1: rendering model</h2>
+    <p>This is the dimension that most affects how a page actually behaves for a user, and it's the one worth understanding before anything else.</p>
+    <ul>
+      <li><strong>Next.js</strong> gives you the most granular control: a Server Component that never ships JS, a Client Component that hydrates, static generation at build time, or on-demand regeneration (ISR) — all mixable in the same app, even the same page. That flexibility is powerful but means more decisions to make per route.</li>
+      <li><strong>Remix</strong> is deliberately simpler here: everything server-renders on every request by default, and you opt into caching at the infrastructure layer (CDN headers) rather than the framework offering multiple built-in strategies. Less to configure, less nuance to reason about.</li>
+      <li><strong>Astro</strong> flips the default entirely: pages ship zero JavaScript unless you explicitly mark a component as interactive ("island"). This is the best default for content-heavy sites where most of the page is static text and images.</li>
+      <li><strong>SvelteKit</strong> server-renders by default like Remix, but because Svelte compiles components into vanilla JS at build time (no framework runtime shipped to the browser), the resulting bundles tend to be smaller even for interactive pages.</li>
+    </ul>
+
+    <h2 id="dimension-learning">4. Dimension 2: learning curve and mental model</h2>
+    <table>
+      <tr><th>Stack</th><th>Mental model</th><th>Curve</th></tr>
+      <tr><td>Next.js</td><td>React's component model, plus the Server/Client Component split, plus the App Router's file conventions</td><td>Steepest of the four — most concepts to internalize, but most tutorials/examples exist</td></tr>
+      <tr><td>Remix</td><td>Web fundamentals first: a route is a loader (GET) and an action (POST), forms submit like it's 2005 but with modern DX</td><td>Gentle if you already know HTTP; unusual if your only mental model is client-side state</td></tr>
+      <tr><td>Astro</td><td>Write components like a static site generator, "eject" into interactivity only where needed</td><td>Gentle — often the easiest of the four to get a first page live</td></tr>
+      <tr><td>SvelteKit</td><td>Svelte's own reactive syntax (no <code>useState</code>-style hooks, closer to plain JS with reactive variables)</td><td>Gentle to learn from scratch, mildly unusual if you're coming from years of React habits</td></tr>
+    </table>
+
+    <h2 id="dimension-hosting">5. Dimension 3: hosting story</h2>
+    <p>This is where the "single home platform" difference from section 2 actually shows up in day-to-day work.</p>
+    <ul>
+      <li><strong>Next.js on Vercel</strong> gets first-class support for every rendering mode the framework offers, often before other hosts catch up — new Next.js features and new Vercel platform features tend to ship in lockstep, since one company owns both.</li>
+      <li><strong>Remix, Astro, and SvelteKit</strong> all ship via "adapters" — a small package that translates the framework's output into whatever a given host expects (a Vercel function, a Netlify function, a plain Node server, static files). This means you can move host without touching your app code, at the cost of occasionally waiting for an adapter to catch up with a brand-new framework feature.</li>
+    </ul>
+    <div class="callout">
+      <strong>The trade-off in one sentence:</strong> Next.js + Vercel optimizes for "deepest integration, less portability"; Remix/Astro/SvelteKit optimize for "host-agnostic, slightly more moving parts to configure."
+    </div>
+
+    <h2 id="dimension-ecosystem">6. Dimension 4: ecosystem and hiring</h2>
+    <p>This dimension rarely gets discussed in technical comparisons, but it's often the deciding factor for a real team.</p>
+    <ul>
+      <li><strong>Next.js</strong> has by far the largest ecosystem: the most Stack Overflow answers, the most third-party libraries with first-class Next.js examples, the easiest pool of developers to hire from because React skills are the most common on the market.</li>
+      <li><strong>Remix</strong> inherits React's hiring pool but a much smaller pattern-specific community — you'll find fewer tutorials for edge cases, and you'll rely more on reading the source/docs directly.</li>
+      <li><strong>Astro</strong> has a fast-growing but content-site-specific community — deep expertise in blogs/docs/marketing sites, thinner if you're building a highly interactive dashboard.</li>
+      <li><strong>SvelteKit</strong> has the smallest hiring pool of the four, though the developers who do know Svelte tend to be enthusiastic about it — a real consideration if you're building a team, not just a side project.</li>
+    </ul>
+
+    <h2 id="worked-example">7. Worked example: picking a stack for a generic project</h2>
+    <p>Say you're starting a project with logins, a dashboard, and some dynamic per-user data — a fairly typical SaaS shape. Here's how the decision actually plays out:</p>
+    <div class="card">
+      <div class="card-title">Decision walkthrough</div>
+      <ol>
+        <li><strong>Does your team already know React?</strong> If yes, you're choosing between Next.js and Remix, not considering Astro or SvelteKit at all — don't introduce a new UI library just for this project unless there's a specific reason to.</li>
+        <li><strong>Do you want maximum control over rendering per page, and don't mind Vercel-specific conventions?</strong> Next.js. This is the safer default for most teams today precisely because of the ecosystem size from section 6.</li>
+        <li><strong>Do you want something closer to plain HTTP, simpler mental model, and host flexibility from day one?</strong> Remix.</li>
+        <li><strong>Is the project actually more content than app</strong> (a blog, docs site, marketing page with a login gate bolted on)? Astro, regardless of what your team knows — the zero-JS-by-default model is wasted if you don't have a content-heavy site.</li>
+        <li><strong>Is smallest possible bundle size the top priority, and is the team open to learning Svelte?</strong> SvelteKit — but be honest about the hiring/community trade-off from section 6 before committing a whole team to it.</li>
+      </ol>
+    </div>
+
+    <h2 id="takeaway">8. The actual takeaway</h2>
+    <p>None of these four stacks is objectively better — they optimize for different things, and three of the four dimensions above (learning curve, hosting, ecosystem) matter more in practice than raw technical capability, because all four can eventually do what you need. The question that actually predicts a good outcome isn't "which stack is best" — it's "which stack's defaults match what this specific project and this specific team actually need," which is exactly the walkthrough in section 7.</p>
+
+        <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 4 · Lição 16</span>
+      <h1>Comparando stacks completas: Next.js+Vercel, Remix, Astro, SvelteKit</h1>
+      <p class="subtitle">Você já conhece as peças individuais — meta-frameworks, estratégias de renderização, plataformas de hospedagem, bancos de dados. Esta lição dá um passo atrás: como quatro stacks comuns de "escolha e comece" se comparam de verdade na hora de decidir por um projeto real?</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e-stack">O que "uma stack" agrupa de fato</a></li>
+        <li><a href="#quatro-stacks">As quatro stacks, lado a lado</a></li>
+        <li><a href="#dimensao-render">Dimensão 1: modelo de renderização</a></li>
+        <li><a href="#dimensao-aprendizado">Dimensão 2: curva de aprendizado e modelo mental</a></li>
+        <li><a href="#dimensao-hosting">Dimensão 3: história de hospedagem</a></li>
+        <li><a href="#dimensao-ecossistema">Dimensão 4: ecossistema e contratação</a></li>
+        <li><a href="#exemplo-pratico">Exemplo prático: escolhendo uma stack pra um projeto genérico</a></li>
+        <li><a href="#conclusao">A conclusão de verdade</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e-stack">1. O que "uma stack" agrupa de fato</h2>
+    <p>Até aqui esta trilha cobriu meta-frameworks (Next.js), estratégias de renderização (SSR/SSG/ISR) e plataformas de hospedagem (Vercel, Netlify) como peças separadas que você monta sozinho. Na prática, porém, a maioria dos times não monta do zero — eles escolhem uma combinação já nomeada que já tem respostas padrão pra roteamento, renderização, busca de dados e deploy. Essa combinação é o que "uma stack" significa aqui: um meta-framework mais seu alvo de hospedagem idiomático mais as convenções que a comunidade em volta dele já consolidou.</p>
+    <p>Escolher uma stack é, na verdade, escolher um conjunto inicial de padrões com o qual você vai conviver pela vida útil do projeto. Cada uma das quatro abaixo consegue, tecnicamente, fazer quase tudo que as outras fazem — as diferenças que importam estão no que é fácil por padrão versus o que exige lutar contra o framework.</p>
+
+    <h2 id="quatro-stacks">2. As quatro stacks, lado a lado</h2>
+    <table>
+      <tr><th>Stack</th><th>Biblioteca de UI</th><th>Renderização padrão</th><th>Casa natural</th></tr>
+      <tr><td><strong>Next.js + Vercel</strong></td><td>React</td><td>Mista: SSR, SSG, ISR e Server Components, escolhidos por rota/componente</td><td>Vercel (a mesma empresa constrói os dois)</td></tr>
+      <tr><td><strong>Remix</strong> (hoje o modo framework do React Router)</td><td>React</td><td>SSR por padrão, construído em volta de fundamentos HTTP (loaders, actions, forms)</td><td>Qualquer host Node — sem uma única "casa"</td></tr>
+      <tr><td><strong>Astro</strong></td><td>Qualquer uma (React, Vue, Svelte, ou nenhuma) via "ilhas"</td><td>Estático por padrão, zero JS enviado a menos que um componente opte por hidratação</td><td>Qualquer host estático, mais adaptadores pra SSR na Vercel/Netlify/Node</td></tr>
+      <tr><td><strong>SvelteKit</strong></td><td>Svelte (compila pra fora, sem DOM virtual)</td><td>SSR por padrão, SSG disponível por rota</td><td>Qualquer host via adaptadores (Vercel, Netlify, Node, estático)</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Repare no padrão:</strong> só o Next.js tem uma única plataforma da qual ele "é" — a Vercel constrói o framework e a plataforma de hospedagem juntos, então a integração é mais profunda ali. Remix, Astro e SvelteKit foram todos projetados pra serem agnósticos de host desde o primeiro dia, o que é um trade-off real, não só uma nota de rodapé (mais na seção de hosting).
+    </div>
+
+    <h2 id="dimensao-render">3. Dimensão 1: modelo de renderização</h2>
+    <p>Essa é a dimensão que mais afeta como uma página de fato se comporta pro usuário, e é a que vale entender antes de qualquer outra.</p>
+    <ul>
+      <li><strong>Next.js</strong> dá o controle mais granular: um Server Component que nunca manda JS, um Client Component que hidrata, geração estática em tempo de build, ou regeneração sob demanda (ISR) — tudo misturável no mesmo app, até na mesma página. Essa flexibilidade é poderosa mas significa mais decisões por rota.</li>
+      <li><strong>Remix</strong> é deliberadamente mais simples aqui: tudo renderiza no servidor a cada requisição por padrão, e você opta por cache na camada de infraestrutura (headers de CDN) em vez do framework oferecer múltiplas estratégias embutidas. Menos pra configurar, menos nuance pra raciocinar.</li>
+      <li><strong>Astro</strong> inverte o padrão inteiramente: páginas mandam zero JavaScript a menos que você marque explicitamente um componente como interativo ("ilha"). Esse é o melhor padrão pra sites com muito conteúdo, onde a maior parte da página é texto e imagem estática.</li>
+      <li><strong>SvelteKit</strong> renderiza no servidor por padrão como o Remix, mas como o Svelte compila componentes pra JS puro em tempo de build (sem runtime de framework enviado ao navegador), os bundles resultantes tendem a ser menores mesmo em páginas interativas.</li>
+    </ul>
+
+    <h2 id="dimensao-aprendizado">4. Dimensão 2: curva de aprendizado e modelo mental</h2>
+    <table>
+      <tr><th>Stack</th><th>Modelo mental</th><th>Curva</th></tr>
+      <tr><td>Next.js</td><td>O modelo de componentes do React, mais a divisão Server/Client Component, mais as convenções de arquivo do App Router</td><td>A mais íngreme das quatro — mais conceitos pra internalizar, mas mais tutoriais/exemplos existem</td></tr>
+      <tr><td>Remix</td><td>Fundamentos web primeiro: uma rota é um loader (GET) e uma action (POST), formulários submetem como em 2005 mas com DX moderna</td><td>Suave se você já conhece HTTP; incomum se seu único modelo mental é state no client</td></tr>
+      <tr><td>Astro</td><td>Escreva componentes como um gerador de site estático, "ejete" pra interatividade só onde precisar</td><td>Suave — muitas vezes a mais fácil das quatro pra colocar uma primeira página no ar</td></tr>
+      <tr><td>SvelteKit</td><td>Sintaxe reativa própria do Svelte (sem hooks estilo <code>useState</code>, mais perto de JS puro com variáveis reativas)</td><td>Suave pra aprender do zero, levemente incomum se você vem de anos de hábitos React</td></tr>
+    </table>
+
+    <h2 id="dimensao-hosting">5. Dimensão 3: história de hospedagem</h2>
+    <p>É aqui que a diferença de "única casa" da seção 2 aparece de fato no dia a dia.</p>
+    <ul>
+      <li><strong>Next.js na Vercel</strong> ganha suporte de primeira classe pra todo modo de renderização que o framework oferece, muitas vezes antes de outros hosts alcançarem — features novas do Next.js e da plataforma Vercel tendem a sair em sincronia, já que uma empresa é dona dos dois.</li>
+      <li><strong>Remix, Astro e SvelteKit</strong> todos publicam via "adaptadores" — um pacotinho que traduz a saída do framework pro que quer que um host específico espere (uma function da Vercel, uma function da Netlify, um servidor Node puro, arquivos estáticos). Isso significa que você pode trocar de host sem tocar no código do app, ao custo de eventualmente esperar um adaptador alcançar uma feature novíssima do framework.</li>
+    </ul>
+    <div class="callout">
+      <strong>O trade-off em uma frase:</strong> Next.js + Vercel otimiza pra "integração mais profunda, menos portabilidade"; Remix/Astro/SvelteKit otimizam pra "agnóstico de host, um pouco mais de peças pra configurar."
+    </div>
+
+    <h2 id="dimensao-ecossistema">6. Dimensão 4: ecossistema e contratação</h2>
+    <p>Essa dimensão raramente é discutida em comparações técnicas, mas costuma ser o fator decisivo pra um time real.</p>
+    <ul>
+      <li><strong>Next.js</strong> tem de longe o maior ecossistema: mais respostas no Stack Overflow, mais bibliotecas de terceiros com exemplos de primeira classe pra Next.js, a piscina mais fácil de desenvolvedores pra contratar porque habilidades em React são as mais comuns no mercado.</li>
+      <li><strong>Remix</strong> herda a piscina de contratação do React mas uma comunidade específica do padrão muito menor — você encontra menos tutoriais pra casos de borda, e depende mais de ler a documentação/código-fonte direto.</li>
+      <li><strong>Astro</strong> tem uma comunidade em crescimento rápido mas específica de site de conteúdo — expertise profunda em blogs/docs/sites institucionais, mais rasa se você está construindo um dashboard bem interativo.</li>
+      <li><strong>SvelteKit</strong> tem a menor piscina de contratação das quatro, embora os desenvolvedores que conhecem Svelte costumem ser bem entusiasmados com ele — uma consideração real se você está formando um time, não só um projeto pessoal.</li>
+    </ul>
+
+    <h2 id="exemplo-pratico">7. Exemplo prático: escolhendo uma stack pra um projeto genérico</h2>
+    <p>Digamos que você está começando um projeto com login, um dashboard, e alguns dados dinâmicos por usuário — um formato bem típico de SaaS. Veja como a decisão se desenrola de fato:</p>
+    <div class="card">
+      <div class="card-title">Passo a passo da decisão</div>
+      <ol>
+        <li><strong>Seu time já conhece React?</strong> Se sim, você está escolhendo entre Next.js e Remix, nem considerando Astro ou SvelteKit — não introduza uma biblioteca de UI nova só pra esse projeto a menos que haja uma razão específica.</li>
+        <li><strong>Você quer controle máximo sobre renderização por página, e não se importa com convenções específicas da Vercel?</strong> Next.js. Esse é o padrão mais seguro pra maioria dos times hoje precisamente por causa do tamanho do ecossistema da seção 6.</li>
+        <li><strong>Você quer algo mais perto de HTTP puro, modelo mental mais simples, e flexibilidade de host desde o primeiro dia?</strong> Remix.</li>
+        <li><strong>O projeto é na verdade mais conteúdo que app</strong> (um blog, site de documentação, página institucional com um login parafusado)? Astro, independente do que seu time conhece — o modelo de zero-JS-por-padrão é desperdiçado se você não tem um site denso em conteúdo.</li>
+        <li><strong>Tamanho de bundle mínimo é a prioridade número um, e o time está aberto a aprender Svelte?</strong> SvelteKit — mas seja honesto sobre o trade-off de contratação/comunidade da seção 6 antes de comprometer um time inteiro com ele.</li>
+      </ol>
+    </div>
+
+    <h2 id="conclusao">8. A conclusão de verdade</h2>
+    <p>Nenhuma dessas quatro stacks é objetivamente melhor — elas otimizam pra coisas diferentes, e três das quatro dimensões acima (curva de aprendizado, hosting, ecossistema) importam mais na prática do que capacidade técnica bruta, porque todas as quatro conseguem eventualmente fazer o que você precisa. A pergunta que realmente prevê um bom resultado não é "qual stack é melhor" — é "quais padrões de stack combinam com o que esse projeto específico e esse time específico realmente precisam", que é exatamente o passo a passo da seção 7.</p>
+
+        <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+<div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Week 4 · Lesson 16</span>
+  <span class="accent" id="footer-right">Full stack comparison</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Week 4 · Lesson 16' : 'Cooldecode · Semana 4 · Lição 16';
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

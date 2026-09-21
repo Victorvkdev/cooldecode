@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 14: Alternatives to SQLite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  pre { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Week 3 · Data &amp; backend · Lesson 14</span>
+      <h1>Beyond SQLite: Postgres, MySQL, Turso, PlanetScale</h1>
+      <p class="subtitle">SQLite is great until it isn't. Here's what to reach for when your app needs more than one writer at a time — and why "just Postgres" isn't the only sane answer anymore.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why">Why look beyond SQLite at all</a></li>
+        <li><a href="#postgres">PostgreSQL</a></li>
+        <li><a href="#mysql">MySQL</a></li>
+        <li><a href="#turso">Turso</a></li>
+        <li><a href="#planetscale">PlanetScale</a></li>
+        <li><a href="#compare">Side-by-side comparison</a></li>
+        <li><a href="#choose">How to actually choose</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why">1. Why look beyond SQLite at all</h2>
+    <p>Lesson 13 covered when SQLite is enough: single-writer workloads, embedded apps, prototypes, low-traffic sites, edge deployments where a file-based database is genuinely simpler than running a server. The moment any of these stop being true — multiple app servers writing at once, traffic that needs to scale horizontally, a team that wants managed backups/replicas without babysitting a file — you need a database that runs as its own server process (or managed service) instead of living inside your application process.</p>
+    <p>That's the common thread across everything in this lesson: Postgres, MySQL, Turso, and PlanetScale all decouple the database from the application, so multiple clients can connect, write concurrently, and be managed independently of any single app deploy.</p>
+
+    <h2 id="postgres">2. PostgreSQL</h2>
+    <p><strong>What it is:</strong> an open-source, general-purpose relational database, in continuous development since the late 1980s. Often just called "Postgres". It's the closest thing the industry has to a default choice for a serious relational database today.</p>
+    <p><strong>Why it exists / why people reach for it:</strong> it combines strict SQL standard compliance with a huge set of advanced features most competitors lack out of the box — JSON/JSONB columns (documents inside a relational table), full-text search, geographic data types (PostGIS), array columns, custom types, and a mature extension ecosystem (like <code>pgvector</code> for embeddings).</p>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Extremely feature-rich: JSON, arrays, full-text search, extensions — often removes the need for a separate specialized database.</li>
+        <li>Strong correctness guarantees (ACID transactions, strict data typing) — fewer silent data corruption surprises than MySQL historically had.</li>
+        <li>Free, open-source, no vendor lock-in for the engine itself; available from every major cloud and countless managed providers (Neon, Supabase, RDS, Vercel Postgres, etc.).</li>
+        <li>Huge community, extension ecosystem, and tooling maturity.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons</div>
+      <ul>
+        <li>Vertical scaling has limits — very large write-heavy workloads eventually need sharding or read replicas, which add operational complexity.</li>
+        <li>Configuration for performance (connection pooling, vacuuming, indexes) has a real learning curve compared to "it just works" file databases.</li>
+        <li>Running it yourself means managing backups, updates, and failover — most teams offload this to a managed provider instead.</li>
+      </ul>
+    </div>
+
+    <h2 id="mysql">3. MySQL</h2>
+    <p><strong>What it is:</strong> another open-source relational database, historically the default pick for web applications (the "M" in the old LAMP stack — Linux, Apache, MySQL, PHP). Owned by Oracle since 2010, though a fully open fork (MariaDB) exists for teams wary of that.</p>
+    <p><strong>Why it exists / why people reach for it:</strong> it prioritizes simplicity and raw read speed for straightforward web workloads. It's what WordPress, most PHP frameworks, and a huge share of legacy web applications run on — meaning enormous hosting support and familiarity.</p>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Extremely well understood, huge hosting support (practically every shared host offers it), enormous body of existing tutorials and tooling.</li>
+        <li>Historically faster for simple read-heavy workloads than Postgres, though this gap has narrowed significantly over the years.</li>
+        <li>Simpler mental model — fewer advanced features means less to configure wrong.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons</div>
+      <ul>
+        <li>Fewer advanced data types and features than Postgres (weaker JSON support, no native arrays, fewer extension options).</li>
+        <li>Historically looser data-type enforcement (silently truncating or coercing invalid values) — improved in recent versions but still a real gotcha for teams migrating from Postgres.</li>
+        <li>Owned by Oracle, which makes some teams (and some open-source purists) prefer MariaDB or Postgres instead.</li>
+      </ul>
+    </div>
+
+    <h2 id="turso">4. Turso</h2>
+    <p><strong>What it is:</strong> a managed, distributed database built on <code>libSQL</code> — an open-source fork of SQLite designed to run as a server, not just as an embedded file. Think of it as "SQLite's file-based simplicity, but as a real client-server database you can deploy at the edge."</p>
+    <p><strong>Why it exists / why people reach for it:</strong> it targets a very specific gap — teams who love SQLite's simplicity and low cost, but need it reachable over the network from serverless/edge functions (Vercel, Cloudflare Workers) where a local file isn't an option. It also supports "embedded replicas": a local SQLite file that syncs from a central Turso database, giving near-zero read latency plus a durable source of truth.</p>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Keeps SQLite's simplicity and low operational overhead while adding real multi-writer, networked access.</li>
+        <li>Edge-friendly: databases can be replicated close to users for very low read latency, which fits serverless/edge deploys (see Lesson 8's ISR discussion and Lesson 9/10 on Vercel/Netlify edge functions).</li>
+        <li>Generous free tier, low cost for small-to-medium apps.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons</div>
+      <ul>
+        <li>Younger ecosystem than Postgres/MySQL — fewer battle-tested integrations, smaller community, less institutional knowledge to lean on when something breaks.</li>
+        <li>Inherits some of SQLite's underlying constraints for very heavy concurrent-write workloads, even though libSQL improves on them.</li>
+        <li>Vendor-specific product (not just "open-source Postgres you can self-host anywhere") — some lock-in to Turso's platform for the managed/distributed features.</li>
+      </ul>
+    </div>
+
+    <h2 id="planetscale">5. PlanetScale</h2>
+    <p><strong>What it is:</strong> a managed database platform built on MySQL-compatible storage (originally Vitess, the sharding layer YouTube built for MySQL at scale; PlanetScale later also introduced a Postgres-based offering). Known especially for schema branching — treating database schema changes like Git branches.</p>
+    <p><strong>Why it exists / why people reach for it:</strong> it solves the operational pain of scaling MySQL horizontally (which normally requires deep Vitess expertise to run yourself) and the workflow pain of making schema changes safely in a team — branch a schema change, test it, merge it, with automatic non-blocking migrations instead of risky manual <code>ALTER TABLE</code> statements on a live table.</p>
+    <div class="card">
+      <div class="card-title">Pros</div>
+      <ul>
+        <li>Schema branching + non-blocking schema changes are a genuinely different workflow than most databases offer — safer team collaboration on schema evolution.</li>
+        <li>Built on Vitess, so horizontal scaling (sharding) is handled for you instead of being a manual, expert-only operation.</li>
+        <li>Fully managed: no server patching, backups handled, generous free tier for small projects.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Cons</div>
+      <ul>
+        <li>No foreign key constraints in the MySQL/Vitess-based product by default (a consequence of the underlying sharding architecture) — some teams find this a meaningful trade-off versus Postgres.</li>
+        <li>Managed-only — there's no realistic "self-host PlanetScale yourself" path the way there is with Postgres or MySQL.</li>
+        <li>Pricing and feature set are tied to a single vendor's roadmap.</li>
+      </ul>
+    </div>
+
+    <h2 id="compare">6. Side-by-side comparison</h2>
+    <table>
+      <tr><th>Database</th><th>Core model</th><th>Best fit</th><th>Watch out for</th></tr>
+      <tr><td><strong>Postgres</strong></td><td>Open-source relational, self-host or managed anywhere</td><td>Default choice for most new apps; anything needing advanced data types or extensions</td><td>Performance tuning has a learning curve</td></tr>
+      <tr><td><strong>MySQL</strong></td><td>Open-source relational, huge legacy footprint</td><td>Simple web apps, existing MySQL-based stacks (WordPress, legacy PHP)</td><td>Weaker advanced features, historically looser type enforcement</td></tr>
+      <tr><td><strong>Turso</strong></td><td>Distributed SQLite (libSQL), managed</td><td>Edge/serverless apps wanting SQLite-like simplicity with real network access</td><td>Younger ecosystem, vendor-specific platform</td></tr>
+      <tr><td><strong>PlanetScale</strong></td><td>Managed, Vitess-sharded MySQL (also offers Postgres)</td><td>Teams needing horizontal scale and safe team schema workflows without deep DB-ops expertise</td><td>No FK constraints by default on the MySQL product; fully managed only</td></tr>
+    </table>
+
+    <h2 id="choose">7. How to actually choose, in practice</h2>
+    <div class="callout">
+      <strong>Default answer for a new project:</strong> Postgres, hosted on a managed provider (Neon, Supabase, Vercel Postgres, RDS). It's the safest "won't regret this in two years" choice — richest feature set, biggest community, least vendor lock-in.
+    </div>
+    <div class="callout">
+      <strong>Building on the edge/serverless with SQLite-style simplicity in mind:</strong> Turso — you keep the low-friction mental model from Lesson 13 while getting a real networked, multi-writer database.
+    </div>
+    <div class="callout">
+      <strong>Already on MySQL, or expecting to need serious horizontal scale with frequent schema changes across a team:</strong> PlanetScale — it turns two of MySQL's classic operational headaches (sharding, risky migrations) into a managed, workflow-friendly experience.
+    </div>
+    <p><strong>Practical example:</strong> imagine a small SaaS starting as a side project. It launches on SQLite (Lesson 13) because it's one founder, low traffic, and zero ops overhead. Six months in, a second background worker needs to write to the same database concurrently, and traffic has grown past what a single file handles comfortably. At that point, migrating to a managed Postgres instance is usually the least risky move — same relational model, same SQL dialect family, just now running as a proper server that multiple processes can talk to at once.</p>
+
+    <div class="card">
+      <div class="card-title">Sources / further reading</div>
+      <p style="margin-bottom:0; font-size:14px;">PostgreSQL and MySQL official documentation; <a href="https://turso.tech/libsql" target="_blank" rel="noopener">Turso / libSQL docs</a>; <a href="https://planetscale.com/docs" target="_blank" rel="noopener">PlanetScale docs</a>.</p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Semana 3 · Dados e backend · Lição 14</span>
+      <h1>Além do SQLite: Postgres, MySQL, Turso, PlanetScale</h1>
+      <p class="subtitle">SQLite é ótimo até deixar de ser. Aqui está o que usar quando sua aplicação precisa de mais de um escritor ao mesmo tempo — e por que "simplesmente Postgres" não é mais a única resposta sensata.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#por-que">Por que olhar além do SQLite</a></li>
+        <li><a href="#postgres-pt">PostgreSQL</a></li>
+        <li><a href="#mysql-pt">MySQL</a></li>
+        <li><a href="#turso-pt">Turso</a></li>
+        <li><a href="#planetscale-pt">PlanetScale</a></li>
+        <li><a href="#comparar">Comparação lado a lado</a></li>
+        <li><a href="#escolher">Como escolher, na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="por-que">1. Por que olhar além do SQLite</h2>
+    <p>A Lição 13 cobriu quando o SQLite basta: cargas de trabalho com um único escritor, apps embarcados, protótipos, sites de baixo tráfego, deploys de edge onde um banco baseado em arquivo é genuinamente mais simples que rodar um servidor. No momento em que qualquer uma dessas premissas deixa de valer — múltiplos servidores da aplicação escrevendo ao mesmo tempo, tráfego que precisa escalar horizontalmente, um time que quer backups/réplicas gerenciados sem cuidar de um arquivo na mão — você precisa de um banco que rode como processo de servidor próprio (ou serviço gerenciado), em vez de viver dentro do processo da aplicação.</p>
+    <p>Esse é o fio condutor de tudo nesta lição: Postgres, MySQL, Turso e PlanetScale desacoplam o banco da aplicação, permitindo que múltiplos clientes se conectem, escrevam de forma concorrente, e sejam gerenciados independentemente de qualquer deploy específico da aplicação.</p>
+
+    <h2 id="postgres-pt">2. PostgreSQL</h2>
+    <p><strong>O que é:</strong> um banco relacional de propósito geral, open-source, em desenvolvimento contínuo desde o fim dos anos 1980. Frequentemente só chamado de "Postgres". É o que mais se aproxima de uma escolha padrão da indústria pra um banco relacional sério hoje.</p>
+    <p><strong>Por que existe / por que as pessoas usam:</strong> ele combina conformidade estrita com o padrão SQL com um conjunto enorme de recursos avançados que a maioria dos concorrentes não tem de fábrica — colunas JSON/JSONB (documentos dentro de uma tabela relacional), busca full-text, tipos de dados geográficos (PostGIS), colunas de array, tipos customizados, e um ecossistema maduro de extensões (como o <code>pgvector</code> pra embeddings).</p>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Extremamente rico em recursos: JSON, arrays, busca full-text, extensões — muitas vezes remove a necessidade de um banco especializado separado.</li>
+        <li>Garantias fortes de correção (transações ACID, tipagem estrita de dados) — menos surpresas silenciosas de corrupção de dados do que o MySQL historicamente teve.</li>
+        <li>Gratuito, open-source, sem vendor lock-in pro motor em si; disponível em toda grande cloud e inúmeros provedores gerenciados (Neon, Supabase, RDS, Vercel Postgres, etc).</li>
+        <li>Comunidade enorme, ecossistema de extensões e maturidade de ferramental.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras</div>
+      <ul>
+        <li>Escala vertical tem limites — cargas muito pesadas de escrita eventualmente precisam de sharding ou réplicas de leitura, o que adiciona complexidade operacional.</li>
+        <li>Configuração pra performance (connection pooling, vacuum, índices) tem uma curva de aprendizado real comparado a bancos baseados em arquivo que "simplesmente funcionam".</li>
+        <li>Rodar você mesmo significa gerenciar backups, atualizações e failover — a maioria dos times terceiriza isso pra um provedor gerenciado.</li>
+      </ul>
+    </div>
+
+    <h2 id="mysql-pt">3. MySQL</h2>
+    <p><strong>O que é:</strong> outro banco relacional open-source, historicamente a escolha padrão pra aplicações web (o "M" do antigo stack LAMP — Linux, Apache, MySQL, PHP). Propriedade da Oracle desde 2010, embora exista um fork totalmente aberto (MariaDB) pra times receosos disso.</p>
+    <p><strong>Por que existe / por que as pessoas usam:</strong> ele prioriza simplicidade e velocidade bruta de leitura pra cargas web diretas. É o que roda o WordPress, a maioria dos frameworks PHP, e uma fatia enorme de aplicações web legadas — significando suporte de hospedagem e familiaridade enormes.</p>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Extremamente bem compreendido, suporte de hospedagem enorme (praticamente todo host compartilhado oferece), corpo enorme de tutoriais e ferramental já existentes.</li>
+        <li>Historicamente mais rápido em cargas simples de leitura que o Postgres, embora essa diferença tenha diminuído bastante ao longo dos anos.</li>
+        <li>Modelo mental mais simples — menos recursos avançados significa menos coisa pra configurar errado.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras</div>
+      <ul>
+        <li>Menos tipos de dados e recursos avançados que o Postgres (suporte a JSON mais fraco, sem arrays nativos, menos opções de extensão).</li>
+        <li>Historicamente aplicação mais frouxa de tipos (truncando ou convertendo valores inválidos silenciosamente) — melhorou em versões recentes mas ainda é uma pegadinha real pra times migrando do Postgres.</li>
+        <li>Propriedade da Oracle, o que faz alguns times (e alguns puristas de open-source) preferirem MariaDB ou Postgres.</li>
+      </ul>
+    </div>
+
+    <h2 id="turso-pt">4. Turso</h2>
+    <p><strong>O que é:</strong> um banco distribuído e gerenciado construído sobre o <code>libSQL</code> — um fork open-source do SQLite desenhado pra rodar como servidor, não só como arquivo embarcado. Pense nele como "a simplicidade baseada em arquivo do SQLite, mas como um banco cliente-servidor de verdade que dá pra publicar na borda (edge)."</p>
+    <p><strong>Por que existe / por que as pessoas usam:</strong> ele mira numa lacuna bem específica — times que amam a simplicidade e o baixo custo do SQLite, mas precisam acessá-lo pela rede a partir de funções serverless/edge (Vercel, Cloudflare Workers) onde um arquivo local não é uma opção. Também suporta "réplicas embarcadas": um arquivo SQLite local que sincroniza a partir de um banco Turso central, dando latência de leitura quase zero mais uma fonte de verdade durável.</p>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Mantém a simplicidade do SQLite e a baixa carga operacional enquanto adiciona acesso real de múltiplos escritores pela rede.</li>
+        <li>Amigável pra edge: bancos podem ser replicados perto dos usuários pra latência de leitura muito baixa, o que combina com deploys serverless/edge (veja a discussão de ISR da Lição 8 e as edge functions de Vercel/Netlify das Lições 9/10).</li>
+        <li>Camada gratuita generosa, custo baixo pra apps pequenas e médias.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras</div>
+      <ul>
+        <li>Ecossistema mais jovem que Postgres/MySQL — menos integrações testadas em batalha, comunidade menor, menos conhecimento institucional pra recorrer quando algo quebra.</li>
+        <li>Herda algumas das restrições subjacentes do SQLite pra cargas muito pesadas de escrita concorrente, mesmo que o libSQL melhore nisso.</li>
+        <li>Produto específico de fornecedor (não é só "Postgres open-source que você pode auto-hospedar em qualquer lugar") — algum lock-in na plataforma da Turso pros recursos gerenciados/distribuídos.</li>
+      </ul>
+    </div>
+
+    <h2 id="planetscale-pt">5. PlanetScale</h2>
+    <p><strong>O que é:</strong> uma plataforma de banco gerenciada construída sobre armazenamento compatível com MySQL (originalmente o Vitess, a camada de sharding que o YouTube construiu pro MySQL em escala; a PlanetScale depois também lançou uma oferta baseada em Postgres). Conhecida especialmente pelo branching de schema — tratar mudanças de esquema de banco como branches do Git.</p>
+    <p><strong>Por que existe / por que as pessoas usam:</strong> ele resolve a dor operacional de escalar o MySQL horizontalmente (que normalmente exige expertise profunda em Vitess pra rodar você mesmo) e a dor de workflow de fazer mudanças de schema com segurança num time — branch de uma mudança de schema, testa, faz merge, com migrações automáticas e não-bloqueantes em vez de comandos <code>ALTER TABLE</code> arriscados e manuais numa tabela em produção.</p>
+    <div class="card">
+      <div class="card-title">Prós</div>
+      <ul>
+        <li>Branching de schema + mudanças de schema não-bloqueantes são um workflow genuinamente diferente do que a maioria dos bancos oferece — colaboração mais segura em time na evolução do schema.</li>
+        <li>Construído sobre o Vitess, então escala horizontal (sharding) é resolvida pra você em vez de ser uma operação manual só pra especialistas.</li>
+        <li>Totalmente gerenciado: sem patch de servidor, backups resolvidos, camada gratuita generosa pra projetos pequenos.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Contras</div>
+      <ul>
+        <li>Sem constraints de foreign key no produto baseado em MySQL/Vitess por padrão (consequência da arquitetura de sharding subjacente) — alguns times acham isso um trade-off significativo frente ao Postgres.</li>
+        <li>Só gerenciado — não existe um caminho realista de "auto-hospedar a PlanetScale você mesmo" como existe com Postgres ou MySQL.</li>
+        <li>Preço e conjunto de recursos atrelados ao roadmap de um único fornecedor.</li>
+      </ul>
+    </div>
+
+    <h2 id="comparar">6. Comparação lado a lado</h2>
+    <table>
+      <tr><th>Banco</th><th>Modelo central</th><th>Melhor encaixe</th><th>Atenção a</th></tr>
+      <tr><td><strong>Postgres</strong></td><td>Relacional open-source, auto-hospedado ou gerenciado em qualquer lugar</td><td>Escolha padrão pra maioria dos apps novos; qualquer coisa que precise de tipos de dados ou extensões avançadas</td><td>Ajuste fino de performance tem curva de aprendizado</td></tr>
+      <tr><td><strong>MySQL</strong></td><td>Relacional open-source, pegada legada enorme</td><td>Apps web simples, stacks já baseados em MySQL (WordPress, PHP legado)</td><td>Recursos avançados mais fracos, aplicação de tipos historicamente mais frouxa</td></tr>
+      <tr><td><strong>Turso</strong></td><td>SQLite distribuído (libSQL), gerenciado</td><td>Apps edge/serverless que querem simplicidade estilo SQLite com acesso real pela rede</td><td>Ecossistema mais jovem, plataforma específica de fornecedor</td></tr>
+      <tr><td><strong>PlanetScale</strong></td><td>MySQL gerenciado e fragmentado via Vitess (também oferece Postgres)</td><td>Times que precisam de escala horizontal e workflows seguros de schema em time sem expertise profunda em DB-ops</td><td>Sem constraints de FK por padrão no produto MySQL; só gerenciado</td></tr>
+    </table>
+
+    <h2 id="escolher">7. Como escolher, na prática</h2>
+    <div class="callout">
+      <strong>Resposta padrão pra um projeto novo:</strong> Postgres, hospedado num provedor gerenciado (Neon, Supabase, Vercel Postgres, RDS). É a escolha mais segura de "não vou me arrepender disso daqui a dois anos" — conjunto de recursos mais rico, maior comunidade, menos lock-in de fornecedor.
+    </div>
+    <div class="callout">
+      <strong>Construindo na edge/serverless com a simplicidade estilo SQLite em mente:</strong> Turso — você mantém o modelo mental de baixo atrito da Lição 13 mas ganha um banco real de rede, com múltiplos escritores.
+    </div>
+    <div class="callout">
+      <strong>Já está no MySQL, ou espera precisar de escala horizontal séria com mudanças frequentes de schema num time:</strong> PlanetScale — ele transforma duas das dores operacionais clássicas do MySQL (sharding, migrações arriscadas) numa experiência gerenciada e amigável ao workflow.
+    </div>
+    <p><strong>Exemplo prático:</strong> imagine um SaaS pequeno começando como projeto paralelo. Ele lança com SQLite (Lição 13) porque é um fundador só, tráfego baixo, e zero carga operacional. Seis meses depois, um segundo worker em background precisa escrever no mesmo banco de forma concorrente, e o tráfego cresceu além do que um único arquivo aguenta confortavelmente. Nesse ponto, migrar pra uma instância Postgres gerenciada costuma ser o movimento de menor risco — mesmo modelo relacional, mesma família de dialeto SQL, só que agora rodando como um servidor de verdade com o qual múltiplos processos podem falar ao mesmo tempo.</p>
+
+    <div class="card">
+      <div class="card-title">Fontes / leitura complementar</div>
+      <p style="margin-bottom:0; font-size:14px;">Documentação oficial do PostgreSQL e do MySQL; <a href="https://turso.tech/libsql" target="_blank" rel="noopener">documentação do Turso / libSQL</a>; <a href="https://planetscale.com/docs" target="_blank" rel="noopener">documentação da PlanetScale</a>.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lesson 14</span>
+  <span class="accent" id="footer-right">Postgres, MySQL, Turso, PlanetScale</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 14' : 'Cooldecode · Lição 14';
+  }
+</script>
+
+</body>
+</html>

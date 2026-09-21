@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — IA Watch: Claude's memory becomes one thing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 10px; }
+  .sources ol { padding-left: 18px; }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">IA Watch · Anthropic/Claude news</span>
+      <h1>Claude's memory just became one thing</h1>
+      <p class="subtitle">Anthropic merged the memory system behind Claude chat and Claude Cowork into a single shared memory — the same mechanism that lets this very newsletter's automation remember your project across runs. Here's what actually changed under the hood.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-changed">1. What changed on August 25, 2026</a></li>
+        <li><a href="#how-it-worked">2. How memory used to work (and why it was clunky)</a></li>
+        <li><a href="#how-it-works-now">3. How it works now: topic files instead of end-of-chat summaries</a></li>
+        <li><a href="#privacy">4. Sensitive topics and privacy controls</a></li>
+        <li><a href="#availability">5. Who gets it, and by default</a></li>
+        <li><a href="#why-it-matters">6. Why this matters beyond the feature itself</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-changed">1. What changed on August 25, 2026</h2>
+    <p>Until this update, Claude's chat interface and Claude Cowork (the agentic, file-and-task-oriented mode) kept memory separately. Something you told Claude in a normal chat — a preference, a recurring project detail, how you like your code reviewed — did not automatically show up when you switched to Cowork to actually get work done, and vice versa. You'd re-explain the same context depending on which surface you happened to be using.</p>
+    <p>Anthropic's August 25 update removes that split: memory is now shared across both surfaces. Anything Claude learns about you or your work in a chat is available the next time you open Cowork, and anything Cowork picks up while executing a task (file structures, recurring decisions, how a project is organized) carries back into ordinary chat.</p>
+
+    <h2 id="how-it-worked">2. How memory used to work (and why it was clunky)</h2>
+    <p>The older approach was <strong>summarization at the end of a conversation</strong>: Claude would look back over a finished chat and distill it into a memory note. That has two structural problems:</p>
+    <ul>
+      <li><strong>Latency</strong> — nothing gets remembered until the conversation actually ends, so a long-running or still-open session contributes nothing to memory yet.</li>
+      <li><strong>Fragmentation</strong> — each surface (chat vs. Cowork) ran its own summarization pass, producing two separate, non-overlapping memory stores that never talked to each other.</li>
+    </ul>
+
+    <h2 id="how-it-works-now">3. How it works now: topic files instead of end-of-chat summaries</h2>
+    <p>The new system writes memory incrementally, as you chat, instead of waiting for the conversation to end. Every piece of retained information is stored as a small, individually addressable <strong>topic file</strong> — visible to you under Topics in Memory settings, where each one can be viewed, edited, or deleted on its own.</p>
+    <div class="callout">
+      <strong>This is the exact mechanism behind this newsletter's automation.</strong> The project-level facts, preferences, and decisions this assistant keeps across sessions — including the ones that make today's two lessons consistent with yesterday's — are stored as topic files of this same kind. Reading about it here is, in a very literal sense, reading the spec of the tool generating the content.
+    </div>
+    <p>Practically, this also means memory updates propagate faster (you don't have to close a chat for something to "stick") and consistently (the same topic file is the one both chat and Cowork read from — there's no reconciliation step between two separate stores).</p>
+
+    <h2 id="privacy">4. Sensitive topics and privacy controls</h2>
+    <p>By default, Claude does <strong>not</strong> save a set of sensitive categories to memory even if they come up in conversation: health information, race, ethnicity, religious beliefs, political views, sexual orientation, and gender identity. If you'd specifically like Claude to remember something in one of those categories — so you stop re-explaining it — that can be turned on explicitly in Memory settings; it is opt-in, not the default.</p>
+    <p>Every stored topic remains inspectable and deletable at the granularity of a single file, not just as an all-or-nothing wipe.</p>
+
+    <h2 id="availability">5. Who gets it, and by default</h2>
+    <table>
+      <tr><th>Plan</th><th>Default state</th></tr>
+      <tr><td>Free, Pro, Max</td><td>Memory is <strong>on</strong> by default</td></tr>
+      <tr><td>Team, Enterprise</td><td>Memory is <strong>off</strong> by default — org admins choose whether to enable it</td></tr>
+    </table>
+    <p>The Team/Enterprise default reflects a reasonable governance concern: persistent memory across a shared workspace has different risk implications than memory tied to one individual's account, so Anthropic left that decision to the organization rather than opting everyone in automatically.</p>
+
+    <h2 id="why-it-matters">6. Why this matters beyond the feature itself</h2>
+    <p>Two things worth sitting with:</p>
+    <ul>
+      <li><strong>Memory is becoming infrastructure, not a chat feature.</strong> Framing it as "topic files that any surface can read and write" is closer to a small personal database than to a chatbot gimmick — it's the same architectural move context engineering has been pushing toward: give the model durable, structured, editable state instead of relying purely on what fits in a single context window.</li>
+      <li><strong>Transparency is doing real work here.</strong> Making every memory a visible, editable file (instead of an opaque internal summary) is what makes persistent memory usable in a professional context — you can audit exactly what an assistant "knows" about you before trusting it with more autonomy, which matters a lot more once that same assistant can also take actions on your files, as Cowork does.</li>
+    </ul>
+    <p>This lesson exists because of the rotation rule this newsletter follows: a real, dated Anthropic announcement takes priority over the regular IA Watch category rotation. Today's would-have-been topic — prompt engineering technique — returns in the next cycle.</p>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://techcrunch.com/2026/08/25/claude-cowork-finally-remembers-what-you-told-the-app-in-chat/" target="_blank" rel="noopener">TechCrunch — "Claude Cowork finally remembers what you told the app in chat" (Aug 25, 2026)</a></li>
+        <li><a href="https://9to5mac.com/2026/08/25/anthropic-update-unifies-memory-feature-across-claude-cowork-and-chat/" target="_blank" rel="noopener">9to5Mac — "Anthropic update unifies memory feature across Claude Cowork and chat" (Aug 25, 2026)</a></li>
+        <li><a href="https://www.engadget.com/2243753/claude-memory-now-works-across-both-chats-and-cowork-sessions/" target="_blank" rel="noopener">Engadget — "Claude's memory now works across both chats and Cowork sessions" (Aug 25, 2026)</a></li>
+        <li><a href="https://www.iclarified.com/101902/anthropic-unifies-claude-memory-across-chat-and-cowork" target="_blank" rel="noopener">iClarified — "Anthropic Unifies Claude Memory Across Chat and Cowork" (Aug 25, 2026)</a></li>
+      </ol>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades Anthropic/Claude</span>
+      <h1>A memória do Claude virou uma coisa só</h1>
+      <p class="subtitle">A Anthropic unificou o sistema de memória por trás do chat do Claude e do Claude Cowork numa memória compartilhada única — o mesmo mecanismo que faz a automação desta própria newsletter lembrar do seu projeto entre execuções. Aqui está o que de fato mudou por baixo do capô.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-mudou">1. O que mudou em 25 de agosto de 2026</a></li>
+        <li><a href="#como-funcionava">2. Como a memória funcionava antes (e por que era limitado)</a></li>
+        <li><a href="#como-funciona-agora">3. Como funciona agora: arquivos por tópico em vez de resumo de fim de conversa</a></li>
+        <li><a href="#privacidade">4. Tópicos sensíveis e controles de privacidade</a></li>
+        <li><a href="#disponibilidade">5. Quem tem acesso, e por padrão</a></li>
+        <li><a href="#por-que-importa">6. Por que isso importa além da feature em si</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-mudou">1. O que mudou em 25 de agosto de 2026</h2>
+    <p>Até esta atualização, a interface de chat do Claude e o Claude Cowork (o modo agêntico, orientado a arquivos e tarefas) mantinham memórias separadas. Algo que você contava ao Claude num chat normal — uma preferência, um detalhe recorrente de projeto, como você gosta que seu código seja revisado — não aparecia automaticamente quando você trocava pro Cowork pra de fato executar um trabalho, e vice-versa. Você acabava reexplicando o mesmo contexto dependendo de qual superfície estava usando no momento.</p>
+    <p>A atualização de 25 de agosto da Anthropic elimina essa separação: agora a memória é compartilhada entre as duas superfícies. Qualquer coisa que o Claude aprende sobre você ou seu trabalho num chat fica disponível na próxima vez que você abrir o Cowork, e qualquer coisa que o Cowork capta enquanto executa uma tarefa (estrutura de arquivos, decisões recorrentes, como um projeto está organizado) volta pro chat comum.</p>
+
+    <h2 id="como-funcionava">2. Como a memória funcionava antes (e por que era limitado)</h2>
+    <p>A abordagem anterior era <strong>resumir no fim da conversa</strong>: o Claude olhava pra um chat já encerrado e destilava ele numa nota de memória. Isso tem dois problemas estruturais:</p>
+    <ul>
+      <li><strong>Latência</strong> — nada é lembrado até a conversa de fato terminar, então uma sessão longa ou ainda aberta não contribui em nada pra memória ainda.</li>
+      <li><strong>Fragmentação</strong> — cada superfície (chat vs. Cowork) rodava sua própria passada de resumo, gerando dois armazenamentos de memória separados e sem sobreposição, que nunca conversavam entre si.</li>
+    </ul>
+
+    <h2 id="como-funciona-agora">3. Como funciona agora: arquivos por tópico em vez de resumo de fim de conversa</h2>
+    <p>O novo sistema escreve memória incrementalmente, enquanto você conversa, em vez de esperar a conversa terminar. Cada pedaço de informação retida é armazenado como um pequeno <strong>arquivo de tópico</strong>, endereçável individualmente — visível pra você em Tópicos, nas configurações de Memória, onde cada um pode ser visto, editado ou apagado por conta própria.</p>
+    <div class="callout">
+      <strong>Esse é exatamente o mecanismo por trás da automação desta newsletter.</strong> Os fatos de projeto, preferências e decisões que este assistente mantém entre sessões — incluindo os que fazem as duas lições de hoje serem consistentes com as de ontem — são armazenados como arquivos de tópico desse mesmo tipo. Ler sobre isso aqui é, de forma bem literal, ler a especificação da própria ferramenta que gera este conteúdo.
+    </div>
+    <p>Na prática, isso também significa que atualizações de memória se propagam mais rápido (você não precisa fechar um chat pra algo "grudar") e de forma consistente (o mesmo arquivo de tópico é lido tanto pelo chat quanto pelo Cowork — não existe uma etapa de reconciliação entre dois armazenamentos separados).</p>
+
+    <h2 id="privacidade">4. Tópicos sensíveis e controles de privacidade</h2>
+    <p>Por padrão, o Claude <strong>não</strong> salva na memória um conjunto de categorias sensíveis mesmo que apareçam na conversa: informações de saúde, raça, etnia, crenças religiosas, opiniões políticas, orientação sexual e identidade de gênero. Se você especificamente quiser que o Claude lembre de algo nessas categorias — pra parar de reexplicar — isso pode ser ativado explicitamente nas configurações de Memória; é opt-in, não o padrão.</p>
+    <p>Todo tópico armazenado continua inspecionável e apagável na granularidade de um único arquivo, não só como um apagão tudo-ou-nada.</p>
+
+    <h2 id="disponibilidade">5. Quem tem acesso, e por padrão</h2>
+    <table>
+      <tr><th>Plano</th><th>Estado padrão</th></tr>
+      <tr><td>Free, Pro, Max</td><td>Memória vem <strong>ativada</strong> por padrão</td></tr>
+      <tr><td>Team, Enterprise</td><td>Memória vem <strong>desativada</strong> por padrão — administradores da organização decidem se ativam</td></tr>
+    </table>
+    <p>O padrão diferente pra Team/Enterprise reflete uma preocupação de governança razoável: memória persistente num workspace compartilhado tem implicações de risco diferentes de uma memória atrelada à conta de um indivíduo só, então a Anthropic deixou essa decisão pra organização em vez de ativar todo mundo automaticamente.</p>
+
+    <h2 id="por-que-importa">6. Por que isso importa além da feature em si</h2>
+    <p>Duas coisas valem a pena parar pra pensar:</p>
+    <ul>
+      <li><strong>Memória está virando infraestrutura, não uma feature de chat.</strong> Descrever isso como "arquivos de tópico que qualquer superfície pode ler e escrever" está mais perto de um pequeno banco de dados pessoal do que de um truque de chatbot — é o mesmo movimento arquitetural que o context engineering vem empurrando: dar ao modelo um estado durável, estruturado e editável, em vez de depender só do que cabe numa única janela de contexto.</li>
+      <li><strong>Transparência está fazendo um trabalho de verdade aqui.</strong> Transformar cada memória num arquivo visível e editável (em vez de um resumo interno opaco) é o que torna a memória persistente utilizável num contexto profissional — você consegue auditar exatamente o que um assistente "sabe" sobre você antes de confiar a ele mais autonomia, o que importa muito mais quando esse mesmo assistente também pode agir sobre seus arquivos, como o Cowork faz.</li>
+    </ul>
+    <p>Esta lição existe por causa da regra de rotação que esta newsletter segue: um anúncio real e datado da Anthropic tem prioridade sobre a rotação normal de categorias do IA Watch. O tema que seria de hoje — técnica de prompt engineering — volta no próximo ciclo.</p>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://techcrunch.com/2026/08/25/claude-cowork-finally-remembers-what-you-told-the-app-in-chat/" target="_blank" rel="noopener">TechCrunch — "Claude Cowork finally remembers what you told the app in chat" (25/08/2026)</a></li>
+        <li><a href="https://9to5mac.com/2026/08/25/anthropic-update-unifies-memory-feature-across-claude-cowork-and-chat/" target="_blank" rel="noopener">9to5Mac — "Anthropic update unifies memory feature across Claude Cowork and chat" (25/08/2026)</a></li>
+        <li><a href="https://www.engadget.com/2243753/claude-memory-now-works-across-both-chats-and-cowork-sessions/" target="_blank" rel="noopener">Engadget — "Claude's memory now works across both chats and Cowork sessions" (25/08/2026)</a></li>
+        <li><a href="https://www.iclarified.com/101902/anthropic-unifies-claude-memory-across-chat-and-cowork" target="_blank" rel="noopener">iClarified — "Anthropic Unifies Claude Memory Across Chat and Cowork" (25/08/2026)</a></li>
+      </ol>
+    </div>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · IA Watch</span>
+  <span class="accent" id="footer-right">Claude memory unification</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

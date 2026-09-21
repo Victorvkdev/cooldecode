@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude as one node in a weapons kill chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude as one node in a weapons kill chain</h1>
+      <p class="subtitle">Anthropic's September 2026 threat intelligence report documents disrupted bioweapons research, a Russian state-linked espionage campaign, and — for the first time this explicitly — AI models being wired into autonomous drone and rocket targeting pipelines.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What Anthropic published, and when</a></li>
+        <li><a href="#bio">Biological weapons: five disrupted cases</a></li>
+        <li><a href="#espionage">Russian state-linked espionage against Ukraine</a></li>
+        <li><a href="#weapons">Drones, rockets, and "AI-orchestrated kill chains"</a></li>
+        <li><a href="#why">Why this report matters more than the headlines</a></li>
+        <li><a href="#takeaway">The takeaway for anyone building with AI</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What Anthropic published, and when</h2>
+    <p>On September 10, 2026, Anthropic published <em>"Detecting and Countering Misuse of AI: September 2026"</em> — its periodic threat intelligence report, covering cases investigated and disrupted between December 2025 and August 2026. It's the same series that previously covered state-sponsored cyber espionage and AI-orchestrated fraud; this edition is notably heavier on physical-world harm: biological weapons research, real combat operations, and autonomous weapons engineering.</p>
+    <p>The report groups disrupted activity into seven harm domains: cyber operations, influence operations, surveillance, scams and fraud, biological misuse, conventional weapons development, and model distillation (using Claude's outputs to train or improve a rival system in violation of Anthropic's terms).</p>
+    <div class="callout">
+      <strong>Important framing:</strong> every case in the report is something Anthropic <em>detected and shut down</em>. It's a disclosure of attempted misuse and the company's own detection capability, not evidence that these operations succeeded or that Claude "caused" the harm described.
+    </div>
+
+    <h2 id="bio">2. Biological weapons: five disrupted cases</h2>
+    <p>Anthropic says it identified and shut down five separate cases in which scientists used Claude models in ways that could have supported biological weapons development. Reporting on the disclosure (based on the same underlying report) describes model behavior as approaching what researchers call a "bioweapons threshold" — the point where a general-purpose model's biology knowledge becomes specific and actionable enough to meaningfully lower the barrier to harm, rather than just repeating what's already in a textbook.</p>
+    <p>This is consistent with Anthropic's own long-standing safety framing: newer, more capable models get progressively tighter safeguards specifically around biological and chemical weapons uplift, and the company has previously described this as one of the few categories where it treats "the model refuses, full stop" as the only acceptable outcome, rather than a nuanced case-by-case judgment call.</p>
+
+    <h2 id="espionage">3. Russian state-linked espionage against Ukraine</h2>
+    <p>The report attributes one disrupted campaign to Midnight Blizzard — the Russian SVR-linked group also tracked as APT29 or NOBELIUM, one of the most well-documented state hacking groups in the world (it's the same cluster blamed for the 2020 SolarWinds breach). Anthropic says it broke up a suspected Midnight Blizzard operation using Claude for AI-assisted espionage activity targeting Ukrainian and European organizations.</p>
+    <p>This fits a pattern the report describes across multiple state and criminal actors: using a model not to invent a new attack technique, but to <strong>accelerate every step of an existing one</strong> — reconnaissance, drafting phishing lures, writing or debugging malicious code, and analyzing stolen data — collapsing work that used to take a specialized team days into something one operator can drive in far less time.</p>
+
+    <h2 id="weapons">4. Drones, rockets, and "AI-orchestrated kill chains"</h2>
+    <p>The most novel material in this edition concerns conventional weapons. The report describes a tracked group (internally labeled GTG-27005) that used Claude to help develop fault-tolerant guidance logic and computer-vision targeting for autonomous first-person-view (FPV) drones, with target classification reportedly trained using real combat footage from Ukraine. A separate, Yemen-based group (GTG-87001) is described integrating flight-control software onto a phone-class computer and using Claude for post-launch analysis tied to a tactical guided rocket.</p>
+    <p>Coverage of the report has coined the term <strong>"AI-orchestrated kill chain"</strong> for the broader pattern it documents: attackers building pipelines where a model like Claude isn't the whole system, but one link in it — issuing instructions to other software agents, querying external data sources, and ultimately feeding decisions into hardware that takes real, physical, irreversible action.</p>
+    <div class="callout">
+      <strong>Why the distinction matters:</strong> a model refusing to write "how to build a bomb" in a chat window is a narrow, well-understood safety problem. A model quietly doing one legitimate-looking engineering subtask inside a much larger autonomous weapons pipeline — where no single request looks alarming on its own — is a fundamentally harder one to catch.
+    </div>
+
+    <h2 id="why">5. Why this report matters more than the headlines</h2>
+    <p>It's easy to read a report like this as simply "AI is being used for bad things," which is true but not the interesting part. What actually changed here is the <strong>shape</strong> of the misuse Anthropic is now finding: less "the model gave someone dangerous instructions," more "the model is embedded as an operational component in a larger, partly autonomous system" — a drone's guidance software, a hacking group's daily workflow, a chain of AI agents where each step looks innocuous in isolation.</p>
+    <p>That shape is a direct, unglamorous consequence of the same agentic capabilities that make AI genuinely useful for legitimate work: models that can call tools, chain multi-step tasks, and operate with less human review at each step. The report is effectively Anthropic's own admission that its detection strategy has to evolve past "does this single output look harmful" toward watching for suspicious <em>patterns of behavior across many calls and sessions</em> — which is a much harder, more probabilistic problem.</p>
+
+    <h2 id="takeaway">6. The takeaway for anyone building with AI</h2>
+    <p>None of this changes what a working developer needs to know day to day about prompting or building with Claude — but it's a useful, concrete data point for anyone building agentic systems of their own: the same properties that make an agent useful (tool access, multi-step autonomy, chaining to other systems) are exactly the properties that make misuse harder to detect from any single interaction. If you're building something that gives a model real-world tool access, "is any one call obviously bad" is the wrong question; "what could this look like across a hundred quiet, individually reasonable steps" is the one worth asking.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Sources</h2>
+    <ul class="sources">
+      <li>Anthropic — <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">"Countering misuse of AI: September 2026"</a>, published September 10, 2026.</li>
+      <li>Anthropic (full PDF) — <a href="https://www-cdn.anthropic.com/e50be2e51e7695dc4b1366a37a245a597377d3b5/Anthropic-Detecting-and-countering-091026.pdf" target="_blank" rel="noopener">"Detecting and countering misuse of AI: September 2026"</a>.</li>
+      <li>Tech Times — <a href="https://www.techtimes.com/articles/327308/20260911/anthropic-threat-report-ai-models-near-bioweapons-threshold-drone-kill-software-emerges.htm" target="_blank" rel="noopener">"Anthropic Threat Report: AI Models Near Bioweapons Threshold as Drone Kill Software Emerges"</a>, September 11, 2026.</li>
+      <li>Northeast Times — <a href="https://northeasttimes.com/2026/09/11/anthropic-identifies-scientists-who-used-its-ai-in-possible-bioweapons-research/" target="_blank" rel="noopener">"Anthropic Identifies Scientists Who Used Its AI in Possible Bioweapons Research"</a>, September 11, 2026.</li>
+      <li>Daily Caller — <a href="https://dailycaller.com/2026/09/10/anthropic-report-kamikaze-drone-swarms-biological-weapons/" target="_blank" rel="noopener">"Anthropic Reveals How It Stopped 'Kamikaze Drone' Swarms, Biological Weapons And More"</a>, September 10, 2026.</li>
+      <li>Yahoo Finance (Canada) — <a href="https://ca.finance.yahoo.com/news/anthropic-disrupts-russian-chinese-ai-202300682.html" target="_blank" rel="noopener">"Anthropic disrupts Russian, Chinese AI misuse"</a>, September 2026.</li>
+    </ul>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude como uma peça a mais numa cadeia de ataque com armas</h1>
+      <p class="subtitle">O relatório de inteligência de ameaças de setembro de 2026 da Anthropic documenta pesquisa de armas biológicas interrompida, uma campanha de espionagem ligada ao estado russo e, pela primeira vez de forma tão explícita, modelos de IA integrados a pipelines autônomos de mira de drones e foguetes.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">O que a Anthropic publicou, e quando</a></li>
+        <li><a href="#bio-pt">Armas biológicas: cinco casos interrompidos</a></li>
+        <li><a href="#espionagem-pt">Espionagem ligada ao estado russo contra a Ucrânia</a></li>
+        <li><a href="#armas-pt">Drones, foguetes e "cadeias de ataque orquestradas por IA"</a></li>
+        <li><a href="#porque-pt">Por que esse relatório importa mais do que as manchetes</a></li>
+        <li><a href="#conclusao-pt">O que fica pra quem constrói com IA</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que a Anthropic publicou, e quando</h2>
+    <p>Em 10 de setembro de 2026, a Anthropic publicou o <em>"Detecting and Countering Misuse of AI: September 2026"</em> — seu relatório periódico de inteligência de ameaças, cobrindo casos investigados e interrompidos entre dezembro de 2025 e agosto de 2026. É a mesma série que já cobriu espionagem cibernética patrocinada por estados e fraude orquestrada por IA; esta edição é claramente mais pesada em dano no mundo físico: pesquisa de armas biológicas, operações reais de combate e engenharia de armas autônomas.</p>
+    <p>O relatório agrupa a atividade interrompida em sete domínios de dano: operações cibernéticas, operações de influência, vigilância, golpes e fraude, uso indevido biológico, desenvolvimento de armas convencionais e destilação de modelo (usar as saídas do Claude pra treinar ou melhorar um sistema concorrente, violando os termos de uso da Anthropic).</p>
+    <div class="callout">
+      <strong>Contexto importante:</strong> todo caso do relatório é algo que a Anthropic <em>detectou e interrompeu</em>. É uma divulgação de tentativas de uso indevido e da própria capacidade de detecção da empresa, não uma prova de que essas operações tiveram sucesso ou de que o Claude "causou" o dano descrito.
+    </div>
+
+    <h2 id="bio-pt">2. Armas biológicas: cinco casos interrompidos</h2>
+    <p>A Anthropic diz ter identificado e encerrado cinco casos separados em que cientistas usaram modelos Claude de formas que poderiam ter apoiado o desenvolvimento de armas biológicas. A cobertura sobre a divulgação (baseada no mesmo relatório) descreve o comportamento do modelo como se aproximando do que pesquisadores chamam de "limiar de armas biológicas" — o ponto em que o conhecimento de biologia de um modelo de propósito geral se torna específico e acionável o bastante pra reduzir de forma relevante a barreira pro dano, em vez de só repetir o que já está num livro didático.</p>
+    <p>Isso é consistente com o posicionamento de segurança de longa data da própria Anthropic: modelos mais novos e capazes recebem salvaguardas progressivamente mais rígidas especificamente em torno de uplift de armas biológicas e químicas, e a empresa já descreveu essa como uma das poucas categorias em que trata "o modelo recusa, ponto final" como o único resultado aceitável, em vez de uma decisão caso a caso mais nuançada.</p>
+
+    <h2 id="espionagem-pt">3. Espionagem ligada ao estado russo contra a Ucrânia</h2>
+    <p>O relatório atribui uma campanha interrompida ao Midnight Blizzard — o grupo russo ligado ao SVR também rastreado como APT29 ou NOBELIUM, um dos grupos de hacking estatal mais bem documentados do mundo (é o mesmo grupo apontado como responsável pela invasão da SolarWinds em 2020). A Anthropic diz ter interrompido uma operação suspeita do Midnight Blizzard usando o Claude para atividade de espionagem assistida por IA voltada a organizações ucranianas e europeias.</p>
+    <p>Isso se encaixa num padrão que o relatório descreve em vários atores estatais e criminosos: usar um modelo não pra inventar uma técnica de ataque nova, mas pra <strong>acelerar cada etapa de uma já existente</strong> — reconhecimento, redação de iscas de phishing, escrita ou depuração de código malicioso, e análise de dados roubados — comprimindo um trabalho que antes levava dias de uma equipe especializada em algo que uma pessoa consegue conduzir sozinha em muito menos tempo.</p>
+
+    <h2 id="armas-pt">4. Drones, foguetes e "cadeias de ataque orquestradas por IA"</h2>
+    <p>O material mais inédito desta edição é sobre armas convencionais. O relatório descreve um grupo rastreado (identificado internamente como GTG-27005) que usou o Claude pra ajudar a desenvolver lógica de guiamento tolerante a falhas e mira por visão computacional para drones autônomos de primeira pessoa (FPV), com a classificação de alvos supostamente treinada usando imagens reais de combate da Ucrânia. Um segundo grupo, baseado no Iêmen (GTG-87001), é descrito integrando software de controle de voo a um computador de porte de smartphone e usando o Claude para análise pós-lançamento ligada a um foguete guiado tático.</p>
+    <p>A cobertura do relatório cunhou o termo <strong>"cadeia de ataque orquestrada por IA"</strong> pro padrão mais amplo que ele documenta: atacantes construindo pipelines em que um modelo como o Claude não é o sistema inteiro, mas um elo dele — emitindo instruções pra outros agentes de software, consultando fontes de dados externas e, no fim, alimentando decisões que chegam a hardware que toma ações reais, físicas e irreversíveis.</p>
+    <div class="callout">
+      <strong>Por que essa distinção importa:</strong> um modelo recusar escrever "como construir uma bomba" numa janela de chat é um problema de segurança estreito e bem entendido. Um modelo executando discretamente uma subtarefa de engenharia com aparência legítima dentro de um pipeline muito maior de armas autônomas — em que nenhuma solicitação isolada parece alarmante — é um problema fundamentalmente mais difícil de flagrar.
+    </div>
+
+    <h2 id="porque-pt">5. Por que esse relatório importa mais do que as manchetes</h2>
+    <p>É fácil ler um relatório desses como só "a IA está sendo usada pra coisa ruim", o que é verdade mas não é a parte interessante. O que de fato mudou aqui é a <strong>forma</strong> do uso indevido que a Anthropic está encontrando agora: menos "o modelo deu instruções perigosas pra alguém", mais "o modelo está incorporado como um componente operacional dentro de um sistema maior, parcialmente autônomo" — o software de guiamento de um drone, o fluxo de trabalho diário de um grupo de hacking, uma cadeia de agentes de IA em que cada etapa parece inofensiva isoladamente.</p>
+    <p>Essa forma é uma consequência direta e nada glamorosa das mesmas capacidades agênticas que tornam a IA genuinamente útil pra trabalho legítimo: modelos que conseguem chamar ferramentas, encadear tarefas de múltiplas etapas e operar com menos revisão humana a cada passo. O relatório é, na prática, a própria Anthropic admitindo que sua estratégia de detecção precisa evoluir de "essa saída isolada parece prejudicial" para observar <em>padrões suspeitos de comportamento ao longo de muitas chamadas e sessões</em> — um problema bem mais difícil e probabilístico.</p>
+
+    <h2 id="conclusao-pt">6. O que fica pra quem constrói com IA</h2>
+    <p>Nada disso muda o que um desenvolvedor precisa saber no dia a dia sobre como fazer prompt ou construir com o Claude — mas é um dado concreto útil pra quem está construindo sistemas agênticos próprios: as mesmas propriedades que tornam um agente útil (acesso a ferramentas, autonomia em múltiplas etapas, encadeamento com outros sistemas) são exatamente as propriedades que tornam o uso indevido mais difícil de detectar a partir de uma única interação. Se você está construindo algo que dá a um modelo acesso real a ferramentas, "essa chamada isolada parece obviamente ruim" é a pergunta errada; "como isso poderia parecer ao longo de cem passos discretos e individualmente razoáveis" é a que vale a pena fazer.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Aprenda o que a IA está criando pra você. Não fique pra trás.</p>
+      <p style="margin-bottom:14px;">Receba um aviso quando uma nova imersão ou lição sair. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Fontes</h2>
+    <ul class="sources">
+      <li>Anthropic — <a href="https://www.anthropic.com/threat-intelligence-report-september-2026" target="_blank" rel="noopener">"Countering misuse of AI: September 2026"</a>, publicado em 10 de setembro de 2026.</li>
+      <li>Anthropic (PDF completo) — <a href="https://www-cdn.anthropic.com/e50be2e51e7695dc4b1366a37a245a597377d3b5/Anthropic-Detecting-and-countering-091026.pdf" target="_blank" rel="noopener">"Detecting and countering misuse of AI: September 2026"</a>.</li>
+      <li>Tech Times — <a href="https://www.techtimes.com/articles/327308/20260911/anthropic-threat-report-ai-models-near-bioweapons-threshold-drone-kill-software-emerges.htm" target="_blank" rel="noopener">"Anthropic Threat Report: AI Models Near Bioweapons Threshold as Drone Kill Software Emerges"</a>, 11 de setembro de 2026.</li>
+      <li>Northeast Times — <a href="https://northeasttimes.com/2026/09/11/anthropic-identifies-scientists-who-used-its-ai-in-possible-bioweapons-research/" target="_blank" rel="noopener">"Anthropic Identifies Scientists Who Used Its AI in Possible Bioweapons Research"</a>, 11 de setembro de 2026.</li>
+      <li>Daily Caller — <a href="https://dailycaller.com/2026/09/10/anthropic-report-kamikaze-drone-swarms-biological-weapons/" target="_blank" rel="noopener">"Anthropic Reveals How It Stopped 'Kamikaze Drone' Swarms, Biological Weapons And More"</a>, 10 de setembro de 2026.</li>
+      <li>Yahoo Finance (Canadá) — <a href="https://ca.finance.yahoo.com/news/anthropic-disrupts-russian-chinese-ai-202300682.html" target="_blank" rel="noopener">"Anthropic disrupts Russian, Chinese AI misuse"</a>, setembro de 2026.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Anthropic threat intelligence report</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Anthropic threat intelligence report';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Relatório de ameaças da Anthropic';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Lesson 20: Framer vs. traditional code — when each one wins</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Lesson 20 · Design &amp; tools</span>
+      <h1>Framer vs. traditional code: when each one wins, and how to combine them</h1>
+      <p class="subtitle">Lesson 19 covered what Framer is. This one is about the decision itself: given a real project, which one do you actually pick — and is it always all-or-nothing?</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#axis">1. The real decision axis: not "better", but "who owns the logic"</a></li>
+        <li><a href="#framer-wins">2. When Framer wins</a></li>
+        <li><a href="#code-wins">3. When traditional code wins</a></li>
+        <li><a href="#hidden-costs">4. The hidden costs people forget on both sides</a></li>
+        <li><a href="#hybrid">5. The hybrid pattern most real teams actually use</a></li>
+        <li><a href="#migration">6. What happens when you outgrow Framer</a></li>
+        <li><a href="#example">7. A practical example: same project, two paths</a></li>
+        <li><a href="#checklist">8. A decision checklist</a></li>
+      </ol>
+    </div>
+
+    <h2 id="axis">1. The real decision axis: not "better", but "who owns the logic"</h2>
+    <p>It's tempting to frame Framer vs. hand-written code as a maturity ladder — as if Framer is "for beginners" and code is "for professionals." That framing is wrong and leads to bad decisions in both directions. The actual axis that matters is: <strong>where does the logic of the product live, and how often does it change in ways a visual tool can't express?</strong></p>
+    <p>A marketing site has almost no logic — it has content, layout, and motion. A SaaS dashboard has a lot of logic — permissions, data mutations, edge cases, integrations with other systems. The tool that fits a project is a function of how much of that second category it has, not how "advanced" the team building it is.</p>
+
+    <h2 id="framer-wins">2. When Framer wins</h2>
+    <ul>
+      <li><strong>The page is mostly presentation.</strong> Landing pages, portfolios, product marketing pages, waitlists, event pages — content and visual polish are the actual product, not a wrapper around business logic.</li>
+      <li><strong>Iteration speed matters more than architectural control.</strong> A marketing or design team needs to ship copy changes, A/B test a hero section, or adjust a pricing table without opening a pull request.</li>
+      <li><strong>One person needs to own design and shipping.</strong> No design-to-dev handoff queue, no waiting on engineering bandwidth for a headline change.</li>
+      <li><strong>The animation is the point.</strong> Scroll-triggered reveals, spring physics, layout transitions — recreating this by hand in CSS/JS is real engineering work that Framer gives you through property panels.</li>
+    </ul>
+
+    <h2 id="code-wins">3. When traditional code wins</h2>
+    <ul>
+      <li><strong>There's real backend logic.</strong> Authentication, permissions, payments, anything that reads/writes a database with business rules attached — a visual builder either can't express this or forces you into its own constrained backend, which becomes its own lock-in.</li>
+      <li><strong>The product needs to integrate deeply with existing systems.</strong> Internal APIs, a specific CI/CD pipeline, a monorepo shared with other services — code lives in the same version control and review process as the rest of the company's engineering.</li>
+      <li><strong>Performance or bundle size is a hard constraint.</strong> Hand-written code lets you control exactly what ships; visual builders trade some of that control for their editing model.</li>
+      <li><strong>The team is already a code-first engineering org.</strong> If every other part of the stack is a Next.js app in a shared repo, adding one page built in a completely separate tool creates a second system to maintain, deploy, and reason about.</li>
+    </ul>
+
+    <h2 id="hidden-costs">4. The hidden costs people forget on both sides</h2>
+    <table>
+      <tr><th>Choosing Framer</th><th>Choosing code</th></tr>
+      <tr><td>Migrating out later is real work — you're re-implementing a visually-built site as code from scratch, not exporting clean source.</td><td>Every future copy tweak, layout change, or animation adjustment needs a developer and a deploy, even for trivial content changes.</td></tr>
+      <tr><td>Hosting/CMS pricing scales with traffic — a viral marketing page can get expensive in ways a static export wouldn't.</td><td>Design fidelity depends entirely on how carefully the team reimplements it — "close enough" often ships instead of pixel-perfect.</td></tr>
+      <tr><td>You inherit the platform's release cycle and outages, same as any hosted SaaS dependency.</td><td>The design-to-code handoff step (see Lesson 18) is itself a source of drift and delay if not managed well.</td></tr>
+    </table>
+
+    <h2 id="hybrid">5. The hybrid pattern most real teams actually use</h2>
+    <p>In practice, this is rarely a company-wide, one-time decision. The most common real-world setup: the marketing site (home page, pricing, blog, landing pages for campaigns) lives in a tool like Framer or Webflow, built and iterated on by design/marketing without engineering in the loop for every change — while the actual product (the logged-in application) is a separate codebase, usually a framework like Next.js, owned by engineering.</p>
+    <p>The two systems talk to each other at specific boundaries: a "Sign up" or "Log in" button on the Framer-built marketing site links out to the real application's domain. Shared visual identity (colors, type, logo) is kept in sync manually or via shared design tokens, but the two are otherwise independent deploys with independent release cycles.</p>
+    <div class="callout"><strong>Why this works well:</strong> the two halves of a typical product have genuinely different rates of change and genuinely different owners. Marketing pages change weekly and are owned by non-engineers; the product changes with every sprint and is owned by engineers. Matching the tool to the owner and the change cadence, instead of forcing one tool to do both jobs, is usually the actual optimization — not a compromise.</div>
+
+    <h2 id="migration">6. What happens when you outgrow Framer</h2>
+    <p>The most common trigger for migrating off a visual builder isn't "the tool got worse" — it's that a page that started as pure marketing content grows real logic over time: a pricing page needs to check the visitor's existing plan, a waitlist form needs custom validation and a real database instead of a simple integration, a landing page needs to render different content per logged-in user. At that point the page has crossed from "presentation" into "product," and the rebuild-in-code conversation becomes worth having.</p>
+    <p>When that migration happens, budget for it as a real rebuild, not a port: content and visual direction transfer conceptually, but the implementation is written from scratch in the target framework, same as if you were redesigning a legacy PHP site into React — Lesson 18's handoff practices (naming tokens consistently, documenting interaction states) make this meaningfully faster, but they don't eliminate the work.</p>
+
+    <h2 id="example">7. A practical example: same project, two paths</h2>
+    <p>Take a generic scenario: an early-stage product needs (a) a public marketing site to convert visitors into signups, and (b) the actual logged-in app behind that signup. A reasonable default split: build (a) in Framer — fast iteration, no engineering bottleneck, good enough performance for a mostly-static page — and build (b) in a framework like Next.js, because it needs auth, a database, and per-user logic from day one. As the company grows, the marketing site might later need a blog with dynamic SEO routing that outgrows Framer's CMS, at which point it's reasonable to migrate just that piece to the same codebase as the product — while the rest of the marketing pages might stay put, because they still don't need it.</p>
+
+    <h2 id="checklist">8. A decision checklist</h2>
+    <div class="callout"><strong>Lean Framer if:</strong> the page's content changes more often than its logic, a non-engineer needs to ship most changes, and there's no meaningful backend behavior beyond form submissions or simple integrations.</div>
+    <div class="callout"><strong>Lean code if:</strong> the page needs authentication, a real database with business rules, deep integration with an existing codebase, or precise control over performance and bundle size.</div>
+    <div class="callout"><strong>Lean hybrid if:</strong> you're building a typical product company — the answer is almost always "both," split along the marketing-site/product-app boundary described above, not a single tool for everything.</div>
+    <p>The mistake to avoid is treating this as a one-time, company-wide, ideological choice ("we're a code shop" or "we're no-code"). The right unit of decision is the individual page or feature, evaluated against how much real logic it carries — not the company's engineering culture as a whole.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Lição 20 · Design e ferramentas</span>
+      <h1>Framer vs. código tradicional: quando cada um vence, e como combinar os dois</h1>
+      <p class="subtitle">A Lição 19 cobriu o que é o Framer. Esta é sobre a decisão em si: dado um projeto real, qual dos dois você realmente escolhe — e é sempre tudo ou nada?</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#eixo">1. O eixo real da decisão: não "melhor", mas "quem é dono da lógica"</a></li>
+        <li><a href="#framer-vence">2. Quando o Framer vence</a></li>
+        <li><a href="#codigo-vence">3. Quando o código tradicional vence</a></li>
+        <li><a href="#custos-ocultos">4. Os custos ocultos que ninguém lembra, dos dois lados</a></li>
+        <li><a href="#hibrido">5. O padrão híbrido que a maioria dos times de verdade usa</a></li>
+        <li><a href="#migracao">6. O que acontece quando você cresce além do Framer</a></li>
+        <li><a href="#exemplo">7. Um exemplo prático: o mesmo projeto, dois caminhos</a></li>
+        <li><a href="#checklist-pt">8. Um checklist de decisão</a></li>
+      </ol>
+    </div>
+
+    <h2 id="eixo">1. O eixo real da decisão: não "melhor", mas "quem é dono da lógica"</h2>
+    <p>É tentador enquadrar Framer vs. código escrito à mão como uma escada de maturidade — como se o Framer fosse "pra iniciantes" e código fosse "pra profissionais". Esse enquadramento está errado e leva a decisões ruins nos dois sentidos. O eixo que realmente importa é: <strong>onde vive a lógica do produto, e com que frequência ela muda de um jeito que uma ferramenta visual não consegue expressar?</strong></p>
+    <p>Um site institucional quase não tem lógica — tem conteúdo, layout e movimento. Um dashboard de SaaS tem muita lógica — permissões, mutação de dados, casos de borda, integrações com outros sistemas. A ferramenta que se encaixa num projeto é função de quanto ele tem dessa segunda categoria, não de quão "avançado" é o time que constrói.</p>
+
+    <h2 id="framer-vence">2. Quando o Framer vence</h2>
+    <ul>
+      <li><strong>A página é majoritariamente apresentação.</strong> Landing pages, portfólios, páginas de marketing de produto, listas de espera, páginas de evento — conteúdo e acabamento visual são o produto de fato, não uma casca em volta de lógica de negócio.</li>
+      <li><strong>Velocidade de iteração importa mais que controle arquitetural.</strong> Um time de marketing ou design precisa publicar mudanças de texto, testar A/B numa seção de hero, ou ajustar uma tabela de preços sem abrir um pull request.</li>
+      <li><strong>Uma pessoa só precisa ser dona do design e da publicação.</strong> Sem fila de handoff design-pra-dev, sem esperar disponibilidade de engenharia pra mudar um título.</li>
+      <li><strong>A animação é o ponto central.</strong> Revelações disparadas por scroll, física de spring, transições de layout — recriar isso à mão em CSS/JS é trabalho de engenharia real que o Framer entrega por painéis de propriedade.</li>
+    </ul>
+
+    <h2 id="codigo-vence">3. Quando o código tradicional vence</h2>
+    <ul>
+      <li><strong>Existe lógica de backend de verdade.</strong> Autenticação, permissões, pagamentos, qualquer coisa que lê/escreve num banco com regra de negócio anexada — uma ferramenta visual ou não consegue expressar isso, ou te empurra pro backend limitado dela mesma, que se torna seu próprio lock-in.</li>
+      <li><strong>O produto precisa se integrar a fundo com sistemas existentes.</strong> APIs internas, um pipeline de CI/CD específico, um monorepo compartilhado com outros serviços — código vive no mesmo controle de versão e processo de review do resto da engenharia da empresa.</li>
+      <li><strong>Performance ou tamanho de bundle é uma restrição rígida.</strong> Código escrito à mão te dá controle exato do que é enviado; ferramentas visuais trocam parte desse controle pelo modelo de edição delas.</li>
+      <li><strong>O time já é uma organização code-first.</strong> Se todo o resto do stack é uma aplicação Next.js num repositório compartilhado, adicionar uma página construída numa ferramenta totalmente separada cria um segundo sistema pra manter, publicar e entender.</li>
+    </ul>
+
+    <h2 id="custos-ocultos">4. Os custos ocultos que ninguém lembra, dos dois lados</h2>
+    <table>
+      <tr><th>Escolhendo o Framer</th><th>Escolhendo código</th></tr>
+      <tr><td>Migrar pra fora depois é trabalho real — você reimplementa do zero um site construído visualmente como código, não exporta uma fonte limpa.</td><td>Toda mudança futura de texto, layout ou animação precisa de um desenvolvedor e um deploy, mesmo pra mudanças triviais de conteúdo.</td></tr>
+      <tr><td>Preço de hospedagem/CMS escala com tráfego — uma página de marketing que viraliza pode ficar cara de um jeito que uma exportação estática não ficaria.</td><td>A fidelidade do design depende inteiramente de quão cuidadoso o time é ao reimplementar — "bom o suficiente" frequentemente vai pro ar em vez de pixel-perfect.</td></tr>
+      <tr><td>Você herda o ciclo de release e as instabilidades da plataforma, igual qualquer dependência de SaaS hospedado.</td><td>O passo de handoff design-pra-código (ver Lição 18) é ele mesmo uma fonte de divergência e atraso se não for bem gerenciado.</td></tr>
+    </table>
+
+    <h2 id="hibrido">5. O padrão híbrido que a maioria dos times de verdade usa</h2>
+    <p>Na prática, raramente essa é uma decisão única e da empresa inteira. A configuração mais comum no mundo real: o site institucional/marketing (home, preços, blog, landing pages de campanha) vive numa ferramenta como Framer ou Webflow, construído e iterado por design/marketing sem engenharia no meio de cada mudança — enquanto o produto de fato (a aplicação logada) é uma base de código separada, geralmente um framework como Next.js, de propriedade da engenharia.</p>
+    <p>Os dois sistemas conversam em pontos específicos: um botão de "Cadastre-se" ou "Entrar" no site de marketing construído em Framer aponta pro domínio da aplicação real. Identidade visual compartilhada (cores, tipografia, logo) é mantida em sincronia manualmente ou via design tokens compartilhados, mas os dois são, no resto, deploys independentes com ciclos de release independentes.</p>
+    <div class="callout"><strong>Por que isso funciona bem:</strong> as duas metades de um produto típico têm ritmos de mudança genuinamente diferentes e donos genuinamente diferentes. Páginas de marketing mudam semanalmente e são de não-engenheiros; o produto muda a cada sprint e é de engenheiros. Combinar a ferramenta com o dono e o ritmo de mudança, em vez de forçar uma ferramenta só a fazer os dois trabalhos, geralmente é a otimização real — não um meio-termo.</div>
+
+    <h2 id="migracao">6. O que acontece quando você cresce além do Framer</h2>
+    <p>O gatilho mais comum pra migrar de uma ferramenta visual não é "a ferramenta piorou" — é que uma página que começou como conteúdo puro de marketing ganha lógica real com o tempo: uma página de preços precisa checar o plano atual do visitante, um formulário de lista de espera precisa de validação customizada e um banco de dados real em vez de uma integração simples, uma landing page precisa renderizar conteúdo diferente por usuário logado. Nesse ponto a página cruzou de "apresentação" pra "produto", e a conversa sobre reconstruir em código passa a valer a pena.</p>
+    <p>Quando essa migração acontece, planeje como uma reconstrução real, não uma portabilidade: conteúdo e direção visual transferem conceitualmente, mas a implementação é escrita do zero no framework de destino, igual seria se você estivesse redesenhando um site PHP legado pra React — as práticas de handoff da Lição 18 (nomear tokens de forma consistente, documentar estados de interação) tornam isso bem mais rápido, mas não eliminam o trabalho.</p>
+
+    <h2 id="exemplo">7. Um exemplo prático: o mesmo projeto, dois caminhos</h2>
+    <p>Um cenário genérico: um produto em estágio inicial precisa (a) de um site público de marketing pra converter visitantes em cadastros, e (b) da aplicação logada de fato por trás desse cadastro. Uma divisão padrão razoável: construir (a) em Framer — iteração rápida, sem gargalo de engenharia, performance boa o suficiente pra uma página majoritariamente estática — e construir (b) num framework como Next.js, porque precisa de autenticação, banco de dados e lógica por usuário desde o primeiro dia. Conforme a empresa cresce, o site de marketing pode depois precisar de um blog com roteamento de SEO dinâmico que ultrapassa o CMS do Framer, e nesse ponto é razoável migrar só essa peça pra mesma base de código do produto — enquanto o resto das páginas de marketing pode continuar onde está, porque ainda não precisa disso.</p>
+
+    <h2 id="checklist-pt">8. Um checklist de decisão</h2>
+    <div class="callout"><strong>Prefira Framer se:</strong> o conteúdo da página muda com mais frequência que a lógica dela, um não-engenheiro precisa publicar a maioria das mudanças, e não há comportamento de backend significativo além de envio de formulário ou integrações simples.</div>
+    <div class="callout"><strong>Prefira código se:</strong> a página precisa de autenticação, um banco de dados real com regras de negócio, integração profunda com uma base de código existente, ou controle preciso de performance e tamanho de bundle.</div>
+    <div class="callout"><strong>Prefira híbrido se:</strong> você está construindo uma empresa de produto típica — a resposta é quase sempre "os dois", divididos na fronteira site-de-marketing/aplicação-de-produto descrita acima, não uma ferramenta só pra tudo.</div>
+    <p>O erro a evitar é tratar isso como uma escolha única, da empresa inteira e ideológica ("somos uma empresa de código" ou "somos no-code"). A unidade certa de decisão é a página ou funcionalidade individual, avaliada pela quantidade de lógica real que ela carrega — não a cultura de engenharia da empresa como um todo.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Lesson 20</span>
+  <span class="accent" id="footer-right">Framer vs. traditional code</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · Lesson 20' : 'Cooldecode · Lição 20';
+  }
+</script>
+
+</body>
+</html>

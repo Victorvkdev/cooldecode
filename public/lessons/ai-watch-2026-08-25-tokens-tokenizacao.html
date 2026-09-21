@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: What a "token" actually is, and why it decides your bill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .sources .card-title { margin-bottom: 12px; }
+  .sources ul { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); font-size: 13px; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+</style>
+<link rel="canonical" href="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-25-tokens-tokenizacao.html">
+<meta property="og:title" content="Cooldecode — AI Watch: What a &quot;token&quot; actually is, and why it decides your bill">
+<meta property="og:description" content="Every price, every context limit, every 'this prompt is too long' error traces back to one invisible step: tokenization. Here's what actually happens when your text gets chopped into pieces a model can read — and why the same sentence can cost different amounts on different models.">
+<meta property="og:url" content="https://cooldecode-beryl.vercel.app/lessons/ai-watch-2026-08-25-tokens-tokenizacao.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Cooldecode">
+<meta property="og:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cooldecode — AI Watch: What a &quot;token&quot; actually is, and why it decides your bill">
+<meta name="twitter:description" content="Every price, context limit, and 'too long' error traces back to one invisible step: tokenization.">
+<meta name="twitter:image" content="https://cooldecode-beryl.vercel.app/opengraph-image">
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM fundamentals</span>
+      <h1>What a "token" actually is, and why it decides your bill</h1>
+      <p class="subtitle">Every price tag, every context-window limit, every "this prompt is too long" error traces back to one invisible step that runs before the model ever sees your text: tokenization. Here's what's actually happening in that step, and why the exact same sentence can cost different amounts — and count as a different number of tokens — depending on which model reads it.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-is-a-token">What a token actually is</a></li>
+        <li><a href="#why-not-words">Why not just split by word?</a></li>
+        <li><a href="#bpe">Byte Pair Encoding: how the vocabulary gets built</a></li>
+        <li><a href="#why-it-matters">Why this quietly controls cost, context, and quality</a></li>
+        <li><a href="#gotchas">Where tokenization trips people up</a></li>
+        <li><a href="#practical">What to actually do with this</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-is-a-token">1. What a token actually is</h2>
+    <p>A language model doesn't read letters or words. It reads a sequence of integers. Before any text reaches the model, a component called the <strong>tokenizer</strong> chops that text into fragments — words, pieces of words, punctuation, sometimes single characters — and looks each fragment up in a fixed vocabulary, usually somewhere between 32,000 and 100,000+ entries. Each fragment becomes one <strong>token</strong>: an integer id the model actually operates on.</p>
+    <p>A token can be a whole common word like <code>the</code>, a fragment of a rarer word like <code>token</code> + <code>ization</code>, or even a single byte when the text doesn't match anything in the vocabulary — which is how tokenizers handle emoji, rare scripts, or malformed text without crashing.</p>
+    <div class="card">
+      <div class="card-title">Rule of thumb</div>
+      <p style="margin-bottom:0;">For plain English, a common estimate is roughly <strong>4 characters, or about 0.75 words, per token</strong>. It's only an approximation — the real count depends on the specific tokenizer, and it gets noticeably worse for code, non-Latin scripts, or specialized jargon, where the same idea can take 2-3x more tokens than in English.</p>
+    </div>
+
+    <h2 id="why-not-words">2. Why not just split by word?</h2>
+    <p>Splitting by whole words sounds obvious, but it breaks in practice for two reasons. First, a whole-word vocabulary has to cover every word that might ever appear — every name, typo, technical term, and word in every language — which makes it enormous and still incomplete; any word missing from the list becomes an "unknown" the model can't represent at all.</p>
+    <p>Second, splitting by individual characters solves the coverage problem (any text can be spelled out one character at a time) but creates a different one: sequences get very long, since a 10-letter word becomes 10 tokens instead of one, and the model has to work much harder to reconstruct meaning from that many tiny pieces.</p>
+    <p><strong>Subword tokenization</strong> is the compromise that every major model — GPT, Gemini, Claude, Llama — has converged on: pieces that are smaller than a word but larger than a single character, striking a balance between vocabulary size and sequence length.</p>
+
+    <h2 id="bpe">3. Byte Pair Encoding: how the vocabulary gets built</h2>
+    <p>The most common algorithm behind subword tokenization is <strong>Byte Pair Encoding (BPE)</strong> — originally a 1994 data-compression trick, adapted for language models around 2016. The idea is simple to state:</p>
+    <ol>
+      <li>Start with every individual character (or byte) as its own token.</li>
+      <li>Scan a large training corpus and find the <strong>most frequent adjacent pair</strong> of tokens — for example, <code>t</code> and <code>h</code> appearing together as <code>th</code> very often.</li>
+      <li>Merge that pair into a single new token, added to the vocabulary.</li>
+      <li>Repeat — now looking for the next most frequent pair, which might combine two already-merged pieces — until the vocabulary reaches a target size (commonly 32,000 to 100,000 tokens).</li>
+    </ol>
+    <p>The result is a vocabulary shaped by real frequency in the training data: extremely common words end up as single tokens, moderately common ones become two or three pieces, and rare words get chopped into many small fragments. SentencePiece and tiktoken are two widely used implementations of this same family of idea, each with its own trained vocabulary — which is exactly why different models don't agree on token counts for the same text.</p>
+
+    <h2 id="why-it-matters">4. Why this quietly controls cost, context, and quality</h2>
+    <p>Tokens aren't a backstage implementation detail — they're the literal unit everything gets measured and billed in:</p>
+    <ul>
+      <li><strong>Price.</strong> API pricing is quoted per token (usually per million), for both input and output. The same sentence in two languages, or the same idea in prose vs. code, can cost meaningfully different amounts purely because it tokenizes into a different number of pieces.</li>
+      <li><strong>Context window.</strong> A "1M token context window" is a hard cap measured in tokens, not characters or words — so a densely-tokenized language or format eats into that budget faster than English prose does.</li>
+      <li><strong>Latency.</strong> Models generate output one token at a time; more tokens to produce means more time waiting, independent of how "hard" the underlying reasoning actually was.</li>
+      <li><strong>Quality on edge cases.</strong> A vocabulary trained mostly on English will tokenize other languages, code, or unusual formatting less efficiently — sometimes falling back to byte-level tokens — which can measurably hurt a model's fluency and accuracy in exactly those cases.</li>
+    </ul>
+    <div class="callout">
+      <strong>Concretely:</strong> a vocabulary with 100,000 entries can represent more per token than one with 32,000 entries, so the exact same prompt can produce noticeably different token counts — and therefore different costs — across two models with different tokenizers, even before either model writes a single word back.
+    </div>
+
+    <h2 id="gotchas">5. Where tokenization trips people up</h2>
+    <p>A few consequences catch people off guard the first time they notice them:</p>
+    <ul>
+      <li><strong>Character-counting tasks are unreliable.</strong> Since the model reasons over tokens, not letters, asking it to count letters in a word or reverse a string is asking it to do something its internal representation doesn't naturally expose — this is a real known weak spot, not a random quirk.</li>
+      <li><strong>Whitespace and casing matter.</strong> Many tokenizers treat <code>" hello"</code> (with a leading space) and <code>"hello"</code> as different tokens entirely, which is why prompt formatting — extra spaces, line breaks — can shift token counts more than people expect.</li>
+      <li><strong>Code tokenizes unevenly.</strong> Programming languages have their own rhythm of symbols and indentation that doesn't match natural-language frequency patterns, which is part of why token counts for code can look surprisingly high relative to its visual length.</li>
+    </ul>
+
+    <h2 id="practical">6. What to actually do with this</h2>
+    <p>None of this requires becoming a tokenizer expert, but it's worth internalizing three practical habits: check a model's actual token count on a sample of your real content before assuming a rough word-count estimate holds, budget extra headroom for non-English text or code inside a fixed context window, and don't lean on a model to do exact character-level manipulation — that's a job for actual code, not a prompt.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ul>
+        <li><a href="https://futureagi.com/blog/what-is-tokenization-llms-2026/" target="_blank" rel="noopener">FutureAGI — "What is Tokenization in LLMs? BPE, SentencePiece, tiktoken in 2026"</a></li>
+        <li><a href="https://www.buildfastwithai.com/blogs/what-is-bpe-byte-pair-encoding-how-tokenizers-actually-work-2026" target="_blank" rel="noopener">Build Fast with AI — "What Is BPE (Byte Pair Encoding)? How Tokenizers Actually Work (2026)"</a></li>
+        <li><a href="https://www.thepromptindex.com/what-are-llm-tokens-2026.html" target="_blank" rel="noopener">The Prompt Index — "What Are LLM Tokens? The Complete 2026 Guide"</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/dotnet/ai/conceptual/understanding-tokens" target="_blank" rel="noopener">Microsoft Learn — "Understanding tokens"</a></li>
+        <li><a href="https://www.intuz.com/blog/how-llm-use-vocabulary-for-token-counting/" target="_blank" rel="noopener">Intuz — "How LLMs Count Tokens: Vocabulary, Encoding & Costs"</a></li>
+        <li><a href="https://benchlm.ai/blog/posts/llm-token-pricing" target="_blank" rel="noopener">BenchLM — "How LLM Token Pricing Works: A Complete Guide to API Costs in 2026"</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Fundamentos de LLMs</span>
+      <h1>O que é um "token", de fato — e por que ele decide sua conta</h1>
+      <p class="subtitle">Todo preço, todo limite de janela de contexto, todo erro de "esse prompt está longo demais" volta pra um passo invisível que roda antes do modelo sequer ver seu texto: a tokenização. Aqui está o que acontece de verdade nesse passo, e por que a mesma frase pode custar valores diferentes — e virar uma quantidade diferente de tokens — dependendo de qual modelo a lê.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e-token">O que é um token, de fato</a></li>
+        <li><a href="#por-que-nao-palavra">Por que não simplesmente separar por palavra?</a></li>
+        <li><a href="#bpe-pt">Byte Pair Encoding: como o vocabulário é construído</a></li>
+        <li><a href="#por-que-importa">Por que isso controla, silenciosamente, custo, contexto e qualidade</a></li>
+        <li><a href="#pegadinhas">Onde a tokenização pega as pessoas de surpresa</a></li>
+        <li><a href="#na-pratica-pt">O que fazer com isso na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e-token">1. O que é um token, de fato</h2>
+    <p>Um modelo de linguagem não lê letras nem palavras. Ele lê uma sequência de números inteiros. Antes de qualquer texto chegar ao modelo, um componente chamado <strong>tokenizador</strong> corta esse texto em fragmentos — palavras, pedaços de palavras, pontuação, às vezes caracteres isolados — e busca cada fragmento num vocabulário fixo, geralmente entre 32 mil e mais de 100 mil entradas. Cada fragmento se torna um <strong>token</strong>: um número inteiro que o modelo de fato manipula.</p>
+    <p>Um token pode ser uma palavra comum inteira como <code>o</code>, um fragmento de uma palavra mais rara como <code>token</code> + <code>ização</code>, ou até um byte isolado quando o texto não bate com nada do vocabulário — é assim que os tokenizadores lidam com emoji, alfabetos raros ou texto malformado sem quebrar.</p>
+    <div class="card">
+      <div class="card-title">Regra de bolso</div>
+      <p style="margin-bottom:0;">Para inglês comum, uma estimativa usual é de aproximadamente <strong>4 caracteres, ou cerca de 0,75 palavra, por token</strong>. É só uma aproximação — a contagem real depende do tokenizador específico, e piora bastante para código, alfabetos não-latinos ou jargão especializado, onde a mesma ideia pode consumir de 2 a 3x mais tokens do que em inglês.</p>
+    </div>
+
+    <h2 id="por-que-nao-palavra">2. Por que não simplesmente separar por palavra?</h2>
+    <p>Separar por palavra inteira parece óbvio, mas quebra na prática por dois motivos. Primeiro, um vocabulário de palavras inteiras precisa cobrir toda palavra que possa aparecer — todo nome, erro de digitação, termo técnico e palavra de todo idioma — o que o torna enorme e ainda incompleto; qualquer palavra fora da lista se torna um "desconhecido" que o modelo simplesmente não consegue representar.</p>
+    <p>Segundo, separar por caractere individual resolve o problema de cobertura (qualquer texto pode ser escrito letra por letra) mas cria outro: as sequências ficam muito longas, já que uma palavra de 10 letras se torna 10 tokens em vez de um, e o modelo precisa trabalhar muito mais pra reconstruir sentido a partir de tantos pedaços minúsculos.</p>
+    <p>A <strong>tokenização de subpalavras</strong> é o meio-termo pro qual todo modelo relevante — GPT, Gemini, Claude, Llama — convergiu: pedaços menores que uma palavra e maiores que um caractere único, equilibrando tamanho de vocabulário e tamanho de sequência.</p>
+
+    <h2 id="bpe-pt">3. Byte Pair Encoding: como o vocabulário é construído</h2>
+    <p>O algoritmo mais comum por trás da tokenização de subpalavras é o <strong>Byte Pair Encoding (BPE)</strong> — originalmente uma técnica de compressão de dados de 1994, adaptada para modelos de linguagem por volta de 2016. A ideia é simples de descrever:</p>
+    <ol>
+      <li>Começar com cada caractere (ou byte) individual como seu próprio token.</li>
+      <li>Escanear um grande corpus de treinamento e achar o <strong>par adjacente mais frequente</strong> de tokens — por exemplo, <code>t</code> e <code>h</code> aparecendo juntos como <code>th</code> com muita frequência.</li>
+      <li>Fundir esse par em um único token novo, adicionado ao vocabulário.</li>
+      <li>Repetir — agora buscando o próximo par mais frequente, que pode combinar dois pedaços já fundidos — até o vocabulário atingir um tamanho-alvo (normalmente entre 32 mil e 100 mil tokens).</li>
+    </ol>
+    <p>O resultado é um vocabulário moldado pela frequência real nos dados de treino: palavras extremamente comuns terminam como um único token, palavras moderadamente comuns viram dois ou três pedaços, e palavras raras são cortadas em muitos fragmentos pequenos. SentencePiece e tiktoken são duas implementações amplamente usadas dessa mesma família de ideia, cada uma com seu próprio vocabulário treinado — e é exatamente por isso que modelos diferentes não concordam na contagem de tokens do mesmo texto.</p>
+
+    <h2 id="por-que-importa">4. Por que isso controla, silenciosamente, custo, contexto e qualidade</h2>
+    <p>Tokens não são um detalhe de implementação nos bastidores — são literalmente a unidade em que tudo é medido e cobrado:</p>
+    <ul>
+      <li><strong>Preço.</strong> O preço de API é cotado por token (geralmente por milhão), tanto para entrada quanto para saída. A mesma frase em dois idiomas, ou a mesma ideia em prosa vs. código, pode custar valores bem diferentes só porque tokeniza em uma quantidade diferente de pedaços.</li>
+      <li><strong>Janela de contexto.</strong> Uma "janela de contexto de 1M de tokens" é um limite rígido medido em tokens, não em caracteres ou palavras — então um idioma ou formato que tokeniza de forma densa consome esse orçamento mais rápido do que prosa em inglês.</li>
+      <li><strong>Latência.</strong> Modelos geram saída um token por vez; mais tokens pra produzir significa mais tempo de espera, independente de quão "difícil" o raciocínio subjacente de fato foi.</li>
+      <li><strong>Qualidade em casos de borda.</strong> Um vocabulário treinado majoritariamente em inglês vai tokenizar outros idiomas, código ou formatação inusual de forma menos eficiente — às vezes recorrendo a tokens no nível de byte — o que pode prejudicar de forma mensurável a fluência e precisão do modelo exatamente nesses casos.</li>
+    </ul>
+    <div class="callout">
+      <strong>Na prática:</strong> um vocabulário com 100 mil entradas consegue representar mais por token do que um com 32 mil entradas, então o mesmo prompt exato pode gerar contagens de tokens visivelmente diferentes — e portanto custos diferentes — entre dois modelos com tokenizadores diferentes, mesmo antes de qualquer um dos dois escrever uma única palavra de resposta.
+    </div>
+
+    <h2 id="pegadinhas">5. Onde a tokenização pega as pessoas de surpresa</h2>
+    <p>Algumas consequências pegam as pessoas desprevenidas na primeira vez que percebem:</p>
+    <ul>
+      <li><strong>Tarefas de contar caracteres são pouco confiáveis.</strong> Como o modelo raciocina sobre tokens, não sobre letras, pedir pra ele contar letras numa palavra ou inverter uma string é pedir algo que sua representação interna não expõe naturalmente — é um ponto fraco real e conhecido, não uma peculiaridade aleatória.</li>
+      <li><strong>Espaço e capitalização importam.</strong> Muitos tokenizadores tratam <code>" olá"</code> (com espaço antes) e <code>"olá"</code> como tokens completamente diferentes, e é por isso que a formatação do prompt — espaços extras, quebras de linha — pode mudar a contagem de tokens mais do que se espera.</li>
+      <li><strong>Código tokeniza de forma desigual.</strong> Linguagens de programação têm seu próprio ritmo de símbolos e indentação que não corresponde aos padrões de frequência da linguagem natural, o que explica em parte por que a contagem de tokens de código pode parecer surpreendentemente alta em relação ao seu tamanho visual.</li>
+    </ul>
+
+    <h2 id="na-pratica-pt">6. O que fazer com isso na prática</h2>
+    <p>Nada disso exige virar especialista em tokenizador, mas vale internalizar três hábitos práticos: checar a contagem real de tokens de um modelo numa amostra do seu conteúdo real antes de assumir que uma estimativa aproximada por palavra vale, reservar margem extra pra texto em outros idiomas ou código dentro de uma janela de contexto fixa, e não depender do modelo pra manipulação exata no nível de caractere — isso é tarefa pra código de verdade, não pra prompt.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ul>
+        <li><a href="https://futureagi.com/blog/what-is-tokenization-llms-2026/" target="_blank" rel="noopener">FutureAGI — "What is Tokenization in LLMs? BPE, SentencePiece, tiktoken in 2026"</a></li>
+        <li><a href="https://www.buildfastwithai.com/blogs/what-is-bpe-byte-pair-encoding-how-tokenizers-actually-work-2026" target="_blank" rel="noopener">Build Fast with AI — "What Is BPE (Byte Pair Encoding)? How Tokenizers Actually Work (2026)"</a></li>
+        <li><a href="https://www.thepromptindex.com/what-are-llm-tokens-2026.html" target="_blank" rel="noopener">The Prompt Index — "What Are LLM Tokens? The Complete 2026 Guide"</a></li>
+        <li><a href="https://learn.microsoft.com/en-us/dotnet/ai/conceptual/understanding-tokens" target="_blank" rel="noopener">Microsoft Learn — "Understanding tokens"</a></li>
+        <li><a href="https://www.intuz.com/blog/how-llm-use-vocabulary-for-token-counting/" target="_blank" rel="noopener">Intuz — "How LLMs Count Tokens: Vocabulary, Encoding & Costs"</a></li>
+        <li><a href="https://benchlm.ai/blog/posts/llm-token-pricing" target="_blank" rel="noopener">BenchLM — "How LLM Token Pricing Works: A Complete Guide to API Costs in 2026"</a></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Tokens, explained</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Tokens, explained';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Tokens, explicados';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>

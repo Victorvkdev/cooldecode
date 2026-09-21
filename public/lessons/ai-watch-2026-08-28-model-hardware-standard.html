@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The Model Hardware Standard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 12px; padding-left: 18px; }
+  .sources li { margin-bottom: 6px; font-size: 12.5px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Anthropic's first move into the physical world: the Model Hardware Standard</h1>
+      <p class="subtitle">On August 27, 2026, Anthropic opened a research preview for MHS — a shared way for AI agents to talk to lab equipment and factory machines. It's built on MCP, and it says a lot about where "AI agent" stops meaning "software task" and starts meaning "turns a knob."</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What actually happened</a></li>
+        <li><a href="#why-hard">Why connecting AI to hardware was hard in the first place</a></li>
+        <li><a href="#how-it-works">How MHS works, concretely</a></li>
+        <li><a href="#mcp-connection">Why it's "built on MCP" and what that buys you</a></li>
+        <li><a href="#who">Who's already using it</a></li>
+        <li><a href="#why-matters">Why this matters beyond labs and factories</a></li>
+        <li><a href="#caveats">What to stay skeptical about</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What actually happened</h2>
+    <p>On August 27, 2026, Anthropic announced the <strong>Model Hardware Standard (MHS)</strong>, a research preview of a specification that lets AI agents safely operate physical equipment — starting with scientific research instruments and advanced manufacturing machinery. It's Anthropic's first product explicitly aimed at "physical AI": not a chatbot, not a coding agent, but a way for a model to read a microscope's status and tell a robotic arm what to do next.</p>
+    <p>The pitch, in Anthropic's own words, is a change in integration time: connecting a piece of lab or factory equipment to an AI model today typically takes a specialist team <strong>weeks to months</strong> of custom engineering. Anthropic says MHS can cut that down to <strong>hours or minutes</strong>, at least for hardware that already exposes a programmable interface.</p>
+    <p>Access right now is limited to a first group of research labs and manufacturers who got early access during development — this is explicitly a research preview, not a generally available product.</p>
+
+    <h2 id="why-hard">2. Why connecting AI to hardware was hard in the first place</h2>
+    <p>Software APIs mostly agree on shared conventions — HTTP, JSON, REST-ish patterns — even across companies that never talked to each other. Lab and factory equipment doesn't have that. A microscope from one vendor, a robotic arm from another, and a liquid-handling machine from a third typically each ship with:</p>
+    <ul>
+      <li><strong>Proprietary control software</strong> that only that vendor's engineers fully understand.</li>
+      <li><strong>Different command formats</strong> — one might use a serial protocol from the 1990s, another a modern SDK, another nothing programmable at all.</li>
+      <li><strong>No shared vocabulary</strong> for basic actions like "read a value" or "move to position X," so every integration is bespoke.</li>
+    </ul>
+    <p>Anthropic's Jonah Cool (head of partnerships and deployment of science) put it directly: scientific equipment "suffers from proprietary solutions that are very brittle and often don't meet the need of scientists." Wiring an LLM to that mess previously meant hiring integration specialists for each specific device — which is exactly why it took months, and why most labs never bothered automating overnight or unattended experiments at all.</p>
+
+    <h2 id="how-it-works">3. How MHS works, concretely</h2>
+    <p>MHS defines a shared set of commands — things like <code>read</code> — that any compliant hardware device can understand and act on, regardless of vendor. Instead of writing custom glue code per device, a manufacturer implements the MHS interface once, and any MHS-aware AI agent can then operate it without device-specific training.</p>
+    <div class="card">
+      <div class="card-title">Two adoption paths</div>
+      <p style="margin-bottom:8px;"><strong>New equipment:</strong> Anthropic is working directly with device manufacturers to ship new products pre-loaded with MHS support out of the box — buy the device, plug it in, an agent can already talk to it.</p>
+      <p style="margin-bottom:0;"><strong>Existing equipment:</strong> for machines that already expose some programmable interface, Anthropic is helping manufacturers retrofit an MHS-compatible layer on top, without needing to redesign the hardware.</p>
+    </div>
+    <p>Not everything qualifies — a machine with zero programmable interface at all can't be bolted onto MHS without a hardware change. The standard works with devices that were already capable of being controlled by <em>some</em> piece of software; MHS just replaces "some proprietary piece of software per device" with one shared layer.</p>
+
+    <h2 id="mcp-connection">4. Why it's "built on MCP" and what that buys you</h2>
+    <p>MHS isn't a brand-new invention from scratch — it's built on top of the <strong>Model Context Protocol (MCP)</strong>, the open standard Anthropic introduced in 2024 for connecting models to data sources and tools (this newsletter covered <a href="#" onclick="return false;">MCP's evolving spec</a> before). Anthropic's Alek Kemeny described MCP as "kind of like the USB for AI to software connection" — MHS extends that same idea from software tools to physical devices.</p>
+    <p>The practical consequence of reusing MCP: MHS is <strong>model-agnostic</strong>. It isn't a Claude-only feature — any LLM, including models from OpenAI or open-source models, can in principle use the same MHS interface to talk to the same equipment. Anthropic explicitly frames this as avoiding vendor lock-in, both for AI model choice and for hardware choice.</p>
+    <div class="callout">
+      <strong>The bet:</strong> the same "define a shared protocol, let anyone implement either side" trick that made MCP the de facto standard for tool-calling now gets applied one layer down, to the physical devices the tools ultimately control.
+    </div>
+
+    <h2 id="who">5. Who's already using it</h2>
+    <p>MHS was developed in partnership with the <strong>HHMI Janelia Research Campus</strong>, a biomedical research center. A handful of labs and hardware manufacturers got early access during development, spanning biotech, robotics, and quantum computing — among the named partners: Genentech, Carnegie Mellon University, quantum computing company QuEra, Universal Robots, AWS, Doosan Robotics, and Danaher. Hugging Face is also a partner, though its own robotics product announced the same week (a robotic duck) doesn't run on MHS.</p>
+
+    <h2 id="why-matters">6. Why this matters beyond labs and factories</h2>
+    <p>Two things are worth tracking here, independent of whether you'll ever touch a microscope or a robotic arm:</p>
+    <ul>
+      <li><strong>"Agent" keeps expanding its scope.</strong> Every AI Watch entry about agents so far has been about software: browsing a page, editing a file, calling an API. MHS is a deliberate, explicit step toward agents that act on the physical world — Nvidia's CEO has been predicting "every industrial company becomes a robotics company," and this is Anthropic staking a claim in that same space, but through a protocol rather than through building robots itself.</li>
+      <li><strong>Protocols compound.</strong> MCP started as "how does a model call a tool." MHS shows the same pattern reused for "how does a model operate a machine." If this keeps working, expect more domain-specific protocols to get bolted onto MCP's foundation rather than invented from scratch — which is a strong argument for treating MCP fluency as a durable skill, not a fad.</li>
+    </ul>
+
+    <h2 id="caveats">7. What to stay skeptical about</h2>
+    <p>A few reasons to read the "hours or minutes" claim with some care:</p>
+    <ul>
+      <li>This is a <strong>research preview</strong> with a small number of hand-picked partners, not a public rollout — the real integration time for a random, non-partner lab with obscure legacy equipment is untested.</li>
+      <li><strong>Not all hardware qualifies.</strong> Devices without any programmable interface still need a hardware or firmware change before MHS applies — this doesn't retroactively make every old machine agent-controllable.</li>
+      <li><strong>Safety is the actual hard problem.</strong> Reading a sensor value is low-risk; letting an autonomous agent move a robotic arm or run an unattended lab experiment raises the stakes of a hallucinated or misinterpreted command well past "the AI wrote a wrong line of code." Anthropic frames MHS around "safely operate," but the safety guarantees at this early stage are still being defined alongside the first partner labs, not proven at scale.</li>
+    </ul>
+    <p>Worth revisiting once MHS moves past research preview — the real test is whether "hours or minutes" holds up outside the partners who helped design the standard.</p>
+
+    <footer>
+      <p style="margin-bottom:6px;"><strong style="color:#fff;">Sources</strong> (accessed 2026-08-28):</p>
+      <ul class="sources">
+        <li><a href="https://www.anthropic.com/news/model-hardware-standard-research-preview" target="_blank" rel="noopener">Anthropic — "Previewing the Model Hardware Standard" (Aug 27, 2026)</a></li>
+        <li><a href="https://fortune.com/2026/08/27/anthropic-makes-first-move-into-physical-ai-with-universal-standard-for-scientists-manufacturing/" target="_blank" rel="noopener">Fortune — "Anthropic makes first move into physical AI..." (Aug 27, 2026)</a></li>
+        <li><a href="https://www.cnbc.com/2026/08/27/anthropic-pushes-into-physical-world-with-new-standard-to-help-ai-agents-operate-machines.html" target="_blank" rel="noopener">CNBC — "Anthropic pushes into physical world with new standard..." (Aug 27, 2026)</a></li>
+        <li><a href="https://app.dealroom.co/news/feed/anthropic-launches-model-hardware-standard-to-connect-ai-with-manufacturing-equipment-and-lab-devices-in-minutes" target="_blank" rel="noopener">Dealroom — "Anthropic launches Model Hardware Standard..." (Aug 27, 2026)</a></li>
+      </ul>
+    </footer>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades Anthropic/Claude</span>
+      <h1>O primeiro passo da Anthropic no mundo físico: o Model Hardware Standard</h1>
+      <p class="subtitle">Em 27 de agosto de 2026, a Anthropic abriu uma prévia de pesquisa do MHS — uma forma compartilhada de agentes de IA conversarem com equipamento de laboratório e máquinas de fábrica. É construído em cima do MCP, e diz muito sobre onde "agente de IA" deixa de significar "tarefa de software" e passa a significar "gira um botão".</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">O que aconteceu, de fato</a></li>
+        <li><a href="#por-que-dificil">Por que conectar IA a hardware sempre foi difícil</a></li>
+        <li><a href="#como-funciona">Como o MHS funciona, na prática</a></li>
+        <li><a href="#conexao-mcp">Por que é "construído em cima do MCP" e o que isso garante</a></li>
+        <li><a href="#quem">Quem já está usando</a></li>
+        <li><a href="#por-que-importa">Por que isso importa além de laboratórios e fábricas</a></li>
+        <li><a href="#ressalvas">O que manter o ceticismo saudável</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que aconteceu, de fato</h2>
+    <p>Em 27 de agosto de 2026, a Anthropic anunciou o <strong>Model Hardware Standard (MHS)</strong>, uma prévia de pesquisa de uma especificação que permite que agentes de IA operem equipamento físico com segurança — começando por instrumentos de pesquisa científica e maquinário de manufatura avançada. É o primeiro produto da Anthropic explicitamente voltado a "IA física": não é um chatbot, não é um agente de código, é uma forma de um modelo ler o status de um microscópio e dizer a um braço robótico o que fazer em seguida.</p>
+    <p>O argumento, nas palavras da própria Anthropic, é uma mudança no tempo de integração: conectar um equipamento de laboratório ou fábrica a um modelo de IA hoje normalmente exige de uma equipe especializada <strong>semanas a meses</strong> de engenharia sob medida. A Anthropic diz que o MHS reduz isso para <strong>horas ou minutos</strong>, pelo menos para hardware que já expõe alguma interface programável.</p>
+    <p>O acesso, por enquanto, está limitado a um primeiro grupo de laboratórios de pesquisa e fabricantes que já tinham acesso antecipado durante o desenvolvimento — isso é explicitamente uma prévia de pesquisa, não um produto disponível ao público em geral.</p>
+
+    <h2 id="por-que-dificil">2. Por que conectar IA a hardware sempre foi difícil</h2>
+    <p>APIs de software, no geral, concordam em convenções compartilhadas — HTTP, JSON, padrões tipo REST — mesmo entre empresas que nunca conversaram entre si. Equipamento de laboratório e fábrica não tem isso. Um microscópio de um fabricante, um braço robótico de outro, e uma máquina de manuseio de líquidos de um terceiro tipicamente vêm cada um com:</p>
+    <ul>
+      <li><strong>Software de controle proprietário</strong> que só os engenheiros daquele fabricante entendem por completo.</li>
+      <li><strong>Formatos de comando diferentes</strong> — um pode usar um protocolo serial dos anos 90, outro um SDK moderno, outro nada programável de fato.</li>
+      <li><strong>Nenhum vocabulário compartilhado</strong> pra ações básicas como "ler um valor" ou "mover pra posição X", então cada integração é feita sob medida.</li>
+    </ul>
+    <p>Jonah Cool, da Anthropic (chefe de parcerias e implantação de ciência), colocou de forma direta: equipamento científico "sofre de soluções proprietárias muito frágeis que frequentemente não atendem à necessidade dos cientistas." Conectar um LLM a essa bagunça antes significava contratar especialistas de integração pra cada dispositivo específico — exatamente por isso levava meses, e por isso a maioria dos laboratórios nunca automatizou experimentos noturnos ou sem supervisão.</p>
+
+    <h2 id="como-funciona">3. Como o MHS funciona, na prática</h2>
+    <p>O MHS define um conjunto compartilhado de comandos — coisas como <code>read</code> — que qualquer dispositivo compatível com o padrão consegue entender e executar, independente do fabricante. Em vez de escrever código de integração sob medida pra cada dispositivo, o fabricante implementa a interface do MHS uma vez, e qualquer agente de IA compatível com o MHS pode então operar aquele equipamento sem treinamento específico do dispositivo.</p>
+    <div class="card">
+      <div class="card-title">Dois caminhos de adoção</div>
+      <p style="margin-bottom:8px;"><strong>Equipamento novo:</strong> a Anthropic está trabalhando direto com fabricantes de dispositivos pra lançar produtos novos já pré-carregados com suporte a MHS de fábrica — você compra o dispositivo, pluga, e um agente já consegue conversar com ele.</p>
+      <p style="margin-bottom:0;"><strong>Equipamento existente:</strong> pra máquinas que já expõem alguma interface programável, a Anthropic está ajudando fabricantes a adaptar uma camada compatível com MHS por cima, sem precisar redesenhar o hardware.</p>
+    </div>
+    <p>Nem tudo se qualifica — uma máquina sem nenhuma interface programável não pode ser encaixada no MHS sem uma mudança de hardware. O padrão funciona com dispositivos que já eram capazes de ser controlados por <em>algum</em> software; o MHS só substitui "algum software proprietário por dispositivo" por uma camada compartilhada.</p>
+
+    <h2 id="conexao-mcp">4. Por que é "construído em cima do MCP" e o que isso garante</h2>
+    <p>O MHS não é uma invenção do zero — é construído em cima do <strong>Model Context Protocol (MCP)</strong>, o padrão aberto que a Anthropic lançou em 2024 pra conectar modelos a fontes de dados e ferramentas (esta newsletter já cobriu a evolução da spec do MCP em edições anteriores). Alek Kemeny, da Anthropic, descreveu o MCP como "meio que o USB da conexão IA-para-software" — o MHS estende essa mesma ideia de ferramentas de software pra dispositivos físicos.</p>
+    <p>A consequência prática de reaproveitar o MCP: o MHS é <strong>agnóstico de modelo</strong>. Não é um recurso exclusivo do Claude — qualquer LLM, incluindo modelos da OpenAI ou modelos open-source, pode em tese usar a mesma interface do MHS pra conversar com o mesmo equipamento. A Anthropic enquadra isso explicitamente como uma forma de evitar vendor lock-in, tanto na escolha do modelo de IA quanto na escolha do hardware.</p>
+    <div class="callout">
+      <strong>A aposta:</strong> o mesmo truque de "definir um protocolo compartilhado, deixar qualquer um implementar qualquer um dos lados" que fez o MCP virar o padrão de fato pra chamada de ferramentas agora é aplicado uma camada abaixo, nos dispositivos físicos que essas ferramentas acabam controlando.
+    </div>
+
+    <h2 id="quem">5. Quem já está usando</h2>
+    <p>O MHS foi desenvolvido em parceria com o <strong>HHMI Janelia Research Campus</strong>, um centro de pesquisa biomédica. Um punhado de laboratórios e fabricantes de hardware teve acesso antecipado durante o desenvolvimento, cobrindo biotecnologia, robótica e computação quântica — entre os parceiros nomeados: Genentech, Carnegie Mellon University, a empresa de computação quântica QuEra, Universal Robots, AWS, Doosan Robotics e Danaher. A Hugging Face também é parceira, embora seu próprio produto de robótica anunciado na mesma semana (um pato robótico) não rode sobre o MHS.</p>
+
+    <h2 id="por-que-importa">6. Por que isso importa além de laboratórios e fábricas</h2>
+    <p>Duas coisas valem a pena acompanhar aqui, independente de você um dia encostar num microscópio ou num braço robótico:</p>
+    <ul>
+      <li><strong>"Agente" continua expandindo o próprio escopo.</strong> Toda edição anterior de IA Watch sobre agentes foi sobre software: navegar numa página, editar um arquivo, chamar uma API. O MHS é um passo deliberado e explícito em direção a agentes que agem no mundo físico — o CEO da Nvidia vem prevendo que "toda empresa industrial vira uma empresa de robótica", e isso é a Anthropic reivindicando espaço nesse mesmo território, mas via protocolo em vez de construindo robôs ela mesma.</li>
+      <li><strong>Protocolos se acumulam.</strong> O MCP começou como "como um modelo chama uma ferramenta". O MHS mostra o mesmo padrão reaproveitado pra "como um modelo opera uma máquina". Se isso continuar funcionando, é razoável esperar mais protocolos específicos de domínio construídos em cima da base do MCP em vez de inventados do zero — o que é um bom argumento pra tratar fluência em MCP como uma habilidade durável, não modismo.</li>
+      </ul>
+
+    <h2 id="ressalvas">7. O que manter o ceticismo saudável</h2>
+    <p>Alguns motivos pra ler a promessa de "horas ou minutos" com cuidado:</p>
+    <ul>
+      <li>Isso é uma <strong>prévia de pesquisa</strong> com um número pequeno de parceiros escolhidos a dedo, não um lançamento público — o tempo real de integração pra um laboratório qualquer, sem ser parceiro, com equipamento legado obscuro, ainda não foi testado.</li>
+      <li><strong>Nem todo hardware se qualifica.</strong> Dispositivos sem nenhuma interface programável ainda precisam de uma mudança de hardware ou firmware antes do MHS se aplicar — isso não torna retroativamente toda máquina antiga controlável por agente.</li>
+      <li><strong>Segurança é o problema difícil de verdade.</strong> Ler o valor de um sensor é baixo risco; deixar um agente autônomo mover um braço robótico ou rodar um experimento de laboratório sem supervisão eleva a aposta de um comando alucinado ou mal interpretado bem além de "a IA escreveu uma linha de código errada". A Anthropic enquadra o MHS em torno de "operar com segurança", mas as garantias de segurança nesse estágio inicial ainda estão sendo definidas junto com os primeiros laboratórios parceiros, não comprovadas em escala.</li>
+    </ul>
+    <p>Vale revisitar quando o MHS sair da fase de prévia de pesquisa — o teste real é se "horas ou minutos" se sustenta fora dos parceiros que ajudaram a desenhar o padrão.</p>
+
+    <footer>
+      <p style="margin-bottom:6px;"><strong style="color:#fff;">Fontes</strong> (acessadas em 28/08/2026):</p>
+      <ul class="sources">
+        <li><a href="https://www.anthropic.com/news/model-hardware-standard-research-preview" target="_blank" rel="noopener">Anthropic — "Previewing the Model Hardware Standard" (27/08/2026)</a></li>
+        <li><a href="https://fortune.com/2026/08/27/anthropic-makes-first-move-into-physical-ai-with-universal-standard-for-scientists-manufacturing/" target="_blank" rel="noopener">Fortune — "Anthropic makes first move into physical AI..." (27/08/2026)</a></li>
+        <li><a href="https://www.cnbc.com/2026/08/27/anthropic-pushes-into-physical-world-with-new-standard-to-help-ai-agents-operate-machines.html" target="_blank" rel="noopener">CNBC — "Anthropic pushes into physical world with new standard..." (27/08/2026)</a></li>
+        <li><a href="https://app.dealroom.co/news/feed/anthropic-launches-model-hardware-standard-to-connect-ai-with-manufacturing-equipment-and-lab-devices-in-minutes" target="_blank" rel="noopener">Dealroom — "Anthropic launches Model Hardware Standard..." (27/08/2026)</a></li>
+      </ul>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

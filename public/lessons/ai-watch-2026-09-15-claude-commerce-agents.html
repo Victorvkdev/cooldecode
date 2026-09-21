@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Anthropic built the shopping brain, skipped the wallet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .newsletter-form { display:flex; gap:8px; flex-wrap:wrap; }
+  .newsletter-input { flex:1; min-width:200px; background:var(--bg-card-2); border:1px solid var(--border); border-radius:8px; padding:10px 12px; font-size:14px; color:var(--text); font-family:'DM Sans',sans-serif; outline:none; }
+  .newsletter-input:focus { border-color:var(--accent); }
+  .newsletter-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .newsletter-btn:hover { opacity:0.9; }
+  .newsletter-btn:disabled { opacity:0.6; cursor:default; }
+  .newsletter-msg { margin-top:10px; margin-bottom:0; font-size:13px; }
+  .newsletter-msg.success { color: var(--accent); font-weight:700; }
+  .newsletter-msg.error { color: var(--text-dim); }
+  .share-row { display:flex; align-items:center; gap:10px; margin:24px 0; flex-wrap:wrap; }
+  .share-label { font-size:13px; color:var(--text-dim); font-weight:700; }
+  .share-btn { display:inline-flex; align-items:center; gap:6px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); font-size:13px; font-weight:700; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .share-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · AI tools &amp; ecosystem</span>
+      <h1>Anthropic built the shopping brain, and skipped the wallet</h1>
+      <p class="subtitle">Anthropic just open-sourced Claude Commerce Agents: a free, Apache-2.0 blueprint for building AI shopping assistants and merchant-operations agents on Claude — with zero payment logic built in. That gap isn't an oversight; it's the whole strategy. Here's what the blueprint actually contains and why Anthropic left the hardest, most regulated part of e-commerce to everyone else.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-it-is">What Claude Commerce Agents actually is</a></li>
+        <li><a href="#two-agents">Two agents, four industries</a></li>
+        <li><a href="#no-wallet">Why Anthropic skipped payments on purpose</a></li>
+        <li><a href="#why-blueprint">Why a "blueprint" instead of a product</a></li>
+        <li><a href="#context">Where this fits in the wider agentic-commerce race</a></li>
+        <li><a href="#takeaway">What this means if you build software</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-it-is">1. What Claude Commerce Agents actually is</h2>
+    <p>On September 2, 2026, Anthropic released <strong>Claude Commerce Agents</strong>, a reference implementation — not a hosted product — showing how to build agents that shop on a customer's behalf and agents that run the operational side of a merchant's business, both powered by Claude. The whole thing is released under an Apache 2.0 license, meaning anyone can take the code, modify it, and ship it commercially without paying Anthropic anything beyond normal API usage.</p>
+    <p>Technically, it's a Python 3.11+ and Node 22 codebase that runs locally with just an <code>ANTHROPIC_API_KEY</code>, and because it's built against the standard Anthropic client, the same code can run against the Claude API directly, or through Amazon Bedrock, Google Cloud Vertex AI, or Microsoft Foundry without changes. That "runs anywhere Claude runs" design is consistent with how Anthropic has shipped most of its recent agent tooling — MCP servers, Skills, Files API — as open specifications rather than closed platforms.</p>
+
+    <h2 id="two-agents">2. Two agents, four industries</h2>
+    <p>The blueprint ships two distinct agent roles, which map to the two sides of any storefront:</p>
+    <table>
+      <tr><th>Agent</th><th>Job</th></tr>
+      <tr><td><strong>Shopper agent</strong></td><td>Helps a customer search a catalog, compare options, build a cart, and walk through checkout — the AI equivalent of a knowledgeable in-store sales associate.</td></tr>
+      <tr><td><strong>Merchant agent</strong></td><td>Handles the operational back end: catalog search, inventory questions, sales-ops tasks — things a merchant's own staff would otherwise do manually.</td></tr>
+    </table>
+    <p>Both agents come with four runnable reference verticals — <strong>retail, travel, telecom, and entertainment/ticketing</strong> — so a developer isn't starting from an empty prompt; they're starting from a working demo tuned to a specific industry's product catalog shape and conversational patterns.</p>
+    <p>Anthropic's own reported numbers claim carts built with the shopper agent run up to <strong>35% larger</strong>, and shoppers using it are <strong>60% more likely to complete a purchase</strong> compared to a traditional search-and-filter flow — numbers worth treating as a vendor's best-case pitch rather than an independently verified benchmark, but directionally consistent with what other conversational-commerce experiments have reported.</p>
+
+    <h2 id="no-wallet">3. Why Anthropic skipped payments on purpose</h2>
+    <p>The most telling design decision in the whole blueprint is what's <em>not</em> there: no payment protocol, no checkout processor, no ad layer. Anthropic built the reasoning and conversation layer — the "brain" that decides what to search for, what to recommend, when to add something to a cart — and left the actual movement of money to established players. The blueprint's docs point explicitly to partners like Visa and Mastercard for that piece.</p>
+    <div class="callout">
+      <strong>This is a deliberate scope cut, not a missing feature.</strong> Payments sit inside one of the most heavily regulated, liability-sensitive parts of any commerce stack — fraud rules, chargeback handling, PCI compliance, region-specific financial regulation. By staying out of that layer entirely, Anthropic avoids becoming a financial intermediary (and the compliance burden that comes with it) while still owning the part of the stack that's hardest to replicate: the agent's judgment.
+    </div>
+
+    <h2 id="why-blueprint">4. Why a "blueprint" instead of a product</h2>
+    <p>Anthropic has increasingly favored this "open reference implementation" pattern over shipping a finished, hosted product — the same approach it used for MCP itself and for Agent Skills. The advantages of a blueprint over a walled-garden product are straightforward: retailers and platforms can adapt the code to their exact catalog, brand voice, and existing checkout stack instead of retrofitting their business around someone else's API; and because it's Apache 2.0, competitors and partners (Shopify, for instance, has been named alongside this release) can build commercial products on top of it without asking Anthropic for permission.</p>
+    <p>The tradeoff is that Anthropic doesn't capture the commerce transaction itself — only the underlying model calls the agents make along the way. That's consistent with Anthropic's broader platform bet: win by being the reasoning layer under as many agent categories as possible, rather than by owning any single vertical product.</p>
+
+    <h2 id="context">5. Where this fits in the wider agentic-commerce race</h2>
+    <p>Commerce is one of the most contested fronts in the current wave of AI agent tooling — every major model provider has been racing to define how AI assistants shop, recommend, and eventually transact on a user's behalf, and standards for agent-initiated payments are still being sorted out industry-wide. Anthropic's move here is notable less for being first and more for how narrowly it scopes Claude's role: reasoning and conversation, full stop, with payments treated as someone else's problem to solve on top.</p>
+    <p>That narrow scoping is a pattern worth watching across Anthropic's tool releases generally — MCP standardized how agents connect to external tools and data, Skills standardized how agents package reusable capabilities, and now Commerce Agents standardizes how a shopping conversation should be structured, in each case leaving the messiest, most regulated adjacent layer (hosting infrastructure, distribution, payments) to the existing ecosystem.</p>
+
+    <h2 id="takeaway">6. What this means if you build software</h2>
+    <div class="callout">
+      <strong>If you build anything customer-facing with a product catalog</strong> — retail, travel booking, ticketing, telecom plans — this blueprint is a legitimate starting point to prototype a conversational shopping flow instead of writing agent orchestration logic from scratch.
+    </div>
+    <div class="callout">
+      <strong>If you're evaluating vendor performance claims</strong> (the "35% larger carts, 60% more conversions" kind), treat them the way you'd treat any vendor-published benchmark: real signal about the direction of the effect, but not a number you should expect to reproduce exactly without your own A/B test.
+    </div>
+    <p>The bigger pattern to take away: when a model provider ships something free and open under a permissive license, look at what's deliberately missing as much as what's included. Here, the missing piece — payments — tells you exactly where Anthropic thinks the real risk (and the real competitive moat of others) still lives.</p>
+
+    <div class="share-row">
+      <span class="share-label">Share:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Learn what AI is creating for you. Don't get lost.</p>
+      <p style="margin-bottom:14px;">Get notified when a new deep dive or lesson goes up. No spam, just new posts.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="you@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Notify me</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Sources</h2>
+    <ul class="sources">
+      <li>PYMNTS — <a href="https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-built-the-shopping-brain-and-skipped-the-wallet/" target="_blank" rel="noopener">"Anthropic Built the Shopping Brain and Skipped the Wallet"</a>, September 2026.</li>
+      <li>MarkTechPost — <a href="https://www.marktechpost.com/2026/09/03/anthropic-released-claude-commerce-agents-an-apache-2-0-blueprint-for-shopping-and-merchant-agents-across-retail-travel-telecom-and-entertainment/" target="_blank" rel="noopener">"Anthropic Released Claude Commerce Agents: An Apache-2.0 Blueprint..."</a>, September 3, 2026.</li>
+      <li>Enterprise DNA — <a href="https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-09-03-anthropic-launches-claude-commerce-agents-with-shopify-visa/" target="_blank" rel="noopener">"Anthropic launches Claude Commerce Agents with Shopify, Visa, Mastercard, and Accenture"</a>, September 3, 2026.</li>
+      <li>Claude (Anthropic blog) — <a href="https://claude.com/blog/claude-for-commerce-agents" target="_blank" rel="noopener">"Building Commerce Agents with Claude"</a>, September 2026.</li>
+      <li>e-commerce.news — <a href="https://e-commerce.news/story/anthropic-launches-claude-commerce-blueprint-for-retailers" target="_blank" rel="noopener">"Anthropic launches Claude commerce blueprint for retailers"</a>, September 2026.</li>
+    </ul>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema de IA</span>
+      <h1>A Anthropic construiu o cérebro da compra e deixou a carteira de fora</h1>
+      <p class="subtitle">A Anthropic acaba de abrir o código do Claude Commerce Agents: um blueprint gratuito, sob licença Apache 2.0, pra construir assistentes de compra e agentes de operação de lojista em cima do Claude — sem nenhuma lógica de pagamento embutida. Essa lacuna não é um esquecimento; é a estratégia inteira. Veja o que o blueprint realmente traz e por que a Anthropic deixou a parte mais difícil e regulada do e-commerce pra todo mundo mais.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#o-que-e">O que é o Claude Commerce Agents, de fato</a></li>
+        <li><a href="#dois-agentes">Dois agentes, quatro setores</a></li>
+        <li><a href="#sem-carteira">Por que a Anthropic deixou pagamentos de fora de propósito</a></li>
+        <li><a href="#por-que-blueprint">Por que um "blueprint" em vez de um produto</a></li>
+        <li><a href="#contexto">Onde isso se encaixa na corrida mais ampla de comércio agêntico</a></li>
+        <li><a href="#conclusao">O que isso significa se você constrói software</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e">1. O que é o Claude Commerce Agents, de fato</h2>
+    <p>Em 2 de setembro de 2026, a Anthropic lançou o <strong>Claude Commerce Agents</strong>, uma implementação de referência — não um produto hospedado — mostrando como construir agentes que compram em nome de um cliente e agentes que rodam o lado operacional do negócio de um lojista, ambos rodando sobre o Claude. Tudo isso sob licença Apache 2.0, o que significa que qualquer um pode pegar o código, modificar e lançar comercialmente sem pagar nada à Anthropic além do uso normal de API.</p>
+    <p>Tecnicamente, é uma base de código em Python 3.11+ e Node 22 que roda localmente só com uma <code>ANTHROPIC_API_KEY</code>, e como é construída em cima do cliente padrão da Anthropic, o mesmo código roda direto na API do Claude, ou via Amazon Bedrock, Google Cloud Vertex AI ou Microsoft Foundry, sem mudanças. Esse design "roda em qualquer lugar que o Claude rode" é consistente com como a Anthropic vem lançando a maior parte do seu ferramental recente de agentes — servidores MCP, Skills, Files API — como especificações abertas em vez de plataformas fechadas.</p>
+
+    <h2 id="dois-agentes">2. Dois agentes, quatro setores</h2>
+    <p>O blueprint traz dois papéis de agente distintos, que mapeiam os dois lados de qualquer loja:</p>
+    <table>
+      <tr><th>Agente</th><th>Função</th></tr>
+      <tr><td><strong>Agente de compra (shopper)</strong></td><td>Ajuda um cliente a buscar no catálogo, comparar opções, montar um carrinho e passar pelo checkout — o equivalente em IA a um vendedor de loja física bem informado.</td></tr>
+      <tr><td><strong>Agente de lojista (merchant)</strong></td><td>Cuida do backend operacional: busca de catálogo, questões de estoque, tarefas de operações de venda — coisas que a própria equipe do lojista faria manualmente.</td></tr>
+    </table>
+    <p>Os dois agentes vêm com quatro verticais de referência prontas pra rodar — <strong>varejo, viagens, telecom e entretenimento/ingressos</strong> — então quem for desenvolver não começa de um prompt vazio; começa de uma demo funcional já ajustada ao formato de catálogo de produto e aos padrões de conversa de cada setor.</p>
+    <p>Os números divulgados pela própria Anthropic dizem que carrinhos montados com o agente de compra ficam até <strong>35% maiores</strong>, e compradores usando ele têm <strong>60% mais chance de concluir a compra</strong> em comparação a um fluxo tradicional de busca e filtro — números que vale tratar como o melhor cenário de um discurso de vendedor, não como um benchmark verificado de forma independente, mas na direção condizente com o que outros experimentos de comércio conversacional já relataram.</p>
+
+    <h2 id="sem-carteira">3. Por que a Anthropic deixou pagamentos de fora de propósito</h2>
+    <p>A decisão de design mais reveladora de todo o blueprint é o que <em>não</em> está lá: nenhum protocolo de pagamento, nenhum processador de checkout, nenhuma camada de anúncios. A Anthropic construiu a camada de raciocínio e conversa — o "cérebro" que decide o que buscar, o que recomendar, quando adicionar algo ao carrinho — e deixou a movimentação de dinheiro em si pra players já estabelecidos. A documentação do blueprint aponta explicitamente pra parceiros como Visa e Mastercard pra essa parte.</p>
+    <div class="callout">
+      <strong>Esse é um corte de escopo deliberado, não uma funcionalidade faltando.</strong> Pagamentos ficam numa das partes mais reguladas e sensíveis a responsabilidade legal de qualquer stack de comércio — regras antifraude, tratamento de chargeback, compliance PCI, regulação financeira específica de cada região. Ao ficar completamente fora dessa camada, a Anthropic evita virar um intermediário financeiro (e o peso de compliance que vem junto) enquanto continua dona da parte do stack mais difícil de replicar: o julgamento do agente.
+    </div>
+
+    <h2 id="por-que-blueprint">4. Por que um "blueprint" em vez de um produto</h2>
+    <p>A Anthropic vem preferindo cada vez mais esse padrão de "implementação de referência aberta" em vez de lançar um produto hospedado e fechado — a mesma abordagem que usou pro próprio MCP e pros Agent Skills. As vantagens de um blueprint sobre um produto de jardim murado são diretas: lojistas e plataformas podem adaptar o código exatamente ao catálogo, à voz de marca e ao stack de checkout que já têm, em vez de reformular o negócio em volta da API de outra empresa; e por ser Apache 2.0, concorrentes e parceiros (a Shopify, por exemplo, foi citada junto com esse lançamento) podem construir produtos comerciais em cima sem pedir permissão à Anthropic.</p>
+    <p>A contrapartida é que a Anthropic não captura a transação de comércio em si — só as chamadas de modelo que os agentes fazem no caminho. Isso é consistente com a aposta de plataforma mais ampla da Anthropic: vencer sendo a camada de raciocínio por baixo do maior número possível de categorias de agente, em vez de ser dona de um produto vertical específico.</p>
+
+    <h2 id="contexto">5. Onde isso se encaixa na corrida mais ampla de comércio agêntico</h2>
+    <p>Comércio é uma das frentes mais disputadas da onda atual de ferramental de agentes de IA — todo grande provedor de modelo vem correndo pra definir como assistentes de IA compram, recomendam e eventualmente transacionam em nome de um usuário, e os padrões pra pagamentos iniciados por agente ainda estão sendo definidos pelo setor inteiro. O movimento da Anthropic aqui chama atenção menos por ser o primeiro e mais por quão estreito é o escopo que ela dá ao papel do Claude: raciocínio e conversa, ponto final, com pagamento tratado como problema de outra empresa resolver em cima.</p>
+    <p>Esse escopo estreito é um padrão que vale acompanhar nos lançamentos de ferramentas da Anthropic de forma geral — o MCP padronizou como agentes se conectam a ferramentas e dados externos, os Skills padronizaram como agentes empacotam capacidades reutilizáveis, e agora o Commerce Agents padroniza como uma conversa de compra deveria ser estruturada, em cada caso deixando a camada adjacente mais confusa e regulada (infraestrutura de hospedagem, distribuição, pagamentos) pro ecossistema já existente.</p>
+
+    <h2 id="conclusao">6. O que isso significa se você constrói software</h2>
+    <div class="callout">
+      <strong>Se você constrói algo voltado a cliente com catálogo de produto</strong> — varejo, reserva de viagem, ingressos, planos de telecom — esse blueprint é um ponto de partida legítimo pra prototipar um fluxo de compra conversacional em vez de escrever lógica de orquestração de agente do zero.
+    </div>
+    <div class="callout">
+      <strong>Se você está avaliando números de performance divulgados por fornecedor</strong> (o tipo "carrinhos 35% maiores, 60% mais conversão"), trate como trataria qualquer benchmark publicado por fornecedor: sinal real da direção do efeito, mas não um número que você deveria esperar reproduzir exatamente sem o seu próprio teste A/B.
+    </div>
+    <p>O padrão maior pra guardar: quando um provedor de modelo lança algo grátis e aberto sob licença permissiva, olhe pro que está deliberadamente faltando tanto quanto pro que está incluído. Aqui, a peça que falta — pagamentos — diz exatamente onde a Anthropic acha que o risco real (e o fosso competitivo real de outras empresas) ainda mora.</p>
+
+    <div class="share-row">
+      <span class="share-label">Compartilhar:</span>
+      <button class="share-btn" onclick="shareLesson('linkedin')" type="button">LinkedIn</button>
+      <button class="share-btn" onclick="shareLesson('x')" type="button">X / Twitter</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Newsletter</div>
+      <p style="margin-bottom:14px; font-weight:700; color:#fff; font-size:16px;">Saiba o que a IA está criando pra você. Não fique por fora.</p>
+      <p style="margin-bottom:14px;">Seja avisado quando eu postar uma imersão ou lição nova. Sem spam, só posts novos.</p>
+      <form class="newsletter-form" onsubmit="return submitNewsletter(event, this)">
+        <input type="email" name="email" required placeholder="voce@email.com" class="newsletter-input">
+        <button type="submit" class="newsletter-btn">Avisar</button>
+      </form>
+      <p class="newsletter-msg" style="display:none;"></p>
+    </div>
+
+    <h2 style="border-top:none; margin-top:40px;">Fontes</h2>
+    <ul class="sources">
+      <li>PYMNTS — <a href="https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-built-the-shopping-brain-and-skipped-the-wallet/" target="_blank" rel="noopener">"Anthropic Built the Shopping Brain and Skipped the Wallet"</a>, setembro de 2026.</li>
+      <li>MarkTechPost — <a href="https://www.marktechpost.com/2026/09/03/anthropic-released-claude-commerce-agents-an-apache-2-0-blueprint-for-shopping-and-merchant-agents-across-retail-travel-telecom-and-entertainment/" target="_blank" rel="noopener">"Anthropic Released Claude Commerce Agents: An Apache-2.0 Blueprint..."</a>, 3 de setembro de 2026.</li>
+      <li>Enterprise DNA — <a href="https://enterprisedna.co/resources/ai-pulse/ai-pulse-2026-09-03-anthropic-launches-claude-commerce-agents-with-shopify-visa/" target="_blank" rel="noopener">"Anthropic launches Claude Commerce Agents with Shopify, Visa, Mastercard, and Accenture"</a>, 3 de setembro de 2026.</li>
+      <li>Claude (blog da Anthropic) — <a href="https://claude.com/blog/claude-for-commerce-agents" target="_blank" rel="noopener">"Building Commerce Agents with Claude"</a>, setembro de 2026.</li>
+      <li>e-commerce.news — <a href="https://e-commerce.news/story/anthropic-launches-claude-commerce-blueprint-for-retailers" target="_blank" rel="noopener">"Anthropic launches Claude commerce blueprint for retailers"</a>, setembro de 2026.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Commerce Agents, Sept 2026</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Claude Commerce Agents, Sept 2026';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Claude Commerce Agents, set/2026';
+    }
+  }
+
+  function submitNewsletter(e, form) {
+    e.preventDefault();
+    var input = form.querySelector('input[type=email]');
+    var btn = form.querySelector('button');
+    var msg = form.parentElement.querySelector('.newsletter-msg');
+    var lang = form.closest('[data-lang]').getAttribute('data-lang');
+    var email = input.value;
+    if (!email) return false;
+    btn.disabled = true;
+    btn.textContent = lang === 'pt' ? 'Enviando...' : 'Sending...';
+    fetch('https://formspree.io/f/xaqrrwro', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email })
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        msg.textContent = lang === 'pt' ? 'Você está na lista — obrigado!' : "You're on the list — thanks!";
+        msg.className = 'newsletter-msg success';
+        msg.style.display = '';
+      } else {
+        msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+        msg.className = 'newsletter-msg error';
+        msg.style.display = '';
+        btn.disabled = false;
+        btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+      }
+    }).catch(function() {
+      msg.textContent = lang === 'pt' ? 'Não deu pra cadastrar agora. Tenta de novo mais tarde.' : "Couldn't sign up right now. Try again later.";
+      msg.className = 'newsletter-msg error';
+      msg.style.display = '';
+      btn.disabled = false;
+      btn.textContent = lang === 'pt' ? 'Avisar' : 'Notify me';
+    });
+    return false;
+  }
+
+  function shareLesson(platform) {
+    var url = encodeURIComponent(window.location.href);
+    var title = encodeURIComponent(document.title);
+    var shareUrl = platform === 'linkedin'
+      ? 'https://www.linkedin.com/sharing/share-offsite/?url=' + url
+      : 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=600');
+  }
+</script>
+
+</body>
+</html>
