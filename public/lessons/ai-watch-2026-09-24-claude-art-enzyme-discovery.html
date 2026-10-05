@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude discovers a novel CRISPR-like enzyme system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 8px; }
+  .sources ol { padding-left: 18px; margin: 8px 0 0; }
+  .sources li { margin-bottom: 4px; font-size: 12.5px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); word-break: break-all; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude discovers a novel CRISPR-like enzyme system in 21 hours</h1>
+      <p class="subtitle">On September 24, 2026, Anthropic announced that Claude — running autonomously in its life sciences lab — found a previously unknown enzyme system hidden in bacteriophage DNA. Nobody had seen it before, a CRISPR pioneer called it "genuinely intriguing," and Anthropic still doesn't know what it does.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">1. What happened</a></li>
+        <li><a href="#the-search">2. How Claude found it: from 1.9 billion clusters to 20 candidates</a></li>
+        <li><a href="#what-is-art">3. What ART actually is (and what it might have to do with CRISPR)</a></li>
+        <li><a href="#caveats">4. The honest caveats: it didn't replicate, and nobody knows what it does</a></li>
+        <li><a href="#why-it-matters">5. Why this matters beyond biology</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What happened</h2>
+    <p>Anthropic's life sciences research group — formed in spring 2026 to test whether AI models can accelerate biological discovery — set Claude loose on a simple but enormous question: search public protein databases for enzyme systems that nobody has described before. Claude ran an autonomous research campaign, and at the end of it, Anthropic says it had a genuinely new finding: an enzyme system tucked inside the DNA of bacteriophages (viruses that infect bacteria) that nobody had flagged as a coherent system before.</p>
+    <p>Anthropic is calling it <strong>ART</strong> — array-associated reverse transcriptases. The company published a preprint alongside the announcement and had it reviewed by outside scientists, including Feng Zhang, the MIT/Broad Institute professor known for his foundational work on CRISPR gene editing. His verdict: the pattern Claude spotted "is genuinely intriguing and merits further investigation."</p>
+    <div class="callout">
+      <strong>In one line:</strong> this isn't Claude inventing a protein or running a wet-lab experiment — it's Claude doing the unglamorous, exhausting pattern-matching work of computational biology, at a scale and speed no human team works at, and surfacing something real enough that a field-defining scientist wants to look closer.
+    </div>
+
+    <h2 id="the-search">2. How Claude found it: from 1.9 billion clusters to 20 candidates</h2>
+    <p>The scale of the search is the actual story here. According to the preprint, the autonomous campaign broke down like this:</p>
+    <table>
+      <tr><th>Stage</th><th>Number</th></tr>
+      <tr><td>Duration</td><td>~21.5 hours</td></tr>
+      <tr><td>Agent sessions</td><td>949</td></tr>
+      <tr><td>Tokens consumed</td><td>~215.6 million</td></tr>
+      <tr><td>Starting protein database</td><td>~1.9 billion protein clusters</td></tr>
+      <tr><td>Reverse transcriptase clusters pulled out</td><td>~200,000</td></tr>
+      <tr><td>Candidate partner-gene families after filtering</td><td>3,564</td></tr>
+      <tr><td>Candidates narrowed down for detailed analysis</td><td>~20</td></tr>
+      <tr><td>Reports produced</td><td>19</td></tr>
+    </table>
+    <p>In practice, this looked like a swarm of agent sessions each combing through slices of a public database of reverse transcriptase enzymes (a category already known for its role in things like retroviruses and CRISPR-adjacent systems), looking for genes that sit next to unusual repeating DNA structures. One candidate stood out: a reverse transcriptase found in a "jumbo phage" — an unusually large bacteriophage — that had technically been logged in earlier studies, but whose neighboring structure nobody had characterized. Claude noticed two things about it that previous work had missed: a long array of evenly spaced, non-coding DNA repeats sitting right next to the enzyme's gene, and a second accessory protein of unknown function riding along with it.</p>
+    <p>That repeat array is the part that raised eyebrows, because it structurally echoes a CRISPR array — the bank of spacer sequences that CRISPR systems use to store "memories" of past viral infections and turn into programmable guide RNAs.</p>
+
+    <h2 id="what-is-art">3. What ART actually is (and what it might have to do with CRISPR)</h2>
+    <p>ART has three parts: a reverse transcriptase enzyme (a class of enzyme that copies RNA back into DNA), a neighboring gene of unknown function, and the repeat array itself. In follow-up lab work — real wet-lab testing, not just computational prediction — Anthropic's scientists confirmed the array isn't just DNA sitting there inertly: it gets actively transcribed into a set of distinct short RNAs. In published sequencing data from a Staphylococcus phage, those RNAs made up as much as <strong>8% of the phage's total RNA</strong> just 15 minutes after infection — a strong signal that this system does something functionally important early in the infection cycle, even though nobody yet knows what.</p>
+    <div class="callout">
+      <strong>Why "CRISPR-like" and not "CRISPR":</strong> the resemblance is structural — a reverse transcriptase next to a repeat array, similar in shape to how CRISPR pairs an enzyme with a spacer array. It is not evidence that ART edits genes, and Anthropic is explicit that its function is still unknown. Calling it a new CRISPR would be premature; calling it a new CRISPR-<em>shaped</em> puzzle is accurate.
+    </div>
+
+    <h2 id="caveats">4. The honest caveats: it didn't replicate, and nobody knows what it does</h2>
+    <p>Two details in Anthropic's own reporting keep this grounded rather than hyped, and are worth taking seriously precisely because Anthropic chose to publish them instead of quietly leaving them out:</p>
+    <ul>
+      <li><strong>It didn't reproduce.</strong> When Anthropic reran the exact same autonomous search process ten more times, none of the ten reruns rediscovered the repeat array. Anthropic attributes this to the sheer size of the search space and the inherently variable paths an autonomous agent can take through it — not necessarily a sign the original finding was wrong, but a clear sign the discovery process itself isn't yet reliable or repeatable on demand.</li>
+      <li><strong>Nobody knows what ART does.</strong> The lab confirmed the array is transcribed and abundant early in infection. It has not shown what job those RNAs perform, whether the system does anything CRISPR-like at the functional level, or why the phage carries it at all.</li>
+    </ul>
+    <p>Put together, the honest summary is: Claude found a real, previously undocumented pattern that independent expert review considers worth investigating — not that Claude discovered "the next CRISPR." Those are different claims, and Anthropic's own materials are careful to keep them separate.</p>
+
+    <h2 id="why-it-matters">5. Why this matters beyond biology</h2>
+    <p>Set the biology aside for a second and look at the shape of the process: an AI agent ran an unsupervised, multi-day research campaign across roughly a billion-scale dataset, made its own decisions about what to filter, follow up on, and discard, and produced a specific, falsifiable, publishable finding — without a human directing each step. That's a different mode of usefulness than "Claude answered my question" or "Claude wrote my function." It's closer to Claude acting as a tireless research assistant capable of doing the kind of large-scale exploratory search that historically ate months of a graduate student's life.</p>
+    <p>It also lands the same week Anthropic opened its Claude Marketplace (September 23, 2026) for plugins, partner agents, and services — a reminder that Anthropic is simultaneously pushing Claude outward into ecosystems of tools <em>and</em> inward into genuinely novel scientific search. The failure to reproduce on ten reruns is arguably the most important data point in the whole story for anyone evaluating "AI for science" claims generally: autonomous discovery working once, spectacularly, is not the same as autonomous discovery working reliably. Anthropic publishing that failure alongside the win is worth noting on its own.</p>
+    <div class="callout">
+      <strong>Practical takeaway:</strong> if you're tracking what "agentic AI" is actually good for beyond coding and chat, this is a concrete data point — long-horizon, tool-using, multi-session autonomous search over a huge structured dataset, with a real (if still unreplicated and not-yet-understood) result at the end of it.
+    </div>
+
+    <footer>
+      <div>Cooldecode · AI Watch — 2026-09-24</div>
+      <div class="sources">
+        <strong>Sources:</strong>
+        <ol>
+          <li><a href="https://www.anthropic.com/news/claude-discovers-novel-enzyme-system" target="_blank" rel="noopener">anthropic.com — "Claude discovers a novel enzyme system with CRISPR-like repeats" (2026-09-24)</a></li>
+          <li><a href="https://techcrunch.com/2026/09/23/anthropic-says-its-biology-lab-has-already-found-something-big/" target="_blank" rel="noopener">TechCrunch — "Anthropic says its biology lab has already found something big" (2026-09-23)</a></li>
+          <li><a href="https://dataconomy.com/2026/09/24/anthropic-claude-crispr-enzyme-system-21-hours/" target="_blank" rel="noopener">Dataconomy — search process breakdown, 21 hours / 949 sessions (2026-09-24)</a></li>
+          <li><a href="https://www.aljazeera.com/economy/2026/9/24/ai-model-claude-discovers-crispr-like-enzyme-system-anthropic-says" target="_blank" rel="noopener">Al Jazeera — "AI model Claude discovers CRISPR-like enzyme system" (2026-09-24)</a></li>
+          <li><a href="https://www.unite.ai/anthropic-says-claude-discovered-a-new-enzyme-system-resembling-crispr/" target="_blank" rel="noopener">Unite.AI — Feng Zhang review and reproducibility caveat (2026-09-24)</a></li>
+        </ol>
+      </div>
+    </footer>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>O Claude descobre um novo sistema de enzimas parecido com CRISPR em 21 horas</h1>
+      <p class="subtitle">Em 24 de setembro de 2026, a Anthropic anunciou que o Claude — rodando de forma autônoma no laboratório de ciências biológicas da empresa — encontrou um sistema de enzimas desconhecido escondido no DNA de bacteriófagos. Ninguém tinha visto isso antes, um dos criadores do CRISPR chamou o achado de "genuinamente intrigante", e a Anthropic ainda não sabe pra que ele serve.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">1. O que aconteceu</a></li>
+        <li><a href="#a-busca">2. Como o Claude achou isso: de 1,9 bilhão de clusters a 20 candidatos</a></li>
+        <li><a href="#o-que-e-art">3. O que o ART realmente é (e o que ele pode ter a ver com CRISPR)</a></li>
+        <li><a href="#ressalvas">4. As ressalvas honestas: não replicou, e ninguém sabe pra que serve</a></li>
+        <li><a href="#por-que-importa-pt">5. Por que isso importa além da biologia</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que aconteceu</h2>
+    <p>O grupo de pesquisa em ciências biológicas da Anthropic — formado na primavera (boreal) de 2026 pra testar se modelos de IA conseguem acelerar descobertas biológicas — soltou o Claude numa pergunta simples mas gigantesca: vasculhar bancos de dados públicos de proteínas atrás de sistemas de enzimas que ninguém tinha descrito antes. O Claude rodou uma campanha de pesquisa autônoma, e no final dela a Anthropic diz que tinha um achado genuinamente novo: um sistema de enzimas escondido no DNA de bacteriófagos (vírus que infectam bactérias) que ninguém tinha identificado como um sistema coerente antes.</p>
+    <p>A Anthropic está chamando isso de <strong>ART</strong> — reverse transcriptases associadas a array (array-associated reverse transcriptases). A empresa publicou um preprint junto com o anúncio e pediu revisão de cientistas externos, incluindo Feng Zhang, professor do MIT/Broad Institute conhecido pelo trabalho fundacional em edição genética por CRISPR. O veredito dele: o padrão que o Claude identificou "é genuinamente intrigante e merece investigação futura".</p>
+    <div class="callout">
+      <strong>Em uma frase:</strong> isso não é o Claude inventando uma proteína nem rodando um experimento de bancada — é o Claude fazendo o trabalho braçal e exaustivo de reconhecimento de padrões da biologia computacional, numa escala e velocidade que nenhuma equipe humana alcança, e trazendo à tona algo real o suficiente pra um cientista que definiu um campo inteiro querer olhar mais de perto.
+    </div>
+
+    <h2 id="a-busca">2. Como o Claude achou isso: de 1,9 bilhão de clusters a 20 candidatos</h2>
+    <p>A escala da busca é a história de verdade aqui. Segundo o preprint, a campanha autônoma se distribuiu assim:</p>
+    <table>
+      <tr><th>Etapa</th><th>Número</th></tr>
+      <tr><td>Duração</td><td>~21,5 horas</td></tr>
+      <tr><td>Sessões de agente</td><td>949</td></tr>
+      <tr><td>Tokens consumidos</td><td>~215,6 milhões</td></tr>
+      <tr><td>Banco de proteínas de partida</td><td>~1,9 bilhão de clusters de proteínas</td></tr>
+      <tr><td>Clusters de reverse transcriptase extraídos</td><td>~200 mil</td></tr>
+      <tr><td>Famílias candidatas de gene parceiro após filtro</td><td>3.564</td></tr>
+      <tr><td>Candidatos afunilados pra análise detalhada</td><td>~20</td></tr>
+      <tr><td>Relatórios produzidos</td><td>19</td></tr>
+    </table>
+    <p>Na prática, isso foi um enxame de sessões de agente vasculhando, cada uma, fatias de um banco de dados público de enzimas reverse transcriptase (uma categoria já conhecida pelo papel em coisas como retrovírus e sistemas próximos do CRISPR), procurando genes que ficam ao lado de estruturas de DNA repetitivas incomuns. Um candidato se destacou: uma reverse transcriptase encontrada num "fago gigante" — um bacteriófago incomumente grande — que tecnicamente já tinha sido catalogada em estudos anteriores, mas cuja estrutura vizinha ninguém tinha caracterizado. O Claude notou duas coisas que trabalhos anteriores deixaram passar: um longo array de repetições de DNA não-codificante, igualmente espaçadas, bem ao lado do gene da enzima, e uma segunda proteína acessória de função desconhecida junto dela.</p>
+    <p>Esse array de repetições é a parte que chamou atenção, porque ele ecoa estruturalmente um array de CRISPR — o banco de sequências espaçadoras que sistemas CRISPR usam pra guardar "memórias" de infecções virais passadas e transformar em RNAs-guia programáveis.</p>
+
+    <h2 id="o-que-e-art">3. O que o ART realmente é (e o que ele pode ter a ver com CRISPR)</h2>
+    <p>O ART tem três partes: uma enzima reverse transcriptase (uma classe de enzima que copia RNA de volta pra DNA), um gene vizinho de função desconhecida, e o próprio array de repetições. Em trabalho de bancada de acompanhamento — teste de laboratório real, não só previsão computacional — os cientistas da Anthropic confirmaram que o array não é só DNA parado ali: ele é ativamente transcrito num conjunto de RNAs curtos e distintos. Em dados de sequenciamento já publicados de um fago de Staphylococcus, esses RNAs chegaram a representar <strong>8% do RNA total do fago</strong> apenas 15 minutos após a infecção — um sinal forte de que esse sistema faz algo funcionalmente importante logo no começo do ciclo de infecção, mesmo que ninguém ainda saiba o quê.</p>
+    <div class="callout">
+      <strong>Por que "parecido com CRISPR" e não "CRISPR":</strong> a semelhança é estrutural — uma reverse transcriptase ao lado de um array de repetições, num formato parecido com o jeito que o CRISPR combina uma enzima com um array de espaçadores. Isso não é evidência de que o ART edita genes, e a Anthropic é explícita que a função dele ainda é desconhecida. Chamar de um novo CRISPR seria prematuro; chamar de um novo quebra-cabeça com <em>formato</em> de CRISPR é preciso.
+    </div>
+
+    <h2 id="ressalvas">4. As ressalvas honestas: não replicou, e ninguém sabe pra que serve</h2>
+    <p>Dois detalhes no próprio relato da Anthropic mantêm isso com os pés no chão em vez de inflado, e valem ser levados a sério justamente porque a Anthropic optou por publicá-los em vez de omitir discretamente:</p>
+    <ul>
+      <li><strong>Não replicou.</strong> Quando a Anthropic repetiu o mesmo processo de busca autônoma mais dez vezes, nenhuma das dez repetições redescobriu o array de repetições. A Anthropic atribui isso ao tamanho gigantesco do espaço de busca e ao caminho inerentemente variável que um agente autônomo pode seguir por ele — não necessariamente um sinal de que o achado original estava errado, mas um sinal claro de que o próprio processo de descoberta ainda não é confiável ou repetível sob demanda.</li>
+      <li><strong>Ninguém sabe pra que o ART serve.</strong> O laboratório confirmou que o array é transcrito e abundante logo no início da infecção. Não mostrou qual função esses RNAs cumprem, se o sistema faz algo parecido com CRISPR no nível funcional, ou por que o fago carrega isso.</li>
+    </ul>
+    <p>Juntando tudo, o resumo honesto é: o Claude encontrou um padrão real, antes não documentado, que a revisão de especialistas independentes considera valer a pena investigar — não que o Claude descobriu "o próximo CRISPR". São afirmações diferentes, e o próprio material da Anthropic tem o cuidado de mantê-las separadas.</p>
+
+    <h2 id="por-que-importa-pt">5. Por que isso importa além da biologia</h2>
+    <p>Deixando a biologia de lado por um instante, olhe pro formato do processo: um agente de IA rodou uma campanha de pesquisa não supervisionada, de múltiplos dias, sobre um dataset na escala de um bilhão de itens, tomou suas próprias decisões sobre o que filtrar, aprofundar e descartar, e produziu um achado específico, falseável e publicável — sem um humano dirigindo cada passo. Isso é um modo de utilidade diferente de "o Claude respondeu minha pergunta" ou "o Claude escreveu minha função". É mais próximo de o Claude atuar como um assistente de pesquisa incansável, capaz de fazer o tipo de busca exploratória em larga escala que historicamente consumia meses da vida de um estudante de pós-graduação.</p>
+    <p>Isso também acontece na mesma semana em que a Anthropic abriu o Claude Marketplace (23 de setembro de 2026) pra plugins, agentes parceiros e serviços — um lembrete de que a Anthropic está simultaneamente empurrando o Claude pra fora, em direção a ecossistemas de ferramentas, <em>e</em> pra dentro, em direção a busca científica genuinamente nova. A falha em replicar nas dez repetições é, sem exagero, o dado mais importante de toda a história pra quem está avaliando alegações de "IA para ciência" de forma geral: descoberta autônoma funcionar uma vez, de forma espetacular, não é a mesma coisa que descoberta autônoma funcionar de forma confiável. A Anthropic publicar essa falha junto com a vitória já vale ser notado por si só.</p>
+    <div class="callout">
+      <strong>Aplicação prática:</strong> se você está acompanhando pra que "IA agêntica" realmente serve além de código e chat, esse é um dado concreto — busca autônoma de longo horizonte, com uso de ferramentas, em múltiplas sessões, sobre um dataset estruturado gigantesco, com um resultado real (ainda que não replicado e ainda não compreendido) no final.
+    </div>
+
+    <footer>
+      <div>Cooldecode · IA Watch — 2026-09-24</div>
+      <div class="sources">
+        <strong>Fontes:</strong>
+        <ol>
+          <li><a href="https://www.anthropic.com/news/claude-discovers-novel-enzyme-system" target="_blank" rel="noopener">anthropic.com — "Claude discovers a novel enzyme system with CRISPR-like repeats" (24/09/2026)</a></li>
+          <li><a href="https://techcrunch.com/2026/09/23/anthropic-says-its-biology-lab-has-already-found-something-big/" target="_blank" rel="noopener">TechCrunch — "Anthropic says its biology lab has already found something big" (23/09/2026)</a></li>
+          <li><a href="https://dataconomy.com/2026/09/24/anthropic-claude-crispr-enzyme-system-21-hours/" target="_blank" rel="noopener">Dataconomy — detalhamento do processo de busca, 21 horas / 949 sessões (24/09/2026)</a></li>
+          <li><a href="https://www.aljazeera.com/economy/2026/9/24/ai-model-claude-discovers-crispr-like-enzyme-system-anthropic-says" target="_blank" rel="noopener">Al Jazeera — "AI model Claude discovers CRISPR-like enzyme system" (24/09/2026)</a></li>
+          <li><a href="https://www.unite.ai/anthropic-says-claude-discovered-a-new-enzyme-system-resembling-crispr/" target="_blank" rel="noopener">Unite.AI — revisão de Feng Zhang e ressalva de reprodutibilidade (24/09/2026)</a></li>
+        </ol>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

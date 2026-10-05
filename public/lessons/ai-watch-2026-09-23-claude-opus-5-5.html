@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Opus 5.5, cheaper and more contained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 8px; }
+  .sources ol { padding-left: 18px; margin: 8px 0 0; }
+  .sources li { margin-bottom: 4px; font-size: 12.5px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); word-break: break-all; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude Opus 5.5: same tier of work, 40% cheaper to run</h1>
+      <p class="subtitle">Anthropic shipped a new flagship model on September 22, 2026 — not a bigger, smarter Opus, but a cheaper, faster one that still holds its own against Claude Fable 5.1 and GPT-6 Astra. Here's what actually changed under the hood.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">1. What happened</a></li>
+        <li><a href="#pricing">2. The pricing story: cheaper, and using fewer tokens to get there</a></li>
+        <li><a href="#features">3. What's actually new: adaptive thinking, inline tools, containment</a></li>
+        <li><a href="#benchmarks">4. Where it wins, and where it doesn't</a></li>
+        <li><a href="#why-it-matters">5. Why this release pattern matters more than the number</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What happened</h2>
+    <p>On September 22, 2026, Anthropic released <strong>Claude Opus 5.5</strong>, positioned as its new leading model for complex coding, research, computer use, and professional knowledge work. It's available immediately through the Claude API, Claude Code, and the major cloud marketplaces (AWS Bedrock, Google Cloud Vertex AI, Microsoft Foundry).</p>
+    <p>The headline isn't a jump in raw capability — Anthropic's own numbers show Opus 5.5 performing at roughly the level of Claude Fable 5.1 on most everyday work. The headline is that it does so while costing about <strong>40% less to run</strong> than the outgoing Opus 5, and while attempting to work around its own guardrails far less often in safety testing.</p>
+    <div class="callout">
+      <strong>In one line:</strong> this is Anthropic optimizing the cost curve of "near-frontier" work, not chasing a new capability ceiling with this particular release.
+    </div>
+
+    <h2 id="pricing">2. The pricing story: cheaper, and using fewer tokens to get there</h2>
+    <p>Two separate things dropped at once, which is why the "40% cheaper" headline is bigger than the sticker-price cut alone:</p>
+    <table>
+      <tr><th>Item</th><th>Opus 5</th><th>Opus 5.5</th><th>Change</th></tr>
+      <tr><td>Input tokens</td><td>$5 / M</td><td>$4 / M</td><td>−20%</td></tr>
+      <tr><td>Output tokens</td><td>$25 / M</td><td>$20 / M</td><td>−20%</td></tr>
+      <tr><td>Prompt cache write</td><td>$6.25 / M</td><td>$5 / M</td><td>−20%</td></tr>
+      <tr><td>Prompt cache read</td><td>$0.50 / M</td><td>$0.20 / M</td><td>−60%</td></tr>
+    </table>
+    <p>That's the list-price cut. On top of it, Anthropic reports that Opus 5.5 tends to need <strong>fewer tokens</strong> to finish the same task — a more efficient reasoning process, not just a smaller price tag — which is where the "typical workloads cost ~40% less overall" claim comes from, beyond the 20% sticker reduction on input/output.</p>
+    <div class="callout">
+      <strong>Why the cache-read cut matters more than it looks:</strong> for any agentic workflow that re-sends a large, mostly-unchanged system prompt or codebase context on every turn (which is most of them), cache reads are the bulk of the bill. Cutting that price by 60% changes the economics of long agent loops more than a 20% cut on fresh input tokens ever could.
+    </div>
+
+    <h2 id="features">3. What's actually new: adaptive thinking, inline tools, containment</h2>
+    <p>Beyond price, three concrete changes ship with this model:</p>
+    <ul>
+      <li><strong>1M-token context window</strong>, up to 128K tokens of output, with a June 2026 knowledge cutoff.</li>
+      <li><strong>Adaptive thinking, always on.</strong> Earlier Claude models let you toggle "extended thinking" on or off; on Opus 5.5 the model always decides how much to think per request, with an effort parameter (default: medium) nudging that budget up or down instead of switching it off entirely.</li>
+      <li><strong>Inline tool definitions.</strong> A new capability (shipped as <code>inline-tools-2026-09-15</code>) lets a running conversation add or redefine a tool mid-session, inside a system message, without breaking the prompt cache or restarting the conversation. Useful for long agent sessions that need to pick up new capabilities without a full reset.</li>
+    </ul>
+    <p>One breaking change worth flagging if you're migrating code: <strong>forced tool use has been retired.</strong> Requests that try to force a specific tool call, or force any tool call at all, now return an error instead of being honored — something to check for in existing integrations before switching models.</p>
+    <p>On the safety side, Anthropic ran a new "containment evaluation" — testing how often the model tries to work around operational boundaries it's been given — and reports Opus 5.5 attempting to circumvent those boundaries <strong>roughly 85% less often</strong> than Opus 5 or Claude Mythos 5.1. Anthropic frames this as one data point among many (a roughly 2,000-scenario internal behavioral audit), not a final word on model safety.</p>
+
+    <h2 id="benchmarks">4. Where it wins, and where it doesn't</h2>
+    <p>Anthropic's own comparison table, echoed by outside coverage, draws a mixed picture against OpenAI's GPT-6 Astra rather than a clean sweep:</p>
+    <table>
+      <tr><th>Area</th><th>Result vs. GPT-6 Astra</th></tr>
+      <tr><td>Agentic coding</td><td>Opus 5.5 ahead</td></tr>
+      <tr><td>Knowledge work</td><td>Opus 5.5 ahead</td></tr>
+      <tr><td>Multidisciplinary reasoning</td><td>Opus 5.5 ahead</td></tr>
+      <tr><td>Business-workflow automation</td><td>GPT-6 Astra ahead</td></tr>
+      <tr><td>Agentic science</td><td>GPT-6 Astra ahead</td></tr>
+    </table>
+    <p>Independent coverage (VentureBeat) frames the release specifically as beating Claude Fable 5.1 on key agentic benchmarks while costing about 60% less over the API — a different cut of the same underlying story: this model competes by being the cheap-but-strong option in Anthropic's own lineup, not by dethroning the top of it.</p>
+
+    <h2 id="why-it-matters">5. Why this release pattern matters more than the number</h2>
+    <p>Zoom out and this fits a pattern visible across the AI industry through 2026: model providers are no longer racing purely on "biggest benchmark score." A growing share of releases — this one included — optimize the price/performance frontier for the tier of work most paying customers actually run day to day (coding assistants, internal knowledge tools, customer-facing agents), rather than chasing marginal gains on frontier research benchmarks few products use directly.</p>
+    <div class="callout">
+      <strong>Practical takeaway:</strong> if you're building on the Claude API and were previously choosing Opus 5 for its ceiling and a cheaper model for cost-sensitive work, Opus 5.5's pricing narrows that gap — it's worth re-testing whether you still need two tiers, or whether Opus 5.5 alone now covers both.
+    </div>
+
+    <footer>
+      <div>Cooldecode · AI Watch — 2026-09-23</div>
+      <div class="sources">
+        <strong>Sources:</strong>
+        <ol>
+          <li><a href="https://www.anthropic.com/claude-opus-5-5" target="_blank" rel="noopener">anthropic.com — "Introducing Claude Opus 5.5" (2026-09-22)</a></li>
+          <li><a href="https://venturebeat.com/technology/anthropic-releases-claude-opus-5-5-beating-fable-5-1-on-key-agentic-benchmarks-at-60-cheaper-api-price" target="_blank" rel="noopener">VentureBeat — benchmarks and pricing coverage (2026-09-22)</a></li>
+          <li><a href="https://money.usnews.com/investing/news/articles/2026-09-22/anthropic-unveils-claude-opus-5-5" target="_blank" rel="noopener">U.S. News — "Anthropic Unveils Claude Opus 5.5" (2026-09-22)</a></li>
+          <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">Claude Platform Docs — "What's new in Claude Opus 5.5"</a></li>
+          <li><a href="https://www.digitalapplied.com/blog/claude-opus-5-5-launch-pricing-benchmarks-2026" target="_blank" rel="noopener">Digital Applied — pricing/benchmarks breakdown (2026-09-22)</a></li>
+        </ol>
+      </div>
+    </footer>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude Opus 5.5: o mesmo nível de trabalho, 40% mais barato pra rodar</h1>
+      <p class="subtitle">A Anthropic lançou um novo modelo topo de linha em 22 de setembro de 2026 — não um Opus maior e mais inteligente, mas um mais barato e mais rápido, que ainda assim se sustenta contra o Claude Fable 5.1 e o GPT-6 Astra. Eis o que realmente mudou por baixo do capô.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-aconteceu">1. O que aconteceu</a></li>
+        <li><a href="#preco">2. A história do preço: mais barato, e usando menos tokens pra chegar lá</a></li>
+        <li><a href="#novidades">3. O que realmente é novo: raciocínio adaptativo, tools inline, contenção</a></li>
+        <li><a href="#benchmarks-pt">4. Onde ele ganha, e onde não ganha</a></li>
+        <li><a href="#por-que-importa">5. Por que esse padrão de lançamento importa mais que o número</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-aconteceu">1. O que aconteceu</h2>
+    <p>Em 22 de setembro de 2026, a Anthropic lançou o <strong>Claude Opus 5.5</strong>, posicionado como seu novo modelo líder pra codificação complexa, pesquisa, uso de computador e trabalho de conhecimento profissional. Ele já está disponível pela API do Claude, pelo Claude Code, e pelos principais marketplaces de nuvem (AWS Bedrock, Google Cloud Vertex AI, Microsoft Foundry).</p>
+    <p>A manchete não é um salto de capacidade bruta — os próprios números da Anthropic mostram o Opus 5.5 performando mais ou menos no nível do Claude Fable 5.1 na maior parte do trabalho do dia a dia. A manchete é que ele faz isso custando cerca de <strong>40% menos</strong> pra rodar do que o Opus 5 anterior, e tentando burlar suas próprias salvaguardas bem menos vezes nos testes de segurança.</p>
+    <div class="callout">
+      <strong>Em uma frase:</strong> aqui a Anthropic está otimizando a curva de custo do trabalho "quase-topo de linha", não perseguindo um novo teto de capacidade com esse lançamento específico.
+    </div>
+
+    <h2 id="preco">2. A história do preço: mais barato, e usando menos tokens pra chegar lá</h2>
+    <p>Duas coisas separadas caíram ao mesmo tempo, e é por isso que a manchete de "40% mais barato" é maior que só o corte no preço de tabela:</p>
+    <table>
+      <tr><th>Item</th><th>Opus 5</th><th>Opus 5.5</th><th>Mudança</th></tr>
+      <tr><td>Tokens de entrada</td><td>US$ 5 / M</td><td>US$ 4 / M</td><td>−20%</td></tr>
+      <tr><td>Tokens de saída</td><td>US$ 25 / M</td><td>US$ 20 / M</td><td>−20%</td></tr>
+      <tr><td>Escrita de cache de prompt</td><td>US$ 6,25 / M</td><td>US$ 5 / M</td><td>−20%</td></tr>
+      <tr><td>Leitura de cache de prompt</td><td>US$ 0,50 / M</td><td>US$ 0,20 / M</td><td>−60%</td></tr>
+    </table>
+    <p>Esse é o corte no preço de tabela. Em cima disso, a Anthropic relata que o Opus 5.5 costuma precisar de <strong>menos tokens</strong> pra terminar a mesma tarefa — um processo de raciocínio mais eficiente, não só uma etiqueta de preço menor — e é daí que vem a alegação de que "cargas de trabalho típicas custam ~40% menos no total", além do corte de 20% no preço de tabela de entrada/saída.</p>
+    <div class="callout">
+      <strong>Por que o corte na leitura de cache importa mais do que parece:</strong> em qualquer fluxo agêntico que reenvia um system prompt grande e majoritariamente igual, ou contexto de código, a cada turno (o que é a maioria deles), leituras de cache são o grosso da conta. Cortar esse preço em 60% muda a economia de loops longos de agente muito mais do que um corte de 20% em tokens de entrada novos jamais mudaria.
+    </div>
+
+    <h2 id="novidades">3. O que realmente é novo: raciocínio adaptativo, tools inline, contenção</h2>
+    <p>Além do preço, três mudanças concretas vêm com esse modelo:</p>
+    <ul>
+      <li><strong>Janela de contexto de 1M de tokens</strong>, até 128K tokens de saída, com corte de conhecimento em junho de 2026.</li>
+      <li><strong>Raciocínio adaptativo, sempre ligado.</strong> Modelos Claude anteriores deixavam você ligar ou desligar o "extended thinking"; no Opus 5.5 o modelo sempre decide quanto vai pensar por requisição, com um parâmetro de esforço (padrão: médio) ajustando esse orçamento pra cima ou pra baixo em vez de desligá-lo por completo.</li>
+      <li><strong>Definição de tools inline.</strong> Uma capacidade nova (lançada como <code>inline-tools-2026-09-15</code>) permite que uma conversa em andamento adicione ou redefina uma tool no meio da sessão, dentro de uma mensagem de sistema, sem quebrar o cache de prompt nem reiniciar a conversa. Útil pra sessões longas de agente que precisam ganhar novas capacidades sem um reset completo.</li>
+    </ul>
+    <p>Uma mudança que quebra compatibilidade e vale destacar se você estiver migrando código: <strong>o uso forçado de tool foi aposentado.</strong> Requisições que tentam forçar uma chamada de tool específica, ou forçar qualquer chamada de tool, agora retornam erro em vez de serem atendidas — algo pra checar em integrações existentes antes de trocar de modelo.</p>
+    <p>No lado da segurança, a Anthropic rodou uma nova "avaliação de contenção" — testando com que frequência o modelo tenta contornar os limites operacionais que recebeu — e relata que o Opus 5.5 tenta burlar esses limites <strong>cerca de 85% menos vezes</strong> que o Opus 5 ou o Claude Mythos 5.1. A Anthropic enquadra isso como um dado a mais entre muitos (uma auditoria comportamental interna de cerca de 2.000 cenários), não como a palavra final sobre segurança do modelo.</p>
+
+    <h2 id="benchmarks-pt">4. Onde ele ganha, e onde não ganha</h2>
+    <p>A própria tabela comparativa da Anthropic, ecoada pela cobertura externa, desenha um quadro misto contra o GPT-6 Astra da OpenAI, em vez de uma vitória completa:</p>
+    <table>
+      <tr><th>Área</th><th>Resultado vs. GPT-6 Astra</th></tr>
+      <tr><td>Codificação agêntica</td><td>Opus 5.5 na frente</td></tr>
+      <tr><td>Trabalho de conhecimento</td><td>Opus 5.5 na frente</td></tr>
+      <tr><td>Raciocínio multidisciplinar</td><td>Opus 5.5 na frente</td></tr>
+      <tr><td>Automação de fluxo de trabalho de negócio</td><td>GPT-6 Astra na frente</td></tr>
+      <tr><td>Ciência agêntica</td><td>GPT-6 Astra na frente</td></tr>
+    </table>
+    <p>A cobertura independente (VentureBeat) enquadra o lançamento especificamente como uma vitória sobre o Claude Fable 5.1 em benchmarks agênticos-chave, custando cerca de 60% menos pela API — um outro corte da mesma história de fundo: esse modelo compete sendo a opção barata-mas-forte na própria linha da Anthropic, não destronando o topo dela.</p>
+
+    <h2 id="por-que-importa">5. Por que esse padrão de lançamento importa mais que o número</h2>
+    <p>Dando um passo atrás, isso se encaixa num padrão visível na indústria de IA ao longo de 2026: fornecedores de modelo não estão mais correndo puramente atrás do "maior score de benchmark". Uma fatia crescente dos lançamentos — este incluído — otimiza a fronteira de preço/performance pro nível de trabalho que a maioria dos clientes pagantes de fato roda no dia a dia (assistentes de código, ferramentas internas de conhecimento, agentes voltados a cliente), em vez de perseguir ganhos marginais em benchmarks de pesquisa de ponta que poucos produtos usam diretamente.</p>
+    <div class="callout">
+      <strong>Aplicação prática:</strong> se você constrói em cima da API do Claude e antes escolhia o Opus 5 pelo teto e um modelo mais barato pro trabalho sensível a custo, o preço do Opus 5.5 encurta essa distância — vale testar de novo se você ainda precisa de dois níveis, ou se o Opus 5.5 sozinho já cobre os dois.
+    </div>
+
+    <footer>
+      <div>Cooldecode · IA Watch — 2026-09-23</div>
+      <div class="sources">
+        <strong>Fontes:</strong>
+        <ol>
+          <li><a href="https://www.anthropic.com/claude-opus-5-5" target="_blank" rel="noopener">anthropic.com — "Introducing Claude Opus 5.5" (22/09/2026)</a></li>
+          <li><a href="https://venturebeat.com/technology/anthropic-releases-claude-opus-5-5-beating-fable-5-1-on-key-agentic-benchmarks-at-60-cheaper-api-price" target="_blank" rel="noopener">VentureBeat — cobertura de benchmarks e preço (22/09/2026)</a></li>
+          <li><a href="https://money.usnews.com/investing/news/articles/2026-09-22/anthropic-unveils-claude-opus-5-5" target="_blank" rel="noopener">U.S. News — "Anthropic Unveils Claude Opus 5.5" (22/09/2026)</a></li>
+          <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">Claude Platform Docs — "What's new in Claude Opus 5.5"</a></li>
+          <li><a href="https://www.digitalapplied.com/blog/claude-opus-5-5-launch-pricing-benchmarks-2026" target="_blank" rel="noopener">Digital Applied — detalhamento de preço/benchmarks (22/09/2026)</a></li>
+        </ol>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Grok 4.7 undercuts everyone on price, still trails on the hardest benchmarks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Industry landscape</span>
+      <h1>Grok 4.7 undercuts everyone on price, still trails on the hardest benchmarks</h1>
+      <p class="subtitle">xAI shipped a 40% bigger base model on September 21, 2026 — and kept the price tag exactly where it was. It's the clearest snapshot yet of a pattern reshaping the whole model market: speed and price move fast, the actual capability gap to the frontier moves slower.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-happened">What xAI actually shipped</a></li>
+        <li><a href="#what-changed">What actually got bigger under the hood</a></li>
+        <li><a href="#benchmarks">The benchmarks, read honestly</a></li>
+        <li><a href="#price">The one number that didn't move: price</a></li>
+        <li><a href="#pattern">The pattern this confirms</a></li>
+        <li><a href="#practical">What this means if you're choosing a model</a></li>
+        <li><a href="#takeaway">The takeaway</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-happened">1. What xAI actually shipped</h2>
+    <p>On September 21, 2026, xAI released <strong>Grok 4.7</strong>, pitched as its most capable model yet for coding and extended, multi-hour knowledge work. It's available through the xAI API as <code>grok-4.7</code>, and shipped simultaneously inside coding tools like Cursor and xAI's own Grok Build.</p>
+    <p>This isn't a new model family or a renamed rebrand — it's a direct successor to Grok 4.6, released with the explicit goal of closing ground on tasks that take a model many steps and a long time to finish, rather than chasing a higher score on short trivia-style benchmarks.</p>
+
+    <h2 id="what-changed">2. What actually got bigger under the hood</h2>
+    <p>Two things changed, and only one of them is about raw size:</p>
+    <ul>
+      <li><strong>A larger base model.</strong> Grok 4.7 runs on a new base with roughly <strong>2.1 trillion parameters</strong>, about 40% larger than Grok 4.6's 1.5 trillion.</li>
+      <li><strong>A different training diet.</strong> xAI ran a longer reinforcement-learning pass weighted toward harder tasks that take many hours to complete, and specifically targeted self-verification and long-context management — a model's ability to check its own work and not lose the thread over a long agentic session.</li>
+    </ul>
+    <p>That second point matters more than the parameter count. A bigger model that's still bad at noticing its own mistakes over a long task isn't more useful in practice — this release is explicitly aimed at the "notices when it's wrong, three hours into a task" problem, not just "knows more facts."</p>
+
+    <h2 id="benchmarks">3. The benchmarks, read honestly</h2>
+    <p>The clearest improvement is on long-horizon, agentic tasks — exactly what the training changes targeted:</p>
+    <table>
+      <tr><th>Benchmark</th><th>What it measures</th><th>Grok 4.6</th><th>Grok 4.7</th></tr>
+      <tr><td>Terminal-Bench 4.0</td><td>Multi-hour terminal/agentic tasks</td><td>20.3%</td><td>38.0%</td></tr>
+      <tr><td>CursorBench 4.0</td><td>Real-world coding tasks</td><td>40.4%</td><td>46.3%</td></tr>
+      <tr><td>AA Briefcase v1.1</td><td>General office/knowledge work</td><td>1,546</td><td>1,657</td></tr>
+    </table>
+    <p>Nearly doubling a score on multi-hour agentic tasks is a real, meaningful jump — that's the metric most aligned with how coding agents actually get used day to day now, not single-shot Q&amp;A.</p>
+    <p>But the competitive picture is less flattering once you put Grok 4.7 next to the current frontier leaders on the same CursorBench 4.0 test:</p>
+    <table>
+      <tr><th>Model</th><th>CursorBench 4.0</th></tr>
+      <tr><td>Claude Fable 5.1 (Anthropic)</td><td>51.8%</td></tr>
+      <tr><td>Grok 4.7 (xAI)</td><td>46.3%</td></tr>
+      <tr><td>GPT-5.6 Sol Max (OpenAI)</td><td>41.7%</td></tr>
+    </table>
+    <div class="callout">
+      <strong>The honest read:</strong> Grok 4.7 leapfrogs OpenAI's mid-tier model on this test, but still sits meaningfully behind Anthropic's top-of-line Claude Fable 5.1. Coverage of the release is consistent on this point — xAI closed a real gap on long-horizon tasks without closing the gap to the actual frontier.
+    </div>
+
+    <h2 id="price">4. The one number that didn't move: price</h2>
+    <p>Here's the part that makes this release strategically interesting rather than just another incremental model bump: Grok 4.7 launched at <strong>$2 per million input tokens and $6 per million output tokens</strong> — identical to Grok 4.6's pricing, despite the base model growing 40%. (Longer prompts, at or above 200,000 tokens, bill higher at $4/$12, with $1 for cached input.)</p>
+    <table>
+      <tr><th>Model</th><th>Input ($/M tokens)</th><th>Output ($/M tokens)</th></tr>
+      <tr><td>Grok 4.7 (xAI)</td><td>$2</td><td>$6</td></tr>
+      <tr><td>GPT-4o (OpenAI, reference rate card)</td><td>$2.50</td><td>$10</td></tr>
+      <tr><td>Gemini 3.7 Flash Standard (Google, promo through Dec 2026)</td><td>$0.75</td><td>$3.75</td></tr>
+    </table>
+    <p>xAI's pricing sits closer to the aggressive rates coming out of Chinese open-weight labs than to Western frontier-lab norms — making Grok the cheapest major Western frontier option even as it trails on the benchmark that matters most for coding work.</p>
+
+    <h2 id="pattern">5. The pattern this confirms</h2>
+    <p>This release lines up with something worth tracking across the whole industry right now, not just one company: model makers are increasingly competing on <em>two separate axes</em> that don't move together — raw capability at the frontier, and price/speed of iteration. Grok 4.7 is a clean example of the second axis winning a release cycle: xAI shipped a big, real jump in agentic performance and kept the price frozen, rather than spending that improvement on catching Claude Fable 5.1 outright.</p>
+    <p>It's the same dynamic behind the broader 2026 price pressure from open-weight Chinese models forcing discounts across the board — cheap, fast-iterating models compete on volume and accessibility, while a smaller set of frontier labs compete on raw ceiling performance, and increasingly these are different races.</p>
+
+    <h2 id="practical">6. What this means if you're choosing a model</h2>
+    <div class="callout">
+      <strong>Budget-sensitive, high-volume coding tasks:</strong> Grok 4.7's price-to-agentic-performance ratio is hard to beat right now among Western frontier labs — especially for long-horizon terminal/agentic work where it nearly doubled its own predecessor.
+    </div>
+    <div class="callout">
+      <strong>Tasks where the ceiling matters more than the bill:</strong> the benchmark gap to Claude Fable 5.1 (51.8% vs. 46.3% on CursorBench 4.0) is real enough that for the hardest coding problems, the top-of-line frontier model is still worth the premium.
+    </div>
+    <div class="callout">
+      <strong>Either way, don't compare on price or benchmark alone.</strong> A model that's 40% cheaper but fails the task still costs more in your time than one that's pricier but reliable — and a model that's technically stronger but overkill for a simple task is money left on the table in the other direction.
+    </div>
+
+    <h2 id="takeaway">7. The takeaway</h2>
+    <p>Grok 4.7 isn't a story about xAI catching Anthropic or OpenAI — the numbers don't support that. It's a story about how fast the "good enough, and cheap" tier of the market is moving, independently of the frontier ceiling. Watching both numbers — not just whichever one a company's press release leads with — is the only way to actually tell what a release means for you.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.marktechpost.com/2026/09/21/spacexai-releases-grok-4-7/" target="_blank" rel="noopener">MarkTechPost — "xAI Releases Grok 4.7: A Larger Base Model at the Same $2/$6 Price as Grok 4.6" (Sept 21, 2026)</a></li>
+      <li><a href="https://the-decoder.com/xai-launches-grok-4-7-at-bargain-prices-but-benchmarks-reveal-a-wide-gap-to-claude-and-gpt-6/" target="_blank" rel="noopener">The Decoder — "xAI launches Grok 4.7 at bargain prices, but benchmarks reveal a wide gap to Claude and GPT-6"</a></li>
+      <li><a href="https://www.datacamp.com/blog/grok-4-7" target="_blank" rel="noopener">DataCamp — "Grok 4.7: Features, Benchmarks, and Pricing"</a></li>
+      <li><a href="https://www.androidheadlines.com/2026/09/grok-4-7-ai-launch-coding-upgrades-pricing.html" target="_blank" rel="noopener">Android Headlines — "xAI Releases Grok 4.7 AI Model"</a></li>
+      <li><a href="https://intuitionlabs.ai/articles/ai-api-pricing-comparison-grok-gemini-openai-claude" target="_blank" rel="noopener">IntuitionLabs — "AI API Pricing Comparison (2026): Grok vs Gemini vs GPT-4o vs Claude"</a></li>
+    </ul>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Panorama da indústria</span>
+      <h1>O Grok 4.7 vence todo mundo no preço, mas ainda fica atrás nos benchmarks mais duros</h1>
+      <p class="subtitle">A xAI lançou um modelo-base 40% maior em 21 de setembro de 2026 — e manteve o preço exatamente onde estava. É o retrato mais claro até agora de um padrão que está reformatando todo o mercado de modelos: velocidade e preço se movem rápido, a diferença real de capacidade pra fronteira se move mais devagar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-lancou">O que a xAI lançou, de fato</a></li>
+        <li><a href="#o-que-mudou">O que realmente ficou maior por dentro</a></li>
+        <li><a href="#benchmarks-pt">Os benchmarks, lidos com honestidade</a></li>
+        <li><a href="#preco">O único número que não mudou: o preço</a></li>
+        <li><a href="#padrao">O padrão que isso confirma</a></li>
+        <li><a href="#pratico">O que isso significa se você está escolhendo um modelo</a></li>
+        <li><a href="#conclusao-pt">A conclusão</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-lancou">1. O que a xAI lançou, de fato</h2>
+    <p>Em 21 de setembro de 2026, a xAI lançou o <strong>Grok 4.7</strong>, apresentado como seu modelo mais capaz até agora para código e trabalho de conhecimento estendido, de várias horas. Ele está disponível pela API da xAI como <code>grok-4.7</code>, e foi lançado simultaneamente dentro de ferramentas de código como o Cursor e o próprio Grok Build da xAI.</p>
+    <p>Não é uma nova família de modelo nem um rebranding — é um sucessor direto do Grok 4.6, lançado com o objetivo explícito de fechar a distância em tarefas que exigem muitos passos e muito tempo pra terminar, em vez de perseguir uma nota mais alta em benchmarks curtos, tipo trivia.</p>
+
+    <h2 id="o-que-mudou">2. O que realmente ficou maior por dentro</h2>
+    <p>Duas coisas mudaram, e só uma delas é sobre tamanho bruto:</p>
+    <ul>
+      <li><strong>Um modelo-base maior.</strong> O Grok 4.7 roda sobre uma base nova com aproximadamente <strong>2,1 trilhões de parâmetros</strong>, cerca de 40% maior que os 1,5 trilhão do Grok 4.6.</li>
+      <li><strong>Uma dieta de treino diferente.</strong> A xAI rodou uma etapa de reinforcement learning mais longa, com peso maior em tarefas difíceis que levam muitas horas pra completar, e mirou especificamente em autoverificação e gestão de contexto longo — a capacidade de um modelo checar o próprio trabalho e não perder o fio da meada numa sessão agêntica longa.</li>
+    </ul>
+    <p>Esse segundo ponto importa mais que a contagem de parâmetros. Um modelo maior que ainda é ruim em perceber os próprios erros numa tarefa longa não é mais útil na prática — esse lançamento mira explicitamente no problema de "percebe quando errou, três horas dentro de uma tarefa", não só em "sabe mais fatos".</p>
+
+    <h2 id="benchmarks-pt">3. Os benchmarks, lidos com honestidade</h2>
+    <p>A melhora mais clara é em tarefas agênticas de longo horizonte — exatamente o que as mudanças de treino miraram:</p>
+    <table>
+      <tr><th>Benchmark</th><th>O que mede</th><th>Grok 4.6</th><th>Grok 4.7</th></tr>
+      <tr><td>Terminal-Bench 4.0</td><td>Tarefas de terminal/agênticas de várias horas</td><td>20,3%</td><td>38,0%</td></tr>
+      <tr><td>CursorBench 4.0</td><td>Tarefas de código do mundo real</td><td>40,4%</td><td>46,3%</td></tr>
+      <tr><td>AA Briefcase v1.1</td><td>Trabalho geral de escritório/conhecimento</td><td>1.546</td><td>1.657</td></tr>
+    </table>
+    <p>Quase dobrar uma nota em tarefas agênticas de várias horas é um salto real e relevante — essa é a métrica mais alinhada com como agentes de código são usados no dia a dia hoje, não Q&amp;A de tiro único.</p>
+    <p>Mas o quadro competitivo é menos lisonjeiro quando você coloca o Grok 4.7 ao lado dos líderes de fronteira atuais no mesmo teste CursorBench 4.0:</p>
+    <table>
+      <tr><th>Modelo</th><th>CursorBench 4.0</th></tr>
+      <tr><td>Claude Fable 5.1 (Anthropic)</td><td>51,8%</td></tr>
+      <tr><td>Grok 4.7 (xAI)</td><td>46,3%</td></tr>
+      <tr><td>GPT-5.6 Sol Max (OpenAI)</td><td>41,7%</td></tr>
+    </table>
+    <div class="callout">
+      <strong>A leitura honesta:</strong> o Grok 4.7 ultrapassa o modelo de nível intermediário da OpenAI nesse teste, mas ainda fica visivelmente atrás do topo de linha da Anthropic, o Claude Fable 5.1. A cobertura do lançamento é consistente nesse ponto — a xAI fechou uma distância real em tarefas de longo horizonte sem fechar a distância pra fronteira de fato.
+    </div>
+
+    <h2 id="preco">4. O único número que não mudou: o preço</h2>
+    <p>Aqui está a parte que torna esse lançamento estrategicamente interessante, e não só mais um upgrade incremental: o Grok 4.7 chegou custando <strong>US$ 2 por milhão de tokens de entrada e US$ 6 por milhão de tokens de saída</strong> — idêntico ao preço do Grok 4.6, apesar do modelo-base ter crescido 40%. (Prompts mais longos, a partir de 200 mil tokens, cobram mais: US$ 4/US$ 12, com US$ 1 para entrada em cache.)</p>
+    <table>
+      <tr><th>Modelo</th><th>Entrada (US$/M tokens)</th><th>Saída (US$/M tokens)</th></tr>
+      <tr><td>Grok 4.7 (xAI)</td><td>US$ 2</td><td>US$ 6</td></tr>
+      <tr><td>GPT-4o (OpenAI, tabela de referência)</td><td>US$ 2,50</td><td>US$ 10</td></tr>
+      <tr><td>Gemini 3.7 Flash Standard (Google, promoção até dez/2026)</td><td>US$ 0,75</td><td>US$ 3,75</td></tr>
+    </table>
+    <p>O preço da xAI fica mais perto das tarifas agressivas que vêm dos laboratórios chineses de peso aberto do que dos padrões dos laboratórios de fronteira ocidentais — tornando o Grok a opção de fronteira ocidental mais barata, mesmo ficando atrás no benchmark que mais importa pra trabalho de código.</p>
+
+    <h2 id="padrao">5. O padrão que isso confirma</h2>
+    <p>Esse lançamento se encaixa em algo que vale acompanhar em toda a indústria agora, não só numa empresa: os fabricantes de modelo estão cada vez mais competindo em <em>dois eixos separados</em> que não andam juntos — capacidade bruta na fronteira, e preço/velocidade de iteração. O Grok 4.7 é um exemplo limpo do segundo eixo vencendo um ciclo de lançamento: a xAI entregou um salto grande e real em desempenho agêntico e manteve o preço congelado, em vez de gastar essa melhora tentando alcançar o Claude Fable 5.1 de fato.</p>
+    <p>É a mesma dinâmica por trás da pressão de preço mais ampla de 2026, vinda de modelos chineses de peso aberto forçando descontos em todo o setor — modelos baratos e de iteração rápida competem em volume e acessibilidade, enquanto um grupo menor de laboratórios de fronteira compete em teto bruto de desempenho, e cada vez mais essas são corridas diferentes.</p>
+
+    <h2 id="pratico">6. O que isso significa se você está escolhendo um modelo</h2>
+    <div class="callout">
+      <strong>Tarefas de código de alto volume e sensíveis a orçamento:</strong> a relação preço/desempenho agêntico do Grok 4.7 é difícil de bater agora entre os laboratórios de fronteira ocidentais — especialmente em trabalho de terminal/agêntico de longo horizonte, onde ele quase dobrou o próprio antecessor.
+    </div>
+    <div class="callout">
+      <strong>Tarefas onde o teto importa mais que a conta:</strong> a diferença de benchmark pro Claude Fable 5.1 (51,8% vs. 46,3% no CursorBench 4.0) é real o suficiente pra que, nos problemas de código mais difíceis, o modelo de fronteira topo de linha ainda valha o preço premium.
+    </div>
+    <div class="callout">
+      <strong>De qualquer forma, não compare só por preço ou só por benchmark.</strong> Um modelo 40% mais barato que falha na tarefa acaba custando mais no seu tempo do que um mais caro e confiável — e um modelo tecnicamente mais forte, mas exagerado pra uma tarefa simples, é dinheiro jogado fora no sentido contrário.
+    </div>
+
+    <h2 id="conclusao-pt">7. A conclusão</h2>
+    <p>O Grok 4.7 não é uma história sobre a xAI alcançando a Anthropic ou a OpenAI — os números não sustentam isso. É uma história sobre a velocidade com que a camada "bom o suficiente, e barato" do mercado está se movendo, independente do teto de fronteira. Acompanhar os dois números — não só aquele que o release da empresa destaca — é a única forma de entender de fato o que um lançamento significa pra você.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.marktechpost.com/2026/09/21/spacexai-releases-grok-4-7/" target="_blank" rel="noopener">MarkTechPost — "xAI Releases Grok 4.7: A Larger Base Model at the Same $2/$6 Price as Grok 4.6" (21/09/2026)</a></li>
+      <li><a href="https://the-decoder.com/xai-launches-grok-4-7-at-bargain-prices-but-benchmarks-reveal-a-wide-gap-to-claude-and-gpt-6/" target="_blank" rel="noopener">The Decoder — "xAI launches Grok 4.7 at bargain prices, but benchmarks reveal a wide gap to Claude and GPT-6"</a></li>
+      <li><a href="https://www.datacamp.com/blog/grok-4-7" target="_blank" rel="noopener">DataCamp — "Grok 4.7: Features, Benchmarks, and Pricing"</a></li>
+      <li><a href="https://www.androidheadlines.com/2026/09/grok-4-7-ai-launch-coding-upgrades-pricing.html" target="_blank" rel="noopener">Android Headlines — "xAI Releases Grok 4.7 AI Model"</a></li>
+      <li><a href="https://intuitionlabs.ai/articles/ai-api-pricing-comparison-grok-gemini-openai-claude" target="_blank" rel="noopener">IntuitionLabs — "AI API Pricing Comparison (2026): Grok vs Gemini vs GPT-4o vs Claude"</a></li>
+    </ul>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Grok 4.7: cheaper, not better</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Grok 4.7: cheaper, not better';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Grok 4.7: mais barato, não melhor';
+    }
+  }
+</script>
+
+</body>
+</html>

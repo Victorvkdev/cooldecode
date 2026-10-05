@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — Deep dive: DBMS (Database Management Systems)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 16px 0 20px; }
+  pre code { background: none; border: none; padding: 0; font-size: 13px; line-height: 1.6; color: var(--text); }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">Deep dive · Databases</span>
+      <h1>DBMS: everything between your app and the disk</h1>
+      <p class="subtitle">A Database Management System is the software that stores, protects and serves your data. This is the full map: what it does, how it works inside, the families of databases, the main products, and how to choose.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What a DBMS is (and what it is not)</a></li>
+        <li><a href="#why">Why not just use files?</a></li>
+        <li><a href="#inside">What's inside: the architecture</a></li>
+        <li><a href="#acid">Transactions and ACID</a></li>
+        <li><a href="#concurrency">Concurrency, isolation and locking</a></li>
+        <li><a href="#indexes">Indexes and the query optimizer</a></li>
+        <li><a href="#storage">Storage engines: B-tree vs LSM-tree</a></li>
+        <li><a href="#families">The families of DBMS</a></li>
+        <li><a href="#products">The main products compared</a></li>
+        <li><a href="#scale">Scaling: replication, sharding, CAP</a></li>
+        <li><a href="#ops">Operations: backup, security, migrations</a></li>
+        <li><a href="#choose">How to choose</a></li>
+        <li><a href="#mistakes">Common mistakes</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What a DBMS is (and what it is not)</h2>
+    <p>A <strong>database</strong> is an organized collection of data. A <strong>DBMS</strong> (Database Management System, SGBD in Portuguese) is the program that manages it: it writes and reads data on disk, enforces rules, handles many users at once, recovers from crashes and answers queries. PostgreSQL is a DBMS; the data inside one PostgreSQL instance is the database.</p>
+    <p>Your application never touches data files directly. It talks to the DBMS through a language (usually SQL) over a connection, and the DBMS decides how to execute the request.</p>
+
+    <h2 id="why">2. Why not just use files?</h2>
+    <p>A JSON or CSV file works until it doesn't. A DBMS solves problems you would otherwise rebuild badly:</p>
+    <ul>
+      <li><strong>Concurrency:</strong> two requests editing the same record without corrupting it.</li>
+      <li><strong>Durability:</strong> a power cut mid-write must not leave half-written data.</li>
+      <li><strong>Querying:</strong> finding one row among 50 million without reading the whole file.</li>
+      <li><strong>Integrity:</strong> constraints (unique email, valid foreign key) enforced in one place, not in every code path.</li>
+      <li><strong>Access control:</strong> who can read or change what.</li>
+      <li><strong>Abstraction:</strong> you say <em>what</em> you want; the DBMS figures out <em>how</em>.</li>
+    </ul>
+
+    <h2 id="inside">3. What's inside: the architecture</h2>
+    <p>A typical relational DBMS processes a query through layers:</p>
+    <ol>
+      <li><strong>Connection layer:</strong> authentication, sessions, connection pooling.</li>
+      <li><strong>Parser:</strong> checks the SQL syntax and builds a tree.</li>
+      <li><strong>Planner / optimizer:</strong> picks the cheapest way to run it (which index, which join order), using statistics about the data.</li>
+      <li><strong>Executor:</strong> runs the chosen plan.</li>
+      <li><strong>Buffer cache:</strong> keeps hot pages in memory so most reads never touch the disk.</li>
+      <li><strong>Transaction and lock manager:</strong> keeps concurrent work consistent.</li>
+      <li><strong>Write-ahead log (WAL):</strong> every change is appended to a log <em>before</em> the data pages change, so a crash can be replayed or undone.</li>
+      <li><strong>Storage engine:</strong> lays data out on disk in pages.</li>
+    </ol>
+    <div class="callout">
+      <strong>The WAL idea is the heart of durability.</strong> Appending to a log is fast and sequential. Data pages can be written lazily later; after a crash the DBMS replays the log to rebuild a consistent state.
+    </div>
+
+    <h2 id="acid">4. Transactions and ACID</h2>
+    <p>A <strong>transaction</strong> groups several operations into one all-or-nothing unit. The classic example is a transfer: subtract from A, add to B. ACID is the set of guarantees:</p>
+    <table>
+      <tr><th>Letter</th><th>Meaning</th><th>In practice</th></tr>
+      <tr><td><strong>A</strong>tomicity</td><td>All steps happen or none do</td><td>A failure halfway rolls everything back</td></tr>
+      <tr><td><strong>C</strong>onsistency</td><td>Data moves from one valid state to another</td><td>Constraints are never left violated</td></tr>
+      <tr><td><strong>I</strong>solation</td><td>Concurrent transactions don't see each other's half-done work</td><td>Controlled by isolation levels</td></tr>
+      <tr><td><strong>D</strong>urability</td><td>Once committed, it survives a crash</td><td>Thanks to the WAL and fsync</td></tr>
+    </table>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;   -- or ROLLBACK; to undo both
+</code></pre>
+
+    <h2 id="concurrency">5. Concurrency, isolation and locking</h2>
+    <p>Many users read and write at once. The DBMS has two main strategies:</p>
+    <ul>
+      <li><strong>Locking:</strong> a transaction locks what it touches; others wait. Simple, but can block and cause deadlocks (two transactions waiting on each other; the DBMS detects and aborts one).</li>
+      <li><strong>MVCC (multi-version concurrency control):</strong> each transaction sees a snapshot; writers create new row versions instead of overwriting. Readers don't block writers. PostgreSQL, MySQL's InnoDB and Oracle use it.</li>
+    </ul>
+    <p>The SQL standard defines <strong>isolation levels</strong>, trading safety for speed: Read Uncommitted, Read Committed, Repeatable Read, Serializable. Each level prevents more anomalies (dirty reads, non-repeatable reads, phantom reads) at a performance cost. Most DBMSs default to Read Committed (PostgreSQL) or Repeatable Read (MySQL InnoDB).</p>
+
+    <h2 id="indexes">6. Indexes and the query optimizer</h2>
+    <p>Without an index, finding a row means scanning the whole table (a <em>sequential scan</em>). An index is a separate sorted structure that lets the DBMS jump straight to matching rows, like a book's index.</p>
+    <ul>
+      <li><strong>B-tree:</strong> the default; great for equality and ranges (<code>=</code>, <code>&lt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code>).</li>
+      <li><strong>Hash:</strong> equality only.</li>
+      <li><strong>GIN / inverted:</strong> full-text search, JSON, arrays.</li>
+      <li><strong>GiST / R-tree:</strong> geometry and geospatial data.</li>
+      <li><strong>Vector (HNSW, IVFFlat):</strong> similarity search for embeddings.</li>
+    </ul>
+    <p>Indexes cost: every write must also update them, and they take disk space. Index what you filter, join and sort on, not everything.</p>
+<pre><code>CREATE INDEX idx_orders_customer ON orders (customer_id);
+EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
+</code></pre>
+    <p><code>EXPLAIN</code> shows the plan the optimizer chose. It's the single most useful performance tool you have.</p>
+
+    <h2 id="storage">7. Storage engines: B-tree vs LSM-tree</h2>
+    <table>
+      <tr><th></th><th>B-tree engines</th><th>LSM-tree engines</th></tr>
+      <tr><td>How writes work</td><td>Update pages in place</td><td>Append to memory, flush sorted files, merge in the background (compaction)</td></tr>
+      <tr><td>Strength</td><td>Fast, predictable reads</td><td>Very high write throughput</td></tr>
+      <tr><td>Cost</td><td>Random I/O on writes</td><td>Read and write amplification from compaction</td></tr>
+      <tr><td>Examples</td><td>PostgreSQL, MySQL InnoDB, SQLite</td><td>RocksDB, Cassandra, ScyllaDB, LevelDB</td></tr>
+    </table>
+    <p>Also: <strong>row-oriented</strong> storage keeps whole rows together (good for transactions, OLTP); <strong>column-oriented</strong> storage keeps each column together (good for analytics scans, OLAP).</p>
+
+    <h2 id="families">8. The families of DBMS</h2>
+    <h3>Relational (RDBMS)</h3>
+    <p>Tables, rows, columns, SQL, joins, strict schemas. Best default for most applications. PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle.</p>
+    <h3>Document</h3>
+    <p>Store JSON-like documents; flexible schema; related data nested together. MongoDB, Couchbase, Firestore. Good when records are self-contained and shape varies; weaker at many-to-many relations.</p>
+    <h3>Key-value</h3>
+    <p>A giant dictionary: get/set by key. Extremely fast. Redis, Valkey, DynamoDB, Memcached. Used for caches, sessions, queues, counters.</p>
+    <h3>Wide-column</h3>
+    <p>Rows grouped by partition key with flexible columns, built for huge write volume across many nodes. Cassandra, ScyllaDB, HBase, Bigtable.</p>
+    <h3>Graph</h3>
+    <p>Nodes and edges as first-class citizens; fast multi-hop relationship queries (recommendations, fraud, social graphs). Neo4j, Amazon Neptune.</p>
+    <h3>Time-series</h3>
+    <p>Optimized for timestamped data streams (metrics, IoT). TimescaleDB, InfluxDB, Prometheus' storage.</p>
+    <h3>Search engines</h3>
+    <p>Inverted indexes for full-text relevance. Elasticsearch, OpenSearch, Meilisearch, Typesense. Usually a secondary store fed from the main database.</p>
+    <h3>Vector</h3>
+    <p>Store embeddings and find nearest neighbors, the backbone of RAG for LLM apps. pgvector (inside PostgreSQL), Pinecone, Qdrant, Weaviate, Milvus.</p>
+    <h3>Analytical (OLAP) warehouses</h3>
+    <p>Column-oriented systems for big aggregations over historical data. BigQuery, Snowflake, ClickHouse, DuckDB, Redshift.</p>
+    <h3>NewSQL / distributed SQL</h3>
+    <p>SQL and ACID, but horizontally scalable across nodes. CockroachDB, YugabyteDB, Google Spanner, TiDB.</p>
+
+    <h2 id="products">9. The main products compared</h2>
+    <table>
+      <tr><th>DBMS</th><th>Type</th><th>Best at</th><th>Watch out for</th></tr>
+      <tr><td><strong>PostgreSQL</strong></td><td>Relational</td><td>General purpose, rich SQL, JSONB, extensions (pgvector, PostGIS)</td><td>Needs tuning and vacuuming at large scale</td></tr>
+      <tr><td><strong>MySQL / MariaDB</strong></td><td>Relational</td><td>Web apps, huge ecosystem, simple replication</td><td>Historically fewer advanced SQL features</td></tr>
+      <tr><td><strong>SQLite</strong></td><td>Embedded relational</td><td>Local apps, tests, small sites; zero config, single file</td><td>One writer at a time; not for heavy concurrent writes</td></tr>
+      <tr><td><strong>SQL Server</strong></td><td>Relational</td><td>Microsoft shops, BI tooling</td><td>Licensing cost</td></tr>
+      <tr><td><strong>Oracle</strong></td><td>Relational</td><td>Large enterprises, mature features</td><td>Cost and complexity</td></tr>
+      <tr><td><strong>MongoDB</strong></td><td>Document</td><td>Flexible schemas, nested data</td><td>Joins and cross-document consistency need care</td></tr>
+      <tr><td><strong>Redis / Valkey</strong></td><td>Key-value (in-memory)</td><td>Caching, sessions, rate limits, queues</td><td>Memory-bound; not a primary store by default</td></tr>
+      <tr><td><strong>DynamoDB</strong></td><td>Key-value / wide</td><td>Serverless scale, predictable latency</td><td>You must design around access patterns up front</td></tr>
+      <tr><td><strong>Cassandra</strong></td><td>Wide-column</td><td>Massive writes, multi-region</td><td>Limited queries; operational complexity</td></tr>
+      <tr><td><strong>ClickHouse / DuckDB</strong></td><td>Analytical columnar</td><td>Fast aggregations over huge datasets</td><td>Not for row-by-row transactional updates</td></tr>
+    </table>
+
+    <h2 id="scale">10. Scaling: replication, sharding, CAP</h2>
+    <ul>
+      <li><strong>Vertical scaling:</strong> a bigger machine. Simplest; has a ceiling.</li>
+      <li><strong>Read replicas:</strong> copies that serve reads; the primary takes writes. Replication can be synchronous (safe, slower) or asynchronous (fast, replicas may lag).</li>
+      <li><strong>Sharding (partitioning):</strong> split data across nodes by a key. Scales writes, but cross-shard queries and transactions get hard.</li>
+      <li><strong>Caching layer:</strong> put Redis in front for hot reads.</li>
+    </ul>
+    <p>The <strong>CAP theorem</strong>: when the network partitions, a distributed system must choose between <em>consistency</em> (every read sees the latest write) and <em>availability</em> (every request gets an answer). Many NoSQL systems choose eventual consistency; distributed SQL systems usually choose consistency. The related <strong>BASE</strong> idea (basically available, soft state, eventually consistent) describes the looser model.</p>
+
+    <h2 id="ops">11. Operations: backup, security, migrations</h2>
+    <ul>
+      <li><strong>Backups:</strong> logical dumps (<code>pg_dump</code>) for portability; physical/continuous archiving + point-in-time recovery for production. A backup you never restored is not a backup.</li>
+      <li><strong>Security:</strong> least-privilege roles, TLS in transit, encryption at rest, never expose the database port publicly, always use parameterized queries to prevent SQL injection.</li>
+      <li><strong>Migrations:</strong> schema changes as versioned files (Prisma, Drizzle, Flyway, Alembic). Make them backward compatible so deploys don't break running code.</li>
+      <li><strong>Connection pooling:</strong> databases handle a limited number of connections; use PgBouncer or the provider's pooler, especially with serverless functions.</li>
+      <li><strong>Monitoring:</strong> slow query log, <code>EXPLAIN</code>, cache hit ratio, replication lag, disk space.</li>
+      <li><strong>Managed vs self-hosted:</strong> managed services (Supabase, Neon, RDS, PlanetScale-style offerings) trade money for not running backups, failover and upgrades yourself.</li>
+    </ul>
+
+    <h2 id="choose">12. How to choose</h2>
+    <div class="callout">
+      <strong>Default answer:</strong> start with PostgreSQL. It handles relational data, JSON, full-text search and vectors, so it covers most apps for a long time. Add specialized stores only when a measured need appears.
+    </div>
+    <table>
+      <tr><th>If you need…</th><th>Reach for…</th></tr>
+      <tr><td>Business data with relationships and transactions</td><td>PostgreSQL or MySQL</td></tr>
+      <tr><td>A tiny app, prototype, local or edge storage</td><td>SQLite</td></tr>
+      <tr><td>Caching, sessions, rate limiting</td><td>Redis / Valkey</td></tr>
+      <tr><td>Flexible, document-shaped data</td><td>MongoDB (or PostgreSQL JSONB)</td></tr>
+      <tr><td>Analytics over millions or billions of rows</td><td>ClickHouse, BigQuery, DuckDB</td></tr>
+      <tr><td>Semantic search for an AI app</td><td>pgvector first; a dedicated vector DB at large scale</td></tr>
+      <tr><td>Full-text search with ranking</td><td>PostgreSQL FTS first; Meilisearch/Elasticsearch if it grows</td></tr>
+      <tr><td>Global scale with SQL guarantees</td><td>CockroachDB, Spanner, YugabyteDB</td></tr>
+    </table>
+    <p>Questions to ask: What are the access patterns? How strict must consistency be? How big will it get? Who operates it? What does the team already know? The last one matters more than most benchmarks.</p>
+
+    <h2 id="mistakes">13. Common mistakes</h2>
+    <ul>
+      <li>Choosing NoSQL "to scale" before having a scaling problem, then reinventing joins in application code.</li>
+      <li>No indexes on foreign keys and filter columns, then blaming the database.</li>
+      <li><code>SELECT *</code> and N+1 queries (one query per item in a loop).</li>
+      <li>Skipping transactions for multi-step writes.</li>
+      <li>Using the database as a queue or cache when a purpose-built tool is simpler.</li>
+      <li>Never testing restores; running with the default superuser; exposing the database to the internet.</li>
+      <li>Treating SQLite as a toy or Postgres as magic. Know each one's limits.</li>
+    </ul>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">Imersão · Bancos de dados</span>
+      <h1>SGBDs: tudo o que fica entre seu app e o disco</h1>
+      <p class="subtitle">Um Sistema de Gerenciamento de Banco de Dados é o software que armazena, protege e serve seus dados. Este é o mapa completo: o que ele faz, como funciona por dentro, as famílias de bancos, os principais produtos e como escolher.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que">O que é um SGBD (e o que não é)</a></li>
+        <li><a href="#por-que">Por que não usar só arquivos?</a></li>
+        <li><a href="#dentro">O que tem por dentro: a arquitetura</a></li>
+        <li><a href="#acid-pt">Transações e ACID</a></li>
+        <li><a href="#concorrencia">Concorrência, isolamento e locks</a></li>
+        <li><a href="#indices">Índices e o otimizador de queries</a></li>
+        <li><a href="#armazenamento">Engines de armazenamento: B-tree vs LSM-tree</a></li>
+        <li><a href="#familias">As famílias de SGBD</a></li>
+        <li><a href="#produtos">Os principais produtos comparados</a></li>
+        <li><a href="#escala">Escala: replicação, sharding, CAP</a></li>
+        <li><a href="#operacao">Operação: backup, segurança, migrations</a></li>
+        <li><a href="#escolher">Como escolher</a></li>
+        <li><a href="#erros">Erros comuns</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que">1. O que é um SGBD (e o que não é)</h2>
+    <p>Um <strong>banco de dados</strong> é uma coleção organizada de dados. Um <strong>SGBD</strong> (Sistema de Gerenciamento de Banco de Dados, DBMS em inglês) é o programa que o gerencia: grava e lê dados no disco, aplica regras, atende muitos usuários ao mesmo tempo, se recupera de falhas e responde queries. O PostgreSQL é um SGBD; os dados dentro de uma instância dele são o banco de dados.</p>
+    <p>Sua aplicação nunca mexe nos arquivos de dados diretamente. Ela conversa com o SGBD por uma linguagem (normalmente SQL) através de uma conexão, e o SGBD decide como executar o pedido.</p>
+
+    <h2 id="por-que">2. Por que não usar só arquivos?</h2>
+    <p>Um arquivo JSON ou CSV funciona até não funcionar mais. Um SGBD resolve problemas que você acabaria reconstruindo mal:</p>
+    <ul>
+      <li><strong>Concorrência:</strong> duas requisições editando o mesmo registro sem corromper.</li>
+      <li><strong>Durabilidade:</strong> uma queda de energia no meio de uma escrita não pode deixar dados pela metade.</li>
+      <li><strong>Consulta:</strong> achar uma linha entre 50 milhões sem ler o arquivo inteiro.</li>
+      <li><strong>Integridade:</strong> restrições (e-mail único, chave estrangeira válida) aplicadas num só lugar, não em cada trecho de código.</li>
+      <li><strong>Controle de acesso:</strong> quem pode ler ou alterar o quê.</li>
+      <li><strong>Abstração:</strong> você diz <em>o que</em> quer; o SGBD descobre <em>como</em>.</li>
+    </ul>
+
+    <h2 id="dentro">3. O que tem por dentro: a arquitetura</h2>
+    <p>Um SGBD relacional típico processa uma query em camadas:</p>
+    <ol>
+      <li><strong>Camada de conexão:</strong> autenticação, sessões, pool de conexões.</li>
+      <li><strong>Parser:</strong> valida a sintaxe SQL e monta uma árvore.</li>
+      <li><strong>Planner / otimizador:</strong> escolhe o jeito mais barato de executar (qual índice, qual ordem de join), usando estatísticas dos dados.</li>
+      <li><strong>Executor:</strong> roda o plano escolhido.</li>
+      <li><strong>Buffer cache:</strong> mantém páginas quentes em memória para que a maioria das leituras nem toque o disco.</li>
+      <li><strong>Gerenciador de transações e locks:</strong> mantém o trabalho concorrente consistente.</li>
+      <li><strong>Write-ahead log (WAL):</strong> toda mudança é anexada a um log <em>antes</em> de alterar as páginas de dados, então uma queda pode ser refeita ou desfeita.</li>
+      <li><strong>Storage engine:</strong> organiza os dados em páginas no disco.</li>
+    </ol>
+    <div class="callout">
+      <strong>A ideia do WAL é o coração da durabilidade.</strong> Anexar a um log é rápido e sequencial. As páginas de dados podem ser gravadas depois, sem pressa; após uma queda o SGBD reaplica o log para reconstruir um estado consistente.
+    </div>
+
+    <h2 id="acid-pt">4. Transações e ACID</h2>
+    <p>Uma <strong>transação</strong> agrupa várias operações numa unidade tudo-ou-nada. O exemplo clássico é uma transferência: tira de A, soma em B. ACID é o conjunto de garantias:</p>
+    <table>
+      <tr><th>Letra</th><th>Significado</th><th>Na prática</th></tr>
+      <tr><td><strong>A</strong>tomicidade</td><td>Todos os passos acontecem ou nenhum</td><td>Uma falha no meio desfaz tudo</td></tr>
+      <tr><td><strong>C</strong>onsistência</td><td>Os dados passam de um estado válido a outro</td><td>Restrições nunca ficam violadas</td></tr>
+      <tr><td><strong>I</strong>solamento</td><td>Transações concorrentes não enxergam o trabalho incompleto umas das outras</td><td>Controlado por níveis de isolamento</td></tr>
+      <tr><td><strong>D</strong>urabilidade</td><td>Depois do commit, sobrevive a uma queda</td><td>Graças ao WAL e ao fsync</td></tr>
+    </table>
+<pre><code>BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;   -- ou ROLLBACK; para desfazer as duas
+</code></pre>
+
+    <h2 id="concorrencia">5. Concorrência, isolamento e locks</h2>
+    <p>Muitos usuários leem e escrevem ao mesmo tempo. O SGBD tem duas estratégias principais:</p>
+    <ul>
+      <li><strong>Locking:</strong> a transação trava o que toca; as outras esperam. Simples, mas pode bloquear e causar deadlocks (duas transações esperando uma pela outra; o SGBD detecta e aborta uma).</li>
+      <li><strong>MVCC (controle de concorrência multiversão):</strong> cada transação enxerga um snapshot; escritas criam novas versões da linha em vez de sobrescrever. Leitores não bloqueiam escritores. PostgreSQL, InnoDB do MySQL e Oracle usam.</li>
+    </ul>
+    <p>O padrão SQL define <strong>níveis de isolamento</strong>, trocando segurança por velocidade: Read Uncommitted, Read Committed, Repeatable Read, Serializable. Cada nível previne mais anomalias (dirty read, non-repeatable read, phantom read) com custo de desempenho. A maioria dos SGBDs usa Read Committed (PostgreSQL) ou Repeatable Read (InnoDB do MySQL) como padrão.</p>
+
+    <h2 id="indices">6. Índices e o otimizador de queries</h2>
+    <p>Sem índice, achar uma linha significa varrer a tabela inteira (<em>sequential scan</em>). Um índice é uma estrutura ordenada separada que deixa o SGBD ir direto às linhas certas, como o índice de um livro.</p>
+    <ul>
+      <li><strong>B-tree:</strong> o padrão; ótimo para igualdade e intervalos (<code>=</code>, <code>&lt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code>).</li>
+      <li><strong>Hash:</strong> só igualdade.</li>
+      <li><strong>GIN / invertido:</strong> busca textual, JSON, arrays.</li>
+      <li><strong>GiST / R-tree:</strong> geometria e dados geoespaciais.</li>
+      <li><strong>Vetorial (HNSW, IVFFlat):</strong> busca por similaridade de embeddings.</li>
+    </ul>
+    <p>Índices têm custo: toda escrita também precisa atualizá-los, e ocupam disco. Indexe o que você filtra, junta e ordena, não tudo.</p>
+<pre><code>CREATE INDEX idx_orders_customer ON orders (customer_id);
+EXPLAIN ANALYZE SELECT * FROM orders WHERE customer_id = 42;
+</code></pre>
+    <p>O <code>EXPLAIN</code> mostra o plano escolhido pelo otimizador. É a ferramenta de performance mais útil que você tem.</p>
+
+    <h2 id="armazenamento">7. Engines de armazenamento: B-tree vs LSM-tree</h2>
+    <table>
+      <tr><th></th><th>Engines B-tree</th><th>Engines LSM-tree</th></tr>
+      <tr><td>Como escrevem</td><td>Atualizam páginas no lugar</td><td>Anexam em memória, descarregam arquivos ordenados, juntam em segundo plano (compaction)</td></tr>
+      <tr><td>Ponto forte</td><td>Leituras rápidas e previsíveis</td><td>Throughput de escrita muito alto</td></tr>
+      <tr><td>Custo</td><td>I/O aleatório nas escritas</td><td>Amplificação de leitura e escrita pela compaction</td></tr>
+      <tr><td>Exemplos</td><td>PostgreSQL, MySQL InnoDB, SQLite</td><td>RocksDB, Cassandra, ScyllaDB, LevelDB</td></tr>
+    </table>
+    <p>Também: o armazenamento <strong>orientado a linhas</strong> guarda a linha inteira junta (bom para transações, OLTP); o <strong>orientado a colunas</strong> guarda cada coluna junta (bom para varreduras analíticas, OLAP).</p>
+
+    <h2 id="familias">8. As famílias de SGBD</h2>
+    <h3>Relacional (SGBDR)</h3>
+    <p>Tabelas, linhas, colunas, SQL, joins, schema rígido. Melhor padrão para a maioria das aplicações. PostgreSQL, MySQL/MariaDB, SQLite, SQL Server, Oracle.</p>
+    <h3>Documento</h3>
+    <p>Guarda documentos tipo JSON; schema flexível; dados relacionados aninhados. MongoDB, Couchbase, Firestore. Bom quando os registros são autocontidos e o formato varia; mais fraco em relações muitos-para-muitos.</p>
+    <h3>Chave-valor</h3>
+    <p>Um dicionário gigante: get/set por chave. Extremamente rápido. Redis, Valkey, DynamoDB, Memcached. Usado em cache, sessões, filas, contadores.</p>
+    <h3>Colunas largas</h3>
+    <p>Linhas agrupadas por chave de partição com colunas flexíveis, feitas para volume enorme de escrita em muitos nós. Cassandra, ScyllaDB, HBase, Bigtable.</p>
+    <h3>Grafo</h3>
+    <p>Nós e arestas como cidadãos de primeira classe; consultas rápidas de relacionamentos em vários saltos (recomendação, fraude, redes sociais). Neo4j, Amazon Neptune.</p>
+    <h3>Séries temporais</h3>
+    <p>Otimizados para fluxos de dados com timestamp (métricas, IoT). TimescaleDB, InfluxDB, armazenamento do Prometheus.</p>
+    <h3>Motores de busca</h3>
+    <p>Índices invertidos para relevância em texto. Elasticsearch, OpenSearch, Meilisearch, Typesense. Normalmente um armazenamento secundário alimentado pelo banco principal.</p>
+    <h3>Vetoriais</h3>
+    <p>Guardam embeddings e acham os vizinhos mais próximos, base do RAG em apps com LLM. pgvector (dentro do PostgreSQL), Pinecone, Qdrant, Weaviate, Milvus.</p>
+    <h3>Data warehouses analíticos (OLAP)</h3>
+    <p>Sistemas colunares para grandes agregações sobre dados históricos. BigQuery, Snowflake, ClickHouse, DuckDB, Redshift.</p>
+    <h3>NewSQL / SQL distribuído</h3>
+    <p>SQL e ACID, mas escalando horizontalmente entre nós. CockroachDB, YugabyteDB, Google Spanner, TiDB.</p>
+
+    <h2 id="produtos">9. Os principais produtos comparados</h2>
+    <table>
+      <tr><th>SGBD</th><th>Tipo</th><th>Melhor em</th><th>Atenção</th></tr>
+      <tr><td><strong>PostgreSQL</strong></td><td>Relacional</td><td>Uso geral, SQL rico, JSONB, extensões (pgvector, PostGIS)</td><td>Pede ajuste e vacuum em grande escala</td></tr>
+      <tr><td><strong>MySQL / MariaDB</strong></td><td>Relacional</td><td>Apps web, ecossistema enorme, replicação simples</td><td>Historicamente menos recursos SQL avançados</td></tr>
+      <tr><td><strong>SQLite</strong></td><td>Relacional embarcado</td><td>Apps locais, testes, sites pequenos; zero configuração, um arquivo</td><td>Um escritor por vez; não serve para muita escrita concorrente</td></tr>
+      <tr><td><strong>SQL Server</strong></td><td>Relacional</td><td>Ambientes Microsoft, ferramentas de BI</td><td>Custo de licença</td></tr>
+      <tr><td><strong>Oracle</strong></td><td>Relacional</td><td>Grandes empresas, recursos maduros</td><td>Custo e complexidade</td></tr>
+      <tr><td><strong>MongoDB</strong></td><td>Documento</td><td>Schemas flexíveis, dados aninhados</td><td>Joins e consistência entre documentos exigem cuidado</td></tr>
+      <tr><td><strong>Redis / Valkey</strong></td><td>Chave-valor (em memória)</td><td>Cache, sessões, rate limit, filas</td><td>Limitado pela memória; não é banco principal por padrão</td></tr>
+      <tr><td><strong>DynamoDB</strong></td><td>Chave-valor / colunas largas</td><td>Escala serverless, latência previsível</td><td>É preciso modelar pelos padrões de acesso desde o início</td></tr>
+      <tr><td><strong>Cassandra</strong></td><td>Colunas largas</td><td>Escrita massiva, multi-região</td><td>Consultas limitadas; complexidade operacional</td></tr>
+      <tr><td><strong>ClickHouse / DuckDB</strong></td><td>Colunar analítico</td><td>Agregações rápidas sobre datasets enormes</td><td>Não serve para updates transacionais linha a linha</td></tr>
+    </table>
+
+    <h2 id="escala">10. Escala: replicação, sharding, CAP</h2>
+    <ul>
+      <li><strong>Escala vertical:</strong> uma máquina maior. A mais simples; tem teto.</li>
+      <li><strong>Read replicas:</strong> cópias que atendem leituras; o primário recebe as escritas. A replicação pode ser síncrona (segura, mais lenta) ou assíncrona (rápida, réplicas podem atrasar).</li>
+      <li><strong>Sharding (particionamento):</strong> divide os dados entre nós por uma chave. Escala escritas, mas consultas e transações entre shards ficam difíceis.</li>
+      <li><strong>Camada de cache:</strong> Redis na frente para leituras quentes.</li>
+    </ul>
+    <p>O <strong>teorema CAP</strong>: quando a rede particiona, um sistema distribuído precisa escolher entre <em>consistência</em> (toda leitura vê a última escrita) e <em>disponibilidade</em> (toda requisição recebe resposta). Muitos NoSQL escolhem consistência eventual; sistemas SQL distribuídos geralmente escolhem consistência. A ideia relacionada de <strong>BASE</strong> (basically available, soft state, eventually consistent) descreve o modelo mais frouxo.</p>
+
+    <h2 id="operacao">11. Operação: backup, segurança, migrations</h2>
+    <ul>
+      <li><strong>Backups:</strong> dumps lógicos (<code>pg_dump</code>) pela portabilidade; arquivamento contínuo físico + recuperação point-in-time em produção. Um backup que você nunca restaurou não é backup.</li>
+      <li><strong>Segurança:</strong> roles com privilégio mínimo, TLS em trânsito, criptografia em repouso, nunca expor a porta do banco publicamente, sempre usar queries parametrizadas contra SQL injection.</li>
+      <li><strong>Migrations:</strong> mudanças de schema como arquivos versionados (Prisma, Drizzle, Flyway, Alembic). Faça-as retrocompatíveis para que o deploy não quebre o código em execução.</li>
+      <li><strong>Connection pooling:</strong> bancos aguentam um número limitado de conexões; use PgBouncer ou o pooler do provedor, principalmente com funções serverless.</li>
+      <li><strong>Monitoramento:</strong> slow query log, <code>EXPLAIN</code>, cache hit ratio, atraso de replicação, espaço em disco.</li>
+      <li><strong>Gerenciado vs auto-hospedado:</strong> serviços gerenciados (Supabase, Neon, RDS e similares) trocam dinheiro por não ter que cuidar de backup, failover e upgrades.</li>
+    </ul>
+
+    <h2 id="escolher">12. Como escolher</h2>
+    <div class="callout">
+      <strong>Resposta padrão:</strong> comece com PostgreSQL. Ele cobre dados relacionais, JSON, busca textual e vetores, o que atende a maioria dos apps por bastante tempo. Adicione armazenamentos especializados só quando surgir uma necessidade medida.
+    </div>
+    <table>
+      <tr><th>Se você precisa de…</th><th>Use…</th></tr>
+      <tr><td>Dados de negócio com relações e transações</td><td>PostgreSQL ou MySQL</td></tr>
+      <tr><td>App minúsculo, protótipo, armazenamento local ou na borda</td><td>SQLite</td></tr>
+      <tr><td>Cache, sessões, rate limiting</td><td>Redis / Valkey</td></tr>
+      <tr><td>Dados flexíveis em formato de documento</td><td>MongoDB (ou JSONB do PostgreSQL)</td></tr>
+      <tr><td>Analytics sobre milhões ou bilhões de linhas</td><td>ClickHouse, BigQuery, DuckDB</td></tr>
+      <tr><td>Busca semântica para um app de IA</td><td>pgvector primeiro; banco vetorial dedicado em grande escala</td></tr>
+      <tr><td>Busca textual com ranking</td><td>FTS do PostgreSQL primeiro; Meilisearch/Elasticsearch se crescer</td></tr>
+      <tr><td>Escala global com garantias SQL</td><td>CockroachDB, Spanner, YugabyteDB</td></tr>
+    </table>
+    <p>Perguntas a fazer: quais são os padrões de acesso? Quão estrita precisa ser a consistência? Quão grande vai ficar? Quem vai operar? O que o time já conhece? A última pesa mais que a maioria dos benchmarks.</p>
+
+    <h2 id="erros">13. Erros comuns</h2>
+    <ul>
+      <li>Escolher NoSQL "para escalar" antes de ter problema de escala, e reinventar joins no código da aplicação.</li>
+      <li>Sem índice em chaves estrangeiras e colunas de filtro, e depois culpar o banco.</li>
+      <li><code>SELECT *</code> e queries N+1 (uma query por item num loop).</li>
+      <li>Não usar transações em escritas de vários passos.</li>
+      <li>Usar o banco como fila ou cache quando uma ferramenta específica é mais simples.</li>
+      <li>Nunca testar restore; rodar com o superusuário padrão; expor o banco na internet.</li>
+      <li>Tratar o SQLite como brinquedo ou o Postgres como mágica. Conheça os limites de cada um.</li>
+    </ul>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · Deep dive</span>
+  <span class="accent" id="footer-right">DBMS: from disk to query</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var l = document.getElementById('footer-left');
+    var r = document.getElementById('footer-right');
+    if (lang === 'en') { l.textContent = 'Cooldecode · Deep dive'; r.textContent = 'DBMS: from disk to query'; }
+    else { l.textContent = 'Cooldecode · Imersão'; r.textContent = 'SGBDs: do disco à query'; }
+  }
+</script>
+
+</body>
+</html>

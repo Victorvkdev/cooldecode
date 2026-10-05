@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Adaptive thinking and the effort dial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering</span>
+      <h1>Adaptive thinking: stop setting a budget, start setting an effort</h1>
+      <p class="subtitle">Claude Opus 5.5 shipped with "always-on adaptive thinking" as one of its headline changes. That's a good excuse to look at how thinking actually works on current Claude models today, and what changed in how you're supposed to prompt for it.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what-changed">What actually changed</a></li>
+        <li><a href="#adaptive-vs-manual">Adaptive thinking vs the old manual budget</a></li>
+        <li><a href="#effort">The effort parameter: your real dial now</a></li>
+        <li><a href="#steering">Steering thinking with plain language</a></li>
+        <li><a href="#when">When extended thinking is actually worth it</a></li>
+        <li><a href="#practice">Putting it into practice</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-changed">1. What actually changed</h2>
+    <p>Claude Opus 5.5 launched on September 22, 2026 as Anthropic's newest Opus-tier model: roughly the same quality bar as Fable 5.1 on most work, about 40% cheaper to run, a 1M-token context window, and — the detail that matters for this lesson — <strong>adaptive thinking that's always on and can't be turned off</strong>. On this model, reasoning between tool calls always shows up as thinking blocks, and there's no request-level switch to disable it entirely.</p>
+    <p>This isn't a brand-new feature invented for Opus 5.5. Adaptive thinking has been the default reasoning mode since Claude 4.6, replacing the older approach where developers manually set a <code>budget_tokens</code> value to cap how many tokens Claude could spend "thinking" before answering. What Opus 5.5 changes is that the always-on behavior is now mandatory rather than optional, and that manual budgets are fully removed as an option on the newest models — not just discouraged.</p>
+
+    <h2 id="adaptive-vs-manual">2. Adaptive thinking vs the old manual budget</h2>
+    <p>The mental model shift is simple, even if the mechanics took a couple of model generations to land:</p>
+    <table>
+      <tr><th>Old approach</th><th>Current approach</th></tr>
+      <tr><td>You (the developer) decide upfront how many tokens Claude is allowed to spend thinking, via <code>budget_tokens</code>.</td><td>Claude decides, per request, whether reasoning would help and roughly how much of it to do — you only nudge the dial.</td></tr>
+      <tr><td>Static: the same budget applies whether the question is trivial or genuinely hard.</td><td>Dynamic: a one-line factual question gets little or no thinking; a multi-step agentic task gets more.</td></tr>
+      <tr><td>Risk of either wasting tokens on easy requests or starving hard ones.</td><td>Risk shifts to "Claude thinks more than I want" on complex system prompts — which is solvable with steering (section 3).</td></tr>
+    </table>
+    <p>On Claude Sonnet 5 and Claude 4.7+ models, setting <code>budget_tokens</code> manually returns an error rather than being silently ignored — it's not deprecated-but-tolerated, it's removed. If you have older integration code that still sets a manual thinking budget, it needs to be rewritten around the <code>effort</code> parameter described next.</p>
+
+    <h2 id="effort">3. The effort parameter: your real dial now</h2>
+    <p>Instead of a token budget, the practical control surface today is the <strong>effort</strong> parameter, which sets how aggressively Claude leans into reasoning:</p>
+    <ul>
+      <li><strong>Low</strong> — minimizes thinking, skips it outright for simple tasks. Cheapest, fastest, best for classification, extraction, or anything close to a lookup.</li>
+      <li><strong>Medium</strong> (the default on Opus 5.5) — may skip thinking for simple queries but engages it for anything that looks like it needs a few steps of reasoning.</li>
+      <li><strong>High</strong> — thinks deeply almost every time. Good default for agentic loops, non-trivial coding tasks, and multi-step tool use.</li>
+      <li><strong>Max</strong> — always thinks, no constraints. Reserved for the hardest problems where cost and latency are secondary to correctness.</li>
+    </ul>
+    <p>You still get a hard ceiling if you need one: <code>max_tokens</code> caps the total output — thinking tokens plus the visible response — even though it no longer lets you carve out a dedicated thinking-only allowance the way <code>budget_tokens</code> did.</p>
+    <div class="callout">
+      <strong>Practical rule of thumb:</strong> start at the model's default effort level, measure quality on your actual workload, and only move the dial up if you can point to specific failures that more reasoning would fix. Cranking effort to max "just in case" mostly buys you latency and cost, not correctness.
+    </div>
+
+    <h2 id="steering">4. Steering thinking with plain language</h2>
+    <p>Because Claude decides on its own whether to think, you sometimes need to steer that decision directly in the prompt — no API parameter required. Two patterns documented by Anthropic:</p>
+    <ul>
+      <li>Appending <strong>"Please think hard before responding"</strong> to a user message pushes Claude toward reasoning on that specific turn, even at a lower effort setting.</li>
+      <li>Appending <strong>"Answer directly without deliberating"</strong> suppresses thinking for that turn — useful when a large or complex system prompt is making Claude over-think trivial follow-up questions.</li>
+    </ul>
+    <p>This matters in practice because system prompts with a lot of instructions, tools, and context (the kind you'd write for an agent) tend to trigger more thinking than a bare user question would, even when a given turn is simple. Plain-language steering is the fix, not a bigger or smaller <code>effort</code> value applied globally.</p>
+
+    <h2 id="when">5. When extended thinking is actually worth it</h2>
+    <p>Extended thinking has a real cost: it adds latency and consumes tokens even when it doesn't change the final answer. Anthropic's own guidance is narrower than "turn it up for anything that feels important" — it recommends reasoning for genuinely multi-step problems: agentic workflows with several tool calls in sequence, non-trivial coding tasks, math or logic puzzles with multiple dependent steps, and long-horizon agent loops where an early mistake compounds.</p>
+    <p>Conversely, thinking rarely helps with single-step lookups, short factual questions, simple formatting or rewriting tasks, or anything where the answer is essentially a retrieval, not a derivation. Forcing thinking on those doesn't just waste money — it can also make Claude second-guess a correct, simple answer into something more convoluted.</p>
+
+    <h2 id="practice">6. Putting it into practice</h2>
+    <div class="callout">
+      <strong>If you're building a simple assistant</strong> (FAQ bot, classifier, data extractor): leave effort at its default or drop it to low, and don't manually force thinking — the cost/latency tradeoff isn't worth it for single-step work.
+    </div>
+    <div class="callout">
+      <strong>If you're building an agent</strong> (multi-step tool use, coding assistant, research loop): favor high effort as a baseline, and use "answer directly without deliberating" selectively on turns you know are trivial (a confirmation, a simple lookup) so you're not paying the thinking tax on every single step.
+    </div>
+    <div class="callout">
+      <strong>If you're migrating old code</strong> that sets <code>budget_tokens</code> against Sonnet 5 or newer models: replace it with the <code>effort</code> parameter and re-test — the manual budget path isn't just legacy, it now returns a hard error.
+    </div>
+    <p>The broader pattern behind this change fits where prompt engineering has been heading all year: less time spent hand-tuning low-level knobs, more time spent describing what you actually want and letting the model figure out the "how much effort does this deserve" part on its own.</p>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">What's new in Claude Opus 5.5 — Claude Platform Docs</a> (Sept 2026)</li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking" target="_blank" rel="noopener">Adaptive thinking — Claude Platform Docs</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/extended-thinking-tips" target="_blank" rel="noopener">Prompting best practices for extended thinking — Claude Platform Docs</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost" target="_blank" rel="noopener">Steering thinking — Claude Platform Docs</a></li>
+        <li><a href="https://www.requesty.ai/blog/claude-opus-5-5-explained" target="_blank" rel="noopener">Claude Opus 5.5: Pricing, API Access and Changes — Requesty</a> (Sept 22, 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering</span>
+      <h1>Adaptive thinking: pare de definir um orçamento, comece a definir um esforço</h1>
+      <p class="subtitle">O Claude Opus 5.5 chegou com "adaptive thinking sempre ligado" como uma das mudanças de destaque. É um bom gancho pra entender como o raciocínio realmente funciona nos modelos atuais do Claude, e o que mudou em como você deve pedir por ele.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-mudou">O que realmente mudou</a></li>
+        <li><a href="#adaptive-vs-manual-pt">Adaptive thinking vs o antigo orçamento manual</a></li>
+        <li><a href="#esforco-pt">O parâmetro effort: seu controle real hoje</a></li>
+        <li><a href="#direcionando-pt">Direcionando o raciocínio com linguagem simples</a></li>
+        <li><a href="#quando-pt">Quando extended thinking realmente vale a pena</a></li>
+        <li><a href="#pratica-pt">Colocando em prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-mudou">1. O que realmente mudou</h2>
+    <p>O Claude Opus 5.5 foi lançado em 22 de setembro de 2026 como o modelo mais novo da Anthropic no nível Opus: qualidade próxima da do Fable 5.1 na maior parte do trabalho, cerca de 40% mais barato pra rodar, janela de contexto de 1M de tokens e — o detalhe que interessa pra essa lição — <strong>adaptive thinking sempre ligado, sem opção de desligar</strong>. Nesse modelo, o raciocínio entre chamadas de ferramenta sempre aparece como blocos de "thinking", e não existe mais um switch no nível da requisição pra desativar isso por completo.</p>
+    <p>Isso não é um recurso novo inventado pro Opus 5.5. O adaptive thinking já é o modo de raciocínio padrão desde o Claude 4.6, substituindo a abordagem antiga em que desenvolvedores definiam manualmente um valor de <code>budget_tokens</code> pra limitar quantos tokens o Claude podia gastar "pensando" antes de responder. O que o Opus 5.5 muda é que o comportamento sempre-ligado agora é obrigatório, não opcional, e que orçamentos manuais foram totalmente removidos como opção nos modelos mais novos — não apenas desencorajados.</p>
+
+    <h2 id="adaptive-vs-manual-pt">2. Adaptive thinking vs o antigo orçamento manual</h2>
+    <p>A mudança de modelo mental é simples, mesmo que a mecânica tenha levado algumas gerações de modelo pra se consolidar:</p>
+    <table>
+      <tr><th>Abordagem antiga</th><th>Abordagem atual</th></tr>
+      <tr><td>Você (o desenvolvedor) decide de antemão quantos tokens o Claude pode gastar pensando, via <code>budget_tokens</code>.</td><td>O Claude decide, a cada requisição, se raciocinar ajudaria e mais ou menos quanto disso fazer — você só ajusta o direcionamento.</td></tr>
+      <tr><td>Estático: o mesmo orçamento vale tanto pra uma pergunta trivial quanto pra uma tarefa genuinamente difícil.</td><td>Dinâmico: uma pergunta factual de uma linha recebe pouco ou nenhum raciocínio; uma tarefa agêntica de vários passos recebe mais.</td></tr>
+      <tr><td>Risco de desperdiçar tokens em requisições fáceis ou de limitar demais as difíceis.</td><td>O risco muda pra "o Claude pensa mais do que eu queria" em system prompts complexos — o que se resolve com direcionamento por linguagem (seção 3).</td></tr>
+    </table>
+    <p>No Claude Sonnet 5 e nos modelos 4.7+, definir <code>budget_tokens</code> manualmente retorna um erro em vez de ser silenciosamente ignorado — não é algo "descontinuado mas tolerado", é removido de fato. Se você tem código de integração antigo que ainda define um orçamento manual de thinking, ele precisa ser reescrito em torno do parâmetro <code>effort</code> descrito a seguir.</p>
+
+    <h2 id="esforco-pt">3. O parâmetro effort: seu controle real hoje</h2>
+    <p>Em vez de um orçamento de tokens, a superfície de controle prática hoje é o parâmetro <strong>effort</strong>, que define o quão agressivamente o Claude investe em raciocínio:</p>
+    <ul>
+      <li><strong>Low (baixo)</strong> — minimiza o raciocínio, pula ele completamente em tarefas simples. Mais barato, mais rápido, ideal pra classificação, extração, ou qualquer coisa próxima de uma consulta direta.</li>
+      <li><strong>Medium (médio)</strong> (o padrão no Opus 5.5) — pode pular o raciocínio em perguntas simples, mas engaja ele pra qualquer coisa que pareça precisar de alguns passos de lógica.</li>
+      <li><strong>High (alto)</strong> — pensa profundamente quase sempre. Bom padrão pra loops agênticos, tarefas de código não triviais, e uso de ferramentas em múltiplos passos.</li>
+      <li><strong>Max</strong> — sempre pensa, sem restrições. Reservado pros problemas mais difíceis, onde custo e latência são secundários frente à correção.</li>
+    </ul>
+    <p>Você ainda tem um limite rígido se precisar de um: <code>max_tokens</code> limita a saída total — tokens de thinking mais a resposta visível — ainda que ele não permita mais reservar uma cota dedicada só pro thinking como o <code>budget_tokens</code> fazia.</p>
+    <div class="callout">
+      <strong>Regra prática:</strong> comece no nível de esforço padrão do modelo, meça a qualidade na sua carga de trabalho real, e só suba o nível se conseguir apontar falhas específicas que mais raciocínio resolveria. Colocar o esforço no máximo "por garantia" geralmente compra latência e custo, não correção.
+    </div>
+
+    <h2 id="direcionando-pt">4. Direcionando o raciocínio com linguagem simples</h2>
+    <p>Como o Claude decide sozinho se vai pensar, às vezes você precisa direcionar essa decisão diretamente no prompt — sem precisar de nenhum parâmetro de API. Dois padrões documentados pela Anthropic:</p>
+    <ul>
+      <li>Adicionar <strong>"Please think hard before responding"</strong> (pense bem antes de responder) numa mensagem do usuário empurra o Claude pro raciocínio naquele turno específico, mesmo com um nível de effort mais baixo.</li>
+      <li>Adicionar <strong>"Answer directly without deliberating"</strong> (responda direto, sem deliberar) suprime o raciocínio naquele turno — útil quando um system prompt grande ou complexo está fazendo o Claude pensar demais em perguntas de acompanhamento triviais.</li>
+    </ul>
+    <p>Isso importa na prática porque system prompts com muitas instruções, ferramentas e contexto (o tipo que você escreveria pra um agente) tendem a disparar mais raciocínio do que uma pergunta simples de usuário disparia sozinha, mesmo quando um turno específico é trivial. O direcionamento por linguagem simples é o ajuste certo aqui — não um valor de <code>effort</code> maior ou menor aplicado de forma global.</p>
+
+    <h2 id="quando-pt">5. Quando extended thinking realmente vale a pena</h2>
+    <p>Extended thinking tem um custo real: adiciona latência e consome tokens mesmo quando não muda a resposta final. A própria orientação da Anthropic é mais restrita do que "ativa pra tudo que parece importante" — ela recomenda raciocínio pra problemas genuinamente de múltiplos passos: fluxos agênticos com várias chamadas de ferramenta em sequência, tarefas de código não triviais, problemas de matemática ou lógica com passos dependentes entre si, e loops de agente de longo horizonte, onde um erro cedo se acumula.</p>
+    <p>Por outro lado, o raciocínio raramente ajuda em consultas de um passo só, perguntas factuais curtas, tarefas simples de formatação ou reescrita, ou qualquer coisa em que a resposta é essencialmente uma busca, não uma dedução. Forçar raciocínio nesses casos não só desperdiça dinheiro — também pode fazer o Claude questionar uma resposta correta e simples até transformá-la em algo mais complicado do que precisava ser.</p>
+
+    <h2 id="pratica-pt">6. Colocando em prática</h2>
+    <div class="callout">
+      <strong>Se você está construindo um assistente simples</strong> (bot de FAQ, classificador, extrator de dados): deixe o effort no padrão ou reduza pra low, e não force raciocínio manualmente — o trade-off de custo/latência não compensa pra trabalho de um passo só.
+    </div>
+    <div class="callout">
+      <strong>Se você está construindo um agente</strong> (uso de ferramentas em múltiplos passos, assistente de código, loop de pesquisa): prefira effort alto como base, e use "answer directly without deliberating" seletivamente em turnos que você sabe que são triviais (uma confirmação, uma busca simples), pra não pagar o "imposto do raciocínio" em cada passo único.
+    </div>
+    <div class="callout">
+      <strong>Se você está migrando código antigo</strong> que define <code>budget_tokens</code> contra o Sonnet 5 ou modelos mais novos: substitua pelo parâmetro <code>effort</code> e teste de novo — o caminho de orçamento manual não é só legado, agora ele retorna um erro rígido.
+    </div>
+    <p>O padrão maior por trás dessa mudança combina com pra onde o prompt engineering vem indo o ano inteiro: menos tempo ajustando manualmente controles de baixo nível, mais tempo descrevendo o que você realmente quer e deixando o modelo decidir sozinho "quanto esforço isso merece".</p>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">What's new in Claude Opus 5.5 — Claude Platform Docs</a> (set/2026)</li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking" target="_blank" rel="noopener">Adaptive thinking — Claude Platform Docs</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/extended-thinking-tips" target="_blank" rel="noopener">Prompting best practices for extended thinking — Claude Platform Docs</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost" target="_blank" rel="noopener">Steering thinking — Claude Platform Docs</a></li>
+        <li><a href="https://www.requesty.ai/blog/claude-opus-5-5-explained" target="_blank" rel="noopener">Claude Opus 5.5: Pricing, API Access and Changes — Requesty</a> (22 set 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Adaptive thinking &amp; effort</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

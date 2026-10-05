@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Fine-tuning, explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 12px; }
+  .sources li { font-size: 12.5px; color: var(--text-dim); margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Fundamentals</span>
+      <h1>Fine-tuning: teaching a model new habits, not new knowledge</h1>
+      <p class="subtitle">The most misunderstood tool in the LLM toolbox — and usually the last one you should reach for, not the first.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">1. What fine-tuning actually is</a></li>
+        <li><a href="#how">2. How it works: full fine-tuning vs. LoRA/QLoRA</a></li>
+        <li><a href="#rlhf">3. RLHF, DPO and friends — teaching preference, not just format</a></li>
+        <li><a href="#when">4. Prompting vs. RAG vs. fine-tuning: the actual decision tree</a></li>
+        <li><a href="#tradeoffs">5. The real trade-offs nobody puts on the landing page</a></li>
+        <li><a href="#example">6. A concrete example</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What fine-tuning actually is</h2>
+    <p>A pretrained LLM already "knows" an enormous amount from its training data. Fine-tuning doesn't add more knowledge to that base — it <strong>keeps training the model's weights</strong> on a smaller, curated dataset so it changes <em>how</em> it behaves: the format it answers in, the tone it uses, which tasks it's better calibrated for, or how strictly it follows a schema.</p>
+    <p>That distinction is the single most common source of confusion: people reach for fine-tuning to "teach the model facts" (a new product catalog, this week's news, internal docs) when that's exactly the job retrieval-augmented generation (RAG) is built for. Fine-tuning is a behavior lever, not a knowledge database.</p>
+
+    <h2 id="how">2. How it works: full fine-tuning vs. LoRA/QLoRA</h2>
+    <p>There are two very different cost profiles here:</p>
+    <table>
+      <tr><th>Approach</th><th>What changes</th><th>Cost profile</th></tr>
+      <tr><td><strong>Full fine-tuning</strong></td><td>Every weight in the model gets updated during training.</td><td>Needs the same order of magnitude of compute/memory as pretraining a model of that size — realistically out of reach outside a well-funded lab for anything beyond small models.</td></tr>
+      <tr><td><strong>LoRA (Low-Rank Adaptation)</strong></td><td>The original weights stay frozen; small "adapter" matrices are trained alongside them and injected into specific layers (commonly attention layers).</td><td>Orders of magnitude cheaper — the insight is that the <em>update</em> a model needs for a new task usually lives in a low-dimensional subspace, so you don't need full-rank matrices to represent it.</td></tr>
+      <tr><td><strong>QLoRA</strong></td><td>LoRA on top of a quantized (lower-precision) copy of the base model.</td><td>Pushes memory requirements down further — this is what makes fine-tuning a 20B+ model feasible on a single consumer-grade GPU.</td></tr>
+    </table>
+    <p>In practice, LoRA/QLoRA-family methods can match or come close to full fine-tuning quality on many tasks while training a tiny fraction of the parameters — which is why they've become the default rather than the exception.</p>
+
+    <h2 id="rlhf">3. RLHF, DPO and friends — teaching preference, not just format</h2>
+    <p>Supervised fine-tuning (SFT) — training on example input/output pairs — teaches a model to imitate a dataset. But a lot of what makes a model "feel" well-behaved (helpful, honest, refusing the right things) comes from a further step: teaching it to prefer some outputs over others.</p>
+    <ul>
+      <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> humans rank multiple model outputs for the same prompt, that ranking data trains a separate <em>reward model</em>, and then the LLM is further trained with reinforcement learning to produce outputs the reward model scores highly.</li>
+      <li><strong>DPO (Direct Preference Optimization):</strong> a newer, simpler alternative that skips training a separate reward model — it optimizes directly on the preference pairs (chosen output vs. rejected output), which is cheaper and more stable to train than full RLHF, at the cost of some of RLHF's flexibility.</li>
+    </ul>
+    <p>This is the step that turns a raw next-token predictor into something that behaves like an assistant — it's a large part of why two models with similar base pretraining can feel very different to talk to.</p>
+
+    <h2 id="when">4. Prompting vs. RAG vs. fine-tuning: the actual decision tree</h2>
+    <p>The order below is the practical consensus, not a personal opinion — and it matters because each step up adds real cost and maintenance burden:</p>
+    <div class="callout">
+      <strong>1. Start with prompt engineering.</strong> No training data, no infrastructure, no lead time. Most "the model doesn't do X" problems are actually "the prompt doesn't ask for X clearly enough" problems.
+    </div>
+    <div class="callout">
+      <strong>2. Add RAG when the gap is knowledge.</strong> If the model doesn't know something — proprietary data, information newer than its training cutoff, your internal docs — retrieval solves that without touching the model's weights at all.
+    </div>
+    <div class="callout">
+      <strong>3. Reach for fine-tuning when the gap is behavior.</strong> If the model already knows the right answer but keeps giving it in the wrong format, tone, or structure — and better prompting and examples in-context can't fix it reliably at scale — that's when updating weights earns its cost.
+    </div>
+    <p>In production, these three aren't mutually exclusive: a common pattern is a model fine-tuned to reliably output one specific format/tone, fed by RAG for current facts, wrapped in a well-engineered system prompt that handles instructions and edge cases.</p>
+
+    <h2 id="tradeoffs">5. The real trade-offs nobody puts on the landing page</h2>
+    <ul>
+      <li><strong>Maintenance debt:</strong> a fine-tuned model is now a specific artifact you own. When the base model improves, you don't get that improvement for free — you have to re-run the fine-tune on the new base, re-validate it, and redeploy it.</li>
+      <li><strong>Data quality is the actual bottleneck.</strong> A few hundred sloppy examples can make a fine-tuned model worse than the base model at the very task you were trying to improve — curation matters more than volume.</li>
+      <li><strong>Catastrophic forgetting:</strong> aggressive fine-tuning on a narrow dataset can degrade the model's general capabilities outside that narrow task — this is one of the reasons LoRA-style approaches (which touch far fewer parameters) are often preferred, they tend to be gentler on everything else the model can do.</li>
+      <li><strong>It doesn't fix hallucination on facts it never had.</strong> Fine-tuning can make a model confidently wrong in a new format — it's not a substitute for giving the model actual access to the information via RAG or tools.</li>
+    </ul>
+
+    <h2 id="example">6. A concrete example</h2>
+    <p>Say a support team wants a model that always replies in a strict JSON schema with a specific set of fields, in a specific tone, even for messy or ambiguous tickets. Prompting alone can get close but occasionally drifts — extra fields appear, tone slips, formatting breaks on edge cases. RAG doesn't help here at all, because the problem isn't missing knowledge — the model already knows how to help with the ticket. This is the textbook case for fine-tuning: a curated set of a few hundred to a few thousand example tickets paired with the exact desired output, trained with LoRA on top of a capable base model, produces a model that holds the format reliably — while RAG (fed by a live knowledge base) stays in the loop for anything that requires current account or product facts.</p>
+
+    <div class="card">
+      <div class="card-title">Takeaway</div>
+      <p style="margin-bottom:0;">Fine-tuning changes how a model behaves, not what it knows. Reach for it last, after prompting and RAG have been tried, and budget for the fact that it's an artifact you now have to maintain — not a one-time fix.</p>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Fundamentos</span>
+      <h1>Fine-tuning: ensinando hábitos novos, não conhecimento novo</h1>
+      <p class="subtitle">A ferramenta mais mal-entendida da caixa de ferramentas de LLM — e geralmente a última que você deveria usar, não a primeira.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-e">1. O que fine-tuning realmente é</a></li>
+        <li><a href="#como-funciona">2. Como funciona: fine-tuning completo vs. LoRA/QLoRA</a></li>
+        <li><a href="#rlhf-pt">3. RLHF, DPO e companhia — ensinando preferência, não só formato</a></li>
+        <li><a href="#quando">4. Prompting vs. RAG vs. fine-tuning: a árvore de decisão de verdade</a></li>
+        <li><a href="#tradeoffs-pt">5. Os trade-offs reais que ninguém coloca na landing page</a></li>
+        <li><a href="#exemplo">6. Um exemplo concreto</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-e">1. O que fine-tuning realmente é</h2>
+    <p>Um LLM pré-treinado já "sabe" uma quantidade enorme de coisas vindas dos dados de treinamento. Fine-tuning não adiciona mais conhecimento a essa base — ele <strong>continua treinando os pesos do modelo</strong> num conjunto de dados menor e curado, pra mudar <em>como</em> ele se comporta: o formato em que responde, o tom que usa, pra quais tarefas ele fica melhor calibrado, ou o quão rigorosamente ele segue um schema.</p>
+    <p>Essa distinção é a fonte de confusão mais comum: as pessoas recorrem a fine-tuning pra "ensinar fatos ao modelo" (um catálogo de produtos novo, notícias da semana, documentação interna) quando essa é exatamente a função da retrieval-augmented generation (RAG). Fine-tuning é uma alavanca de comportamento, não um banco de dados de conhecimento.</p>
+
+    <h2 id="como-funciona">2. Como funciona: fine-tuning completo vs. LoRA/QLoRA</h2>
+    <p>Existem dois perfis de custo bem diferentes aqui:</p>
+    <table>
+      <tr><th>Abordagem</th><th>O que muda</th><th>Perfil de custo</th></tr>
+      <tr><td><strong>Fine-tuning completo</strong></td><td>Todo peso do modelo é atualizado durante o treino.</td><td>Precisa de uma ordem de grandeza de compute/memória parecida com pré-treinar um modelo desse tamanho — na prática, fora de alcance fora de um laboratório bem financiado pra qualquer coisa além de modelos pequenos.</td></tr>
+      <tr><td><strong>LoRA (Low-Rank Adaptation)</strong></td><td>Os pesos originais ficam congelados; pequenas matrizes "adaptadoras" são treinadas junto e injetadas em camadas específicas (geralmente camadas de atenção).</td><td>Ordens de grandeza mais barato — a sacada é que a <em>atualização</em> que um modelo precisa pra uma tarefa nova geralmente vive num subespaço de baixa dimensão, então você não precisa de matrizes de rank completo pra representá-la.</td></tr>
+      <tr><td><strong>QLoRA</strong></td><td>LoRA em cima de uma cópia quantizada (precisão reduzida) do modelo base.</td><td>Reduz ainda mais os requisitos de memória — é o que torna viável fazer fine-tuning de um modelo de 20B+ numa única GPU de consumidor.</td></tr>
+    </table>
+    <p>Na prática, métodos da família LoRA/QLoRA conseguem igualar ou chegar perto da qualidade do fine-tuning completo em muitas tarefas treinando uma fração minúscula dos parâmetros — por isso viraram o padrão em vez da exceção.</p>
+
+    <h2 id="rlhf-pt">3. RLHF, DPO e companhia — ensinando preferência, não só formato</h2>
+    <p>Fine-tuning supervisionado (SFT) — treinar em pares de exemplo entrada/saída — ensina um modelo a imitar um dataset. Mas boa parte do que faz um modelo "parecer" bem-comportado (útil, honesto, recusando as coisas certas) vem de um passo a mais: ensinar ele a preferir algumas saídas em vez de outras.</p>
+    <ul>
+      <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> humanos ranqueiam múltiplas saídas do modelo pro mesmo prompt, esses dados de ranqueamento treinam um <em>modelo de recompensa</em> separado, e depois o LLM é treinado mais um pouco com reinforcement learning pra produzir saídas que o modelo de recompensa pontua bem.</li>
+      <li><strong>DPO (Direct Preference Optimization):</strong> uma alternativa mais nova e simples que pula treinar um modelo de recompensa separado — otimiza direto sobre os pares de preferência (saída escolhida vs. saída rejeitada), o que é mais barato e mais estável de treinar que o RLHF completo, ao custo de parte da flexibilidade do RLHF.</li>
+    </ul>
+    <p>Esse é o passo que transforma um previsor cru de próximo token em algo que se comporta como um assistente — é boa parte do motivo pelo qual dois modelos com pré-treino base parecido podem parecer muito diferentes na hora de conversar.</p>
+
+    <h2 id="quando">4. Prompting vs. RAG vs. fine-tuning: a árvore de decisão de verdade</h2>
+    <p>A ordem abaixo é o consenso prático, não uma opinião pessoal — e importa porque cada degrau a mais adiciona custo real e carga de manutenção:</p>
+    <div class="callout">
+      <strong>1. Comece com prompt engineering.</strong> Sem dado de treino, sem infraestrutura, sem tempo de preparação. A maioria dos problemas de "o modelo não faz X" na verdade é "o prompt não pede X com clareza suficiente".
+    </div>
+    <div class="callout">
+      <strong>2. Adicione RAG quando a lacuna é de conhecimento.</strong> Se o modelo não sabe algo — dado proprietário, informação mais nova que o corte de treinamento dele, sua documentação interna — retrieval resolve isso sem tocar nos pesos do modelo.
+    </div>
+    <div class="callout">
+      <strong>3. Recorra a fine-tuning quando a lacuna é de comportamento.</strong> Se o modelo já sabe a resposta certa mas continua entregando no formato, tom ou estrutura errados — e prompting melhor e exemplos no próprio contexto não resolvem isso de forma confiável em escala — é aí que atualizar os pesos compensa o custo.
+    </div>
+    <p>Em produção, essas três coisas não são mutuamente exclusivas: um padrão comum é um modelo com fine-tuning pra manter um formato/tom específico de forma confiável, alimentado por RAG pra fatos atuais, envolto num system prompt bem construído que cuida de instruções e casos extremos.</p>
+
+    <h2 id="tradeoffs-pt">5. Os trade-offs reais que ninguém coloca na landing page</h2>
+    <ul>
+      <li><strong>Dívida de manutenção:</strong> um modelo com fine-tuning agora é um artefato específico que você é dono. Quando o modelo base melhora, você não ganha essa melhoria de graça — precisa rodar o fine-tune de novo em cima da nova base, revalidar e reimplantar.</li>
+      <li><strong>Qualidade do dado é o gargalo de verdade.</strong> Algumas centenas de exemplos malfeitos podem deixar um modelo com fine-tuning pior que o modelo base na mesma tarefa que você queria melhorar — curadoria importa mais que volume.</li>
+      <li><strong>Esquecimento catastrófico:</strong> fine-tuning agressivo num dataset estreito pode degradar as capacidades gerais do modelo fora dessa tarefa estreita — esse é um dos motivos pelos quais abordagens estilo LoRA (que tocam muito menos parâmetros) costumam ser preferidas, elas tendem a ser mais suaves com o resto do que o modelo sabe fazer.</li>
+      <li><strong>Não resolve alucinação sobre fatos que ele nunca teve.</strong> Fine-tuning pode deixar um modelo errado com confiança num formato novo — não substitui dar ao modelo acesso de verdade à informação via RAG ou ferramentas.</li>
+    </ul>
+
+    <h2 id="exemplo">6. Um exemplo concreto</h2>
+    <p>Digamos que um time de suporte quer um modelo que sempre responda num schema JSON rígido, com um conjunto específico de campos, num tom específico, mesmo pra tickets bagunçados ou ambíguos. Só prompting consegue chegar perto mas às vezes escorrega — campos extras aparecem, o tom foge do combinado, a formatação quebra em casos extremos. RAG não ajuda nada aqui, porque o problema não é falta de conhecimento — o modelo já sabe como ajudar com o ticket. Esse é o caso de livro-texto pra fine-tuning: um conjunto curado de algumas centenas a alguns milhares de tickets de exemplo pareados com a saída exata desejada, treinado com LoRA em cima de um modelo base capaz, produz um modelo que mantém o formato de forma confiável — enquanto o RAG (alimentado por uma base de conhecimento viva) continua no circuito pra qualquer coisa que exija fatos atuais de conta ou produto.</p>
+
+    <div class="card">
+      <div class="card-title">Resumo</div>
+      <p style="margin-bottom:0;">Fine-tuning muda como um modelo se comporta, não o que ele sabe. Recorra a ele por último, depois de tentar prompting e RAG, e já conte com o fato de que é um artefato que você vai precisar manter — não um conserto de uma vez só.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span><br>
+  <span class="accent" id="footer-right">Fine-tuning, explained</span>
+  <ul class="sources" id="sources-list">
+    <li><a href="https://synthesis.ai/2024/08/13/fine-tuning-llms-rlhf-lora-and-instruction-tuning/" target="_blank" rel="noopener">Synthesis AI — Fine-Tuning LLMs: RLHF, LoRA, and Instruction Tuning</a></li>
+    <li><a href="https://huggingface.co/blog/trl-peft" target="_blank" rel="noopener">Hugging Face — Fine-tuning 20B LLMs with RLHF on a 24GB consumer GPU</a></li>
+    <li><a href="https://lightning.ai/pages/community/lora-insights/" target="_blank" rel="noopener">Lightning AI — Finetuning LLMs with LoRA and QLoRA: Insights from Hundreds of Experiments</a></li>
+    <li><a href="https://www.k2view.com/blog/rag-vs-fine-tuning-vs-prompt-engineering/" target="_blank" rel="noopener">K2view — RAG vs fine-tuning vs prompt engineering</a></li>
+    <li><a href="https://www.analyticsvidhya.com/blog/2026/03/fine-tuning-vs-rag-vs-prompt-engineering/" target="_blank" rel="noopener">Analytics Vidhya (2026) — Fine-Tuning vs RAG vs Prompt Engineering</a></li>
+  </ul>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>
