@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The Coding-Agent Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Tools &amp; ecosystem</span>
+      <h1>The coding-agent map in late 2026: who's winning, and the three protocols that make agents swappable</h1>
+      <p class="subtitle">Nine in ten professional developers now use a coding agent every week. The market has a clear leader, a fast challenger and a fading incumbent. But the more durable story is underneath: three open standards (MCP, ACP and Agent Skills) are turning agents into interchangeable parts. Here's the map, what the numbers really say, and how to pick a setup that doesn't lock you in.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#adoption">Adoption: from "nice to have" to default</a></li>
+        <li><a href="#players">The players, by the numbers</a></li>
+        <li><a href="#howmuch">How much code do agents really write?</a></li>
+        <li><a href="#stack">The protocol stack: MCP, ACP, Skills</a></li>
+        <li><a href="#acp">ACP up close: the "LSP for agents"</a></li>
+        <li><a href="#choose">Choosing a setup without getting locked in</a></li>
+      </ol>
+    </div>
+
+    <h2 id="adoption">1. Adoption: from "nice to have" to default</h2>
+    <p>JetBrains' <strong>Developer Ecosystem Survey 2026</strong> (15,000+ professional developers, fielded May–July 2026, reweighted to be globally representative) is the largest independent snapshot of how people actually code right now. Headline numbers:</p>
+    <div class="card">
+      <div class="card-title">Key figures</div>
+      <ul>
+        <li><strong>90%</strong> of professional developers use AI coding agents at work at least weekly (local or cloud agents).</li>
+        <li><strong>68%</strong> use them daily.</li>
+        <li>An "agent" here means more than autocomplete: a tool that reads the codebase, edits multiple files, runs commands and iterates, the loop covered in the AI Watch on agents (Aug 24).</li>
+      </ul>
+    </div>
+    <p>Put simply, not using an agent is now the unusual choice. The interesting questions have moved: <em>which</em> agent, <em>how much</em> you delegate, and <em>how</em> it plugs into the rest of your tools.</p>
+
+    <h2 id="players">2. The players, by the numbers</h2>
+    <p>"Adoption" below means share of professional developers using the tool at work (JetBrains survey, Jan 2026 vs. May–July 2026). "Awareness" means share who have heard of it.</p>
+    <table>
+      <tr><th>Tool</th><th>Adoption at work</th><th>Trend</th><th>What stands out</th></tr>
+      <tr><td><strong>Claude Code</strong> (Anthropic)</td><td>18% → <strong>39%</strong></td><td>▲ more than doubled</td><td>47% in the US. The <em>main</em> tool for 31% of developers, meaning ~80% of its users make it their primary tool.</td></tr>
+      <tr><td><strong>GitHub Copilot</strong></td><td>29% (a year ago) → 21%</td><td>▼ lost the lead</td><td>Still the best known (79% awareness). Broadest ecosystem; issue-to-PR cloud agent inside GitHub.</td></tr>
+      <tr><td><strong>Codex</strong> (OpenAI)</td><td>3% → 16%</td><td>▲ ~5×</td><td>Awareness jumped from 27% to 65%. Its users are the most "agent-heavy" (see next section).</td></tr>
+      <tr><td><strong>Cursor</strong></td><td>18% → 12%</td><td>▼ small decline</td><td>Awareness still rising (69% → 75%). Biggest drop in China (28% → 16%).</td></tr>
+      <tr><td><strong>JetBrains AI / Junie</strong></td><td>~9%</td><td>—</td><td>Also hosts other agents inside its IDEs (more on ACP below).</td></tr>
+      <tr><td><strong>OpenCode</strong> (open source)</td><td>7%</td><td>▲ new</td><td>42% awareness with no big company behind it.</td></tr>
+      <tr><td><strong>Google Antigravity</strong></td><td>6%</td><td>→ stable</td><td>Awareness 29% → 47%; tied for 3rd place in India (15%).</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Read this with care:</strong> the survey is run by JetBrains, which sells its own AI tools, though it's reweighted to reduce bias toward JetBrains users. Shares add up to more than 100% because many developers use several tools. And adoption isn't quality: benchmark leaderboards shift with every model release (Codex holds a top Terminal-Bench 4.0 entry; Claude Code with Opus 5.5 scores 66 on Artificial Analysis's Coding Agent Index), so "most used" and "best on a benchmark" are separate questions.
+    </div>
+
+    <h3>Why the shift happened (the plausible reasons)</h3>
+    <ul>
+      <li><strong>Terminal-first agents beat editor-first assistants for multi-step work.</strong> Tools that run commands, execute tests and retry on their own fit the "delegate the task" workflow better than inline suggestion.</li>
+      <li><strong>The model and the tool improved together.</strong> Each frontier model release (Opus 5.5 on Sep 22, Sonnet 5.5 on Sep 28) lands in the vendor's own agent first.</li>
+      <li><strong>Price and quotas matter.</strong> JetBrains suggests Codex's heavy users may be chasing value, since it has historically offered higher usage quotas.</li>
+    </ul>
+
+    <h2 id="howmuch">3. How much code do agents really write?</h2>
+    <p>You've heard "100% of my code is written by AI". A follow-up JetBrains analysis asked developers what share of last month's work code was fully agent-written, AI-assisted or fully manual.</p>
+    <table>
+      <tr><th>Metric</th><th>Value</th></tr>
+      <tr><td>Average share fully written by agents</td><td><strong>~47%</strong></td></tr>
+      <tr><td>Written with some AI assistance</td><td>~38%</td></tr>
+      <tr><td>Written fully by hand</td><td>~27%</td></tr>
+      <tr><td>Developers with &gt;80% agent-generated code</td><td>~22% (a minority)</td></tr>
+      <tr><td>Developers who write zero code without AI</td><td>1 in 5</td></tr>
+    </table>
+    <p style="font-size:14px;color:var(--text-dim)">(Averages exceed 100% because answers were in buckets and the midpoints were averaged.)</p>
+    <p>Three profiles emerged from clustering the answers:</p>
+    <ul>
+      <li><strong>Agentic coders (~31%)</strong>: ~84% of their code is agent-generated.</li>
+      <li><strong>AI-assisted coders (~47%)</strong>: ~40% agent-generated, but still steer most of it with AI help and write some by hand.</li>
+      <li><strong>Manual coders (~23%)</strong>: ~75% hand-written, AI used occasionally.</li>
+    </ul>
+    <p>Other patterns worth knowing:</p>
+    <ul>
+      <li><strong>Seniors delegate more, not less.</strong> About a quarter of senior developers generate over 80% of their code with agents; juniors lean toward AI-assisted rather than fully agentic. Delegation needs judgment: knowing what to ask for and how to review it.</li>
+      <li><strong>Stack matters.</strong> Go, JavaScript and TypeScript developers are the most agentic (~54–55% agent-written); C/C++ the least (~38%). Web front-end and back-end work sits at the high end.</li>
+      <li><strong>Region matters.</strong> In China, Japan and South Korea, 32–35% of developers generate over 80% of their code with agents, about double Europe/UK (~16%).</li>
+      <li><strong>Tool audience matters.</strong> 42% of heavy Codex users are above 80% agent-generated, versus 32% for Claude Code. JetBrains' reading: Claude Code has gone mainstream, so its audience is no longer mostly power users.</li>
+    </ul>
+
+    <h2 id="stack">4. The protocol stack: MCP, ACP, Skills</h2>
+    <p>Market share will keep moving. What makes it less risky to pick a tool is that the industry has converged on open standards at three different layers. Think of a coding agent as a worker: it needs a <em>desk</em> (where it lives), <em>tools</em> (what it can touch) and <em>know-how</em> (procedures it follows).</p>
+    <table>
+      <tr><th>Layer</th><th>Standard</th><th>Question it answers</th><th>Origin</th></tr>
+      <tr><td>Desk</td><td><strong>ACP</strong> (Agent Client Protocol)</td><td>"Where does the agent live in my editor?"</td><td>Zed, Aug 2025; JetBrains co-develops since Oct 2025</td></tr>
+      <tr><td>Tools</td><td><strong>MCP</strong> (Model Context Protocol)</td><td>"What data and actions can the agent reach?"</td><td>Anthropic, Nov 2024; now under the Agentic AI Foundation</td></tr>
+      <tr><td>Know-how</td><td><strong>Agent Skills</strong> (<code>SKILL.md</code>)</td><td>"How should the agent do this specific task?"</td><td>Anthropic, open standard since Dec 2025; 40+ adopting clients</td></tr>
+    </table>
+    <p>MCP and Skills were covered in earlier AI Watch editions (Aug 20 and Sep 1). ACP is the piece most people haven't met yet, so let's zoom in.</p>
+
+    <h2 id="acp">5. ACP up close: the "LSP for agents"</h2>
+    <p>Before the <strong>Language Server Protocol</strong>, every editor had to build its own TypeScript support, its own Python linter integration, and so on. LSP made one language server work in every editor. ACP applies the same idea to agents: any ACP-compatible agent runs in any ACP-compatible editor, no custom plugin per pair.</p>
+    <h3>How it works</h3>
+    <ul>
+      <li><strong>Subprocess model:</strong> the editor launches the agent as a child process and they talk JSON-RPC 2.0 over stdin/stdout, the same transport LSP uses.</li>
+      <li><strong>Sessions:</strong> the editor creates a session with history, sends prompts, and the agent streams updates back token by token.</li>
+      <li><strong>Permissions:</strong> before running a terminal command or writing a file, the agent sends a <code>session/request_permission</code> message; the editor (you) approves or denies.</li>
+      <li><strong>MCP hand-off:</strong> at session start the editor passes its configured MCP servers to the agent. So you configure tools once, in the editor, and any agent you plug in can use them.</li>
+    </ul>
+    <div class="card">
+      <div class="card-title">The five core messages</div>
+      <p style="margin:0"><code>session/initialize</code> (capabilities) → <code>session/new</code> (open a conversation) → <code>session/prompt</code> (user asks) → <code>session/update</code> (agent streams) → <code>session/cancel</code> (stop mid-response)</p>
+    </div>
+    <h3>Who supports it</h3>
+    <ul>
+      <li><strong>Editors:</strong> Zed (native, most complete), JetBrains IDEs (native, where Claude Agent, Codex, Copilot and OpenCode are built into the AI chat and others like Cursor can be added via ACP), Neovim and Emacs (stable community plugins). VS Code has no native support; Microsoft standardized its agent mode on MCP instead (status as of March 2026).</li>
+      <li><strong>Agents:</strong> 25+ as of March 2026. Gemini CLI, GitHub Copilot CLI, Goose, Cline and OpenHands natively; Claude Code and Codex CLI through adapters.</li>
+    </ul>
+    <h3>Pros and cons</h3>
+    <table>
+      <tr><th>Pros</th><th>Cons</th></tr>
+      <tr><td>Switch agents without switching editors (or relearning your workflow).</td><td>Adapters for the biggest agents mean features can lag behind the vendor's own app.</td></tr>
+      <tr><td>Configure MCP tools once, reuse with every agent.</td><td>No native VS Code support, and VS Code is the most used editor.</td></tr>
+      <tr><td>Uniform permission prompts across agents.</td><td>Another moving standard to track; still version 1.</td></tr>
+    </table>
+
+    <h2 id="choose">6. Choosing a setup without getting locked in</h2>
+    <p>A practical way to think about it, whatever tool you use today:</p>
+    <ol>
+      <li><strong>Pick the agent for the model and the loop, not the brand.</strong> Run it on 3–5 real tasks from your own work (a bug fix, a small feature, a refactor with tests) and compare finished results and cost per task.</li>
+      <li><strong>Put your tools in MCP.</strong> Database access, docs search, issue tracker: if they're MCP servers, they move with you to any agent.</li>
+      <li><strong>Put your procedures in Skills and plain files.</strong> Repo conventions in a project instructions file, repeatable workflows (e.g. "how we write a migration") as <code>SKILL.md</code>. Both are portable text, not vendor settings.</li>
+      <li><strong>If you live in Zed, JetBrains, Neovim or Emacs, try ACP</strong> so you can swap agents from the same panel.</li>
+      <li><strong>Keep the review muscle.</strong> The data shows seniors delegate most because they can judge the output. Delegate more as your ability to review grows, not before.</li>
+    </ol>
+    <div class="card">
+      <div class="card-title">Generic example: a portable setup</div>
+      <p style="margin:0 0 8px">A small team building a web app with a Postgres database:</p>
+      <ul style="margin:0">
+        <li><strong>Tools (MCP):</strong> a Postgres MCP server (read-only in dev), a docs-search server, a browser server for UI checks.</li>
+        <li><strong>Know-how (Skills):</strong> <code>skills/write-migration/SKILL.md</code>, <code>skills/add-api-endpoint/SKILL.md</code>.</li>
+        <li><strong>Rules:</strong> a project instructions file with stack, test command and "never touch <code>.env</code>".</li>
+        <li><strong>Agent:</strong> whichever one wins their own 5-task trial this quarter. If a better one appears next quarter, they switch the agent and keep everything above.</li>
+      </ul>
+    </div>
+    <div class="callout">
+      <strong>The takeaway:</strong> the leaderboard will look different in six months. Your tools, procedures and review habits don't have to. Invest in the layers that are standardized, and treat the agent itself as the swappable part.
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">AI Coding Agents: Adoption Trends — The JetBrains Blog</a> (Aug 19, 2026; Developer Ecosystem Survey 2026, fielded May–July 2026)</li>
+        <li><a href="https://blog.jetbrains.com/research/2026/08/how-much-code-do-developers-really-let-agents-write/" target="_blank" rel="noopener">How Much Code Do Developers Really Let Agents Write? — The JetBrains Blog</a> (Aug 26, 2026)</li>
+        <li><a href="https://www.morphllm.com/agent-client-protocol" target="_blank" rel="noopener">Agent Client Protocol (ACP) Explained: ACP vs MCP, Editor Support — Morph</a> (Mar 3, 2026)</li>
+        <li><a href="https://zed.dev/acp" target="_blank" rel="noopener">Agent Client Protocol — Zed</a> (accessed Sep 30, 2026)</li>
+        <li><a href="https://www.morphllm.com/best-ai-coding-agents-2026" target="_blank" rel="noopener">Best AI Coding Agents (September 2026) — Morph</a> (Sep 2026)</li>
+        <li><a href="https://atlan.com/know/ai-agent/ai-agent-skills/what-are-agent-skills/" target="_blank" rel="noopener">Agent Skills Explained: SKILL.md Format and Adoption (2026) — Atlan</a> (2026)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema</span>
+      <h1>O mapa dos agentes de código no fim de 2026: quem está ganhando, e os três protocolos que tornam os agentes intercambiáveis</h1>
+      <p class="subtitle">Nove em cada dez devs profissionais já usam um agente de código toda semana. O mercado tem um líder claro, um desafiante acelerado e um ex-líder perdendo terreno. Mas a história mais duradoura está por baixo: três padrões abertos (MCP, ACP e Agent Skills) estão transformando agentes em peças trocáveis. Aqui vai o mapa, o que os números dizem de verdade, e como montar um setup que não te prende a ninguém.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#pt-adoption">Adoção: de "diferencial" a padrão</a></li>
+        <li><a href="#pt-players">Os players, em números</a></li>
+        <li><a href="#pt-howmuch">Quanto código os agentes escrevem de fato?</a></li>
+        <li><a href="#pt-stack">A pilha de protocolos: MCP, ACP, Skills</a></li>
+        <li><a href="#pt-acp">ACP de perto: o "LSP dos agentes"</a></li>
+        <li><a href="#pt-choose">Como escolher sem ficar preso</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-adoption">1. Adoção: de "diferencial" a padrão</h2>
+    <p>A <strong>Developer Ecosystem Survey 2026</strong> da JetBrains (mais de 15 mil devs profissionais, aplicada entre maio e julho de 2026, com pesos para representar a população global) é o maior retrato independente de como as pessoas programam hoje. Os números principais:</p>
+    <div class="card">
+      <div class="card-title">Números-chave</div>
+      <ul>
+        <li><strong>90%</strong> dos devs profissionais usam agentes de código no trabalho pelo menos uma vez por semana (locais ou na nuvem).</li>
+        <li><strong>68%</strong> usam todo dia.</li>
+        <li>"Agente" aqui é mais que autocomplete: uma ferramenta que lê o código, edita vários arquivos, roda comandos e itera, o loop que vimos no IA Watch sobre agentes (24/08).</li>
+      </ul>
+    </div>
+    <p>Resumindo: não usar agente virou a exceção. As perguntas interessantes mudaram de lugar: <em>qual</em> agente, <em>quanto</em> você delega e <em>como</em> ele se conecta ao resto das suas ferramentas.</p>
+
+    <h2 id="pt-players">2. Os players, em números</h2>
+    <p>"Adoção" abaixo é a fatia de devs profissionais que usam a ferramenta no trabalho (pesquisa da JetBrains, jan/2026 vs. mai–jul/2026). "Conhecimento" é a fatia que já ouviu falar dela.</p>
+    <table>
+      <tr><th>Ferramenta</th><th>Adoção no trabalho</th><th>Tendência</th><th>Destaque</th></tr>
+      <tr><td><strong>Claude Code</strong> (Anthropic)</td><td>18% → <strong>39%</strong></td><td>▲ mais que dobrou</td><td>47% nos EUA. É a ferramenta <em>principal</em> de 31% dos devs, ou seja, ~80% de quem usa acaba fazendo dela a número um.</td></tr>
+      <tr><td><strong>GitHub Copilot</strong></td><td>29% (há um ano) → 21%</td><td>▼ perdeu a liderança</td><td>Continua o mais conhecido (79%). Ecossistema mais amplo; agente na nuvem que vai da issue ao PR dentro do GitHub.</td></tr>
+      <tr><td><strong>Codex</strong> (OpenAI)</td><td>3% → 16%</td><td>▲ ~5×</td><td>Conhecimento saltou de 27% para 65%. Seus usuários são os que mais delegam (ver próxima seção).</td></tr>
+      <tr><td><strong>Cursor</strong></td><td>18% → 12%</td><td>▼ leve queda</td><td>Conhecimento ainda subindo (69% → 75%). Maior queda na China (28% → 16%).</td></tr>
+      <tr><td><strong>JetBrains AI / Junie</strong></td><td>~9%</td><td>—</td><td>Também hospeda outros agentes dentro das IDEs (mais sobre ACP abaixo).</td></tr>
+      <tr><td><strong>OpenCode</strong> (open source)</td><td>7%</td><td>▲ novo</td><td>42% de conhecimento sem nenhuma big tech por trás.</td></tr>
+      <tr><td><strong>Google Antigravity</strong></td><td>6%</td><td>→ estável</td><td>Conhecimento 29% → 47%; empatado em 3º na Índia (15%).</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Leia com cuidado:</strong> a pesquisa é da JetBrains, que vende ferramentas de IA próprias, embora os dados sejam reponderados para reduzir o viés a favor de usuários JetBrains. As fatias somam mais de 100% porque muita gente usa várias ferramentas. E adoção não é qualidade: os rankings de benchmark mudam a cada lançamento de modelo (o Codex tem uma das primeiras posições no Terminal-Bench 4.0; o Claude Code com Opus 5.5 marca 66 no Coding Agent Index da Artificial Analysis). "Mais usado" e "melhor no benchmark" são perguntas diferentes.
+    </div>
+
+    <h3>Por que a virada aconteceu (as explicações mais plausíveis)</h3>
+    <ul>
+      <li><strong>Agentes de terminal superam assistentes de editor em trabalho de várias etapas.</strong> Ferramentas que rodam comandos, executam testes e tentam de novo sozinhas combinam melhor com o fluxo "delega a tarefa inteira" do que sugestões inline.</li>
+      <li><strong>Modelo e ferramenta evoluíram juntos.</strong> Cada modelo de ponta novo (Opus 5.5 em 22/09, Sonnet 5.5 em 28/09) chega primeiro no agente do próprio fabricante.</li>
+      <li><strong>Preço e cota pesam.</strong> A JetBrains sugere que os usuários mais intensos do Codex podem estar buscando custo-benefício, já que ele historicamente oferece cotas maiores.</li>
+    </ul>
+
+    <h2 id="pt-howmuch">3. Quanto código os agentes escrevem de fato?</h2>
+    <p>Você já ouviu "100% do meu código é escrito por IA". Uma análise complementar da JetBrains perguntou aos devs qual fatia do código de trabalho do último mês foi escrita inteiramente por agentes, com ajuda de IA, ou totalmente à mão.</p>
+    <table>
+      <tr><th>Métrica</th><th>Valor</th></tr>
+      <tr><td>Média escrita inteiramente por agentes</td><td><strong>~47%</strong></td></tr>
+      <tr><td>Escrita com alguma ajuda de IA</td><td>~38%</td></tr>
+      <tr><td>Escrita totalmente à mão</td><td>~27%</td></tr>
+      <tr><td>Devs com mais de 80% do código gerado por agentes</td><td>~22% (minoria)</td></tr>
+      <tr><td>Devs que não escrevem nenhuma linha sem IA</td><td>1 em cada 5</td></tr>
+    </table>
+    <p style="font-size:14px;color:var(--text-dim)">(As médias passam de 100% porque as respostas eram por faixas e a conta usou o ponto médio de cada faixa.)</p>
+    <p>Agrupando as respostas, surgiram três perfis:</p>
+    <ul>
+      <li><strong>Agentic coders (~31%)</strong>: ~84% do código vem de agentes.</li>
+      <li><strong>AI-assisted coders (~47%)</strong>: ~40% vem de agentes, mas a maior parte ainda é conduzida com ajuda de IA e uma parte escrita à mão.</li>
+      <li><strong>Manual coders (~23%)</strong>: ~75% escrito à mão, IA usada de vez em quando.</li>
+    </ul>
+    <p>Outros padrões que valem saber:</p>
+    <ul>
+      <li><strong>Seniores delegam mais, não menos.</strong> Cerca de um quarto dos seniores gera mais de 80% do código com agentes; juniores tendem ao modo assistido. Delegar exige critério: saber o que pedir e como revisar.</li>
+      <li><strong>A stack importa.</strong> Devs de Go, JavaScript e TypeScript são os mais "agênticos" (~54–55% do código por agentes); C/C++ os menos (~38%). Front-end e back-end web ficam no topo.</li>
+      <li><strong>A região importa.</strong> Na China, Japão e Coreia do Sul, 32–35% dos devs geram mais de 80% do código com agentes, cerca do dobro da Europa/Reino Unido (~16%).</li>
+      <li><strong>O público da ferramenta importa.</strong> 42% dos usuários intensos do Codex passam de 80% de código gerado, contra 32% no Claude Code. A leitura da JetBrains: o Claude Code virou mainstream, então seu público já não é só de power users.</li>
+    </ul>
+
+    <h2 id="pt-stack">4. A pilha de protocolos: MCP, ACP, Skills</h2>
+    <p>A fatia de mercado vai continuar mudando. O que diminui o risco de escolher uma ferramenta é que a indústria convergiu para padrões abertos em três camadas diferentes. Pense num agente de código como um profissional: ele precisa de uma <em>mesa</em> (onde trabalha), de <em>ferramentas</em> (o que pode tocar) e de <em>know-how</em> (procedimentos que segue).</p>
+    <table>
+      <tr><th>Camada</th><th>Padrão</th><th>Pergunta que responde</th><th>Origem</th></tr>
+      <tr><td>Mesa</td><td><strong>ACP</strong> (Agent Client Protocol)</td><td>"Onde o agente mora dentro do meu editor?"</td><td>Zed, ago/2025; JetBrains co-desenvolve desde out/2025</td></tr>
+      <tr><td>Ferramentas</td><td><strong>MCP</strong> (Model Context Protocol)</td><td>"Que dados e ações o agente alcança?"</td><td>Anthropic, nov/2024; hoje sob a Agentic AI Foundation</td></tr>
+      <tr><td>Know-how</td><td><strong>Agent Skills</strong> (<code>SKILL.md</code>)</td><td>"Como o agente deve fazer esta tarefa específica?"</td><td>Anthropic, padrão aberto desde dez/2025; 40+ clientes adotaram</td></tr>
+    </table>
+    <p>MCP e Skills já apareceram em edições anteriores do IA Watch (20/08 e 01/09). O ACP é a peça que pouca gente conhece ainda, então vamos dar zoom nele.</p>
+
+    <h2 id="pt-acp">5. ACP de perto: o "LSP dos agentes"</h2>
+    <p>Antes do <strong>Language Server Protocol</strong>, cada editor precisava construir seu próprio suporte a TypeScript, sua própria integração com linter de Python, e assim por diante. O LSP fez um único servidor de linguagem funcionar em qualquer editor. O ACP aplica a mesma ideia aos agentes: qualquer agente compatível roda em qualquer editor compatível, sem plugin específico para cada par.</p>
+    <h3>Como funciona</h3>
+    <ul>
+      <li><strong>Modelo de subprocesso:</strong> o editor inicia o agente como processo filho e os dois conversam via JSON-RPC 2.0 por stdin/stdout, o mesmo transporte do LSP.</li>
+      <li><strong>Sessões:</strong> o editor cria uma sessão com histórico, envia prompts, e o agente devolve atualizações em streaming, token a token.</li>
+      <li><strong>Permissões:</strong> antes de rodar um comando no terminal ou gravar um arquivo, o agente manda uma mensagem <code>session/request_permission</code>; o editor (você) aprova ou nega.</li>
+      <li><strong>Repasse de MCP:</strong> no início da sessão, o editor entrega ao agente os servidores MCP que você configurou. Você configura as ferramentas uma vez, no editor, e qualquer agente plugado pode usá-las.</li>
+    </ul>
+    <div class="card">
+      <div class="card-title">As cinco mensagens básicas</div>
+      <p style="margin:0"><code>session/initialize</code> (capacidades) → <code>session/new</code> (abre conversa) → <code>session/prompt</code> (usuário pede) → <code>session/update</code> (agente responde em streaming) → <code>session/cancel</code> (interrompe no meio)</p>
+    </div>
+    <h3>Quem suporta</h3>
+    <ul>
+      <li><strong>Editores:</strong> Zed (nativo, o mais completo), IDEs JetBrains (nativo; Claude Agent, Codex, Copilot e OpenCode vêm embutidos no chat de IA, e outros como o Cursor entram via ACP), Neovim e Emacs (plugins da comunidade, estáveis). O VS Code não tem suporte nativo; a Microsoft padronizou o modo agente dele em MCP (situação em março de 2026).</li>
+      <li><strong>Agentes:</strong> mais de 25 em março de 2026. Gemini CLI, GitHub Copilot CLI, Goose, Cline e OpenHands nativamente; Claude Code e Codex CLI via adaptadores.</li>
+    </ul>
+    <h3>Prós e contras</h3>
+    <table>
+      <tr><th>Prós</th><th>Contras</th></tr>
+      <tr><td>Troca de agente sem trocar de editor (nem reaprender o fluxo).</td><td>Os maiores agentes rodam via adaptador, então recursos podem chegar depois do app oficial.</td></tr>
+      <tr><td>Configura as ferramentas MCP uma vez e reaproveita em qualquer agente.</td><td>Sem suporte nativo no VS Code, que é o editor mais usado.</td></tr>
+      <tr><td>Pedidos de permissão uniformes entre agentes.</td><td>Mais um padrão em movimento para acompanhar; ainda na versão 1.</td></tr>
+    </table>
+
+    <h2 id="pt-choose">6. Como escolher sem ficar preso</h2>
+    <p>Um jeito prático de pensar, seja qual for a ferramenta que você usa hoje:</p>
+    <ol>
+      <li><strong>Escolha o agente pelo modelo e pelo loop, não pela marca.</strong> Rode em 3 a 5 tarefas reais do seu trabalho (um bug, uma feature pequena, um refactor com testes) e compare resultado final e custo por tarefa.</li>
+      <li><strong>Coloque suas ferramentas em MCP.</strong> Banco de dados, busca em docs, gerenciador de issues: se forem servidores MCP, vão junto com você para qualquer agente.</li>
+      <li><strong>Coloque seus procedimentos em Skills e em arquivos simples.</strong> Convenções do repositório num arquivo de instruções do projeto, fluxos repetíveis (ex.: "como escrevemos uma migration") como <code>SKILL.md</code>. Os dois são texto portátil, não configuração de fornecedor.</li>
+      <li><strong>Se você vive no Zed, JetBrains, Neovim ou Emacs, teste o ACP</strong> para trocar de agente no mesmo painel.</li>
+      <li><strong>Mantenha o músculo da revisão.</strong> Os dados mostram que seniores delegam mais porque conseguem julgar o resultado. Aumente a delegação conforme sua capacidade de revisar cresce, não antes.</li>
+    </ol>
+    <div class="card">
+      <div class="card-title">Exemplo genérico: um setup portátil</div>
+      <p style="margin:0 0 8px">Um time pequeno construindo um web app com banco Postgres:</p>
+      <ul style="margin:0">
+        <li><strong>Ferramentas (MCP):</strong> um servidor MCP de Postgres (só leitura em dev), um de busca em documentação, um de navegador para checar a UI.</li>
+        <li><strong>Know-how (Skills):</strong> <code>skills/write-migration/SKILL.md</code>, <code>skills/add-api-endpoint/SKILL.md</code>.</li>
+        <li><strong>Regras:</strong> um arquivo de instruções do projeto com a stack, o comando de teste e "nunca mexa no <code>.env</code>".</li>
+        <li><strong>Agente:</strong> o que vencer o teste de 5 tarefas do próprio time neste trimestre. Se aparecer um melhor no próximo, eles trocam o agente e mantêm todo o resto.</li>
+      </ul>
+    </div>
+    <div class="callout">
+      <strong>A lição:</strong> o ranking vai estar diferente daqui a seis meses. Suas ferramentas, procedimentos e hábitos de revisão não precisam mudar junto. Invista nas camadas que são padronizadas e trate o agente em si como a peça trocável.
+    </div>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://blog.jetbrains.com/research/2026/08/ai-coding-agent-adoption-2026/" target="_blank" rel="noopener">AI Coding Agents: Adoption Trends — The JetBrains Blog</a> (19/08/2026; Developer Ecosystem Survey 2026, aplicada entre maio e julho de 2026)</li>
+        <li><a href="https://blog.jetbrains.com/research/2026/08/how-much-code-do-developers-really-let-agents-write/" target="_blank" rel="noopener">How Much Code Do Developers Really Let Agents Write? — The JetBrains Blog</a> (26/08/2026)</li>
+        <li><a href="https://www.morphllm.com/agent-client-protocol" target="_blank" rel="noopener">Agent Client Protocol (ACP) Explained: ACP vs MCP, Editor Support — Morph</a> (03/03/2026)</li>
+        <li><a href="https://zed.dev/acp" target="_blank" rel="noopener">Agent Client Protocol — Zed</a> (acessado em 30/09/2026)</li>
+        <li><a href="https://www.morphllm.com/best-ai-coding-agents-2026" target="_blank" rel="noopener">Best AI Coding Agents (September 2026) — Morph</a> (set/2026)</li>
+        <li><a href="https://atlan.com/know/ai-agent/ai-agent-skills/what-are-agent-skills/" target="_blank" rel="noopener">Agent Skills Explained: SKILL.md Format and Adoption (2026) — Atlan</a> (2026)</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Coding agents &amp; protocols</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

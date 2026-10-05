@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Code Mods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic / Claude news</span>
+      <h1>Claude Code Mods: from a tool you configure to a tool you program</h1>
+      <p class="subtitle">On October 1, 2026, Anthropic opened Claude Code to "mods": small TypeScript or JavaScript modules that run <em>inside</em> the agent and can change what it does and what it draws. It's a big step in extensibility — and it comes with security fine print you should read before installing anything.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What a mod is</a></li>
+        <li><a href="#vs">Mods vs. hooks, skills, MCP and plugins</a></li>
+        <li><a href="#can">What a mod can do</a></li>
+        <li><a href="#mental">A mental model: middleware for an agent</a></li>
+        <li><a href="#risk">The security fine print</a></li>
+        <li><a href="#use">How to approach mods in practice</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What a mod is</h2>
+    <p>Until now, you could extend Claude Code from the <strong>outside</strong>: run a shell script on an event (hooks), hand it text and procedures (skills, instructions files), or give it tools (MCP servers). A <strong>mod</strong> is different: it is a function that Claude Code <strong>loads into its own process</strong> and calls when something happens — a tool call, a submitted prompt, a piece of the interface being drawn. The handler can watch, change or replace what happens next.</p>
+    <div class="card">
+      <div class="card-title">Key facts (as of Oct 2, 2026)</div>
+      <ul>
+        <li>Announced Oct 1, 2026 by Anthropic's developer account: <em>"You can now mod Claude Code."</em> Docs went live the same day.</li>
+        <li>Mods are written in a few lines of TypeScript/JavaScript — or you can ask Claude to write one for you.</li>
+        <li>They <strong>ship inside plugins</strong> and install the usual way (<code>/plugin</code> in the CLI or desktop app).</li>
+        <li>Requires Claude Code <strong>v2.1.287 or later</strong>; mods are <strong>on by default</strong>.</li>
+        <li>Mod-drawn interface appears in the <strong>terminal</strong> and the <strong>Code tab of the desktop app</strong>; handlers can also run in other surfaces (e.g. the VS Code extension, headless runs) without drawing UI.</li>
+        <li>Four mods already ship built in, including <code>/diff</code> and one that loads <code>AGENTS.md</code> as project instructions.</li>
+      </ul>
+    </div>
+
+    <h2 id="vs">2. Mods vs. hooks, skills, MCP and plugins</h2>
+    <p>Claude Code already had several extension points. The new one fills a gap none of them covered.</p>
+    <table>
+      <tr><th>Mechanism</th><th>Runs where</th><th>Good for</th><th>Can't do</th></tr>
+      <tr><td><strong>Skills / instructions</strong></td><td>Text in the model's context</td><td>Teaching procedures and conventions</td><td>Enforce anything; change the UI</td></tr>
+      <tr><td><strong>MCP servers</strong></td><td>Separate process, over a protocol</td><td>Giving the agent new tools and data</td><td>Alter built-in behavior or rendering</td></tr>
+      <tr><td><strong>Hooks</strong></td><td>A shell command / HTTP call fired from outside</td><td>Reacting to events (run a linter, log, block)</td><td>Draw UI, share in-memory state</td></tr>
+      <tr><td><strong>Mods</strong></td><td><strong>Inside</strong> Claude Code's process</td><td>Changing behavior <em>and</em> interface, with shared state</td><td>Change the permission prompt</td></tr>
+      <tr><td><strong>Plugins</strong></td><td>—</td><td>The <em>package</em>: bundles skills, commands, MCP, and now mods</td><td>(It's a container, not a mechanism)</td></tr>
+    </table>
+    <p>In short: skills and MCP add <em>capabilities</em> the model can use; hooks add <em>reactions</em>; mods let you reshape the <em>harness</em> itself.</p>
+
+    <h2 id="can">3. What a mod can do</h2>
+    <p>According to Anthropic's documentation (as summarized by independent coverage on launch day):</p>
+    <ul>
+      <li><strong>Draw its own interface:</strong> a pane beside the transcript, or a band above the prompt with tabs, buttons and text fields.</li>
+      <li><strong>Restyle Claude Code's own interface:</strong> the row of a tool call, the spinner, the dialog where Claude asks you questions.</li>
+      <li><strong>Step into a tool call or a request:</strong> hold a call while it asks you something, answer it without running the tool at all, or send one request to a different model.</li>
+      <li><strong>Add slash commands</strong> that run your function immediately, with no Claude turn (so no tokens spent).</li>
+      <li><strong>Share data between handlers:</strong> e.g. count tool calls in one handler and show the count beside the spinner in another.</li>
+    </ul>
+
+    <h2 id="mental">4. A mental model: middleware for an agent</h2>
+    <p>If you've used Express or Koa, you already know the shape. Multiple mods run in registration order as an <strong>onion-style chain</strong>: earlier handlers wrap later ones, and each can pass the event along, modify it, or stop it. Instead of HTTP requests, the "requests" are agent events.</p>
+    <div class="card">
+      <div class="card-title">Generic example — pseudocode, not the real API</div>
+      <p style="margin:0 0 8px">Imagine a mod called <code>cost-guard</code>. Conceptually it would do this (check the official Mods API docs for real names and signatures):</p>
+      <ul style="margin:0">
+        <li>On every <strong>model request</strong>: count tokens so far this session.</li>
+        <li>On a <strong>tool call</strong> that matches a risky pattern (say, deleting many files): hold it and ask you first.</li>
+        <li>On <strong>render</strong>: show a small band above the prompt with the running total.</li>
+        <li>As a <strong>slash command</strong> <code>/budget</code>: print the totals instantly, without spending a model turn.</li>
+      </ul>
+    </div>
+    <p>That's the leap: behavior (guard the call), interface (the band) and state (the running total) living in one small module.</p>
+
+    <h2 id="risk">5. The security fine print</h2>
+    <p>Anthropic's docs are blunt: <strong>"A mod is code that runs with your permissions."</strong> It is <strong>not sandboxed</strong>. Turning on Claude Code's sandboxing isolates the Bash commands the agent runs — not processes a mod starts.</p>
+    <table>
+      <tr><th>What a loaded mod can reach</th><th>What that means</th></tr>
+      <tr><td>Your machine</td><td>Read/write files, start programs, make network requests — as you</td></tr>
+      <tr><td>Your secrets</td><td>Environment variables and settings files, including API keys</td></tr>
+      <tr><td>Your session</td><td>Every prompt and tool call; it can rewrite them or submit prompts</td></tr>
+      <tr><td>Your approvals</td><td>It can approve a tool call <em>before you're asked</em></td></tr>
+      <tr><td>Your usage</td><td>It can call a model on your plan or API key</td></tr>
+    </table>
+    <div class="callout">
+      <strong>The one hard line:</strong> a mod can restyle much of the interface, <strong>but not the permission prompt</strong>. However, a mod that auto-approves tool calls can approve something a rule would otherwise have asked you about — so "the prompt is intact" is not the same as "I'm safe."
+    </div>
+    <h3>Controls Anthropic documents</h3>
+    <ul>
+      <li><code>claude plugin validate</code> — inspect a mod before trusting it.</li>
+      <li><code>--safe-mode</code> — start a session with mods off.</li>
+      <li><code>disableAllHooks</code> — turn every mod off.</li>
+      <li>An <strong>administrator setting</strong> that limits which mods load (user-installed ones can be blocked while managed ones keep running).</li>
+    </ul>
+
+    <h2 id="use">6. How to approach mods in practice</h2>
+    <ol>
+      <li><strong>Treat a mod like an npm dependency with root-ish access to your session.</strong> Same supply-chain thinking: who wrote it, is the source readable, is it pinned to a version?</li>
+      <li><strong>Read the code before installing.</strong> A mod is "a few lines of TypeScript" — that's exactly why reviewing it is cheap.</li>
+      <li><strong>Prefer the lightest mechanism that works.</strong> If a skill or hook solves your problem, use that; reach for a mod only when you need UI, in-process state, or to intercept requests.</li>
+      <li><strong>Teams: decide the policy first.</strong> Use the admin setting to allow only vetted mods before people start installing from random marketplaces.</li>
+      <li><strong>Start by building your own tiny mod</strong> (a status band, a slash command). You'll understand both the power and the risk much better.</li>
+    </ol>
+    <div class="callout">
+      <strong>Why it matters:</strong> coding agents are becoming <em>platforms</em>. Extensions turned browsers into platforms — with the same trade: power arrives together with a new supply chain. Worth watching: a changelog entry, the first public mod marketplaces, security research on malicious mods, and whether competing agents ship a comparable in-process extension model.
+    </div>
+    <p style="font-size:14px;color:var(--text-dim)">Note: details above come from Anthropic's launch-day documentation as reported by independent sources; at the time of writing there was no public changelog entry yet and no community mod marketplace announced. APIs may change quickly.</p>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://cellcog.ai/blog/claude-code-mods/" target="_blank" rel="noopener">Claude Code Mods: What They Can Do and What They Can Reach — CellCog</a> (Oct 2, 2026; summarizes Anthropic's Mods docs, the mods folder on GitHub and the launch post)</li>
+        <li><a href="https://alphasignal.ai/news/anthropic-s-claude-code-mods-let-developers-rewrite-the-agent-from-inside" target="_blank" rel="noopener">Anthropic's Claude Code Mods Let Developers Rewrite the Agent From Inside — AlphaSignal</a> (Oct 2026)</li>
+        <li><a href="https://pasqualepillitteri.it/en/news/19871/claude-code-mods-plugins" target="_blank" rel="noopener">Claude Code Gets Mods, Plugins That Rewrite the Agent — Pasquale Pillitteri</a> (Oct 2026)</li>
+        <li><a href="https://blog.4sapi.com/blog/claude-mods-typescript-hooks-developer-guide" target="_blank" rel="noopener">Claude Mods Revealed: TypeScript Hooks for Claude Code — 4SAPI Blog</a> (Oct 2026)</li>
+        <li><a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">Anthropic Release Notes, October 2026 — Releasebot</a> (Oct 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades Anthropic / Claude</span>
+      <h1>Mods do Claude Code: de uma ferramenta que você configura para uma que você programa</h1>
+      <p class="subtitle">Em 1º de outubro de 2026, a Anthropic abriu o Claude Code para "mods": pequenos módulos em TypeScript ou JavaScript que rodam <em>dentro</em> do agente e podem mudar o que ele faz e o que ele desenha na tela. É um passo grande em extensibilidade — e vem com letras miúdas de segurança que vale ler antes de instalar qualquer coisa.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#pt-what">O que é um mod</a></li>
+        <li><a href="#pt-vs">Mods vs. hooks, skills, MCP e plugins</a></li>
+        <li><a href="#pt-can">O que um mod pode fazer</a></li>
+        <li><a href="#pt-mental">Modelo mental: middleware para um agente</a></li>
+        <li><a href="#pt-risk">As letras miúdas de segurança</a></li>
+        <li><a href="#pt-use">Como abordar mods na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-what">1. O que é um mod</h2>
+    <p>Até agora, você estendia o Claude Code <strong>por fora</strong>: rodando um script de shell num evento (hooks), entregando texto e procedimentos (skills, arquivos de instruções) ou dando ferramentas a ele (servidores MCP). Um <strong>mod</strong> é diferente: é uma função que o Claude Code <strong>carrega dentro do próprio processo</strong> e chama quando algo acontece — uma chamada de ferramenta, um prompt enviado, um pedaço da interface sendo desenhado. O handler pode observar, alterar ou substituir o que acontece em seguida.</p>
+    <div class="card">
+      <div class="card-title">Fatos-chave (em 02/10/2026)</div>
+      <ul>
+        <li>Anunciado em 01/10/2026 pela conta de desenvolvedores da Anthropic: <em>"You can now mod Claude Code."</em> A documentação saiu no mesmo dia.</li>
+        <li>Mods são escritos em poucas linhas de TypeScript/JavaScript — ou você pede para o Claude escrever um.</li>
+        <li>Eles <strong>vêm dentro de plugins</strong> e se instalam do jeito de sempre (<code>/plugin</code> no CLI ou no app desktop).</li>
+        <li>Exige Claude Code <strong>v2.1.287 ou superior</strong>; mods ficam <strong>ligados por padrão</strong>.</li>
+        <li>A interface desenhada por mods aparece no <strong>terminal</strong> e na <strong>aba Code do app desktop</strong>; os handlers também podem rodar em outras superfícies (ex.: extensão do VS Code, execuções headless), mas sem desenhar UI.</li>
+        <li>Quatro mods já vêm embutidos, incluindo o <code>/diff</code> e um que carrega o <code>AGENTS.md</code> como instruções do projeto.</li>
+      </ul>
+    </div>
+
+    <h2 id="pt-vs">2. Mods vs. hooks, skills, MCP e plugins</h2>
+    <p>O Claude Code já tinha vários pontos de extensão. O novo preenche uma lacuna que nenhum deles cobria.</p>
+    <table>
+      <tr><th>Mecanismo</th><th>Roda onde</th><th>Bom para</th><th>Não consegue</th></tr>
+      <tr><td><strong>Skills / instruções</strong></td><td>Texto no contexto do modelo</td><td>Ensinar procedimentos e convenções</td><td>Impor nada; mudar a UI</td></tr>
+      <tr><td><strong>Servidores MCP</strong></td><td>Processo separado, via protocolo</td><td>Dar novas ferramentas e dados ao agente</td><td>Alterar comportamento nativo ou renderização</td></tr>
+      <tr><td><strong>Hooks</strong></td><td>Comando de shell / chamada HTTP disparado de fora</td><td>Reagir a eventos (rodar linter, logar, bloquear)</td><td>Desenhar UI, manter estado em memória compartilhado</td></tr>
+      <tr><td><strong>Mods</strong></td><td><strong>Dentro</strong> do processo do Claude Code</td><td>Mudar comportamento <em>e</em> interface, com estado compartilhado</td><td>Alterar o prompt de permissão</td></tr>
+      <tr><td><strong>Plugins</strong></td><td>—</td><td>O <em>pacote</em>: agrupa skills, comandos, MCP e agora mods</td><td>(É um contêiner, não um mecanismo)</td></tr>
+    </table>
+    <p>Resumindo: skills e MCP adicionam <em>capacidades</em> que o modelo usa; hooks adicionam <em>reações</em>; mods deixam você remodelar o próprio <em>harness</em>.</p>
+
+    <h2 id="pt-can">3. O que um mod pode fazer</h2>
+    <p>Segundo a documentação da Anthropic (como resumida por coberturas independentes no dia do lançamento):</p>
+    <ul>
+      <li><strong>Desenhar a própria interface:</strong> um painel ao lado da transcrição, ou uma faixa acima do prompt com abas, botões e campos de texto.</li>
+      <li><strong>Redesenhar a interface do próprio Claude Code:</strong> a linha de uma chamada de ferramenta, o spinner, o diálogo em que o Claude te faz perguntas.</li>
+      <li><strong>Entrar no meio de uma chamada de ferramenta ou de uma requisição:</strong> segurar a chamada para te perguntar algo, responder sem rodar a ferramenta, ou enviar uma requisição a outro modelo.</li>
+      <li><strong>Adicionar slash commands</strong> que executam sua função na hora, sem turno do Claude (ou seja, sem gastar tokens).</li>
+      <li><strong>Compartilhar dados entre handlers:</strong> por exemplo, contar chamadas de ferramenta num handler e mostrar o total ao lado do spinner em outro.</li>
+    </ul>
+
+    <h2 id="pt-mental">4. Modelo mental: middleware para um agente</h2>
+    <p>Se você já usou Express ou Koa, já conhece o formato. Vários mods rodam na ordem de registro numa <strong>cadeia em camadas (estilo cebola)</strong>: handlers anteriores envolvem os posteriores, e cada um pode repassar o evento, modificá-lo ou interrompê-lo. Em vez de requisições HTTP, as "requisições" são eventos do agente.</p>
+    <div class="card">
+      <div class="card-title">Exemplo genérico — pseudocódigo, não é a API real</div>
+      <p style="margin:0 0 8px">Imagine um mod chamado <code>cost-guard</code>. Conceitualmente ele faria isto (consulte a documentação oficial da Mods API para nomes e assinaturas reais):</p>
+      <ul style="margin:0">
+        <li>A cada <strong>requisição ao modelo</strong>: somar os tokens da sessão.</li>
+        <li>Numa <strong>chamada de ferramenta</strong> com padrão arriscado (por exemplo, apagar muitos arquivos): segurar e te perguntar antes.</li>
+        <li>No <strong>render</strong>: mostrar uma faixa acima do prompt com o total corrente.</li>
+        <li>Como <strong>slash command</strong> <code>/budget</code>: imprimir os totais na hora, sem gastar um turno do modelo.</li>
+      </ul>
+    </div>
+    <p>Esse é o salto: comportamento (proteger a chamada), interface (a faixa) e estado (o total) vivendo num único módulo pequeno.</p>
+
+    <h2 id="pt-risk">5. As letras miúdas de segurança</h2>
+    <p>A documentação da Anthropic é direta: <strong>"A mod is code that runs with your permissions."</strong> Ou seja, ele roda com as suas permissões e <strong>não é isolado (sandbox)</strong>. Ligar o sandbox do Claude Code isola os comandos Bash que o agente executa — não os processos que um mod inicia.</p>
+    <table>
+      <tr><th>O que um mod carregado alcança</th><th>O que isso significa</th></tr>
+      <tr><td>Sua máquina</td><td>Ler/gravar arquivos, iniciar programas, fazer requisições de rede — como você</td></tr>
+      <tr><td>Seus segredos</td><td>Variáveis de ambiente e arquivos de configuração, incluindo chaves de API</td></tr>
+      <tr><td>Sua sessão</td><td>Todo prompt e toda chamada de ferramenta; pode reescrevê-los ou enviar prompts</td></tr>
+      <tr><td>Suas aprovações</td><td>Pode aprovar uma chamada de ferramenta <em>antes de você ser perguntado</em></td></tr>
+      <tr><td>Seu uso</td><td>Pode chamar um modelo no seu plano ou na sua chave de API</td></tr>
+    </table>
+    <div class="callout">
+      <strong>A única linha firme:</strong> um mod pode redesenhar boa parte da interface, <strong>mas não o prompt de permissão</strong>. Só que um mod que aprova chamadas automaticamente pode aprovar algo sobre o qual uma regra normalmente te perguntaria — então "o prompt está intacto" não significa "estou seguro".
+    </div>
+    <h3>Controles documentados pela Anthropic</h3>
+    <ul>
+      <li><code>claude plugin validate</code> — inspecionar um mod antes de confiar nele.</li>
+      <li><code>--safe-mode</code> — iniciar uma sessão com mods desligados.</li>
+      <li><code>disableAllHooks</code> — desligar todos os mods.</li>
+      <li>Uma <strong>configuração de administrador</strong> que limita quais mods carregam (os instalados pelo usuário podem ser bloqueados enquanto os gerenciados continuam rodando).</li>
+    </ul>
+
+    <h2 id="pt-use">6. Como abordar mods na prática</h2>
+    <ol>
+      <li><strong>Trate um mod como uma dependência npm com acesso quase total à sua sessão.</strong> Mesmo raciocínio de cadeia de suprimentos: quem escreveu, o código é legível, está fixado numa versão?</li>
+      <li><strong>Leia o código antes de instalar.</strong> Um mod são "algumas linhas de TypeScript" — é justamente por isso que revisar é barato.</li>
+      <li><strong>Prefira o mecanismo mais leve que resolve.</strong> Se uma skill ou hook resolve, use; recorra a um mod só quando precisar de UI, estado em processo ou interceptar requisições.</li>
+      <li><strong>Times: definam a política primeiro.</strong> Use a configuração de admin para liberar só mods avaliados antes de o pessoal instalar de marketplaces aleatórios.</li>
+      <li><strong>Comece construindo seu próprio mod pequeno</strong> (uma faixa de status, um slash command). Você entende muito melhor o poder e o risco.</li>
+    </ol>
+    <div class="callout">
+      <strong>Por que importa:</strong> agentes de código estão virando <em>plataformas</em>. Extensões transformaram navegadores em plataformas — com a mesma troca: o poder chega junto com uma nova cadeia de suprimentos. Vale acompanhar: uma entrada no changelog, os primeiros marketplaces públicos de mods, pesquisas de segurança sobre mods maliciosos e se agentes concorrentes lançam um modelo comparável de extensão em processo.
+    </div>
+    <p style="font-size:14px;color:var(--text-dim)">Nota: os detalhes acima vêm da documentação de lançamento da Anthropic, conforme relatada por fontes independentes; na hora da escrita não havia entrada pública no changelog nem marketplace comunitário de mods anunciado. As APIs podem mudar rápido.</p>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://cellcog.ai/blog/claude-code-mods/" target="_blank" rel="noopener">Claude Code Mods: What They Can Do and What They Can Reach — CellCog</a> (02/10/2026; resume a documentação de Mods da Anthropic, a pasta de mods no GitHub e o post de lançamento)</li>
+        <li><a href="https://alphasignal.ai/news/anthropic-s-claude-code-mods-let-developers-rewrite-the-agent-from-inside" target="_blank" rel="noopener">Anthropic's Claude Code Mods Let Developers Rewrite the Agent From Inside — AlphaSignal</a> (out/2026)</li>
+        <li><a href="https://pasqualepillitteri.it/en/news/19871/claude-code-mods-plugins" target="_blank" rel="noopener">Claude Code Gets Mods, Plugins That Rewrite the Agent — Pasquale Pillitteri</a> (out/2026)</li>
+        <li><a href="https://blog.4sapi.com/blog/claude-mods-typescript-hooks-developer-guide" target="_blank" rel="noopener">Claude Mods Revealed: TypeScript Hooks for Claude Code — 4SAPI Blog</a> (out/2026)</li>
+        <li><a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">Anthropic Release Notes, October 2026 — Releasebot</a> (out/2026)</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Code Mods</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

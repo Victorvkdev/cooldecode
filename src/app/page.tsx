@@ -704,6 +704,105 @@ const posts: Post[] = [
     file: "ai-watch-2026-09-21-claude-leads-rd.html",
   },
   {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Grok 4.7 undercuts everyone on price, still trails on the hardest benchmarks", pt: "O Grok 4.7 vence todo mundo no preço, mas ainda fica atrás nos benchmarks mais duros" },
+    desc: {
+      en: "xAI shipped a 40% bigger base model and kept the price frozen — a clean snapshot of price and frontier capability moving as two separate races.",
+      pt: "A xAI lançou um modelo-base 40% maior e manteve o preço congelado — um retrato claro de preço e capacidade de fronteira como duas corridas separadas.",
+    },
+    date: "2026-09-22",
+    file: "ai-watch-2026-09-22-grok-4-7-price-performance.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Claude Opus 5.5: same tier of work, 40% cheaper", pt: "Claude Opus 5.5: mesmo nível de trabalho, 40% mais barato" },
+    desc: {
+      en: "Anthropic's new flagship matches Fable 5.1 on most work while costing ~40% less to run — pricing and safety over a bigger benchmark score.",
+      pt: "O novo topo de linha da Anthropic empata com o Fable 5.1 na maior parte do trabalho custando ~40% menos pra rodar — preço e segurança acima de um benchmark maior.",
+    },
+    date: "2026-09-23",
+    file: "ai-watch-2026-09-23-claude-opus-5-5.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Claude discovers a novel CRISPR-like enzyme system", pt: "Claude descobre um novo sistema de enzimas parecido com CRISPR" },
+    desc: {
+      en: "Anthropic's biology lab let Claude search ~1.9B protein clusters autonomously for 21 hours — and it surfaced a real, previously unknown enzyme system a CRISPR pioneer called worth investigating.",
+      pt: "O laboratório de biologia da Anthropic deixou o Claude vasculhar ~1,9 bi de clusters de proteínas de forma autônoma por 21 horas — e ele trouxe à tona um sistema de enzimas real e inédito, que um dos criadores do CRISPR considerou valer a pena investigar.",
+    },
+    date: "2026-09-24",
+    file: "ai-watch-2026-09-24-claude-art-enzyme-discovery.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Fine-tuning, explained", pt: "Fine-tuning, explicado" },
+    desc: {
+      en: "Fine-tuning changes how a model behaves, not what it knows — LoRA/QLoRA, RLHF/DPO, and the real decision tree against prompting and RAG.",
+      pt: "Fine-tuning muda como um modelo se comporta, não o que ele sabe — LoRA/QLoRA, RLHF/DPO, e a árvore de decisão de verdade frente a prompting e RAG.",
+    },
+    date: "2026-09-25",
+    file: "ai-watch-2026-09-25-fine-tuning-llms.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Adaptive thinking: effort, not budget", pt: "Adaptive thinking: esforço, não orçamento" },
+    desc: {
+      en: "Claude Opus 5.5 made adaptive thinking mandatory — how the effort parameter replaced manual thinking budgets, and when reasoning is actually worth the cost.",
+      pt: "O Claude Opus 5.5 tornou o adaptive thinking obrigatório — como o parâmetro effort substituiu os orçamentos manuais de raciocínio, e quando pensar mais realmente vale o custo.",
+    },
+    date: "2026-09-28",
+    file: "ai-watch-2026-09-28-extended-thinking-effort.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Claude Sonnet 5.5: same price, smaller bill", pt: "Claude Sonnet 5.5: mesmo preço, conta menor" },
+    desc: {
+      en: "Anthropic's new mid-tier model keeps the $2/$10 price but finishes tasks with far fewer tokens — why cost per task beats list price, the benchmarks, and when to pick Sonnet over Opus.",
+      pt: "O novo modelo intermediário da Anthropic mantém o preço de US$2/US$10, mas termina as tarefas com bem menos tokens — por que custo por tarefa vale mais que preço de tabela, os benchmarks, e quando escolher Sonnet em vez de Opus.",
+    },
+    date: "2026-09-29",
+    file: "ai-watch-2026-09-29-claude-sonnet-5-5.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "The coding-agent map, late 2026", pt: "O mapa dos agentes de código, fim de 2026" },
+    desc: {
+      en: "90% of developers now use coding agents weekly — who's winning (Claude Code, Codex, Copilot, Cursor), how much code agents really write, and how MCP, ACP and Skills make agents swappable.",
+      pt: "90% dos devs já usam agentes de código toda semana — quem está ganhando (Claude Code, Codex, Copilot, Cursor), quanto código os agentes escrevem de fato, e como MCP, ACP e Skills tornam os agentes trocáveis.",
+    },
+    date: "2026-09-30",
+    file: "ai-watch-2026-09-30-coding-agents-map-protocols.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Claude Code Mods: a tool you program", pt: "Mods do Claude Code: uma ferramenta que você programa" },
+    desc: {
+      en: "Anthropic opened Claude Code to mods — TypeScript modules that run inside the agent to change behavior and UI. How they differ from hooks, skills and MCP, and the security fine print.",
+      pt: "A Anthropic abriu o Claude Code para mods — módulos em TypeScript que rodam dentro do agente e mudam comportamento e interface. Como diferem de hooks, skills e MCP, e as letras miúdas de segurança.",
+    },
+    date: "2026-10-02",
+    file: "ai-watch-2026-10-02-claude-code-mods.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Two frontier launches in 24 hours, one price point", pt: "Dois lançamentos de fronteira em 24 horas, um único preço" },
+    desc: {
+      en: "GPT-6.1 Sol and Gemini 4 Argon both land at $2/$10 per million tokens — same as Claude Sonnet 5.5. What the convergence means, and the fine print on each price tag.",
+      pt: "GPT-6.1 Sol e Gemini 4 Argon chegam a US$ 2/US$ 10 por milhão de tokens — igual ao Claude Sonnet 5.5. O que a convergência significa e as letras miúdas de cada tabela.",
+    },
+    date: "2026-10-05",
+    file: "ai-watch-2026-10-05-gpt-6-1-sol-gemini-4-argon-price-point.html",
+  },
+  {
     category: "deep",
     categoryLabel: { en: "Deep dive", pt: "Imersão" },
     title: { en: "Tailwind CSS", pt: "Tailwind CSS" },
@@ -735,6 +834,17 @@ const posts: Post[] = [
     },
     date: "2026-08-02",
     file: "imersao-frameworks-deploy.html",
+  },
+  {
+    category: "deep",
+    categoryLabel: { en: "Deep dive", pt: "Imersão" },
+    title: { en: "DBMS: Database Management Systems", pt: "SGBDs: Sistemas de Gerenciamento de Banco de Dados" },
+    desc: {
+      en: "What a DBMS does, how it works inside (WAL, MVCC, indexes), every database family, main products compared and how to choose.",
+      pt: "O que um SGBD faz, como funciona por dentro (WAL, MVCC, índices), todas as famílias de bancos, principais produtos comparados e como escolher.",
+    },
+    date: "2026-10-05",
+    file: "imersao-sgbds.html",
   },
 ];
 

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Sonnet 5.5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #ffb3bd; }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 20px 0; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc .card-title { margin-bottom: 14px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 8px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .sources { margin-top: 40px; }
+  .sources ol { font-size: 13px; color: var(--text-dim); }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude Sonnet 5.5: same price tag, smaller bill</h1>
+      <p class="subtitle">Anthropic shipped the second model of the 5.5 family on September 28, 2026. The list price didn't move, but the cost per finished task did. Here's why that matters more than a price cut, what the benchmarks do and don't tell you, and how to decide between Sonnet and Opus now.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What launched</a></li>
+        <li><a href="#cost">"Up to 30% cheaper" without a price cut</a></li>
+        <li><a href="#bench">Benchmarks, with the right amount of skepticism</a></li>
+        <li><a href="#choose">Sonnet 5.5 or Opus 5.5?</a></li>
+        <li><a href="#safety">A Sonnet with Opus-level safeguards</a></li>
+        <li><a href="#migrate">Migration checklist</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What launched</h2>
+    <p><strong>Claude Sonnet 5.5</strong> is Anthropic's new mid-tier model, released six days after Opus 5.5 and about three months after Sonnet 5. Anthropic pitches it as the "faster, lower-cost complement" to Opus 5.5, aimed at well-scoped everyday work: bug fixing, coding tasks with clear boundaries, and polished documents, slides and spreadsheets.</p>
+    <div class="card">
+      <div class="card-title">Spec sheet</div>
+      <ul>
+        <li><strong>Model ID:</strong> <code>claude-sonnet-5-5</code>, on the Claude Platform, AWS, Google Cloud and Microsoft Azure (zero data retention available).</li>
+        <li><strong>Context / output:</strong> 1M-token context window, up to 128K output tokens.</li>
+        <li><strong>Reliable knowledge cutoff:</strong> June 2026.</li>
+        <li><strong>Reasoning:</strong> adaptive thinking on by default, with five effort levels: low, medium, high, xhigh, max.</li>
+        <li><strong>Price:</strong> $2 input / $10 output per million tokens, identical to Sonnet 5 and half of Opus 5.5 ($4 / $20).</li>
+        <li><strong>Speed:</strong> 30%+ faster output generation, the fastest Sonnet to date.</li>
+      </ul>
+    </div>
+    <p>Anthropic also said a new Haiku, the smallest tier, is coming "in the coming weeks", with no firm date.</p>
+
+    <h2 id="cost">2. "Up to 30% cheaper" without a price cut</h2>
+    <p>This is the most useful idea to take from the launch. What you pay the API is <em>price per token × tokens used</em>. Anthropic kept the first number fixed and attacked the second: Sonnet 5.5 reaches the same result with fewer output tokens and fewer tool calls (it batches actions into fewer steps). So the <strong>cost per task</strong> goes down even though the rate card doesn't change.</p>
+    <div class="card">
+      <div class="card-title">Illustrative example</div>
+      <p>Say an agent task used 60K input tokens and 20K output tokens on Sonnet 5:</p>
+      <p><code>60K × $2/M + 20K × $10/M = $0.12 + $0.20 = $0.32</code></p>
+      <p>If the new model finishes the same task with 30% fewer tokens on each side (42K in, 14K out):</p>
+      <p><code>42K × $2/M + 14K × $10/M = $0.084 + $0.14 = $0.224</code></p>
+      <p style="margin:0">Same price per token, ~30% less per task. At 10,000 tasks/month, that's about $960 saved. Your real ratio depends on your workload, so measure it.</p>
+    </div>
+    <p>Customer numbers Anthropic published point the same way: an asset manager measured about <strong>121K tokens per answer versus 497K</strong> on Sonnet 5; an app-builder platform needed <strong>3.6 iterations per app build where Opus 5 took 7.7</strong>; a support-software company processed tickets <strong>20% faster</strong>. A code-review company said Sonnet 5's habit of "reaching for web search too often" was gone.</p>
+    <div class="callout">
+      <strong>Why this matters beyond Claude:</strong> when comparing any two models, list price is the wrong metric. A model that costs twice as much per token but finishes in a third of the tokens is cheaper. Always compare cost per completed task on your own workload.
+    </div>
+
+    <h2 id="bench">3. Benchmarks, with the right amount of skepticism</h2>
+    <p>All numbers below are vendor-reported in Anthropic's launch post (GDPval-AA is run by Artificial Analysis). Methodology is in the Sonnet 5.5 system card.</p>
+    <table>
+      <tr><th>Benchmark</th><th>Sonnet 5</th><th>Sonnet 5.5</th><th>Opus 5.5</th></tr>
+      <tr><td>Terminal-Bench 4.0 (agentic coding in a terminal)</td><td>10.3%</td><td><strong>70.6%</strong></td><td>66.4% (xhigh)</td></tr>
+      <tr><td>CursorBench 4.0</td><td>—</td><td>55.5%</td><td>57.8%</td></tr>
+      <tr><td>FrontierCode 1.1</td><td>—</td><td>52.1% (xhigh) / 46.2% (max)</td><td>54.4%</td></tr>
+      <tr><td>GDPval-AA v2.1 (knowledge work, 44 occupations)</td><td>1449</td><td>1844</td><td>1846</td></tr>
+      <tr><td>OSWorld 2.1 (computer use)</td><td>—</td><td>80.1%</td><td>81.8%</td></tr>
+      <tr><td>Humanity's Last Exam (with tools)</td><td>54.9%</td><td>64.5%</td><td>—</td></tr>
+    </table>
+    <p>Three things worth noticing:</p>
+    <ul>
+      <li><strong>The Terminal-Bench jump is huge.</strong> 10.3% to 70.6% in three months is the kind of number to verify on your own tasks before you believe it. Big jumps on one benchmark often reflect a specific capability (here, efficient multi-step terminal work) more than a general leap.</li>
+      <li><strong>More effort isn't always better.</strong> On FrontierCode, <em>max</em> scored lower than <em>xhigh</em>. At max, the model more often launched multi-agent code review, which sometimes caused timeouts or edits outside the task's scope, both penalized by the benchmark. A good reminder that the highest setting is not the default choice.</li>
+      <li><strong>Sonnet beats Opus on some agentic coding tests</strong>, but Anthropic itself says Opus 5.5 is still clearly stronger on complex, open-ended work. Benchmarks measure well-defined tasks; real ambiguity is where the bigger model earns its price.</li>
+    </ul>
+
+    <h2 id="choose">4. Sonnet 5.5 or Opus 5.5?</h2>
+    <table>
+      <tr><th>Situation</th><th>Better fit</th><th>Why</th></tr>
+      <tr><td>Clear bug fix, scoped feature, refactor with tests</td><td>Sonnet 5.5</td><td>Well-defined, and the token savings add up fast in agent loops.</td></tr>
+      <tr><td>High-volume pipelines (tickets, classification, doc drafting)</td><td>Sonnet 5.5 at low/medium effort</td><td>Speed and per-task cost dominate.</td></tr>
+      <tr><td>Decks, spreadsheets, reports from a template</td><td>Sonnet 5.5</td><td>Early testers report output that needs little editing.</td></tr>
+      <tr><td>Vague problem, architecture decisions, long open-ended research</td><td>Opus 5.5</td><td>Anthropic's own guidance: stronger on complex, open-ended work.</td></tr>
+      <tr><td>You're not sure</td><td>Start with Sonnet 5.5</td><td>Escalate to Opus only where you can point to specific failures.</td></tr>
+    </table>
+
+    <h2 id="safety">5. A Sonnet with Opus-level safeguards</h2>
+    <p>According to TechCrunch, Anthropic rates Sonnet 5.5's cyber capabilities as comparable to Opus 5, so this is the <strong>first Sonnet to ship with the same cyber safeguards</strong> applied to Fable and Opus. In practice:</p>
+    <ul>
+      <li>Routine software work (finding and fixing bugs) works normally. Higher-risk cybersecurity requests fall back to Sonnet 5.</li>
+      <li>Biology safeguards are the same as Sonnet 5; Anthropic warns these may flag some legitimate microbiology/virology requests, and organizations can apply for verified expanded access.</li>
+      <li>New measures target <strong>capability extraction via large numbers of fake accounts</strong> (a form of distillation). Anthropic says most developers won't notice anything.</li>
+      <li>In an automated audit of about 1,850 scenarios, Sonnet 5.5 matched or improved on Sonnet 5 on most alignment, misuse-resistance and honesty measures. Anthropic notes its tests can't catch every failure.</li>
+    </ul>
+
+    <h2 id="migrate">6. Migration checklist</h2>
+    <ol>
+      <li><strong>Swap the model ID</strong> to <code>claude-sonnet-5-5</code>. Pricing is unchanged, so budgets don't need to move.</li>
+      <li><strong>If you ran Sonnet with thinking turned off</strong>, switch to the new <code>between_tools</code> setting before moving over (per Anthropic's migration guide as reported by Help Net Security).</li>
+      <li><strong>Check which effort default you're getting.</strong> Claude Code and the Claude apps default to <em>medium</em>; the Claude Platform API defaults to <em>high</em>. Same model, different behavior depending on where you call it.</li>
+      <li><strong>Re-measure tokens per task</strong> on a sample of real jobs. That number, not the list price, tells you whether you actually saved.</li>
+      <li><strong>Re-test prompts that were tuned around Sonnet 5 quirks</strong> (for example, instructions telling it not to over-search). They may now be unnecessary.</li>
+    </ol>
+
+    <div class="sources">
+      <div class="card-title">Sources</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/claude-sonnet-5-5" target="_blank" rel="noopener">Introducing Claude Sonnet 5.5 — Anthropic</a> (Sep 28, 2026; figures cross-checked via the coverage below)</li>
+        <li><a href="https://www.marktechpost.com/2026/09/28/anthropic-releases-claude-sonnet-5-5-70-6-on-terminal-bench-4-0-at-the-same-2-10-price/" target="_blank" rel="noopener">Anthropic Releases Claude Sonnet 5.5: 70.6% on Terminal-Bench 4.0 at the Same $2/$10 Price — MarkTechPost</a> (Sep 28, 2026)</li>
+        <li><a href="https://techcrunch.com/2026/09/28/anthropic-releases-sonnet-5-5-which-it-calls-a-significantly-cheaper-faster-work-partner/" target="_blank" rel="noopener">Anthropic releases Sonnet 5.5, which it calls a significantly cheaper, faster work partner — TechCrunch</a> (Sep 28, 2026)</li>
+        <li><a href="https://www.helpnetsecurity.com/2026/09/29/anthropic-claude-sonnet-5-5/" target="_blank" rel="noopener">Claude Sonnet 5.5 gets faster without a price hike — Help Net Security</a> (Sep 29, 2026)</li>
+        <li><a href="https://releasebot.io/updates/anthropic/claude" target="_blank" rel="noopener">Claude release notes — Releasebot</a> (Sep 28, 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude Sonnet 5.5: mesmo preço na tabela, conta menor no fim do mês</h1>
+      <p class="subtitle">A Anthropic lançou o segundo modelo da família 5.5 em 28 de setembro de 2026. O preço de tabela não mudou, mas o custo por tarefa concluída caiu. Veja por que isso importa mais do que um desconto, o que os benchmarks dizem (e o que não dizem) e como escolher entre Sonnet e Opus agora.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#pt-what">O que foi lançado</a></li>
+        <li><a href="#pt-cost">"Até 30% mais barato" sem baixar o preço</a></li>
+        <li><a href="#pt-bench">Benchmarks, com a dose certa de ceticismo</a></li>
+        <li><a href="#pt-choose">Sonnet 5.5 ou Opus 5.5?</a></li>
+        <li><a href="#pt-safety">Um Sonnet com salvaguardas de nível Opus</a></li>
+        <li><a href="#pt-migrate">Checklist de migração</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-what">1. O que foi lançado</h2>
+    <p>O <strong>Claude Sonnet 5.5</strong> é o novo modelo intermediário da Anthropic, lançado seis dias depois do Opus 5.5 e cerca de três meses depois do Sonnet 5. A Anthropic o apresenta como o "complemento mais rápido e mais barato" do Opus 5.5, pensado para o trabalho do dia a dia com escopo bem definido: correção de bugs, tarefas de código com limites claros, e documentos, slides e planilhas bem acabados.</p>
+    <div class="card">
+      <div class="card-title">Ficha técnica</div>
+      <ul>
+        <li><strong>ID do modelo:</strong> <code>claude-sonnet-5-5</code>, na Claude Platform, AWS, Google Cloud e Microsoft Azure (com opção de zero data retention).</li>
+        <li><strong>Contexto / saída:</strong> janela de 1M de tokens, até 128K tokens de saída.</li>
+        <li><strong>Corte de conhecimento confiável:</strong> junho de 2026.</li>
+        <li><strong>Raciocínio:</strong> adaptive thinking ligado por padrão, com cinco níveis de esforço: low, medium, high, xhigh, max.</li>
+        <li><strong>Preço:</strong> US$ 2 de entrada / US$ 10 de saída por milhão de tokens, igual ao Sonnet 5 e metade do Opus 5.5 (US$ 4 / US$ 20).</li>
+        <li><strong>Velocidade:</strong> geração de saída 30%+ mais rápida, o Sonnet mais rápido até hoje.</li>
+      </ul>
+    </div>
+    <p>A Anthropic também avisou que um novo Haiku, o menor modelo da linha, chega "nas próximas semanas", sem data definida.</p>
+
+    <h2 id="pt-cost">2. "Até 30% mais barato" sem baixar o preço</h2>
+    <p>Essa é a ideia mais útil do lançamento. O que você paga pra API é <em>preço por token × tokens usados</em>. A Anthropic manteve o primeiro número fixo e atacou o segundo: o Sonnet 5.5 chega ao mesmo resultado com menos tokens de saída e menos chamadas de ferramenta (ele agrupa ações em menos passos). Então o <strong>custo por tarefa</strong> cai mesmo com a tabela de preços igual.</p>
+    <div class="card">
+      <div class="card-title">Exemplo ilustrativo</div>
+      <p>Imagine uma tarefa de agente que usou 60K tokens de entrada e 20K de saída no Sonnet 5:</p>
+      <p><code>60K × US$2/M + 20K × US$10/M = US$0,12 + US$0,20 = US$0,32</code></p>
+      <p>Se o modelo novo termina a mesma tarefa com 30% menos tokens dos dois lados (42K de entrada, 14K de saída):</p>
+      <p><code>42K × US$2/M + 14K × US$10/M = US$0,084 + US$0,14 = US$0,224</code></p>
+      <p style="margin:0">Mesmo preço por token, ~30% a menos por tarefa. Com 10 mil tarefas/mês, são uns US$ 960 de economia. A proporção real depende da sua carga de trabalho, então meça.</p>
+    </div>
+    <p>Os números de clientes divulgados pela Anthropic apontam na mesma direção: uma gestora de investimentos mediu cerca de <strong>121K tokens por resposta contra 497K</strong> no Sonnet 5; uma plataforma de criação de apps precisou de <strong>3,6 iterações por app, onde o Opus 5 levava 7,7</strong>; uma empresa de software de suporte processou tickets <strong>20% mais rápido</strong>. Uma empresa de code review disse que a mania do Sonnet 5 de "recorrer à busca na web com frequência demais" sumiu.</p>
+    <div class="callout">
+      <strong>Por que isso vale além do Claude:</strong> na hora de comparar dois modelos quaisquer, preço de tabela é a métrica errada. Um modelo que custa o dobro por token, mas termina a tarefa com um terço dos tokens, sai mais barato. Compare sempre o custo por tarefa concluída na sua própria carga de trabalho.
+    </div>
+
+    <h2 id="pt-bench">3. Benchmarks, com a dose certa de ceticismo</h2>
+    <p>Todos os números abaixo foram divulgados pela própria Anthropic no post de lançamento (o GDPval-AA é rodado pela Artificial Analysis). A metodologia está no system card do Sonnet 5.5.</p>
+    <table>
+      <tr><th>Benchmark</th><th>Sonnet 5</th><th>Sonnet 5.5</th><th>Opus 5.5</th></tr>
+      <tr><td>Terminal-Bench 4.0 (código agêntico no terminal)</td><td>10,3%</td><td><strong>70,6%</strong></td><td>66,4% (xhigh)</td></tr>
+      <tr><td>CursorBench 4.0</td><td>—</td><td>55,5%</td><td>57,8%</td></tr>
+      <tr><td>FrontierCode 1.1</td><td>—</td><td>52,1% (xhigh) / 46,2% (max)</td><td>54,4%</td></tr>
+      <tr><td>GDPval-AA v2.1 (trabalho intelectual, 44 profissões)</td><td>1449</td><td>1844</td><td>1846</td></tr>
+      <tr><td>OSWorld 2.1 (uso de computador)</td><td>—</td><td>80,1%</td><td>81,8%</td></tr>
+      <tr><td>Humanity's Last Exam (com ferramentas)</td><td>54,9%</td><td>64,5%</td><td>—</td></tr>
+    </table>
+    <p>Três pontos que merecem atenção:</p>
+    <ul>
+      <li><strong>O salto no Terminal-Bench é enorme.</strong> Sair de 10,3% pra 70,6% em três meses é o tipo de número que vale conferir nas suas próprias tarefas antes de acreditar. Saltos grandes num único benchmark costumam refletir uma capacidade específica (aqui, trabalho eficiente em vários passos no terminal) mais do que um avanço geral.</li>
+      <li><strong>Mais esforço nem sempre é melhor.</strong> No FrontierCode, o <em>max</em> pontuou menos que o <em>xhigh</em>. No max, o modelo disparava com mais frequência um code review com vários agentes, o que às vezes causava timeout ou edições fora do escopo da tarefa, e o benchmark penaliza as duas coisas. Um bom lembrete de que o nível mais alto não deve ser a escolha padrão.</li>
+      <li><strong>O Sonnet vence o Opus em alguns testes de código agêntico</strong>, mas a própria Anthropic diz que o Opus 5.5 continua claramente mais forte em trabalho complexo e aberto. Benchmarks medem tarefas bem definidas; é na ambiguidade real que o modelo maior justifica o preço.</li>
+    </ul>
+
+    <h2 id="pt-choose">4. Sonnet 5.5 ou Opus 5.5?</h2>
+    <table>
+      <tr><th>Situação</th><th>Melhor escolha</th><th>Por quê</th></tr>
+      <tr><td>Bug claro, feature com escopo fechado, refatoração com testes</td><td>Sonnet 5.5</td><td>Bem definido, e a economia de tokens se acumula rápido em loops de agente.</td></tr>
+      <tr><td>Pipelines de alto volume (tickets, classificação, rascunho de docs)</td><td>Sonnet 5.5 em esforço low/medium</td><td>Velocidade e custo por tarefa mandam.</td></tr>
+      <tr><td>Apresentações, planilhas, relatórios a partir de template</td><td>Sonnet 5.5</td><td>Quem testou antes relata resultado que pede pouca edição.</td></tr>
+      <tr><td>Problema vago, decisões de arquitetura, pesquisa longa e aberta</td><td>Opus 5.5</td><td>Orientação da própria Anthropic: mais forte em trabalho complexo e aberto.</td></tr>
+      <tr><td>Na dúvida</td><td>Comece pelo Sonnet 5.5</td><td>Suba pro Opus só onde você conseguir apontar falhas concretas.</td></tr>
+    </table>
+
+    <h2 id="pt-safety">5. Um Sonnet com salvaguardas de nível Opus</h2>
+    <p>Segundo o TechCrunch, a Anthropic considera as capacidades de cibersegurança do Sonnet 5.5 comparáveis às do Opus 5, então ele é o <strong>primeiro Sonnet a sair com as mesmas salvaguardas de ciber</strong> aplicadas ao Fable e ao Opus. Na prática:</p>
+    <ul>
+      <li>Trabalho de software rotineiro (achar e corrigir bugs) funciona normalmente. Pedidos de cibersegurança de maior risco caem para o Sonnet 5.</li>
+      <li>As salvaguardas de biologia são as mesmas do Sonnet 5; a Anthropic avisa que elas podem barrar alguns pedidos legítimos de microbiologia/virologia, e organizações podem se inscrever em programas de verificação pra ter acesso ampliado.</li>
+      <li>Novas medidas miram a <strong>extração de capacidades usando muitas contas falsas</strong> (uma forma de destilação). A Anthropic diz que a maioria dos desenvolvedores não vai notar diferença.</li>
+      <li>Numa auditoria automatizada com cerca de 1.850 cenários, o Sonnet 5.5 empatou ou superou o Sonnet 5 na maioria das medidas de alinhamento, resistência a mau uso e honestidade. A Anthropic ressalta que os testes não pegam todas as falhas.</li>
+    </ul>
+
+    <h2 id="pt-migrate">6. Checklist de migração</h2>
+    <ol>
+      <li><strong>Troque o ID do modelo</strong> para <code>claude-sonnet-5-5</code>. O preço não mudou, então o orçamento não precisa mexer.</li>
+      <li><strong>Se você usava o Sonnet com thinking desligado</strong>, mude para a nova configuração <code>between_tools</code> antes de migrar (conforme o guia de migração da Anthropic, citado pela Help Net Security).</li>
+      <li><strong>Confira qual esforço padrão você está recebendo.</strong> O Claude Code e os apps do Claude usam <em>medium</em> por padrão; a API da Claude Platform usa <em>high</em>. Mesmo modelo, comportamento diferente dependendo de onde você chama.</li>
+      <li><strong>Meça de novo os tokens por tarefa</strong> numa amostra de trabalhos reais. É esse número, não o preço de tabela, que diz se você economizou de verdade.</li>
+      <li><strong>Reteste prompts ajustados para manias do Sonnet 5</strong> (por exemplo, instruções pedindo pra não buscar demais na web). Talvez nem sejam mais necessários.</li>
+    </ol>
+
+    <div class="sources">
+      <div class="card-title">Fontes</div>
+      <ol>
+        <li><a href="https://www.anthropic.com/claude-sonnet-5-5" target="_blank" rel="noopener">Introducing Claude Sonnet 5.5 — Anthropic</a> (28 set 2026; números conferidos com a cobertura abaixo)</li>
+        <li><a href="https://www.marktechpost.com/2026/09/28/anthropic-releases-claude-sonnet-5-5-70-6-on-terminal-bench-4-0-at-the-same-2-10-price/" target="_blank" rel="noopener">Anthropic Releases Claude Sonnet 5.5: 70.6% on Terminal-Bench 4.0 at the Same $2/$10 Price — MarkTechPost</a> (28 set 2026)</li>
+        <li><a href="https://techcrunch.com/2026/09/28/anthropic-releases-sonnet-5-5-which-it-calls-a-significantly-cheaper-faster-work-partner/" target="_blank" rel="noopener">Anthropic releases Sonnet 5.5, which it calls a significantly cheaper, faster work partner — TechCrunch</a> (28 set 2026)</li>
+        <li><a href="https://www.helpnetsecurity.com/2026/09/29/anthropic-claude-sonnet-5-5/" target="_blank" rel="noopener">Claude Sonnet 5.5 gets faster without a price hike — Help Net Security</a> (29 set 2026)</li>
+        <li><a href="https://releasebot.io/updates/anthropic/claude" target="_blank" rel="noopener">Claude release notes — Releasebot</a> (28 set 2026)</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Sonnet 5.5</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    footerLeft.textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>
