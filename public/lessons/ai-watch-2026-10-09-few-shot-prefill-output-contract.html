@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Show, don't tell: examples, prefill and output contracts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 0 0 20px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; line-height: 1.55; color: #d4d4dc; white-space: pre-wrap; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering</span>
+      <h1>Show, don't tell: examples, prefill and output contracts</h1>
+      <p class="subtitle">When the problem is "the answer is right but the format keeps changing," more adjectives won't help. Three tools do: an example, a started answer, and a written-down contract for the output. Here is how each works, where each breaks, and how to choose.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why">Why description fails and demonstration works</a></li>
+        <li><a href="#examples">Examples: one-shot first, few-shot only if needed</a></li>
+        <li><a href="#leak">The trap: modern models copy your examples closely</a></li>
+        <li><a href="#prefill">Prefill: start the answer for the model</a></li>
+        <li><a href="#contract">The output contract</a></li>
+        <li><a href="#combo">All three together (before/after)</a></li>
+        <li><a href="#choose">How to choose</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why">1. Why description fails and demonstration works</h2>
+    <p>Try describing a tone in words: "concise but friendly, technical without jargon, slightly dry." Ten people would write ten different things from that. Now show one sample sentence and everyone converges. Models behave the same way. Anthropic's prompt engineering guide says it directly: examples "show rather than tell, clarifying subtle requirements that are difficult to express through description alone."</p>
+    <p>The guide lists four situations where examples earn their tokens: the desired format is easier to show than describe; you need a specific tone or style; the task involves subtle patterns or conventions; and simple instructions haven't produced consistent results. If none of these applies, you probably don't need an example — and the guide is explicit that examples are "not always necessary."</p>
+
+    <h2 id="examples">2. Examples: one-shot first, few-shot only if needed</h2>
+    <p>One example is called <strong>one-shot</strong>; several are <strong>few-shot</strong>. Anthropic's advice is to start with one and add more only if the output still doesn't match. Every example costs tokens on every call, so more is not free.</p>
+    <p>A minimal pattern — an example, then the real input in the same shape:</p>
+<pre>Summarize each article in the style below.
+
+Article: [EU passes AI Act ...]
+Summary: EU passes comprehensive AI Act targeting high-risk systems.
+Key provisions include transparency requirements and human oversight
+mandates. Takes effect 2026.
+
+Now summarize this article in the same style:
+Article: [your new article]</pre>
+    <p>Notice what the example fixes without a single rule: length (three short sentences), voice (neutral), content order (what happened, key provisions, when). Writing those as rules would take a paragraph and still leave gaps.</p>
+
+    <h2 id="leak">3. The trap: modern models copy your examples closely</h2>
+    <p>The same guide adds an important warning: Claude 4.x-and-later models "pay very close attention to details in examples," so your examples should match the behavior you want and avoid patterns you don't. In practice, this means everything in the example is treated as signal:</p>
+    <ul>
+      <li><strong>Accidental length.</strong> If your example summary is 28 words, expect 28-ish words.</li>
+      <li><strong>Accidental topic.</strong> If the example is about politics, outputs drift toward that framing; vary the subjects if you use several examples.</li>
+      <li><strong>Accidental quirks.</strong> A trailing "Hope this helps!" in the example will show up in every output.</li>
+      <li><strong>Over-fitting.</strong> If all your examples have three bullets, the model will force three bullets even when there are two real points.</li>
+    </ul>
+    <div class="callout">
+      <strong>Rule of thumb:</strong> read your example as if it were a spec. Anything you wouldn't be happy to see copied into every output doesn't belong in it.
+    </div>
+
+    <h2 id="prefill">4. Prefill: start the answer for the model</h2>
+    <p><strong>Prefilling</strong> means writing the first characters of the model's reply yourself, so it continues from there. It is the most direct way to enforce an output format or skip chatty preambles ("Sure! Here's the JSON you asked for:"). Anthropic's guide shows the API pattern: the last message has role <code>assistant</code> and content <code>{</code>, so the model can only continue a JSON object.</p>
+<pre>messages = [
+  {"role": "user",
+   "content": "Extract the name and price from this product description into JSON."},
+  {"role": "assistant", "content": "{"}   # the prefill
+]</pre>
+    <p>Where it helps: structured output (JSON/XML), removing preambles, holding a persona or voice, and controlling how the answer begins. In a chat app you can't prefill, but the guide notes you can approximate it: "Output only valid JSON with no preamble. Begin your response with an opening brace."</p>
+    <div class="callout">
+      <strong>Check your model:</strong> the guide I used is dated Nov 10, 2025. Support for prefilled assistant turns can differ between model generations and APIs, and I did not verify it for the current models — confirm in the docs for the model you actually call. If prefill isn't available, the explicit-instruction version and the output contract below are the fallback.
+    </div>
+
+    <h2 id="contract">5. The output contract</h2>
+    <p>A looser but very effective idea from the practitioner guides: write the output as a <strong>contract</strong> — format, length, tone and required sections — stated so it can be tested. "Be concise" can't be tested. "Max 80 words, no bullet points, end with one next step" can. A testable contract has two payoffs: the model has an unambiguous target, and <em>you</em> can write a tiny script that checks outputs automatically.</p>
+    <table>
+      <tr><th>Vague</th><th>Testable contract</th></tr>
+      <tr><td>"Keep it short"</td><td>"At most 80 words"</td></tr>
+      <tr><td>"Return structured data"</td><td>"Return only JSON with keys <code>revenue</code>, <code>profit_margin</code>, <code>growth_rate</code>"</td></tr>
+      <tr><td>"Don't make things up"</td><td>"If a value isn't stated in the report, use <code>null</code>"</td></tr>
+      <tr><td>"Professional tone"</td><td>"Second person, no exclamation marks, no emojis"</td></tr>
+    </table>
+    <p>Note the last-but-one row: it's the permission-to-abstain trick from the previous AI Watch lesson on hallucinations, expressed as part of the format. The guide itself recommends it ("use null rather than guessing").</p>
+    <p>Also, phrase the contract positively. The guide's example: instead of "Do not use markdown," say "Your response should be composed of smoothly flowing prose paragraphs." It also notes that your prompt's own style leaks into the output — a prompt full of bullets and bold tends to get bullets and bold back.</p>
+
+    <h2 id="combo">6. All three together (before/after)</h2>
+    <p><strong>Before:</strong></p>
+<pre>Get the key numbers from this quarterly report as JSON.</pre>
+    <p>Typical failure: a friendly sentence before the JSON, "$4.2M" in one run and "4200000" in another, and an invented growth rate when the report doesn't give one.</p>
+    <p><strong>After:</strong> the structure below, adapted from the guide's own "putting it all together" example.</p>
+<pre>Extract key financial metrics from this quarterly report as JSON.
+This feeds an automated pipeline, so respond with ONLY valid JSON,
+no preamble or explanation.
+
+Use this structure:
+{
+  "revenue": "value with units",
+  "profit_margin": "percentage",
+  "growth_rate": "percentage"
+}
+
+If a metric is not clearly stated in the report, use null
+rather than guessing.
+
+Begin your response with an opening brace: {</pre>
+    <p>It combines explicit instructions, the reason the format matters, an example structure, permission to be uncertain, and format control at the start of the reply. Each line removes one specific failure.</p>
+
+    <h2 id="choose">7. How to choose</h2>
+    <table>
+      <tr><th>Symptom</th><th>Reach for</th><th>Cost</th></tr>
+      <tr><td>Format or tone keeps varying</td><td>One example, then few-shot</td><td>Tokens on every call; risk of copied quirks</td></tr>
+      <tr><td>Preamble before the data, or broken JSON</td><td>Prefill (if supported) or explicit "begin with {"</td><td>Model/API-dependent</td></tr>
+      <tr><td>Output "kind of right" but can't be checked</td><td>Testable output contract</td><td>Almost none</td></tr>
+      <tr><td>Task itself is too complex</td><td>None of these — split it (prompt chaining)</td><td>Extra calls and latency</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Takeaway:</strong> start with a clear contract, add one carefully chosen example if the format still drifts, and use prefill only for the specific problem it solves. Anthropic's own closing advice applies: the best prompt isn't the longest, it's the one that reliably gets the result with the minimum structure — and you only know that by testing each addition.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude (Anthropic) — "Best practices for prompt engineering for 2026" (published Nov 10, 2025; read directly on Oct 9, 2026)</a></li>
+      <li><a href="https://promptbuilder.cc/blog/claude-prompt-engineering-best-practices-2026" target="_blank" rel="noopener">PromptBuilder — Claude prompt engineering best practices (2026) (search snippet only; source of the "output contract" framing)</a></li>
+      <li><a href="https://promptbuilder.cc/blog/prompt-engineering-best-practices-2026" target="_blank" rel="noopener">PromptBuilder — Prompt engineering best practices (2026) (search snippet only)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: no Anthropic/Claude announcement dated Oct 9, 2026 was found, so the category rotation (Prompt engineering) was applied. The Anthropic article was read in full; the two PromptBuilder pages were seen only through search-result summaries, and the claim about prefill support on current models is flagged above as unverified.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering</span>
+      <h1>Mostre, não descreva: exemplos, prefill e contratos de saída</h1>
+      <p class="subtitle">Quando o problema é "a resposta está certa, mas o formato muda toda hora", mais adjetivos não ajudam. Três ferramentas ajudam: um exemplo, uma resposta já iniciada e um contrato escrito para a saída. Veja como cada uma funciona, onde quebra e como escolher.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#why-pt">Por que descrever falha e demonstrar funciona</a></li>
+        <li><a href="#examples-pt">Exemplos: um primeiro, vários só se precisar</a></li>
+        <li><a href="#leak-pt">A armadilha: modelos modernos copiam seus exemplos de perto</a></li>
+        <li><a href="#prefill-pt">Prefill: começar a resposta pelo modelo</a></li>
+        <li><a href="#contract-pt">O contrato de saída</a></li>
+        <li><a href="#combo-pt">Os três juntos (antes/depois)</a></li>
+        <li><a href="#choose-pt">Como escolher</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why-pt">1. Por que descrever falha e demonstrar funciona</h2>
+    <p>Tente descrever um tom em palavras: "conciso mas simpático, técnico sem jargão, levemente seco". Dez pessoas escreveriam dez coisas diferentes. Agora mostre uma frase de amostra e todo mundo converge. Os modelos se comportam do mesmo jeito. O guia de prompt engineering da Anthropic diz isso diretamente: exemplos "mostram em vez de contar, esclarecendo requisitos sutis difíceis de expressar só por descrição".</p>
+    <p>O guia lista quatro situações em que exemplos valem os tokens: o formato desejado é mais fácil de mostrar que de descrever; você precisa de um tom ou estilo específico; a tarefa envolve padrões ou convenções sutis; e instruções simples não geraram consistência. Se nada disso se aplica, provavelmente você não precisa de exemplo — e o guia deixa claro que exemplos "nem sempre são necessários".</p>
+
+    <h2 id="examples-pt">2. Exemplos: um primeiro, vários só se precisar</h2>
+    <p>Um exemplo é <strong>one-shot</strong>; vários são <strong>few-shot</strong>. A recomendação da Anthropic é começar com um e adicionar mais só se a saída ainda não bater. Cada exemplo custa tokens em toda chamada, então mais não é de graça.</p>
+    <p>Um padrão mínimo — um exemplo e depois a entrada real no mesmo formato:</p>
+<pre>Resuma cada artigo no estilo abaixo.
+
+Artigo: [UE aprova AI Act ...]
+Resumo: UE aprova AI Act abrangente voltado a sistemas de alto risco.
+Principais pontos: requisitos de transparência e supervisão humana.
+Entra em vigor em 2026.
+
+Agora resuma este artigo no mesmo estilo:
+Artigo: [seu novo artigo]</pre>
+    <p>Note o que o exemplo fixa sem uma única regra: tamanho (três frases curtas), voz (neutra), ordem do conteúdo (o que aconteceu, pontos principais, quando). Escrever isso como regras levaria um parágrafo e ainda deixaria lacunas.</p>
+
+    <h2 id="leak-pt">3. A armadilha: modelos modernos copiam seus exemplos de perto</h2>
+    <p>O mesmo guia traz um aviso importante: modelos da geração Claude 4.x em diante "prestam muita atenção aos detalhes nos exemplos", então seus exemplos devem refletir o comportamento que você quer e evitar os padrões que não quer. Na prática, tudo no exemplo vira sinal:</p>
+    <ul>
+      <li><strong>Tamanho acidental.</strong> Se o resumo do exemplo tem 28 palavras, espere algo perto de 28.</li>
+      <li><strong>Tema acidental.</strong> Se o exemplo é sobre política, as saídas tendem a esse enquadramento; varie os assuntos se usar vários exemplos.</li>
+      <li><strong>Cacoetes acidentais.</strong> Um "Espero ter ajudado!" no fim do exemplo vai aparecer em toda saída.</li>
+      <li><strong>Overfitting.</strong> Se todos os exemplos têm três tópicos, o modelo vai forçar três tópicos mesmo havendo só dois pontos reais.</li>
+    </ul>
+    <div class="callout">
+      <strong>Regra prática:</strong> leia seu exemplo como se fosse uma especificação. Tudo que você não gostaria de ver copiado em toda saída não deve estar nele.
+    </div>
+
+    <h2 id="prefill-pt">4. Prefill: começar a resposta pelo modelo</h2>
+    <p><strong>Prefill</strong> é escrever você mesmo os primeiros caracteres da resposta, para o modelo continuar dali. É a forma mais direta de forçar um formato ou cortar preâmbulos ("Claro! Aqui está o JSON que você pediu:"). O guia da Anthropic mostra o padrão na API: a última mensagem tem role <code>assistant</code> e conteúdo <code>{</code>, então o modelo só consegue continuar um objeto JSON.</p>
+<pre>messages = [
+  {"role": "user",
+   "content": "Extraia nome e preço desta descrição de produto em JSON."},
+  {"role": "assistant", "content": "{"}   # o prefill
+]</pre>
+    <p>Onde ajuda: saída estruturada (JSON/XML), remover preâmbulos, manter uma persona ou voz e controlar como a resposta começa. Em apps de chat você não consegue fazer prefill, mas o guia observa que dá para aproximar: "Responda apenas com JSON válido, sem preâmbulo. Comece a resposta com uma chave de abertura."</p>
+    <div class="callout">
+      <strong>Confira seu modelo:</strong> o guia que usei é de 10/11/2025. O suporte a turnos do assistente pré-preenchidos pode variar entre gerações de modelo e APIs, e eu não verifiquei isso para os modelos atuais — confirme na documentação do modelo que você realmente chama. Se o prefill não estiver disponível, a versão com instrução explícita e o contrato de saída abaixo são o plano B.
+    </div>
+
+    <h2 id="contract-pt">5. O contrato de saída</h2>
+    <p>Uma ideia mais solta, mas muito eficaz, dos guias de profissionais: escreva a saída como um <strong>contrato</strong> — formato, tamanho, tom e seções obrigatórias — enunciado de modo que possa ser testado. "Seja conciso" não é testável. "No máximo 80 palavras, sem bullets, terminando com um próximo passo" é. Um contrato testável tem dois ganhos: o modelo recebe um alvo sem ambiguidade e <em>você</em> pode escrever um script pequeno que confere as saídas automaticamente.</p>
+    <table>
+      <tr><th>Vago</th><th>Contrato testável</th></tr>
+      <tr><td>"Seja breve"</td><td>"No máximo 80 palavras"</td></tr>
+      <tr><td>"Devolva dados estruturados"</td><td>"Devolva apenas JSON com as chaves <code>revenue</code>, <code>profit_margin</code>, <code>growth_rate</code>"</td></tr>
+      <tr><td>"Não invente"</td><td>"Se um valor não estiver no relatório, use <code>null</code>"</td></tr>
+      <tr><td>"Tom profissional"</td><td>"Segunda pessoa, sem exclamações, sem emojis"</td></tr>
+    </table>
+    <p>Repare na penúltima linha: é o truque de permissão para se abster da lição anterior de IA Watch sobre alucinações, expresso como parte do formato. O próprio guia recomenda ("use null em vez de chutar").</p>
+    <p>Além disso, formule o contrato de forma positiva. O exemplo do guia: em vez de "Não use markdown", diga "Sua resposta deve ser composta de parágrafos de prosa fluida". Ele também observa que o estilo do seu prompt vaza para a saída — um prompt cheio de bullets e negrito tende a receber bullets e negrito de volta.</p>
+
+    <h2 id="combo-pt">6. Os três juntos (antes/depois)</h2>
+    <p><strong>Antes:</strong></p>
+<pre>Pegue os números principais deste relatório trimestral em JSON.</pre>
+    <p>Falha típica: uma frase simpática antes do JSON, "US$ 4,2 mi" numa execução e "4200000" em outra, e uma taxa de crescimento inventada quando o relatório não traz.</p>
+    <p><strong>Depois:</strong> a estrutura abaixo, adaptada do exemplo "putting it all together" do próprio guia.</p>
+<pre>Extraia as principais métricas financeiras deste relatório
+trimestral em JSON. Isso alimenta um pipeline automático, então
+responda SOMENTE com JSON válido, sem preâmbulo nem explicação.
+
+Use esta estrutura:
+{
+  "revenue": "valor com unidade",
+  "profit_margin": "percentual",
+  "growth_rate": "percentual"
+}
+
+Se uma métrica não estiver claramente no relatório, use null
+em vez de chutar.
+
+Comece a resposta com uma chave de abertura: {</pre>
+    <p>Ele combina instruções explícitas, o motivo de o formato importar, uma estrutura de exemplo, permissão para a incerteza e controle de formato no começo da resposta. Cada linha elimina uma falha específica.</p>
+
+    <h2 id="choose-pt">7. Como escolher</h2>
+    <table>
+      <tr><th>Sintoma</th><th>Use</th><th>Custo</th></tr>
+      <tr><td>Formato ou tom variam sempre</td><td>Um exemplo e, depois, few-shot</td><td>Tokens em toda chamada; risco de copiar cacoetes</td></tr>
+      <tr><td>Preâmbulo antes dos dados, ou JSON quebrado</td><td>Prefill (se houver suporte) ou "comece com {" explícito</td><td>Depende do modelo/API</td></tr>
+      <tr><td>Saída "mais ou menos certa" e impossível de conferir</td><td>Contrato de saída testável</td><td>Quase nenhum</td></tr>
+      <tr><td>A própria tarefa é complexa demais</td><td>Nenhuma delas — divida a tarefa (prompt chaining)</td><td>Chamadas extras e latência</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Conclusão:</strong> comece com um contrato claro, adicione um exemplo bem escolhido se o formato ainda oscilar e use prefill só para o problema específico que ele resolve. O conselho final da própria Anthropic vale aqui: o melhor prompt não é o mais longo, é o que atinge o resultado de forma confiável com o mínimo de estrutura — e só se descobre isso testando cada acréscimo.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude (Anthropic) — "Best practices for prompt engineering for 2026" (publicado em 10/11/2025; lido diretamente em 09/10/2026)</a></li>
+      <li><a href="https://promptbuilder.cc/blog/claude-prompt-engineering-best-practices-2026" target="_blank" rel="noopener">PromptBuilder — Claude prompt engineering best practices (2026) (só o resumo da busca; origem do enquadramento de "contrato de saída")</a></li>
+      <li><a href="https://promptbuilder.cc/blog/prompt-engineering-best-practices-2026" target="_blank" rel="noopener">PromptBuilder — Prompt engineering best practices (2026) (só o resumo da busca)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: não foi encontrado anúncio da Anthropic/Claude datado de 09/10/2026, então foi aplicada a rotação de categorias (Prompt engineering). O artigo da Anthropic foi lido por inteiro; as duas páginas da PromptBuilder foram vistas só pelos resumos da busca, e a afirmação sobre suporte a prefill nos modelos atuais está marcada acima como não verificada.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Show, then specify</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Show, then specify';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Mostre, depois especifique';
+    }
+  }
+</script>
+
+</body>
+</html>

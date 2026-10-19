@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Code Projects: from a folder to a coordinator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic / Claude news</span>
+      <h1>Claude Code Projects: from a folder to a coordinator</h1>
+      <p class="subtitle">On September 17, Anthropic redesigned Projects in Claude Code. The old project was a folder with some files and one chat. The new one is a single ongoing conversation where Claude acts as a coordinator, splitting work into parallel cloud threads that keep running after you close your laptop. It's in public beta, and it changes how you'd structure a long piece of work.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#model">The model: coordinator and threads</a></li>
+        <li><a href="#inherit">What every thread inherits</a></li>
+        <li><a href="#examples">What the work looks like</a></li>
+        <li><a href="#cost">The cost side: limits and caps</a></li>
+        <li><a href="#access">Who can use it, and where</a></li>
+        <li><a href="#fit">When it fits, and when it doesn't</a></li>
+      </ol>
+    </div>
+
+    <h2 id="model">1. The model: coordinator and threads</h2>
+    <p>The architecture has two layers. The <strong>project conversation</strong> is the coordinator: it reads what you send, answers quick questions in place, and starts threads for real work. It sees what threads report back, not every step they take. The <strong>threads</strong> are the workers. Each is a full Claude Code cloud session with its own context window, running on its own branch and its own copy of the repository.</p>
+    <p>A thread opens a pull request when the work calls for one, then watches it with auto-fix: it pushes fixes when CI fails and replies when checks pass. Threads can also delegate further, using subagents, loops and workflows. If two threads touch the same code, the overlap shows up as an ordinary git merge conflict — there's no special merge magic.</p>
+    <div class="callout">
+      <strong>Mental shift:</strong> before, <em>you</em> were the coordinator — opening several sessions, copying context between them and stitching results together. Now the coordination itself is a conversation you steer.
+    </div>
+
+    <h2 id="inherit">2. What every thread inherits</h2>
+    <p>Standing context is set once and reaches each new thread:</p>
+    <ul>
+      <li>the project's repositories and uploaded files;</li>
+      <li><strong>project instructions</strong>, up to 16,000 characters;</li>
+      <li><strong>project memory</strong>, which Claude writes and reads through a <code>MEMORY.md</code> index (e.g. "the release moved to Friday", or who to check with before touching billing);</li>
+      <li>the connectors on your claude.ai account (the project conversation itself has no connectors, so connector work must go to a thread);</li>
+      <li>a cloud environment: network access, environment variables, credentials, installed tools.</li>
+    </ul>
+    <p>Each thread clones <em>every</em> repository in the project and loads <code>CLAUDE.md</code>, skills and plugins from all of them. One caveat: permission rules, hooks and <code>env</code> only apply from the directory the thread starts in, so a single-repo project honors them and a multi-repo project does not. A <strong>Library</strong> tab collects the files you uploaded and the files threads produced, and the Overview pane groups threads by state: Ready for review, Waiting on you, Working, Landing, Idle and Resolved.</p>
+
+    <h2 id="examples">3. What the work looks like</h2>
+    <p>Anthropic's own examples are cross-cutting jobs with several independent parts:</p>
+    <ul>
+      <li><strong>Performance:</strong> set a goal to reduce checkout p75 latency, then ask Claude to profile each endpoint, test optimizations and open pull requests in parallel threads.</li>
+      <li><strong>Migration:</strong> retire a deprecated v1 endpoint across API, web and mobile repositories, one thread each, with Claude reporting which pull requests merge first.</li>
+    </ul>
+    <p>The common shape: work that outlasts one reply and has more than one part. The coordinator decides when to fan out. A quick question stays in the conversation; a new piece of work becomes a thread, or goes to an existing thread working in the same area.</p>
+    <p>Cloud threads work on GitHub repositories and on files or Google Drive folders uploaded to the project — not on things that exist only on your machine. When a task needs a local database, a device emulator or an API behind your VPN, you can ask Claude to run that thread on your computer through <strong>Remote Control</strong> (Claude Code v2.1.280 or later; unavailable while "Require trusted devices" is on). A session you started yourself still can't be added to a project.</p>
+
+    <h2 id="cost">4. The cost side: limits and caps</h2>
+    <div class="callout">
+      <strong>Parallel is not free.</strong> Every running thread is a full session, and the coordinator conversation spends tokens too, so a project burns plan limits faster than a single session. Idle threads also wake and spend again when CI fails or a review comment lands.
+    </div>
+    <ul>
+      <li>The enforced ceiling is <strong>200 new threads per day</strong> across your projects.</li>
+      <li>A thread that hits a usage limit waits and resumes on its own (a thread started by a routine stops with a limit error instead).</li>
+      <li>There's a per-project Usage tab, plus separate model and effort settings for the coordinator and for threads. A new project defaults to Opus everywhere, high effort for threads and low effort for the conversation.</li>
+    </ul>
+    <p>Practical tip: the default of low effort for the coordinator and high effort for workers is a reasonable split — routing is cheap, real work is not. Tune it before you scale up.</p>
+
+    <h2 id="access">5. Who can use it, and where</h2>
+    <table>
+      <tr><th>Aspect</th><th>Status (as of late September 2026)</th></tr>
+      <tr><td>Plans</td><td>Public beta for Pro and Max; Team and Enterprise not yet</td></tr>
+      <tr><td>Rollout</td><td>Gradual, starting with accounts that already used cloud sessions and have no existing projects in Claude or Cowork; a waitlist exists</td></tr>
+      <tr><td>Where</td><td><code>claude.ai/code</code>, the desktop app and the mobile app — not the terminal CLI, nor Bedrock, Google Cloud or Foundry</td></tr>
+      <tr><td>Ownership</td><td>One project belongs to one user; no organization-level controls during the beta</td></tr>
+    </table>
+    <p>Related: Anthropic's docs for plain cloud sessions dropped the "research preview" label in the same week — they're now listed as available on Pro, Max and Team, and for eligible Enterprise seats. That doesn't make Projects generally available; Projects keeps its own beta rollout.</p>
+
+    <h2 id="fit">6. When it fits, and when it doesn't</h2>
+    <ul>
+      <li><strong>Good fit:</strong> multi-repo migrations, a research stream with several deliverables, a build where implementation, tests and review can proceed in parallel.</li>
+      <li><strong>Poor fit:</strong> a small change in one file. A single session is cheaper and easier to follow.</li>
+      <li><strong>Watch out for:</strong> overlapping branches (you'll resolve merge conflicts the usual way), usage burn, and the single-user boundary for teams that need shared controls.</li>
+      <li><strong>Review is still yours.</strong> Threads open pull requests; deciding what merges, and in what order, remains a human job.</li>
+    </ul>
+    <div class="callout">
+      <strong>Takeaway:</strong> the promise isn't simply "more agents." It's a persistent work queue with shared memory, repository-aware threads and one place to see what's finished, what needs you and which pull requests are ready — in exchange for faster spend and a beta-stage rollout.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.marktechpost.com/2026/09/17/anthropic-launches-claude-code-projects-in-beta-parallel-cloud-sessions-that-keep-running-after-you-close-your-laptop/" target="_blank" rel="noopener">MarkTechPost — "Anthropic Launches Claude Code Projects in Beta: Parallel Cloud Sessions That Keep Running After You Close Your Laptop" (Sept 17, 2026)</a></li>
+      <li><a href="https://aicatchup.com/news/claude-code-projects-parallel-cloud-sessions" target="_blank" rel="noopener">AI Catchup — "Claude Code Projects Turn One Conversation Into Parallel Cloud Sessions" (Sept 18, updated Sept 25, 2026)</a></li>
+      <li><a href="https://claude.com/blog/projects-redesigned" target="_blank" rel="noopener">Anthropic — "Projects redesigned: from folder to conversation" (Sept 17, 2026; cited via the two articles above)</a></li>
+      <li><a href="https://code.claude.com/docs/en/claude-projects" target="_blank" rel="noopener">Claude Code docs — "Let Claude coordinate ongoing work with Projects" (cited via the two articles above)</a></li>
+      <li><a href="https://releasebot.io/updates/anthropic/claude-code" target="_blank" rel="noopener">Releasebot — Claude Code updates, October 2026</a></li>
+    </ul>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Projects no Claude Code: de pasta a coordenador</h1>
+      <p class="subtitle">Em 17 de setembro, a Anthropic redesenhou os Projects no Claude Code. O projeto antigo era uma pasta com alguns arquivos e um chat. O novo é uma única conversa contínua em que o Claude atua como coordenador, dividindo o trabalho em threads paralelas na nuvem que seguem rodando depois que você fecha o notebook. Está em beta público e muda como você estruturaria um trabalho longo.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#modelo-pt">O modelo: coordenador e threads</a></li>
+        <li><a href="#herda-pt">O que toda thread herda</a></li>
+        <li><a href="#exemplos-pt">Como é o trabalho na prática</a></li>
+        <li><a href="#custo-pt">O lado do custo: limites e tetos</a></li>
+        <li><a href="#acesso-pt">Quem pode usar, e onde</a></li>
+        <li><a href="#encaixe-pt">Quando faz sentido, e quando não</a></li>
+      </ol>
+    </div>
+
+    <h2 id="modelo-pt">1. O modelo: coordenador e threads</h2>
+    <p>A arquitetura tem duas camadas. A <strong>conversa do projeto</strong> é o coordenador: lê o que você manda, responde perguntas rápidas ali mesmo e abre threads para o trabalho de verdade. Ela vê o que as threads reportam, não cada passo que elas dão. As <strong>threads</strong> são os trabalhadores. Cada uma é uma sessão completa do Claude Code na nuvem, com janela de contexto própria, rodando numa branch própria e numa cópia própria do repositório.</p>
+    <p>Uma thread abre um pull request quando o trabalho pede e depois o acompanha com auto-fix: envia correções quando o CI falha e responde quando os checks passam. Threads também podem delegar mais, usando subagentes, loops e workflows. Se duas threads mexem no mesmo código, a sobreposição aparece como um conflito de merge comum do git — não existe mágica especial de merge.</p>
+    <div class="callout">
+      <strong>Mudança de mentalidade:</strong> antes, <em>você</em> era o coordenador — abrindo várias sessões, copiando contexto entre elas e juntando os resultados na mão. Agora a própria coordenação é uma conversa que você conduz.
+    </div>
+
+    <h2 id="herda-pt">2. O que toda thread herda</h2>
+    <p>O contexto permanente é definido uma vez e chega a cada nova thread:</p>
+    <ul>
+      <li>os repositórios do projeto e os arquivos enviados;</li>
+      <li><strong>instruções do projeto</strong>, de até 16.000 caracteres;</li>
+      <li><strong>memória do projeto</strong>, que o Claude escreve e lê por um índice <code>MEMORY.md</code> (ex.: "o release foi para sexta" ou com quem falar antes de mexer em billing);</li>
+      <li>os conectores da sua conta claude.ai (a conversa do projeto em si não tem conectores, então trabalho que usa conector precisa ir para uma thread);</li>
+      <li>um ambiente de nuvem: acesso à rede, variáveis de ambiente, credenciais, ferramentas instaladas.</li>
+    </ul>
+    <p>Cada thread clona <em>todos</em> os repositórios do projeto e carrega <code>CLAUDE.md</code>, skills e plugins de todos eles. Uma ressalva: regras de permissão, hooks e <code>env</code> só valem a partir do diretório onde a thread começa — então um projeto de um único repositório as respeita e um projeto com vários repositórios não. Uma aba <strong>Library</strong> reúne os arquivos que você enviou e os que as threads produziram, e o painel Overview agrupa as threads por estado: Ready for review, Waiting on you, Working, Landing, Idle e Resolved.</p>
+
+    <h2 id="exemplos-pt">3. Como é o trabalho na prática</h2>
+    <p>Os exemplos da própria Anthropic são tarefas transversais com várias partes independentes:</p>
+    <ul>
+      <li><strong>Performance:</strong> definir como meta reduzir a latência p75 do checkout e pedir ao Claude que perfile cada endpoint, teste otimizações e abra pull requests em threads paralelas.</li>
+      <li><strong>Migração:</strong> aposentar um endpoint v1 obsoleto nos repositórios de API, web e mobile, uma thread para cada, com o Claude informando quais pull requests devem ser mergeados primeiro.</li>
+    </ul>
+    <p>O formato comum: trabalho que dura mais que uma resposta e tem mais de uma parte. O coordenador decide quando abrir em paralelo. Uma pergunta rápida fica na conversa; uma nova frente de trabalho vira uma thread, ou vai para uma thread existente que já atua na mesma área.</p>
+    <p>Threads na nuvem trabalham em repositórios do GitHub e em arquivos ou pastas do Google Drive enviados ao projeto — não em coisas que só existem na sua máquina. Quando a tarefa precisa de um banco local, um emulador de dispositivo ou uma API atrás da VPN, você pode pedir ao Claude para rodar aquela thread no seu computador por meio do <strong>Remote Control</strong> (Claude Code v2.1.280 ou superior; indisponível enquanto "Require trusted devices" estiver ligado). Uma sessão que você mesmo iniciou ainda não pode ser adicionada a um projeto.</p>
+
+    <h2 id="custo-pt">4. O lado do custo: limites e tetos</h2>
+    <div class="callout">
+      <strong>Paralelo não é de graça.</strong> Cada thread em execução é uma sessão completa, e a conversa do coordenador também gasta tokens — então um projeto consome os limites do plano mais rápido que uma sessão única. Threads ociosas também acordam e gastam de novo quando o CI falha ou chega um comentário de revisão.
+    </div>
+    <ul>
+      <li>O teto aplicado é de <strong>200 novas threads por dia</strong> somando todos os seus projetos.</li>
+      <li>Uma thread que bate no limite de uso espera e retoma sozinha (uma thread iniciada por uma routine para com erro de limite).</li>
+      <li>Há uma aba Usage por projeto, além de configurações separadas de modelo e esforço para o coordenador e para as threads. Um projeto novo usa Opus em tudo, esforço alto nas threads e baixo na conversa.</li>
+    </ul>
+    <p>Dica prática: o padrão de esforço baixo no coordenador e alto nos trabalhadores é uma divisão razoável — rotear é barato, trabalhar de verdade não é. Ajuste isso antes de escalar.</p>
+
+    <h2 id="acesso-pt">5. Quem pode usar, e onde</h2>
+    <table>
+      <tr><th>Aspecto</th><th>Situação (até o fim de setembro de 2026)</th></tr>
+      <tr><td>Planos</td><td>Beta público para Pro e Max; Team e Enterprise ainda não</td></tr>
+      <tr><td>Liberação</td><td>Gradual, começando por contas que já usaram sessões na nuvem e não têm projetos no Claude ou no Cowork; existe lista de espera</td></tr>
+      <tr><td>Onde</td><td><code>claude.ai/code</code>, app desktop e app mobile — não no CLI do terminal, nem em Bedrock, Google Cloud ou Foundry</td></tr>
+      <tr><td>Propriedade</td><td>Um projeto pertence a um único usuário; sem controles em nível de organização durante o beta</td></tr>
+    </table>
+    <p>Relacionado: a documentação das sessões na nuvem tirou o rótulo "research preview" na mesma semana — agora constam como disponíveis em Pro, Max e Team, e em assentos Enterprise elegíveis. Isso não torna os Projects disponíveis para todos; eles seguem com a liberação beta própria.</p>
+
+    <h2 id="encaixe-pt">6. Quando faz sentido, e quando não</h2>
+    <ul>
+      <li><strong>Bom encaixe:</strong> migrações em vários repositórios, uma frente de pesquisa com vários entregáveis, um build em que implementação, testes e revisão andam em paralelo.</li>
+      <li><strong>Mau encaixe:</strong> uma mudança pequena num arquivo só. Uma sessão única é mais barata e mais fácil de acompanhar.</li>
+      <li><strong>Atenção a:</strong> branches que se sobrepõem (você resolve conflitos de merge do jeito de sempre), consumo de limite e a fronteira de usuário único para times que precisam de controles compartilhados.</li>
+      <li><strong>A revisão continua sendo sua.</strong> As threads abrem pull requests; decidir o que entra e em que ordem segue sendo trabalho humano.</li>
+    </ul>
+    <div class="callout">
+      <strong>Conclusão:</strong> a promessa não é simplesmente "mais agentes". É uma fila de trabalho persistente com memória compartilhada, threads que conhecem o repositório e um único lugar para ver o que terminou, o que precisa de você e quais pull requests estão prontos — em troca de gasto mais rápido e de uma liberação em beta.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.marktechpost.com/2026/09/17/anthropic-launches-claude-code-projects-in-beta-parallel-cloud-sessions-that-keep-running-after-you-close-your-laptop/" target="_blank" rel="noopener">MarkTechPost — "Anthropic Launches Claude Code Projects in Beta: Parallel Cloud Sessions That Keep Running After You Close Your Laptop" (17/09/2026)</a></li>
+      <li><a href="https://aicatchup.com/news/claude-code-projects-parallel-cloud-sessions" target="_blank" rel="noopener">AI Catchup — "Claude Code Projects Turn One Conversation Into Parallel Cloud Sessions" (18/09, atualizado em 25/09/2026)</a></li>
+      <li><a href="https://claude.com/blog/projects-redesigned" target="_blank" rel="noopener">Anthropic — "Projects redesigned: from folder to conversation" (17/09/2026; citado via os dois artigos acima)</a></li>
+      <li><a href="https://code.claude.com/docs/en/claude-projects" target="_blank" rel="noopener">Docs do Claude Code — "Let Claude coordinate ongoing work with Projects" (citado via os dois artigos acima)</a></li>
+      <li><a href="https://releasebot.io/updates/anthropic/claude-code" target="_blank" rel="noopener">Releasebot — atualizações do Claude Code, outubro de 2026</a></li>
+    </ul>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">One conversation, many threads</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'One conversation, many threads';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Uma conversa, várias threads';
+    }
+  }
+</script>
+
+</body>
+</html>

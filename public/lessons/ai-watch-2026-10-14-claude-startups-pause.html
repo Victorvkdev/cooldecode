@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Free Claude for a year, paused in three days</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic / Claude news</span>
+      <h1>Free Claude for a year, paused in three days</h1>
+      <p class="subtitle">Anthropic opened Claude for Startups to far more companies on October 6, then paused the two big perks on October 9 because demand blew past capacity. What happened, what founders keep, and what the episode teaches about building on credits.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What was announced on October 6</a></li>
+        <li><a href="#pause">The pause on October 9</a></li>
+        <li><a href="#kept">What is paused and what is not</a></li>
+        <li><a href="#why">Why a generous offer breaks fast</a></li>
+        <li><a href="#dev">What this means if you build on an API</a></li>
+        <li><a href="#unknown">What we do not know yet</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What was announced on October 6</h2>
+    <p>As reported by TechCrunch and CNBC, Anthropic expanded its <strong>Claude for Startups</strong> program around SF Tech Week. Qualifying companies could get a <strong>free year of Claude Team</strong> (up to five premium seats) and <strong>$1,000 in API credits</strong>, plus Claude Marketplace access and office hours with Anthropic's Applied AI team.</p>
+    <p>Eligibility, per TechCrunch's description, was broad: a company founded in the last five years, or funded in the last two. The program page also says you do not need VC backing to apply. That is a low bar: a lot of people can honestly describe a side project or small company that way.</p>
+
+    <h2 id="pause">2. The pause on October 9</h2>
+    <p>Three days later, Anthropic's official Claude account on X announced it was pausing the Claude Team and $1,000 API credit offers. In the post's words, Anthropic "underestimated demand," had "hundreds of thousands of applicants," and was re-reviewing applications.</p>
+    <p>Secondary sources add detail that I could not confirm on a primary page: one summary claims applications ran about 21 times the previous five months combined in 48 hours, and that many non-startups were accepted. Treat those two points as <strong>reported, not verified</strong>.</p>
+
+    <h2 id="kept">3. What is paused and what is not</h2>
+    <table>
+      <tr><th>Item</th><th>Status (as reported)</th></tr>
+      <tr><td>Free year of Claude Team</td><td>Paused for new claims</td></tr>
+      <tr><td>$1,000 API credit</td><td>Paused for new claims</td></tr>
+      <tr><td>Already-claimed offers</td><td>Kept: "nothing changes"</td></tr>
+      <tr><td>Approved but not yet claimed</td><td>Under re-review; some may lose the offer</td></tr>
+      <tr><td>Startup Stack partner discounts, office hours, events</td><td>Still available</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Practical rule:</strong> a credit you have not redeemed is not a credit you own. Until it is in your account, do not put it in your budget.
+    </div>
+
+    <h2 id="why">4. Why a generous offer breaks fast</h2>
+    <p>Think of a restaurant that announces "free dinner for anyone who says they are a chef." The only thing stopping a flood is the check at the door, and here the check was weak: eligibility was self-described and broad. Three ingredients combine:</p>
+    <ul>
+      <li><strong>Real value:</strong> a year of a team plan plus API cash is worth claiming.</li>
+      <li><strong>Cheap eligibility:</strong> "founded in five years" is easy to satisfy and hard to verify at scale.</li>
+      <li><strong>Amplification:</strong> a tech-week announcement reaches everyone at once.</li>
+    </ul>
+    <p>This is a general pattern in software, not just in AI: promo codes, free tiers and trials all need rate limits and verification. The sensible expectation is that the program returns with stricter checks (company domain, incorporation or funding records), but Anthropic has not said so.</p>
+
+    <h2 id="dev">5. What this means if you build on an API</h2>
+    <ol>
+      <li><strong>Budget on list prices.</strong> Treat credits as a bonus. Check the current pricing page for your model.</li>
+      <li><strong>Set spend limits in the Console.</strong> A cap protects you whether or not credits exist.</li>
+      <li><strong>Route by model size.</strong> Use a cheaper, faster model for bulk work and a stronger one only where quality matters.</li>
+      <li><strong>Check where credits apply.</strong> Per one secondary source, the startup credit works on the first-party API through Console, not on cloud marketplaces; verify before you plan around it.</li>
+      <li><strong>Avoid resold credits.</strong> Discounted accounts or tokens from strangers are a security and compliance risk.</li>
+    </ol>
+
+    <h2 id="unknown">6. What we do not know yet</h2>
+    <p>Anthropic has not published how long the pause lasts, what the new eligibility rules will be, or how many applicants lose offers. The official program page and the Claude account on X are the places to watch. I could not open the original X post or the program page directly, so details here come from news coverage that quotes them.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://explainx.ai/blog/anthropic-claude-startups-credits-paused-over-capacity-what-changed-2026" target="_blank" rel="noopener">explainx.ai — "Anthropic Pauses Claude Startups Credits" (Oct 9, 2026; read directly; quotes the program FAQ and TechCrunch)</a></li>
+      <li><a href="https://techjacksolutions.com/ai-brief/anthropic-claude-startups-program-pause-credits-team-seats/" target="_blank" rel="noopener">Tech Jacks Solutions — "Anthropic Pauses Claude Startups Credit Grants and Free Team Seats" (Oct 11, 2026; read directly)</a></li>
+      <li><a href="https://x.com/claudeai/status/2108404561413349695" target="_blank" rel="noopener">Claude on X — pause announcement (Oct 2026; seen via search result, not opened)</a></li>
+      <li><a href="https://techcrunch.com/2026/10/06/anthropic-gives-startups-a-free-year-of-enterprise-service-and-1000-in-token-credits/" target="_blank" rel="noopener">TechCrunch — expansion announcement (Oct 6, 2026; via the pages above, not opened)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "Anthropic/Claude news"; the 21x figure and the claim that non-startups were accepted are from secondary summaries.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude grátis por um ano, pausado em três dias</h1>
+      <p class="subtitle">A Anthropic abriu o Claude for Startups para muito mais empresas em 6 de outubro e, em 9 de outubro, pausou os dois grandes benefícios porque a demanda estourou a capacidade. O que aconteceu, o que os fundadores mantêm e o que o episódio ensina sobre construir em cima de créditos.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#what-pt">O que foi anunciado em 6 de outubro</a></li>
+        <li><a href="#pause-pt">A pausa de 9 de outubro</a></li>
+        <li><a href="#kept-pt">O que está pausado e o que não está</a></li>
+        <li><a href="#why-pt">Por que uma oferta generosa quebra rápido</a></li>
+        <li><a href="#dev-pt">O que isso significa se você constrói em cima de uma API</a></li>
+        <li><a href="#unknown-pt">O que ainda não sabemos</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que foi anunciado em 6 de outubro</h2>
+    <p>Segundo TechCrunch e CNBC, a Anthropic expandiu o <strong>Claude for Startups</strong> na SF Tech Week. Empresas qualificadas podiam receber <strong>um ano grátis do Claude Team</strong> (até cinco assentos premium) e <strong>US$ 1.000 em créditos de API</strong>, além de acesso ao Claude Marketplace e office hours com o time de Applied AI.</p>
+    <p>A elegibilidade, como descrita pelo TechCrunch, era ampla: empresa fundada nos últimos cinco anos ou que recebeu investimento nos últimos dois. A página do programa também diz que não é preciso ter VC para se candidatar. É uma barreira baixa: muita gente consegue descrever honestamente um projeto paralelo ou uma empresa pequena assim.</p>
+
+    <h2 id="pause-pt">2. A pausa de 9 de outubro</h2>
+    <p>Três dias depois, a conta oficial do Claude no X anunciou a pausa das ofertas do Claude Team e dos US$ 1.000 de crédito. Nas palavras do post, a Anthropic "subestimou a demanda", tinha "centenas de milhares de candidatos" e estava reavaliando as inscrições.</p>
+    <p>Fontes secundárias acrescentam detalhes que não consegui confirmar numa página primária: um resumo afirma que as inscrições chegaram a cerca de 21 vezes o total dos cinco meses anteriores em 48 horas, e que muitas empresas que não eram startups foram aceitas. Trate esses dois pontos como <strong>reportados, não verificados</strong>.</p>
+
+    <h2 id="kept-pt">3. O que está pausado e o que não está</h2>
+    <table>
+      <tr><th>Item</th><th>Status (como reportado)</th></tr>
+      <tr><td>Um ano grátis de Claude Team</td><td>Pausado para novos resgates</td></tr>
+      <tr><td>US$ 1.000 em créditos de API</td><td>Pausado para novos resgates</td></tr>
+      <tr><td>Ofertas já resgatadas</td><td>Mantidas: "nada muda"</td></tr>
+      <tr><td>Aprovadas mas ainda não resgatadas</td><td>Em nova revisão; algumas podem perder a oferta</td></tr>
+      <tr><td>Descontos de parceiros (Startup Stack), office hours, eventos</td><td>Continuam disponíveis</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Regra prática:</strong> crédito que você ainda não resgatou não é crédito seu. Enquanto não estiver na sua conta, não coloque no orçamento.
+    </div>
+
+    <h2 id="why-pt">4. Por que uma oferta generosa quebra rápido</h2>
+    <p>Pense num restaurante que anuncia "jantar grátis para quem disser que é chef". A única coisa que segura a multidão é a checagem na porta, e aqui ela era fraca: a elegibilidade era autodeclarada e ampla. Três ingredientes se combinam:</p>
+    <ul>
+      <li><strong>Valor real:</strong> um ano de plano de equipe mais crédito de API vale a pena resgatar.</li>
+      <li><strong>Elegibilidade barata:</strong> "fundada há menos de cinco anos" é fácil de cumprir e difícil de verificar em escala.</li>
+      <li><strong>Amplificação:</strong> um anúncio numa semana de tecnologia chega a todo mundo ao mesmo tempo.</li>
+    </ul>
+    <p>É um padrão geral de software, não só de IA: cupons, planos gratuitos e testes precisam de limite de taxa e verificação. O esperado é que o programa volte com checagens mais rígidas (domínio da empresa, registro de constituição ou de investimento), mas a Anthropic não disse isso.</p>
+
+    <h2 id="dev-pt">5. O que isso significa se você constrói em cima de uma API</h2>
+    <ol>
+      <li><strong>Faça o orçamento com preço de tabela.</strong> Trate crédito como bônus. Confira a página de preços atual do seu modelo.</li>
+      <li><strong>Defina limites de gasto no Console.</strong> Um teto protege você existam créditos ou não.</li>
+      <li><strong>Roteie por tamanho de modelo.</strong> Use um modelo mais barato e rápido para trabalho em volume e um mais forte só onde a qualidade importa.</li>
+      <li><strong>Confira onde o crédito vale.</strong> Segundo uma fonte secundária, o crédito de startup vale na API própria da Anthropic via Console, não em marketplaces de nuvem; verifique antes de planejar em cima disso.</li>
+      <li><strong>Evite crédito revendido.</strong> Contas ou tokens com desconto vindos de desconhecidos são risco de segurança e de conformidade.</li>
+    </ol>
+
+    <h2 id="unknown-pt">6. O que ainda não sabemos</h2>
+    <p>A Anthropic não publicou quanto tempo a pausa dura, quais serão as novas regras de elegibilidade nem quantos candidatos perderão a oferta. A página oficial do programa e a conta do Claude no X são os lugares para acompanhar. Não consegui abrir o post original no X nem a página do programa diretamente, então os detalhes vêm de matérias que os citam.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://explainx.ai/blog/anthropic-claude-startups-credits-paused-over-capacity-what-changed-2026" target="_blank" rel="noopener">explainx.ai — "Anthropic Pauses Claude Startups Credits" (09/10/2026; lido diretamente; cita o FAQ do programa e o TechCrunch)</a></li>
+      <li><a href="https://techjacksolutions.com/ai-brief/anthropic-claude-startups-program-pause-credits-team-seats/" target="_blank" rel="noopener">Tech Jacks Solutions — "Anthropic Pauses Claude Startups Credit Grants and Free Team Seats" (11/10/2026; lido diretamente)</a></li>
+      <li><a href="https://x.com/claudeai/status/2108404561413349695" target="_blank" rel="noopener">Claude no X — anúncio da pausa (out/2026; visto em resultado de busca, não aberto)</a></li>
+      <li><a href="https://techcrunch.com/2026/10/06/anthropic-gives-startups-a-free-year-of-enterprise-service-and-1000-in-token-credits/" target="_blank" rel="noopener">TechCrunch — anúncio da expansão (06/10/2026; via as páginas acima, não aberto)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Novidades da Anthropic/Claude"; o número de 21x e a afirmação de que não-startups foram aceitas vêm de resumos secundários.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Startups pause</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

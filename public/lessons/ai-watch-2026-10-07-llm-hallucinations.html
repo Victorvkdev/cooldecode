@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Hallucinations: why models guess instead of saying "I don't know"</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM fundamentals</span>
+      <h1>Hallucinations: why models guess instead of saying "I don't know"</h1>
+      <p class="subtitle">A hallucination is a confident, fluent statement that is false. It isn't a random glitch — it falls out of how models are trained, how they're graded, and how their internal "do I know this?" machinery can misfire. Understanding the three causes tells you which fixes actually work.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What a hallucination is (and isn't)</a></li>
+        <li><a href="#training">Cause 1: pretraining can't tell fact from plausible</a></li>
+        <li><a href="#grading">Cause 2: the way models are graded rewards guessing</a></li>
+        <li><a href="#inside">Cause 3: what happens inside — a "known entity" misfire</a></li>
+        <li><a href="#fixes">What reduces hallucinations in practice</a></li>
+        <li><a href="#limits">What doesn't fix it</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What a hallucination is (and isn't)</h2>
+    <p>A language model generates the most plausible next piece of text given what came before. When the text it produces states something untrue — an invented citation, a function that doesn't exist in a library, a wrong date — as if it were fact, that's a hallucination. The problem isn't that the output is wrong; it's that the <strong>tone doesn't change</strong>. A made-up answer reads exactly like a correct one.</p>
+    <p>Two kinds are worth separating. <strong>Closed-book</strong> hallucinations happen when the model answers from memory and its memory is missing or blurry. <strong>Grounded</strong> hallucinations happen even when you hand it the source — it summarizes a document and adds a claim the document never made. They have different fixes.</p>
+
+    <h2 id="training">2. Cause 1: pretraining can't tell fact from plausible</h2>
+    <p>Research from OpenAI and collaborators (<em>Why Language Models Hallucinate</em>, Sept 2025) frames hallucinations as ordinary statistical errors. During pretraining the model only sees positive examples of fluent text. It never gets a label saying "this sentence is false." If it can't reliably distinguish valid statements from plausible-looking invalid ones, then errors appear through plain statistical pressure — the same way a classifier makes mistakes on cases it has little evidence about.</p>
+    <p>The practical consequence: <strong>facts that appear rarely in training data are the most likely to be hallucinated</strong>. A famous event is stated correctly thousands of times; a one-off detail — a minor person's birthday, an obscure API parameter — appears once or never, so the model has patterns but no firm memory, and fills the gap with something that fits the pattern.</p>
+
+    <h2 id="grading">3. Cause 2: the way models are graded rewards guessing</h2>
+    <p>The same research makes a sharper point: hallucinations <em>persist</em> because most benchmarks and training signals give credit for correct answers and give no credit for "I don't know." Think of a multiple-choice exam with no penalty for wrong answers: the best strategy is always to guess. A model optimized against such scores learns to be a good test-taker, not an honest one.</p>
+    <table>
+      <tr><th>Grading scheme</th><th>Answer right</th><th>Says "I don't know"</th><th>Answer wrong</th><th>Best strategy</th></tr>
+      <tr><td>Accuracy only (most leaderboards)</td><td>+1</td><td>0</td><td>0</td><td>Always guess</td></tr>
+      <tr><td>Penalize confident errors</td><td>+1</td><td>0</td><td>negative</td><td>Guess only when likely right</td></tr>
+    </table>
+    <p>The authors' proposed fix is socio-technical rather than a new algorithm: change the scoring of the existing, widely used evaluations so that confident errors cost more than abstentions, instead of adding yet another separate "hallucination benchmark" that nobody optimizes for.</p>
+    <div class="callout">
+      <strong>Why this matters to you:</strong> when you compare models by a single accuracy number, you're partly rewarding the model that guesses more. A lower-scoring model that abstains more often can be the safer one to build on.
+    </div>
+
+    <h2 id="inside">4. Cause 3: what happens inside — a "known entity" misfire</h2>
+    <p>Anthropic's interpretability work on Claude ("Tracing the thoughts of a large language model", March 2025, with the companion papers on circuit tracing) looked at this from the inside. Their finding: in Claude, <strong>declining to answer is the default behavior</strong>. A circuit that says "I can't answer this" is on unless something switches it off. What switches it off is a "known entity" feature — an internal signal that fires when the model recognizes the thing being asked about.</p>
+    <p>Hallucination happens when that recognition signal misfires: the name or topic feels familiar enough to suppress the default refusal, but the model doesn't actually hold the facts. The reported example was an invented name ("Michael Batkin") — the model treated it as a known person and then produced fabricated details to match. So the failure isn't "the model doesn't know it doesn't know"; it's "the familiarity check said yes when it should have said no."</p>
+    <p>This also explains an odd experience: models hallucinate more about things that are <em>almost</em> familiar — a plausible-sounding library name, a real author with a fake book — than about things that are clearly unfamiliar.</p>
+
+    <h2 id="fixes">5. What reduces hallucinations in practice</h2>
+    <ul>
+      <li><strong>Ground the answer.</strong> Retrieval (RAG) or pasting the source in the prompt turns a closed-book question into an open-book one. Ask the model to answer <em>only</em> from the provided text.</li>
+      <li><strong>Give permission to abstain.</strong> A line like "If the document doesn't say, answer 'not stated'" counters the guess-to-score habit directly. Models follow this surprisingly well.</li>
+      <li><strong>Require quotes.</strong> Ask for the exact supporting sentence next to each claim. A claim with no matching quote is a flag; you can even verify quotes programmatically.</li>
+      <li><strong>Use tools for facts.</strong> Search, a calculator, a database query or a code run replaces recall with lookup. For anything with a verifiable answer, let the model call the tool rather than "remember."</li>
+      <li><strong>Verify in a second pass.</strong> A separate step that checks each claim against the source catches errors the first pass confidently made. Don't just ask "are you sure?" — give it the source.</li>
+      <li><strong>Keep context focused.</strong> Long, noisy context makes grounded hallucinations more likely; relevant, well-structured context makes them less likely.</li>
+    </ul>
+
+    <h2 id="limits">6. What doesn't fix it</h2>
+    <ul>
+      <li><strong>"Don't hallucinate" in the prompt.</strong> The model has no switch it can flip; the instruction helps only when paired with grounding or permission to abstain.</li>
+      <li><strong>Lowering temperature.</strong> Makes output more repeatable, not more true. A wrong answer can be reproduced deterministically.</li>
+      <li><strong>Asking for the model's confidence.</strong> Self-reported confidence is better than nothing but is not well calibrated; treat it as a hint, not a measurement.</li>
+      <li><strong>A bigger model, alone.</strong> Larger models hallucinate less on common facts, but still guess on rare ones, and they can do it more persuasively.</li>
+    </ul>
+    <div class="callout">
+      <strong>Takeaway:</strong> hallucinations come from three places — training that can't label falsehoods, grading that rewards guessing, and a familiarity check that sometimes fires wrongly. You can't remove them by instruction; you reduce them by changing the task: ground it in a source, allow "I don't know", require evidence, and verify what matters.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://arxiv.org/html/2509.04664v1" target="_blank" rel="noopener">arXiv — "Why Language Models Hallucinate" (Kalai, Nachum, Vempala, Zhang; OpenAI and Georgia Tech, Sept 2025)</a></li>
+      <li><a href="https://www.infoq.com/news/2025/10/openai-llm-hallucinations" target="_blank" rel="noopener">InfoQ — coverage of OpenAI's hallucination research (Oct 2025)</a></li>
+      <li><a href="https://campustechnology.com/articles/2025/04/18/anthropic-develops-ai-microscope-to-reveal-the-hidden-mechanics-of-llm-thought.aspx" target="_blank" rel="noopener">Campus Technology — "Anthropic Develops AI 'Microscope' to Reveal the Hidden Mechanics of LLM Thought" (Apr 18, 2025)</a></li>
+      <li><a href="https://pureai.com/articles/2025/04/15/microscope-for-ai.aspx" target="_blank" rel="noopener">PureAI — "Microscope for AI" (Apr 15, 2025)</a></li>
+      <li><a href="https://memx.app/blog/llm-hallucination-mitigation-honest-guide/" target="_blank" rel="noopener">memx — LLM hallucination mitigation guide (used for the practical-fixes section)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: the Anthropic and OpenAI primary pages were not read directly in this run; findings are taken from the paper abstract/HTML and from secondary coverage that quotes the Anthropic work.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Fundamentos de LLMs</span>
+      <h1>Alucinações: por que os modelos chutam em vez de dizer "não sei"</h1>
+      <p class="subtitle">Uma alucinação é uma afirmação confiante, fluente e falsa. Não é um defeito aleatório — ela nasce de como os modelos são treinados, de como são avaliados e de como o mecanismo interno de "eu conheço isso?" pode falhar. Entender as três causas mostra quais correções realmente funcionam.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#o-que-pt">O que é (e o que não é) uma alucinação</a></li>
+        <li><a href="#treino-pt">Causa 1: o pré-treino não separa fato de plausível</a></li>
+        <li><a href="#nota-pt">Causa 2: o jeito de avaliar recompensa o chute</a></li>
+        <li><a href="#dentro-pt">Causa 3: o que acontece por dentro — um erro no "já conheço isso"</a></li>
+        <li><a href="#corrigir-pt">O que reduz alucinações na prática</a></li>
+        <li><a href="#nao-pt">O que não resolve</a></li>
+      </ol>
+    </div>
+
+    <h2 id="o-que-pt">1. O que é (e o que não é) uma alucinação</h2>
+    <p>Um modelo de linguagem gera o próximo trecho de texto mais plausível dado o que veio antes. Quando o texto produzido afirma algo falso — uma citação inventada, uma função que não existe numa biblioteca, uma data errada — como se fosse fato, isso é uma alucinação. O problema não é só a resposta estar errada; é que o <strong>tom não muda</strong>. Uma resposta inventada soa exatamente como uma correta.</p>
+    <p>Vale separar dois tipos. As alucinações de <strong>livro fechado</strong> acontecem quando o modelo responde de memória e a memória está ausente ou borrada. As <strong>ancoradas</strong> acontecem mesmo quando você entrega a fonte — ele resume um documento e acrescenta uma afirmação que o documento nunca fez. Cada tipo tem correções diferentes.</p>
+
+    <h2 id="treino-pt">2. Causa 1: o pré-treino não separa fato de plausível</h2>
+    <p>Pesquisa da OpenAI e colaboradores (<em>Why Language Models Hallucinate</em>, set/2025) trata alucinações como erros estatísticos comuns. No pré-treino o modelo só vê exemplos positivos de texto fluente. Nunca recebe um rótulo dizendo "esta frase é falsa". Se ele não consegue distinguir com segurança afirmações válidas de afirmações inválidas com cara de plausíveis, os erros surgem por simples pressão estatística — como um classificador que erra em casos sobre os quais tem pouca evidência.</p>
+    <p>A consequência prática: <strong>fatos raros nos dados de treino são os mais propensos a serem alucinados</strong>. Um evento famoso é dito corretamente milhares de vezes; um detalhe isolado — o aniversário de uma pessoa pouco conhecida, um parâmetro obscuro de uma API — aparece uma vez ou nenhuma, então o modelo tem padrões, mas não uma memória firme, e preenche o buraco com algo que se encaixa no padrão.</p>
+
+    <h2 id="nota-pt">3. Causa 2: o jeito de avaliar recompensa o chute</h2>
+    <p>A mesma pesquisa faz um ponto mais afiado: as alucinações <em>persistem</em> porque a maioria dos benchmarks e sinais de treino dá crédito para resposta certa e nenhum crédito para "não sei". Pense numa prova de múltipla escolha sem penalidade para erro: a melhor estratégia é sempre chutar. Um modelo otimizado contra esse tipo de nota aprende a ser um bom candidato de prova, não um honesto.</p>
+    <table>
+      <tr><th>Esquema de nota</th><th>Acerta</th><th>Diz "não sei"</th><th>Erra</th><th>Melhor estratégia</th></tr>
+      <tr><td>Só acurácia (a maioria dos rankings)</td><td>+1</td><td>0</td><td>0</td><td>Sempre chutar</td></tr>
+      <tr><td>Penaliza erro confiante</td><td>+1</td><td>0</td><td>negativo</td><td>Chutar só quando provável</td></tr>
+    </table>
+    <p>A correção proposta pelos autores é sociotécnica, não um novo algoritmo: mudar a pontuação das avaliações já existentes e amplamente usadas para que erro confiante custe mais que abstenção, em vez de criar mais um "benchmark de alucinação" separado que ninguém otimiza.</p>
+    <div class="callout">
+      <strong>Por que isso importa pra você:</strong> ao comparar modelos por um único número de acurácia, você está em parte premiando o modelo que chuta mais. Um modelo com nota menor que se abstém mais pode ser o mais seguro para construir em cima.
+    </div>
+
+    <h2 id="dentro-pt">4. Causa 3: o que acontece por dentro — um erro no "já conheço isso"</h2>
+    <p>O trabalho de interpretabilidade da Anthropic sobre o Claude ("Tracing the thoughts of a large language model", março/2025, com os artigos complementares sobre circuit tracing) olhou isso por dentro. A descoberta: no Claude, <strong>recusar-se a responder é o comportamento padrão</strong>. Existe um circuito dizendo "não consigo responder isso" que fica ligado, a menos que algo o desligue. O que o desliga é uma feature de "entidade conhecida" — um sinal interno que dispara quando o modelo reconhece aquilo de que se fala.</p>
+    <p>A alucinação acontece quando esse sinal de reconhecimento falha: o nome ou o tema parece familiar o bastante para suprimir a recusa padrão, mas o modelo não tem de fato os fatos. O exemplo relatado foi um nome inventado ("Michael Batkin") — o modelo o tratou como uma pessoa conhecida e então produziu detalhes fabricados para combinar. Ou seja, a falha não é "o modelo não sabe que não sabe"; é "a checagem de familiaridade disse sim quando devia dizer não".</p>
+    <p>Isso também explica uma experiência estranha: os modelos alucinam mais sobre coisas <em>quase</em> familiares — um nome de biblioteca plausível, um autor real com um livro falso — do que sobre coisas claramente desconhecidas.</p>
+
+    <h2 id="corrigir-pt">5. O que reduz alucinações na prática</h2>
+    <ul>
+      <li><strong>Ancore a resposta.</strong> Recuperação (RAG) ou colar a fonte no prompt transforma uma pergunta de livro fechado em livro aberto. Peça para o modelo responder <em>só</em> com base no texto fornecido.</li>
+      <li><strong>Dê permissão para se abster.</strong> Uma frase como "se o documento não disser, responda 'não consta'" ataca diretamente o hábito de chutar para pontuar. Os modelos seguem isso surpreendentemente bem.</li>
+      <li><strong>Exija citações.</strong> Peça a frase exata que sustenta cada afirmação. Afirmação sem citação correspondente é um alerta; dá até para verificar as citações por código.</li>
+      <li><strong>Use ferramentas para fatos.</strong> Busca, calculadora, consulta a banco ou execução de código trocam recordação por consulta. Para tudo que tem resposta verificável, deixe o modelo chamar a ferramenta em vez de "lembrar".</li>
+      <li><strong>Verifique numa segunda passada.</strong> Uma etapa separada que confere cada afirmação contra a fonte pega erros que a primeira passada cometeu com confiança. Não basta perguntar "tem certeza?" — dê a fonte.</li>
+      <li><strong>Mantenha o contexto focado.</strong> Contexto longo e ruidoso torna as alucinações ancoradas mais prováveis; contexto relevante e bem estruturado as torna menos.</li>
+    </ul>
+
+    <h2 id="nao-pt">6. O que não resolve</h2>
+    <ul>
+      <li><strong>"Não alucine" no prompt.</strong> O modelo não tem uma chave para virar; a instrução só ajuda quando acompanhada de ancoragem ou de permissão para se abster.</li>
+      <li><strong>Baixar a temperatura.</strong> Deixa a saída mais repetível, não mais verdadeira. Uma resposta errada pode ser reproduzida de forma determinística.</li>
+      <li><strong>Pedir a confiança do modelo.</strong> A confiança autodeclarada é melhor que nada, mas não é bem calibrada; trate como pista, não como medida.</li>
+      <li><strong>Só um modelo maior.</strong> Modelos maiores alucinam menos em fatos comuns, mas ainda chutam em fatos raros — e podem fazer isso de forma mais convincente.</li>
+    </ul>
+    <div class="callout">
+      <strong>Conclusão:</strong> as alucinações vêm de três lugares — um treino que não rotula o falso, uma avaliação que recompensa o chute e uma checagem de familiaridade que às vezes dispara errado. Não dá para eliminá-las por instrução; dá para reduzi-las mudando a tarefa: ancore numa fonte, permita o "não sei", exija evidência e verifique o que importa.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://arxiv.org/html/2509.04664v1" target="_blank" rel="noopener">arXiv — "Why Language Models Hallucinate" (Kalai, Nachum, Vempala, Zhang; OpenAI e Georgia Tech, set/2025)</a></li>
+      <li><a href="https://www.infoq.com/news/2025/10/openai-llm-hallucinations" target="_blank" rel="noopener">InfoQ — cobertura da pesquisa da OpenAI sobre alucinações (out/2025)</a></li>
+      <li><a href="https://campustechnology.com/articles/2025/04/18/anthropic-develops-ai-microscope-to-reveal-the-hidden-mechanics-of-llm-thought.aspx" target="_blank" rel="noopener">Campus Technology — "Anthropic Develops AI 'Microscope' to Reveal the Hidden Mechanics of LLM Thought" (18/04/2025)</a></li>
+      <li><a href="https://pureai.com/articles/2025/04/15/microscope-for-ai.aspx" target="_blank" rel="noopener">PureAI — "Microscope for AI" (15/04/2025)</a></li>
+      <li><a href="https://memx.app/blog/llm-hallucination-mitigation-honest-guide/" target="_blank" rel="noopener">memx — guia de mitigação de alucinações em LLMs (usado na seção de correções práticas)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: as páginas primárias da Anthropic e da OpenAI não foram lidas diretamente nesta execução; as informações vêm do resumo/HTML do artigo e de coberturas secundárias que citam o trabalho da Anthropic.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Grounded beats confident</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Grounded beats confident';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Ancorado vence confiante';
+    }
+  }
+</script>
+
+</body>
+</html>
