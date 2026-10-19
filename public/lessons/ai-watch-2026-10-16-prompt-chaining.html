@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: One job per prompt: chaining, and a reviewer that checks against something real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .chain { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 24px 0; }
+  .link { flex: 1 1 150px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; }
+  .link b { display: block; font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 15px; margin-bottom: 4px; }
+  .link span { color: var(--text-dim); font-size: 13px; }
+  .link.gate { border-color: rgba(124,58,237,0.6); background: var(--accent-soft); }
+  .arrow { display: flex; align-items: center; color: var(--accent); font-weight: 700; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>One job per prompt: chaining, and a reviewer that checks against something real</h1>
+      <p class="subtitle">A single giant prompt that researches, drafts, formats and double-checks tends to skip a step quietly. Splitting the work into a chain of small prompts fixes that, but only if each link can be tested, and only if the "review" step checks against something outside the model's own opinion.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why">Why one big prompt drops steps</a></li>
+        <li><a href="#shapes">Three shapes of a chain</a></li>
+        <li><a href="#handoff">Handoffs: make each link's output parseable</a></li>
+        <li><a href="#review">The review step, and why "check your work" is not enough</a></li>
+        <li><a href="#example">A worked example in code</a></li>
+        <li><a href="#when">When not to chain</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why">1. Why one big prompt drops steps</h2>
+    <p>Anthropic's prompting docs put the problem in one sentence: when you handle everything in a single prompt, Claude can drop steps. Their example is a contract review: one prompt asked the model to find risks in a SaaS contract <em>and</em> write an email to the vendor proposing changes. The email came out, but the proposed changes were missing. Split into two prompts (find risks → draft email from those risks), each step did its one job.</p>
+    <p><strong>Prompt chaining</strong> means the output of one prompt becomes the input of the next. Techsy's July 2026 guide calls it "decomposition made real in code": decomposition is breaking the task into steps on paper; chaining is running each step as its own call. The docs list three benefits:</p>
+    <ul>
+      <li><strong>Accuracy</strong>: each call has one objective, so nothing competes for attention.</li>
+      <li><strong>Clarity</strong>: each prompt is short enough to read and reason about.</li>
+      <li><strong>Traceability</strong>: when the final output is wrong, you can see which link broke and fix only that one.</li>
+    </ul>
+    <div class="callout"><strong>Analogy:</strong> a restaurant kitchen. One cook doing prep, grill, plating and tasting will forget the garnish on a busy night. A line of stations, each with one job and a pass where the head chef checks the plate, does not. Chaining is building the line.</div>
+
+    <h2 id="shapes">2. Three shapes of a chain</h2>
+    <h3>Sequential</h3>
+    <p>Each step depends on the one before. Common pipelines from the docs:</p>
+<pre><code>Content:    Research → Outline → Draft → Edit → Format
+Data:       Extract → Transform → Analyze → Visualize
+Decision:   Gather info → List options → Analyze each → Recommend</code></pre>
+    <h3>Parallel (fan-out)</h3>
+    <p>If subtasks do not depend on each other (summarizing five documents, say), run them at the same time and combine the results in a final call. The docs are explicit: chain sequentially only when an output depends on a previous step. Parallel calls cost the same tokens but much less waiting.</p>
+    <h3>Verification loop</h3>
+    <p>Generate → review → refine → review again. This is the one people get wrong most often, so it gets its own section below.</p>
+
+    <h2 id="handoff">3. Handoffs: make each link's output parseable</h2>
+    <p>A chain is only as good as the joints between links. If step 1 returns a friendly paragraph, step 2 has to guess where the useful part is. The docs recommend wrapping handoffs in XML tags: ask step 1 to put its findings inside <code>&lt;risks&gt;</code>, then pass exactly that block into step 2 as <code>&lt;concerns&gt;…&lt;/concerns&gt;</code>.</p>
+    <p>When the next step is code rather than another prompt, go further and use structured outputs (a JSON schema the API enforces). Your code can then check the handoff before spending another call: is the list empty? Is a required field missing? Stop early instead of letting a bad input flow down the line.</p>
+
+    <h2 id="review">4. The review step, and why "check your work" is not enough</h2>
+    <p>Anthropic's docs show a three-prompt self-correction chain: summarize a paper → review the summary for accuracy, clarity and completeness on an A–F scale → update the summary based on that feedback. In their example, the review caught undefined acronyms and missing baseline statistics. That is useful, and cheap.</p>
+    <p>But research adds an important caveat. A Tsinghua/NTU paper, <em>"Understanding the Dark Side of LLMs' Intrinsic Self-Correction"</em> (arXiv, results timestamped Feb 2025), tested models like ChatGPT, Llama and DeepSeek on simple and complex tasks. When the model gets only a generic "are you sure? think again" with no outside information, it can <strong>waver</strong>: flip correct answers to wrong ones, react to the wording of the review prompt itself, and show human-like biases such as overthinking and perfectionism on open-ended work. Earlier studies the paper cites reached the same conclusion: self-correction without external feedback is unreliable.</p>
+    <p>So the useful question is not "should I add a review step?" but <strong>"what does the reviewer compare against?"</strong></p>
+    <div class="table-wrap"><table>
+      <tr><th>Reviewer checks against…</th><th>Reliability</th><th>Example</th></tr>
+      <tr><td>Nothing ("check your answer")</td><td>Low; may flip correct answers</td><td>"Are you sure? Try again."</td></tr>
+      <tr><td>An explicit rubric in a separate call</td><td>Medium; catches omissions and clarity issues</td><td>"Does the summary define every acronym? List any that are missing."</td></tr>
+      <tr><td>The source material</td><td>Good for factual drift</td><td>"Quote the sentence in &lt;paper&gt; that supports each number."</td></tr>
+      <tr><td>Something deterministic</td><td>Highest</td><td>Schema validation, unit tests, a word count, a regex, a banned-phrase list</td></tr>
+    </table></div>
+    <p>Techsy describes the last row from its own production pipeline: a validator step greps every draft against a 52-phrase blocklist and blocks publishing on any hit; when a translation step started returning ASCII instead of accented characters, the fix was a gate that counts native characters and re-runs the step if the count is zero. That is a "review" with no opinion involved, and it never wavers.</p>
+    <div class="callout"><strong>Rule of thumb:</strong> push as much checking as possible into code. Use a model as reviewer only for things code cannot measure (tone, completeness), give it a concrete rubric, and run it in a separate call so it is not grading its own homework in the same breath.</div>
+
+    <h2 id="example">5. A worked example in code</h2>
+    <p>A generic support pipeline: classify a ticket, draft a reply, check the reply. Below, <code>callModel</code> stands in for any LLM API call; it is not a real library function.</p>
+    <div class="chain">
+      <div class="link"><b>1 · Extract</b><span>Ticket → JSON: category, product, what the customer wants</span></div>
+      <div class="arrow">→</div>
+      <div class="link gate"><b>Code gate</b><span>Valid JSON? Known category?</span></div>
+      <div class="arrow">→</div>
+      <div class="link"><b>2 · Draft</b><span>Reply using only the extracted facts + policy</span></div>
+      <div class="arrow">→</div>
+      <div class="link gate"><b>Code gate</b><span>Length, no forbidden promises</span></div>
+      <div class="arrow">→</div>
+      <div class="link"><b>3 · Rubric review</b><span>Separate call: does it answer the ask?</span></div>
+    </div>
+<pre><code>async function handleTicket(ticket, policy) {
+  // Link 1: one job — extract facts. Output must match a schema.
+  const facts = await callModel({
+    prompt: `Read the ticket in &lt;ticket&gt;. Return JSON with
+category (billing | technical | account), product, and request
+(one sentence: what the customer wants).
+&lt;ticket&gt;${ticket}&lt;/ticket&gt;`,
+    schema: FACTS_SCHEMA,
+  });
+
+  // Gate: deterministic check before spending another call.
+  if (!["billing", "technical", "account"].includes(facts.category)) {
+    return { status: "needs_human", reason: "unknown category" };
+  }
+
+  // Link 2: one job — draft, using only the handed-off facts.
+  const draft = await callModel({
+    prompt: `Write a reply under 120 words that addresses &lt;request&gt;.
+Follow &lt;policy&gt;. Do not promise refunds or dates.
+&lt;request&gt;${facts.request}&lt;/request&gt;
+&lt;policy&gt;${policy}&lt;/policy&gt;`,
+  });
+
+  // Gate: rules code can measure.
+  const words = draft.split(/\s+/).length;
+  if (words &gt; 120 || /refund|guarantee/i.test(draft)) {
+    return { status: "retry_draft", draft };
+  }
+
+  // Link 3: rubric review in a separate call — compares against the request.
+  const review = await callModel({
+    prompt: `Does &lt;reply&gt; fully answer &lt;request&gt;? Answer PASS or FAIL,
+then list anything missing.
+&lt;request&gt;${facts.request}&lt;/request&gt;
+&lt;reply&gt;${draft}&lt;/reply&gt;`,
+  });
+
+  return review.startsWith("PASS")
+    ? { status: "ready", draft }
+    : { status: "revise", draft, feedback: review };
+}</code></pre>
+    <p>Notice three things. Each prompt has <strong>one</strong> objective. Handoffs are wrapped in tags or schemas. And two of the three checks are plain code, which costs nothing and behaves the same every time. When something regresses, you test that one link with a handful of saved tickets instead of rereading a 60-line mega-prompt.</p>
+
+    <h2 id="when">6. When not to chain</h2>
+    <ul>
+      <li><strong>The task is simple.</strong> Current reasoning models already plan internally. Techsy notes that scripting reasoning steps for these models can be redundant or even hurt; OpenAI's reasoning guide says the same. A short, clear single prompt beats a five-step chain for a one-paragraph answer.</li>
+      <li><strong>Latency matters more than polish.</strong> Every sequential link adds a full round-trip. Parallelize what you can and merge links that never fail.</li>
+      <li><strong>You can't say what each link should output.</strong> If you can't write a test for a step, it isn't a real step yet. Rethink the split.</li>
+      <li><strong>An agent loop fits better.</strong> A fixed chain suits a known sequence. When the path depends on what the model finds (search, read, decide), an agent with tools is the better shape. Chains and agents are cousins: a chain is a route you choose in advance.</li>
+    </ul>
+    <div class="callout"><strong>Takeaway:</strong> split work where a step keeps getting dropped, pass clean tagged handoffs, and make every "review" compare against something real: a schema, a test, the source text, or at minimum a written rubric in a separate call.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.aiwithgrant.com/guides/anthropic-chain-complex-prompts" target="_blank" rel="noopener">aiwithgrant — "Chain Complex Prompts — Anthropic" (read directly, Oct 16, 2026): structured digest of Anthropic's official chaining docs — benefits, workflows, parallel vs sequential, self-correction and contract examples. The official page was not opened directly.</a></li>
+      <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank" rel="noopener">Anthropic Docs — "Chain complex prompts" (original source of the above; cited, not opened)</a></li>
+      <li><a href="https://techsy.io/en/blog/prompt-engineering-guide" target="_blank" rel="noopener">Techsy — "Prompt Engineering in 2026: 10 Techniques That Still Work" (Jul 17, 2026; read directly): decomposition vs chaining, reasoning-model caveats, production grep/validation gates</a></li>
+      <li><a href="https://arxiv.org/html/2412.14959v2" target="_blank" rel="noopener">Zhang et al. — "Understanding the Dark Side of LLMs' Intrinsic Self-Correction" (arXiv 2412.14959v2; results timestamped Feb 15, 2025; abstract and introduction read): answer wavering, prompt bias, cognitive-bias failures</a></li>
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Anthropic — "Best practices for prompt engineering" (Nov 2025; via search summary): advanced techniques matter most for agentic and multi-stage work</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "Prompt engineering in practice"; no Anthropic/Claude announcement dated today was found (the most recent items were the Oct 14 election-information update and the Oct 15 default rollout of Docs/Slides/Design). Anthropic's chaining guidance was read through a third-party digest that links to the official page. The code example is illustrative; <code>callModel</code> is a placeholder.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>Um trabalho por prompt: encadeamento, e um revisor que confere contra algo concreto</h1>
+      <p class="subtitle">Um prompt gigante que pesquisa, rascunha, formata e ainda revisa costuma pular uma etapa sem avisar. Dividir o trabalho numa cadeia de prompts pequenos resolve isso, mas só se cada elo puder ser testado, e só se a etapa de "revisão" conferir contra algo que não seja a própria opinião do modelo.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#why-pt">Por que um prompt grande pula etapas</a></li>
+        <li><a href="#shapes-pt">Três formatos de cadeia</a></li>
+        <li><a href="#handoff-pt">Passagem de bastão: saída de cada elo precisa ser legível por máquina</a></li>
+        <li><a href="#review-pt">A etapa de revisão, e por que "confira seu trabalho" não basta</a></li>
+        <li><a href="#example-pt">Um exemplo em código</a></li>
+        <li><a href="#when-pt">Quando não encadear</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why-pt">1. Por que um prompt grande pula etapas</h2>
+    <p>A documentação de prompting da Anthropic resume o problema numa frase: quando tudo fica num único prompt, o Claude pode pular etapas. O exemplo deles é a revisão de um contrato: um prompt pedia para achar os riscos de um contrato de SaaS <em>e</em> escrever um e-mail ao fornecedor propondo mudanças. O e-mail saiu, mas sem as mudanças propostas. Dividido em dois prompts (achar riscos → redigir e-mail a partir desses riscos), cada etapa cumpriu sua função.</p>
+    <p><strong>Prompt chaining</strong> (encadeamento de prompts) é quando a saída de um prompt vira a entrada do próximo. O guia da Techsy de julho de 2026 chama isso de "decomposição colocada em código": decompor é quebrar a tarefa em etapas no papel; encadear é rodar cada etapa como uma chamada separada. A documentação lista três benefícios:</p>
+    <ul>
+      <li><strong>Precisão</strong>: cada chamada tem um objetivo, então nada disputa a atenção do modelo.</li>
+      <li><strong>Clareza</strong>: cada prompt é curto o bastante para ler e entender.</li>
+      <li><strong>Rastreabilidade</strong>: quando o resultado final sai errado, dá para ver qual elo quebrou e consertar só ele.</li>
+    </ul>
+    <div class="callout"><strong>Analogia:</strong> a cozinha de um restaurante. Um cozinheiro sozinho fazendo pré-preparo, grelha, montagem e prova vai esquecer a guarnição numa noite cheia. Uma linha de praças, cada uma com uma função e um passe onde o chef confere o prato antes de sair, não esquece. Encadear prompts é montar essa linha.</div>
+
+    <h2 id="shapes-pt">2. Três formatos de cadeia</h2>
+    <h3>Sequencial</h3>
+    <p>Cada etapa depende da anterior. Pipelines comuns citados na documentação:</p>
+<pre><code>Conteúdo:   Pesquisa → Estrutura → Rascunho → Edição → Formatação
+Dados:      Extrair → Transformar → Analisar → Visualizar
+Decisão:    Reunir info → Listar opções → Analisar cada uma → Recomendar</code></pre>
+    <h3>Paralelo (fan-out)</h3>
+    <p>Se as subtarefas não dependem umas das outras (resumir cinco documentos, por exemplo), rode todas ao mesmo tempo e combine os resultados numa chamada final. A documentação é direta: encadeie em sequência só quando uma saída depende de uma etapa anterior. Chamadas em paralelo gastam os mesmos tokens, mas muito menos tempo de espera.</p>
+    <h3>Loop de verificação</h3>
+    <p>Gerar → revisar → refinar → revisar de novo. É o formato que mais se faz errado, então ganhou uma seção só para ele.</p>
+
+    <h2 id="handoff-pt">3. Passagem de bastão: saída de cada elo precisa ser legível por máquina</h2>
+    <p>Uma cadeia é tão boa quanto as juntas entre os elos. Se a etapa 1 devolve um parágrafo simpático, a etapa 2 precisa adivinhar onde está a parte útil. A documentação recomenda envolver as passagens em tags XML: peça para a etapa 1 colocar o resultado dentro de <code>&lt;risks&gt;</code> e passe exatamente esse bloco para a etapa 2 como <code>&lt;concerns&gt;…&lt;/concerns&gt;</code>.</p>
+    <p>Quando a próxima etapa é código, e não outro prompt, vá além e use structured outputs (um JSON schema que a API garante). Aí seu código pode validar a passagem antes de gastar mais uma chamada: a lista veio vazia? Falta um campo obrigatório? Pare cedo em vez de deixar uma entrada ruim descer pela linha.</p>
+
+    <h2 id="review-pt">4. A etapa de revisão, e por que "confira seu trabalho" não basta</h2>
+    <p>A documentação da Anthropic mostra uma cadeia de autocorreção com três prompts: resumir um artigo → revisar o resumo quanto a precisão, clareza e completude numa escala de A a F → atualizar o resumo com base nesse feedback. No exemplo, a revisão pegou siglas não definidas e estatísticas de base que faltavam. Isso é útil e barato.</p>
+    <p>Mas a pesquisa acrescenta uma ressalva importante. Um artigo de Tsinghua/NTU, <em>"Understanding the Dark Side of LLMs' Intrinsic Self-Correction"</em> (arXiv, resultados datados de fev/2025), testou modelos como ChatGPT, Llama e DeepSeek em tarefas simples e complexas. Quando o modelo recebe só um genérico "tem certeza? pense de novo", sem nenhuma informação externa, ele pode <strong>vacilar</strong>: trocar respostas certas por erradas, reagir ao próprio texto do prompt de revisão e mostrar vieses parecidos com os humanos, como pensar demais e perfeccionismo em tarefas abertas. Estudos anteriores citados pelo artigo chegaram à mesma conclusão: autocorreção sem feedback externo não é confiável.</p>
+    <p>Então a pergunta útil não é "devo colocar uma etapa de revisão?", e sim <strong>"contra o que o revisor está comparando?"</strong></p>
+    <div class="table-wrap"><table>
+      <tr><th>O revisor confere contra…</th><th>Confiabilidade</th><th>Exemplo</th></tr>
+      <tr><td>Nada ("confira sua resposta")</td><td>Baixa; pode trocar resposta certa por errada</td><td>"Tem certeza? Tente de novo."</td></tr>
+      <tr><td>Uma rubrica explícita, em chamada separada</td><td>Média; pega omissões e problemas de clareza</td><td>"O resumo define todas as siglas? Liste as que faltam."</td></tr>
+      <tr><td>O material de origem</td><td>Boa contra desvio factual</td><td>"Cite a frase em &lt;paper&gt; que sustenta cada número."</td></tr>
+      <tr><td>Algo determinístico</td><td>A mais alta</td><td>Validação de schema, testes unitários, contagem de palavras, regex, lista de termos proibidos</td></tr>
+    </table></div>
+    <p>A Techsy descreve a última linha a partir do próprio pipeline de produção: uma etapa validadora faz grep de cada rascunho contra uma lista de 52 frases proibidas e bloqueia a publicação em qualquer ocorrência; quando a etapa de tradução começou a devolver ASCII em vez de caracteres acentuados, a correção foi um portão que conta caracteres nativos e roda a etapa de novo se a contagem der zero. É uma "revisão" sem opinião envolvida, e ela nunca vacila.</p>
+    <div class="callout"><strong>Regra prática:</strong> empurre o máximo de checagem possível para o código. Use o modelo como revisor só para o que código não mede (tom, completude), dê a ele uma rubrica concreta e rode em chamada separada, para ele não corrigir a própria prova no mesmo fôlego.</div>
+
+    <h2 id="example-pt">5. Um exemplo em código</h2>
+    <p>Um pipeline genérico de suporte: classificar um chamado, redigir uma resposta, conferir a resposta. Abaixo, <code>callModel</code> representa qualquer chamada de API de LLM; não é função de nenhuma biblioteca real.</p>
+    <div class="chain">
+      <div class="link"><b>1 · Extrair</b><span>Chamado → JSON: categoria, produto, o que o cliente quer</span></div>
+      <div class="arrow">→</div>
+      <div class="link gate"><b>Portão em código</b><span>JSON válido? Categoria conhecida?</span></div>
+      <div class="arrow">→</div>
+      <div class="link"><b>2 · Redigir</b><span>Resposta usando só os fatos extraídos + política</span></div>
+      <div class="arrow">→</div>
+      <div class="link gate"><b>Portão em código</b><span>Tamanho, nenhuma promessa proibida</span></div>
+      <div class="arrow">→</div>
+      <div class="link"><b>3 · Revisão por rubrica</b><span>Chamada separada: responde ao pedido?</span></div>
+    </div>
+<pre><code>async function handleTicket(ticket, policy) {
+  // Elo 1: um trabalho — extrair fatos. A saída precisa seguir um schema.
+  const facts = await callModel({
+    prompt: `Leia o chamado em &lt;ticket&gt;. Retorne JSON com
+category (billing | technical | account), product e request
+(uma frase: o que o cliente quer).
+&lt;ticket&gt;${ticket}&lt;/ticket&gt;`,
+    schema: FACTS_SCHEMA,
+  });
+
+  // Portão: checagem determinística antes de gastar outra chamada.
+  if (!["billing", "technical", "account"].includes(facts.category)) {
+    return { status: "needs_human", reason: "categoria desconhecida" };
+  }
+
+  // Elo 2: um trabalho — redigir, usando só os fatos recebidos.
+  const draft = await callModel({
+    prompt: `Escreva uma resposta com menos de 120 palavras que atenda &lt;request&gt;.
+Siga &lt;policy&gt;. Não prometa reembolso nem prazo.
+&lt;request&gt;${facts.request}&lt;/request&gt;
+&lt;policy&gt;${policy}&lt;/policy&gt;`,
+  });
+
+  // Portão: regras que o código consegue medir.
+  const words = draft.split(/\s+/).length;
+  if (words &gt; 120 || /reembolso|garant/i.test(draft)) {
+    return { status: "retry_draft", draft };
+  }
+
+  // Elo 3: revisão por rubrica em chamada separada — compara com o pedido.
+  const review = await callModel({
+    prompt: `A &lt;reply&gt; responde totalmente a &lt;request&gt;? Responda PASS ou FAIL
+e depois liste o que faltou.
+&lt;request&gt;${facts.request}&lt;/request&gt;
+&lt;reply&gt;${draft}&lt;/reply&gt;`,
+  });
+
+  return review.startsWith("PASS")
+    ? { status: "ready", draft }
+    : { status: "revise", draft, feedback: review };
+}</code></pre>
+    <p>Repare em três coisas. Cada prompt tem <strong>um</strong> objetivo. As passagens vão envoltas em tags ou schemas. E duas das três checagens são código puro, que não custa nada e se comporta igual toda vez. Quando algo piora, você testa só aquele elo com um punhado de chamados salvos, em vez de reler um megaprompt de 60 linhas.</p>
+
+    <h2 id="when-pt">6. Quando não encadear</h2>
+    <ul>
+      <li><strong>A tarefa é simples.</strong> Os modelos de raciocínio atuais já planejam internamente. A Techsy observa que roteirizar passos de raciocínio para esses modelos pode ser redundante ou até piorar; o guia de raciocínio da OpenAI diz o mesmo. Um prompt único, curto e claro ganha de uma cadeia de cinco etapas para uma resposta de um parágrafo.</li>
+      <li><strong>Latência importa mais que acabamento.</strong> Cada elo sequencial adiciona uma ida e volta completa. Paralelize o que der e junte elos que nunca falham.</li>
+      <li><strong>Você não consegue dizer o que cada elo deve entregar.</strong> Se não dá para escrever um teste para uma etapa, ela ainda não é uma etapa de verdade. Repense a divisão.</li>
+      <li><strong>Um loop de agente encaixa melhor.</strong> Uma cadeia fixa serve para uma sequência conhecida. Quando o caminho depende do que o modelo encontra (buscar, ler, decidir), um agente com ferramentas é o formato certo. Cadeias e agentes são primos: a cadeia é um roteiro que você escolhe antes.</li>
+    </ul>
+    <div class="callout"><strong>Resumo:</strong> divida o trabalho onde uma etapa vive sendo esquecida, passe o bastão com tags limpas e faça toda "revisão" comparar contra algo concreto: um schema, um teste, o texto de origem ou, no mínimo, uma rubrica escrita numa chamada separada.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.aiwithgrant.com/guides/anthropic-chain-complex-prompts" target="_blank" rel="noopener">aiwithgrant — "Chain Complex Prompts — Anthropic" (lido diretamente em 16/10/2026): resumo estruturado da documentação oficial da Anthropic sobre encadeamento — benefícios, fluxos, paralelo vs. sequencial, exemplos de autocorreção e contrato. A página oficial não foi aberta diretamente.</a></li>
+      <li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/chain-prompts" target="_blank" rel="noopener">Anthropic Docs — "Chain complex prompts" (fonte original do item acima; citada, não aberta)</a></li>
+      <li><a href="https://techsy.io/en/blog/prompt-engineering-guide" target="_blank" rel="noopener">Techsy — "Prompt Engineering in 2026: 10 Techniques That Still Work" (17/07/2026; lido diretamente): decomposição vs. encadeamento, ressalvas sobre modelos de raciocínio, portões de grep/validação em produção</a></li>
+      <li><a href="https://arxiv.org/html/2412.14959v2" target="_blank" rel="noopener">Zhang et al. — "Understanding the Dark Side of LLMs' Intrinsic Self-Correction" (arXiv 2412.14959v2; resultados datados de 15/02/2025; resumo e introdução lidos): respostas que vacilam, viés de prompt, falhas por viés cognitivo</a></li>
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Anthropic — "Best practices for prompt engineering" (nov/2025; via resumo de busca): técnicas avançadas pesam mais em trabalho agêntico e de várias etapas</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Prompt engineering na prática"; não foi encontrado anúncio da Anthropic/Claude datado de hoje (os itens mais recentes eram a atualização de informações eleitorais de 14/10 e a ativação padrão de Docs/Slides/Design em 15/10). A orientação da Anthropic sobre encadeamento foi lida por um resumo de terceiros que aponta para a página oficial. O código é ilustrativo; <code>callModel</code> é um placeholder.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Prompt chaining</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+    document.getElementById('footer-right').textContent = lang === 'en' ? 'Prompt chaining' : 'Encadeamento de prompts';
+  }
+</script>
+
+</body>
+</html>

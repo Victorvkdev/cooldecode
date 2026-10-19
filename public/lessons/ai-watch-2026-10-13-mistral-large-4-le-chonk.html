@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: A trillion parameters, 49 billion at work: Mistral Large 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Industry landscape</span>
+      <h1>A trillion parameters, 49 billion at work: Mistral Large 4</h1>
+      <p class="subtitle">On October 6, Mistral previewed Large 4, nicknamed "Le Chonk": a huge open-weight model with a staged release. What it is, what the benchmarks do and do not prove, and why the weights are only half of Mistral's bet.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What was announced</a></li>
+        <li><a href="#moe">How 1T parameters can run on 49B: sparse models</a></li>
+        <li><a href="#bench">The benchmark picture, read carefully</a></li>
+        <li><a href="#staged">Why the release is staged</a></li>
+        <li><a href="#bet">Mistral's real bet: weights plus a sovereign stack</a></li>
+        <li><a href="#watch">What to watch next</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What was announced</h2>
+    <p>Mistral AI launched a public preview of <strong>Mistral Large 4 (ML4)</strong> on October 6, 2026. The key facts reported by VentureBeat and TestingCatalog (which relays Mistral's announcement):</p>
+    <ul>
+      <li>About <strong>1 trillion total parameters</strong>, <strong>49 billion active</strong>, natively multimodal (it reads images and documents) but with <strong>text-only output</strong>.</li>
+      <li>Trained from scratch in roughly two months on Nvidia Grace Blackwell GPUs in Mistral's own European data centers (reported as 4,000 GPUs by VentureBeat and 3,800 by TestingCatalog, so treat it as "about 4,000").</li>
+      <li>More than 160 languages in training, including every official EU language.</li>
+      <li>API available now in preview; <strong>open weights planned for October 27</strong> under a custom Mistral license (not a standard open-source license).</li>
+      <li>Reported API price: $1.36 per million input tokens and $4.18 per million output tokens (TestingCatalog only; VentureBeat said no pricing was in its materials).</li>
+    </ul>
+    <p>The nickname comes from an internet joke: in June a fake model called "Le Chaton Fat" went viral, and Mistral leaned into it. Mistral's chief scientist said ML4 could be seen as a first version of that idea, with larger models to come.</p>
+
+    <h2 id="moe">2. How 1T parameters can run on 49B: sparse models</h2>
+    <p>ML4 is a <strong>mixture-of-experts (MoE)</strong> model. Instead of running every parameter for every token, a small "router" picks a few specialist sub-networks (experts) per token. Analogy: a hospital with 100 specialists does not send every patient to every doctor; the triage desk sends each one to two or three.</p>
+    <table>
+      <tr><th></th><th>Dense model</th><th>MoE model (like ML4)</th></tr>
+      <tr><td>Parameters used per token</td><td>All of them</td><td>A small fraction (49B of 1T, about 5%)</td></tr>
+      <tr><td>Compute cost per token</td><td>Scales with total size</td><td>Scales with active size</td></tr>
+      <tr><td>Memory needed to host it</td><td>Total size</td><td>Still total size: all 1T must be loaded</td></tr>
+    </table>
+    <div class="callout">
+      <strong>The catch for self-hosting:</strong> MoE makes each answer cheaper to compute, not cheaper to store. A 1T-parameter model still needs a serious multi-GPU cluster just to hold the weights. "Open weights" at this size is realistic for companies and governments, not for a laptop. (For contrast, Meta's Muse Glimmer, released in August, is 30B and is pitched to run on a 24GB consumer GPU.)
+    </div>
+
+    <h2 id="bench">3. The benchmark picture, read carefully</h2>
+    <p>Mistral claims ML4 is the best open-weight model from the US or Europe on aggregated benchmarks, and competitive with the best Chinese open models. The numbers it published:</p>
+    <table>
+      <tr><th>Benchmark</th><th>ML4 (Mistral's figure)</th><th>Context</th></tr>
+      <tr><td>DeepSWE v1.1 (long-horizon coding)</td><td>about 62%</td><td>Mistral's chart lists GLM-5.3 at 61%, DeepSeek V4 Pro at 57%, Qwen 3.8 Max at 51%</td></tr>
+      <tr><td>Harvey Legal Agent Benchmark</td><td>15%</td><td>Public leaderboard shows open rivals at about 8-13%; some proprietary models score higher</td></tr>
+      <tr><td>Finch (finance workflows)</td><td>67%</td><td>Tied with DeepSeek V4 Pro in Mistral's chart; exact scores not independently found</td></tr>
+      <tr><td>Cyber tests (Cybench)</td><td>93%</td><td>Reported by TestingCatalog from Mistral's materials</td></tr>
+    </table>
+    <p>Here is the reading skill that matters. VentureBeat pointed out that the live DeepSWE leaderboard, when it picks the best published setup for each model, puts GLM-5.3 and Kimi K3 near 69% and the top closed models around 74%. So 62% is <strong>strong against Western open models</strong> but does <strong>not</strong> show an outright coding lead. Benchmark scores depend on the agent harness around the model, and vendor charts choose their own comparisons.</p>
+    <div class="callout">
+      <strong>Rule of thumb:</strong> a launch benchmark is a hypothesis, not a result. ML4 did not yet appear on Artificial Analysis or the DeepSWE leaderboard at press time, so the ranking claim stays provisional until outsiders test the final weights.
+    </div>
+
+    <h2 id="staged">4. Why the release is staged</h2>
+    <p>Mistral is not simply dropping the weights. For roughly three weeks it is testing the model with developers, cybersecurity leaders, vetted partners and state authorities, including a version with reduced moderation and expanded cyber capabilities for red-teaming. It is also continuing reinforcement learning to tune the final checkpoint, which means <strong>the model you can download on October 27 may differ from the preview you can call today</strong>.</p>
+    <p>The logic: a strong model for vulnerability finding and patching is dual-use. Mistral argues closed providers may refuse legitimate defensive requests, so open weights give security teams control; the staged rollout is the attempt to manage the risk of that openness.</p>
+
+    <h2 id="bet">5. Mistral's real bet: weights plus a sovereign stack</h2>
+    <p>Mistral says it raised a €3 billion Series D in September at a valuation above €21 billion (Reuters: about $24 billion), and that ML4 is the first milestone backed by it. The strategy, as described by its chief scientist: model weights are becoming more of a commodity, so the value shifts to what surrounds them. That is why the pitch bundles open weights with:</p>
+    <ul>
+      <li><strong>Sovereignty:</strong> an end-to-end European deployment under European law, plus private-cloud and on-premises options.</li>
+      <li><strong>Customization:</strong> the same training and reinforcement-learning environment is offered to customers through Mistral Forge.</li>
+      <li><strong>Services:</strong> infrastructure (Mistral Compute) and engineering support; Mistral says it serves 125+ enterprises, including Airbus, ASML and HSBC.</li>
+    </ul>
+    <p>For a developer, the comparison with closed APIs is a trade: less out-of-the-box polish and (so far) unverified rankings, in exchange for control over where the model runs and how it is tuned.</p>
+
+    <h2 id="watch">6. What to watch next</h2>
+    <ol>
+      <li><strong>October 27:</strong> do the weights actually ship, and under what license terms?</li>
+      <li><strong>Independent evals:</strong> where ML4 lands on Artificial Analysis and the DeepSWE leaderboard once outsiders run it.</li>
+      <li><strong>Meta's answer:</strong> Meta said in August that an open-weight Muse Spark 1.2 would follow "in the coming weeks"; I could not confirm it has shipped, so the open-weight race has a second pending release.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://venturebeat.com/technology/mistral-debuts-large-4-le-chonk-a-1-trillion-parameter-text-output-model-with-high-benchmarks-planned-for-open-weights-release" target="_blank" rel="noopener">VentureBeat — "Mistral debuts Large 4 'Le Chonk'..." (Oct 6, 2026; read directly)</a></li>
+      <li><a href="https://www.testingcatalog.com/mistral-launches-large-4-preview-with-1-t-parameters/" target="_blank" rel="noopener">TestingCatalog — "Mistral launches Large 4 preview with 1 T parameters" (Oct 6, 2026; read directly)</a></li>
+      <li><a href="https://x.com/MistralAI/status/2107457414387622310" target="_blank" rel="noopener">Mistral AI on X — announcement post (Oct 6, 2026; seen via search results and embedded in TestingCatalog)</a></li>
+      <li>Meta Muse Glimmer / Muse Spark 1.2 open-weight plans (Aug 10, 2026): from web search summaries (CNBC and others); not verified on primary pages.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: no Anthropic/Claude announcement dated Oct 13, 2026 was found, so the category rotation (Industry landscape) was applied. All benchmark figures are vendor-reported unless stated otherwise.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Panorama da indústria</span>
+      <h1>Um trilhão de parâmetros, 49 bilhões trabalhando: Mistral Large 4</h1>
+      <p class="subtitle">Em 6 de outubro, a Mistral apresentou o Large 4, apelidado de "Le Chonk": um modelo gigante de pesos abertos com lançamento em etapas. O que ele é, o que os benchmarks provam (e não provam) e por que os pesos são só metade da aposta da Mistral.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#what-pt">O que foi anunciado</a></li>
+        <li><a href="#moe-pt">Como 1T de parâmetros roda com 49B: modelos esparsos</a></li>
+        <li><a href="#bench-pt">O quadro de benchmarks, lido com cuidado</a></li>
+        <li><a href="#staged-pt">Por que o lançamento é em etapas</a></li>
+        <li><a href="#bet-pt">A aposta real da Mistral: pesos mais stack soberano</a></li>
+        <li><a href="#watch-pt">O que acompanhar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que foi anunciado</h2>
+    <p>A Mistral AI lançou em 6 de outubro de 2026 uma prévia pública do <strong>Mistral Large 4 (ML4)</strong>. Os fatos principais, segundo VentureBeat e TestingCatalog (que repassa o anúncio da Mistral):</p>
+    <ul>
+      <li>Cerca de <strong>1 trilhão de parâmetros no total</strong>, <strong>49 bilhões ativos</strong>, nativamente multimodal (lê imagens e documentos), mas com <strong>saída apenas em texto</strong>.</li>
+      <li>Treinado do zero em cerca de dois meses, em GPUs Nvidia Grace Blackwell nos data centers europeus da própria Mistral (4.000 GPUs segundo a VentureBeat, 3.800 segundo o TestingCatalog; trate como "cerca de 4.000").</li>
+      <li>Mais de 160 idiomas no treino, incluindo todos os idiomas oficiais da UE.</li>
+      <li>API disponível agora em prévia; <strong>pesos abertos previstos para 27 de outubro</strong> sob uma licença própria da Mistral (não é uma licença open source padrão).</li>
+      <li>Preço reportado da API: US$ 1,36 por milhão de tokens de entrada e US$ 4,18 por milhão de saída (só o TestingCatalog; a VentureBeat disse que não havia preço nos materiais).</li>
+    </ul>
+    <p>O apelido vem de uma piada da internet: em junho viralizou um modelo falso chamado "Le Chaton Fat", e a Mistral entrou na brincadeira. O cientista-chefe disse que o ML4 pode ser visto como uma primeira versão dessa ideia, com modelos ainda maiores por vir.</p>
+
+    <h2 id="moe-pt">2. Como 1T de parâmetros roda com 49B: modelos esparsos</h2>
+    <p>O ML4 é um modelo de <strong>mixture-of-experts (MoE)</strong>. Em vez de rodar todos os parâmetros para cada token, um "roteador" escolhe poucas sub-redes especialistas (os experts) por token. Analogia: um hospital com 100 especialistas não manda cada paciente para todos os médicos; a triagem manda cada um para dois ou três.</p>
+    <table>
+      <tr><th></th><th>Modelo denso</th><th>Modelo MoE (como o ML4)</th></tr>
+      <tr><td>Parâmetros usados por token</td><td>Todos</td><td>Uma fração pequena (49B de 1T, cerca de 5%)</td></tr>
+      <tr><td>Custo de computação por token</td><td>Cresce com o tamanho total</td><td>Cresce com o tamanho ativo</td></tr>
+      <tr><td>Memória para hospedar</td><td>Tamanho total</td><td>Continua o tamanho total: o 1T inteiro precisa ser carregado</td></tr>
+    </table>
+    <div class="callout">
+      <strong>A pegadinha de hospedar você mesmo:</strong> MoE deixa cada resposta mais barata de computar, não mais barata de armazenar. Um modelo de 1T de parâmetros ainda precisa de um cluster sério de várias GPUs só para guardar os pesos. "Pesos abertos" nesse tamanho é realista para empresas e governos, não para um notebook. (Em contraste, o Muse Glimmer da Meta, lançado em agosto, tem 30B e é vendido como capaz de rodar numa GPU de consumo de 24GB.)
+    </div>
+
+    <h2 id="bench-pt">3. O quadro de benchmarks, lido com cuidado</h2>
+    <p>A Mistral afirma que o ML4 é o melhor modelo de pesos abertos dos EUA ou da Europa em benchmarks agregados, e competitivo com os melhores modelos abertos chineses. Os números que ela publicou:</p>
+    <table>
+      <tr><th>Benchmark</th><th>ML4 (número da Mistral)</th><th>Contexto</th></tr>
+      <tr><td>DeepSWE v1.1 (código de longo prazo)</td><td>cerca de 62%</td><td>O gráfico da Mistral lista GLM-5.3 com 61%, DeepSeek V4 Pro com 57%, Qwen 3.8 Max com 51%</td></tr>
+      <tr><td>Harvey Legal Agent Benchmark</td><td>15%</td><td>O ranking público mostra rivais abertos em cerca de 8-13%; alguns modelos proprietários pontuam mais</td></tr>
+      <tr><td>Finch (fluxos financeiros)</td><td>67%</td><td>Empatado com o DeepSeek V4 Pro no gráfico da Mistral; notas exatas não encontradas de forma independente</td></tr>
+      <tr><td>Testes de cyber (Cybench)</td><td>93%</td><td>Reportado pelo TestingCatalog a partir dos materiais da Mistral</td></tr>
+    </table>
+    <p>Aqui está a habilidade de leitura que importa. A VentureBeat apontou que o ranking ao vivo do DeepSWE, quando escolhe a melhor configuração publicada de cada modelo, coloca GLM-5.3 e Kimi K3 perto de 69% e os melhores modelos fechados em torno de 74%. Ou seja, 62% é <strong>forte contra modelos abertos ocidentais</strong>, mas <strong>não</strong> mostra liderança clara em código. A nota de um benchmark depende do agente em volta do modelo, e gráficos de fabricante escolhem as próprias comparações.</p>
+    <div class="callout">
+      <strong>Regra prática:</strong> benchmark de lançamento é hipótese, não resultado. O ML4 ainda não aparecia na Artificial Analysis nem no ranking do DeepSWE no fechamento da matéria, então a alegação de ranking segue provisória até terceiros testarem os pesos finais.
+    </div>
+
+    <h2 id="staged-pt">4. Por que o lançamento é em etapas</h2>
+    <p>A Mistral não vai simplesmente soltar os pesos. Por cerca de três semanas ela testa o modelo com desenvolvedores, líderes de cibersegurança, parceiros selecionados e autoridades estatais, incluindo uma versão com moderação reduzida e capacidades de cyber ampliadas para red-teaming. Ela também continua o aprendizado por reforço para ajustar o checkpoint final, o que significa que <strong>o modelo que você baixar em 27 de outubro pode ser diferente da prévia que dá para chamar hoje</strong>.</p>
+    <p>A lógica: um modelo forte em achar e corrigir vulnerabilidades é de uso duplo. A Mistral argumenta que provedores fechados podem recusar pedidos defensivos legítimos, então pesos abertos dão controle às equipes de segurança; o lançamento em etapas é a tentativa de administrar o risco dessa abertura.</p>
+
+    <h2 id="bet-pt">5. A aposta real da Mistral: pesos mais stack soberano</h2>
+    <p>A Mistral diz ter levantado uma Série D de € 3 bilhões em setembro, com valuation acima de € 21 bilhões (Reuters: cerca de US$ 24 bilhões), e que o ML4 é o primeiro marco bancado por ela. A estratégia, como descrita pelo cientista-chefe: pesos de modelo estão virando commodity, então o valor migra para o que os cerca. Por isso a oferta junta pesos abertos com:</p>
+    <ul>
+      <li><strong>Soberania:</strong> implantação europeia de ponta a ponta sob lei europeia, além de opções de nuvem privada e on-premises.</li>
+      <li><strong>Customização:</strong> o mesmo ambiente de treino e aprendizado por reforço é oferecido a clientes pelo Mistral Forge.</li>
+      <li><strong>Serviços:</strong> infraestrutura (Mistral Compute) e suporte de engenharia; a Mistral diz atender mais de 125 empresas, incluindo Airbus, ASML e HSBC.</li>
+    </ul>
+    <p>Para quem desenvolve, a comparação com APIs fechadas é uma troca: menos acabamento pronto e (até agora) rankings não verificados, em troca de controle sobre onde o modelo roda e como é ajustado.</p>
+
+    <h2 id="watch-pt">6. O que acompanhar</h2>
+    <ol>
+      <li><strong>27 de outubro:</strong> os pesos saem de fato, e com quais termos de licença?</li>
+      <li><strong>Avaliações independentes:</strong> onde o ML4 cai na Artificial Analysis e no ranking do DeepSWE quando terceiros o rodarem.</li>
+      <li><strong>A resposta da Meta:</strong> a Meta disse em agosto que uma versão de pesos abertos do Muse Spark 1.2 viria "nas próximas semanas"; não consegui confirmar que saiu, então a corrida dos modelos abertos tem um segundo lançamento pendente.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://venturebeat.com/technology/mistral-debuts-large-4-le-chonk-a-1-trillion-parameter-text-output-model-with-high-benchmarks-planned-for-open-weights-release" target="_blank" rel="noopener">VentureBeat — "Mistral debuts Large 4 'Le Chonk'..." (06/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.testingcatalog.com/mistral-launches-large-4-preview-with-1-t-parameters/" target="_blank" rel="noopener">TestingCatalog — "Mistral launches Large 4 preview with 1 T parameters" (06/10/2026; lido diretamente)</a></li>
+      <li><a href="https://x.com/MistralAI/status/2107457414387622310" target="_blank" rel="noopener">Mistral AI no X — post do anúncio (06/10/2026; visto em resultados de busca e incorporado no TestingCatalog)</a></li>
+      <li>Planos de pesos abertos do Muse Glimmer / Muse Spark 1.2 da Meta (10/08/2026): vindo de resumos de busca (CNBC e outros); não verificado nas páginas primárias.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: não foi encontrado anúncio da Anthropic/Claude datado de 13/10/2026, então foi aplicada a rotação de categorias (Panorama da indústria). Todos os números de benchmark são reportados pelo fabricante, salvo indicação contrária.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Le Chonk</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Le Chonk';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Le Chonk';
+    }
+  }
+</script>
+
+</body>
+</html>

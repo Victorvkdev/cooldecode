@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Who owns the agent plumbing? Inside the Agentic AI Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; margin: 0 0 20px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 13px; line-height: 1.55; color: #d4d4dc; white-space: pre-wrap; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Tools &amp; ecosystem</span>
+      <h1>Who owns the agent plumbing? Inside the Agentic AI Foundation</h1>
+      <p class="subtitle">MCP, AGENTS.md and goose were built by three competing companies and now live under one neutral roof. Here is what that roof is, why it matters to anyone building with agents, and what it does not guarantee.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#problem">The problem: standards need a neutral owner</a></li>
+        <li><a href="#what">What the AAIF is</a></li>
+        <li><a href="#three">The three founding projects</a></li>
+        <li><a href="#who">Who is in, and how big it grew</a></li>
+        <li><a href="#wg">Beyond the founding trio: working groups</a></li>
+        <li><a href="#practical">What it changes for you as a builder</a></li>
+        <li><a href="#limits">What neutral governance does not solve</a></li>
+      </ol>
+    </div>
+
+    <h2 id="problem">1. The problem: standards need a neutral owner</h2>
+    <p>A protocol is only useful if everyone is willing to build on it. But if one company controls the spec, its competitors have a reason to hesitate: the owner can change the rules, favor its own products, or simply lose interest. Think of how the web works: HTTP and HTML are not "owned" by any single browser maker, and that is exactly why every browser can implement them.</p>
+    <p>Agents had this problem in 2025. The most widely used plumbing for connecting models to tools, MCP, was created and maintained by Anthropic. The most widely used convention for telling coding agents how a repository works, AGENTS.md, came from OpenAI. Both were being adopted by their own rivals. The question was who would be the referee.</p>
+
+    <h2 id="what">2. What the AAIF is</h2>
+    <p>The <strong>Agentic AI Foundation (AAIF)</strong> was announced by the Linux Foundation on December 9, 2025. It is a directed fund: a non-profit home where member companies pay to support open-source projects, while the projects keep open governance. The Linux Foundation describes its goal as "a neutral, open foundation to ensure agentic AI evolves transparently and collaboratively."</p>
+    <p>The Linux Foundation is the same organization that hosts Linux, Kubernetes, Node.js and PyTorch. The pitch is the same one it has made for decades: companies that compete on products can still cooperate on the infrastructure underneath.</p>
+
+    <h2 id="three">3. The three founding projects</h2>
+    <table>
+      <tr><th>Project</th><th>Donated by</th><th>What it is</th></tr>
+      <tr><td><strong>MCP</strong> (Model Context Protocol)</td><td>Anthropic</td><td>The standard way for an AI app to connect to tools and data. Open-sourced in November 2024. At the foundation's launch: more than 10,000 published servers, adopted by Claude, Cursor, Microsoft Copilot, Gemini, VS Code, ChatGPT and others.</td></tr>
+      <tr><td><strong>AGENTS.md</strong></td><td>OpenAI</td><td>A plain markdown file that gives coding agents project-specific guidance (how to build, test, what conventions to follow). Released August 2025; more than 60,000 open-source projects at launch.</td></tr>
+      <tr><td><strong>goose</strong></td><td>Block</td><td>An open-source, local-first agent framework that combines a language model, extensible tools and MCP-based integrations. Its repository moved to a new <code>aaif-goose</code> GitHub organization in April 2026.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Why this mix is telling:</strong> a protocol (MCP), a file convention (AGENTS.md) and a reference agent (goose) cover three different layers: how agents reach tools, how agents learn about your project, and a runnable agent to build on. Two of the three came from companies that compete directly in the model market.
+    </div>
+
+    <h2 id="who">4. Who is in, and how big it grew</h2>
+    <p>At launch, the Platinum members were Amazon Web Services, Anthropic, Block, Bloomberg, Cloudflare, Google, Microsoft and OpenAI. Gold members included Cisco, Docker, IBM, JetBrains, Okta, Oracle, Salesforce, SAP, Shopify, Snowflake and Twilio, among others; Silver included Hugging Face, Pydantic, Zapier, Uber and ZED, among others.</p>
+    <p>On growth: the most recent dated figure I found was about 190 member organizations in May 2026, though a separate AAIF page listed 188, and third-party guides cite older, lower numbers. Treat "roughly 190" as a ballpark and check <a href="https://aaif.io/" target="_blank" rel="noopener">aaif.io</a> for the current count.</p>
+
+    <h2 id="wg">5. Beyond the founding trio: working groups</h2>
+    <p>The foundation's site now lists working groups that go beyond the three founding projects. They are a good map of what the industry thinks is still unsolved:</p>
+    <ul>
+      <li><strong>Reliability</strong> — defining what accuracy, consistency, failure management and recovery mean for autonomous systems.</li>
+      <li><strong>Identity and trust</strong> — portable identity and delegation: how permissions flow between agents and across domains.</li>
+      <li><strong>Observability</strong> — execution tracing, audit trails and standardized metrics across platforms.</li>
+      <li><strong>Security</strong> — security-by-design practices and adversarial testing for agentic operations.</li>
+      <li><strong>Commerce</strong> — discovery, negotiation and payment authorization for agents.</li>
+      <li><strong>Governance</strong> — mapping agent risk to regulation such as the EU AI Act.</li>
+      <li><strong>Business processes</strong> — handoff protocols, role definitions and state guarantees for multi-step work.</li>
+    </ul>
+    <p>Note that the site describes these as focus areas and says members can "access working group outputs"; I did not verify how many have published finished specifications, so read it as an agenda, not as shipped standards.</p>
+
+    <h2 id="practical">6. What it changes for you as a builder</h2>
+    <ol>
+      <li><strong>Lower lock-in risk when you pick MCP or AGENTS.md.</strong> A tool server or a repo file written once is more likely to work across Claude, Cursor, Copilot and others. That was already true in practice; the foundation makes it a governance commitment, not just a habit.</li>
+      <li><strong>A visible roadmap.</strong> Standards work now happens in public working groups and an open GitHub process (the foundation invites project proposals through it), so you can follow changes instead of discovering them in release notes.</li>
+      <li><strong>Events to follow.</strong> The Linux Foundation site advertises AGNTCon + MCPCon North America on October 22-23 in San Jose, a good place to watch for announcements about where the specs go next.</li>
+    </ol>
+    <p>A tiny, concrete example: an <code>AGENTS.md</code> at the root of a project can be as simple as this, and any compatible coding agent will read it:</p>
+<pre># AGENTS.md
+## Build &amp; test
+- Install: npm install
+- Run tests: npm test (must pass before any commit)
+## Conventions
+- TypeScript strict mode; no default exports
+- Never edit files under /generated</pre>
+
+    <h2 id="limits">7. What neutral governance does not solve</h2>
+    <ul>
+      <li><strong>Neutral is not the same as equal.</strong> Platinum members pay the most and sit closest to decisions. Governance of a directed fund is still shaped by who funds it.</li>
+      <li><strong>Standards do not guarantee quality or safety.</strong> A protocol that everyone adopts can still be misused; security and trust are exactly what the working groups say is unfinished.</li>
+      <li><strong>Competing protocols remain.</strong> The Linux Foundation has also hosted other agent-to-agent efforts, and vendors still ship their own extensions. A shared home reduces fragmentation; it does not abolish it.</li>
+    </ul>
+    <div class="callout">
+      <strong>Takeaway:</strong> the interesting news is not a new product but a change of ownership model. The plumbing that connects agents to tools is now stewarded by a foundation that includes the companies that compete with each other, which makes it a safer bet to build on, while leaving the hard questions (identity, trust, security) as open work.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation" target="_blank" rel="noopener">The Linux Foundation — "Linux Foundation Announces the Formation of the Agentic AI Foundation (AAIF)" (Dec 9, 2025; read directly on Oct 12, 2026)</a></li>
+      <li><a href="https://goose-docs.ai/blog/2026/04/07/goose-moves-to-aaif/" target="_blank" rel="noopener">goose blog — "goose has a new home - the Agentic AI Foundation" (Apr 7, 2026; read directly)</a></li>
+      <li><a href="https://new.aaif.io/" target="_blank" rel="noopener">AAIF — site with working groups and community news (read directly on Oct 12, 2026)</a></li>
+      <li>Membership count (~188-190, May 2026): from web search summaries of AAIF/third-party pages; not verified on the primary page.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: no Anthropic/Claude announcement dated Oct 12, 2026 was found, so the category rotation (Tools &amp; ecosystem) was applied. The AAIF launched in Dec 2025, so this lesson explains the structure rather than breaking news.</p>
+
+  </div>
+
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema</span>
+      <h1>Quem é dono do encanamento dos agentes? Por dentro da Agentic AI Foundation</h1>
+      <p class="subtitle">MCP, AGENTS.md e goose foram criados por três empresas concorrentes e hoje vivem sob o mesmo teto neutro. Veja o que é esse teto, por que ele importa para quem constrói com agentes e o que ele não garante.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#problem-pt">O problema: padrões precisam de um dono neutro</a></li>
+        <li><a href="#what-pt">O que é a AAIF</a></li>
+        <li><a href="#three-pt">Os três projetos fundadores</a></li>
+        <li><a href="#who-pt">Quem participa e quanto cresceu</a></li>
+        <li><a href="#wg-pt">Além do trio fundador: grupos de trabalho</a></li>
+        <li><a href="#practical-pt">O que muda para você que constrói</a></li>
+        <li><a href="#limits-pt">O que governança neutra não resolve</a></li>
+      </ol>
+    </div>
+
+    <h2 id="problem-pt">1. O problema: padrões precisam de um dono neutro</h2>
+    <p>Um protocolo só é útil se todo mundo aceitar construir em cima dele. Mas se uma única empresa controla a especificação, os concorrentes têm motivo para hesitar: o dono pode mudar as regras, favorecer os próprios produtos ou simplesmente perder o interesse. Pense em como a web funciona: HTTP e HTML não pertencem a nenhum fabricante de navegador, e é exatamente por isso que todos os navegadores podem implementá-los.</p>
+    <p>Os agentes tinham esse problema em 2025. O encanamento mais usado para conectar modelos a ferramentas, o MCP, foi criado e mantido pela Anthropic. A convenção mais usada para dizer a agentes de código como um repositório funciona, o AGENTS.md, veio da OpenAI. Os dois estavam sendo adotados pelos próprios rivais. A pergunta era quem seria o árbitro.</p>
+
+    <h2 id="what-pt">2. O que é a AAIF</h2>
+    <p>A <strong>Agentic AI Foundation (AAIF)</strong> foi anunciada pela Linux Foundation em 9 de dezembro de 2025. É um "directed fund": um lar sem fins lucrativos onde empresas-membro pagam para apoiar projetos open source, enquanto os projetos mantêm governança aberta. A Linux Foundation descreve o objetivo como "uma fundação neutra e aberta para garantir que a IA agêntica evolua de forma transparente e colaborativa".</p>
+    <p>A Linux Foundation é a mesma organização que abriga Linux, Kubernetes, Node.js e PyTorch. O argumento é o mesmo de décadas: empresas que competem em produtos ainda podem cooperar na infraestrutura que fica por baixo.</p>
+
+    <h2 id="three-pt">3. Os três projetos fundadores</h2>
+    <table>
+      <tr><th>Projeto</th><th>Doado por</th><th>O que é</th></tr>
+      <tr><td><strong>MCP</strong> (Model Context Protocol)</td><td>Anthropic</td><td>O jeito padrão de um app de IA se conectar a ferramentas e dados. Aberto em novembro de 2024. No lançamento da fundação: mais de 10.000 servidores publicados, adotado por Claude, Cursor, Microsoft Copilot, Gemini, VS Code, ChatGPT e outros.</td></tr>
+      <tr><td><strong>AGENTS.md</strong></td><td>OpenAI</td><td>Um arquivo markdown simples que dá a agentes de código orientações específicas do projeto (como compilar, testar, quais convenções seguir). Lançado em agosto de 2025; mais de 60.000 projetos open source no lançamento.</td></tr>
+      <tr><td><strong>goose</strong></td><td>Block</td><td>Um framework de agentes open source e local-first que combina um modelo de linguagem, ferramentas extensíveis e integrações via MCP. O repositório mudou para a organização <code>aaif-goose</code> no GitHub em abril de 2026.</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Por que essa mistura é reveladora:</strong> um protocolo (MCP), uma convenção de arquivo (AGENTS.md) e um agente de referência (goose) cobrem três camadas diferentes: como agentes alcançam ferramentas, como agentes aprendem sobre o seu projeto e um agente executável para construir em cima. Dois dos três vieram de empresas que competem diretamente no mercado de modelos.
+    </div>
+
+    <h2 id="who-pt">4. Quem participa e quanto cresceu</h2>
+    <p>No lançamento, os membros Platinum eram Amazon Web Services, Anthropic, Block, Bloomberg, Cloudflare, Google, Microsoft e OpenAI. Entre os Gold estavam Cisco, Docker, IBM, JetBrains, Okta, Oracle, Salesforce, SAP, Shopify, Snowflake e Twilio, entre outros; entre os Silver, Hugging Face, Pydantic, Zapier, Uber e ZED, entre outros.</p>
+    <p>Sobre o crescimento: o número datado mais recente que encontrei foi cerca de 190 organizações-membro em maio de 2026, embora outra página da AAIF listasse 188, e guias de terceiros citem números mais antigos e menores. Trate "cerca de 190" como ordem de grandeza e confira o total atual em <a href="https://aaif.io/" target="_blank" rel="noopener">aaif.io</a>.</p>
+
+    <h2 id="wg-pt">5. Além do trio fundador: grupos de trabalho</h2>
+    <p>O site da fundação hoje lista grupos de trabalho que vão além dos três projetos fundadores. Eles são um bom mapa do que a indústria considera ainda não resolvido:</p>
+    <ul>
+      <li><strong>Confiabilidade</strong> — definir o que significam precisão, consistência, gestão de falhas e recuperação para sistemas autônomos.</li>
+      <li><strong>Identidade e confiança</strong> — identidade portátil e delegação: como permissões fluem entre agentes e entre domínios.</li>
+      <li><strong>Observabilidade</strong> — rastreamento de execução, trilhas de auditoria e métricas padronizadas entre plataformas.</li>
+      <li><strong>Segurança</strong> — práticas de segurança por design e testes adversariais para operações agênticas.</li>
+      <li><strong>Comércio</strong> — descoberta, negociação e autorização de pagamento para agentes.</li>
+      <li><strong>Governança</strong> — mapear o risco dos agentes para regulações como o EU AI Act.</li>
+      <li><strong>Processos de negócio</strong> — protocolos de passagem de tarefa, definição de papéis e garantias de estado em trabalhos de vários passos.</li>
+    </ul>
+    <p>Repare que o site descreve essas áreas como focos de trabalho e diz que membros podem "acessar os resultados dos grupos"; não verifiquei quantos já publicaram especificações finalizadas, então leia isso como uma agenda, não como padrões já entregues.</p>
+
+    <h2 id="practical-pt">6. O que muda para você que constrói</h2>
+    <ol>
+      <li><strong>Menos risco de lock-in ao escolher MCP ou AGENTS.md.</strong> Um servidor de ferramentas ou um arquivo de repositório escrito uma vez tem mais chance de funcionar em Claude, Cursor, Copilot e outros. Isso já era verdade na prática; a fundação transforma em compromisso de governança, não só em hábito.</li>
+      <li><strong>Um roadmap visível.</strong> O trabalho de padronização acontece em grupos de trabalho públicos e num processo aberto no GitHub (a fundação convida propostas de projeto por ele), então você pode acompanhar mudanças em vez de descobri-las nas notas de versão.</li>
+      <li><strong>Eventos para acompanhar.</strong> O site da Linux Foundation anuncia o AGNTCon + MCPCon North America em 22-23 de outubro, em San Jose — um bom lugar para observar anúncios sobre o rumo das especificações.</li>
+    </ol>
+    <p>Um exemplo pequeno e concreto: um <code>AGENTS.md</code> na raiz de um projeto pode ser tão simples quanto isto, e qualquer agente de código compatível vai lê-lo:</p>
+<pre># AGENTS.md
+## Build &amp; test
+- Instalar: npm install
+- Rodar testes: npm test (precisa passar antes de qualquer commit)
+## Convenções
+- TypeScript em modo strict; sem default exports
+- Nunca editar arquivos em /generated</pre>
+
+    <h2 id="limits-pt">7. O que governança neutra não resolve</h2>
+    <ul>
+      <li><strong>Neutro não é o mesmo que igual.</strong> Membros Platinum pagam mais e ficam mais perto das decisões. A governança de um directed fund ainda é moldada por quem o financia.</li>
+      <li><strong>Padrões não garantem qualidade nem segurança.</strong> Um protocolo adotado por todos ainda pode ser mal usado; segurança e confiança são exatamente o que os grupos de trabalho dizem estar inacabado.</li>
+      <li><strong>Protocolos concorrentes continuam existindo.</strong> A Linux Foundation também abrigou outras iniciativas de comunicação entre agentes, e fornecedores ainda lançam extensões próprias. Um lar compartilhado reduz a fragmentação; não a abole.</li>
+    </ul>
+    <div class="callout">
+      <strong>Conclusão:</strong> a notícia interessante não é um produto novo, e sim uma mudança de modelo de propriedade. O encanamento que conecta agentes a ferramentas agora é gerido por uma fundação que inclui empresas concorrentes entre si, o que o torna uma aposta mais segura para construir em cima — enquanto deixa as perguntas difíceis (identidade, confiança, segurança) como trabalho em aberto.
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.linuxfoundation.org/press/linux-foundation-announces-the-formation-of-the-agentic-ai-foundation" target="_blank" rel="noopener">The Linux Foundation — "Linux Foundation Announces the Formation of the Agentic AI Foundation (AAIF)" (09/12/2025; lido diretamente em 12/10/2026)</a></li>
+      <li><a href="https://goose-docs.ai/blog/2026/04/07/goose-moves-to-aaif/" target="_blank" rel="noopener">Blog do goose — "goose has a new home - the Agentic AI Foundation" (07/04/2026; lido diretamente)</a></li>
+      <li><a href="https://new.aaif.io/" target="_blank" rel="noopener">AAIF — site com grupos de trabalho e notícias da comunidade (lido diretamente em 12/10/2026)</a></li>
+      <li>Número de membros (~188-190, maio/2026): vindo de resumos de busca de páginas da AAIF e de terceiros; não verificado na página primária.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: não foi encontrado anúncio da Anthropic/Claude datado de 12/10/2026, então foi aplicada a rotação de categorias (Ferramentas e ecossistema). A AAIF foi lançada em dez/2025, então esta lição explica a estrutura, não uma notícia de última hora.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Neutral plumbing</span>
+</footer>
+
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    var footerLeft = document.getElementById('footer-left');
+    var footerRight = document.getElementById('footer-right');
+    if (lang === 'en') {
+      footerLeft.textContent = 'Cooldecode · AI Watch';
+      footerRight.textContent = 'Neutral plumbing';
+    } else {
+      footerLeft.textContent = 'Cooldecode · IA Watch';
+      footerRight.textContent = 'Encanamento neutro';
+    }
+  }
+</script>
+
+</body>
+</html>

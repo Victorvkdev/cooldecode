@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Temperature, top-p and the dial that is disappearing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .bars { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .bar-row { display: grid; grid-template-columns: 70px 1fr 56px; gap: 10px; align-items: center; font-size: 13.5px; margin-bottom: 8px; }
+  .bar-track { background: var(--bg-card-2); border-radius: 6px; height: 14px; overflow: hidden; }
+  .bar-fill { background: var(--accent); height: 100%; border-radius: 6px; transition: width .25s; }
+  .bar-val { color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+  .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; font-size: 14px; flex-wrap: wrap; }
+  .slider-row input { flex: 1; min-width: 160px; accent-color: var(--accent); }
+  .slider-row output { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; min-width: 40px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM concepts explained</span>
+      <h1>Temperature, top-p and the dial that is disappearing</h1>
+      <p class="subtitle">Every word a model writes is a weighted dice roll. Temperature and top-p decide how loaded the dice are. Here is how they work, the myths around them, and why the newest Claude models no longer let you touch the temperature knob at all.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#draw">The next token is a draw, not a lookup</a></li>
+        <li><a href="#temp">Temperature: a contrast dial</a></li>
+        <li><a href="#trunc">Top-k, top-p, min-p: trimming the long tail</a></li>
+        <li><a href="#myths">Four myths worth dropping</a></li>
+        <li><a href="#gone">Why reasoning models are taking the dial away</a></li>
+        <li><a href="#do">What to use instead</a></li>
+      </ol>
+    </div>
+
+    <h2 id="draw">1. The next token is a draw, not a lookup</h2>
+    <p>You already know from the <em>tokens</em> lesson that a model writes one token at a time. At each step, its last layer produces a raw score, called a <strong>logit</strong>, for every token in its vocabulary. Logits can be negative or large and do not add up to anything. A function called <strong>softmax</strong> turns them into probabilities that sum to 100%.</p>
+    <p>Then the model has to pick one. The simplest strategy, <strong>greedy decoding</strong>, always takes the top token. It sounds safe, but research going back to Holtzman et al. (ICLR 2020) showed greedy output on open-ended text tends to loop and repeat itself. So most systems <strong>sample</strong>: they draw a token at random, weighted by its probability. Temperature and top-p are the controls on that draw.</p>
+    <div class="callout"><strong>Analogy:</strong> picture a jar of marbles where each color is a candidate word and the number of marbles is its probability. Sampling is reaching in blind. Temperature changes how many marbles of each color are in the jar. Top-p throws the rare colors out before you reach in.</div>
+
+    <h2 id="temp">2. Temperature: a contrast dial</h2>
+    <p>Temperature (<code>T</code>) divides every logit before softmax. Below 1, the gaps between scores grow, so the favorite becomes even more likely. Above 1, the gaps shrink and the distribution flattens. Think of the contrast slider on a photo: low contrast washes everything to gray, high contrast pushes bright pixels whiter and dark ones to black.</p>
+    <p>Here is the worked example from Let's Data Science, for the prompt <em>"The mouse ate the…"</em> (I re-checked the math):</p>
+    <div class="table-wrap"><table>
+      <tr><th>Token</th><th>Logit</th><th>T = 0.2</th><th>T = 1.0</th><th>T = 2.0</th></tr>
+      <tr><td>cheese</td><td>3.0</td><td>99.3%</td><td>68.6%</td><td>50.6%</td></tr>
+      <tr><td>crumb</td><td>2.0</td><td>0.7%</td><td>25.3%</td><td>30.7%</td></tr>
+      <tr><td>cable</td><td>0.5</td><td>~0%</td><td>5.6%</td><td>14.5%</td></tr>
+      <tr><td>moon</td><td>-2.0</td><td>~0%</td><td>0.5%</td><td>4.2%</td></tr>
+    </table></div>
+    <p>Try it yourself with the same four logits:</p>
+    <div class="bars" id="demo-en">
+      <div class="slider-row"><span>Temperature</span><input type="range" min="0.1" max="3" step="0.1" value="1" data-demo><output>1.0</output></div>
+      <div data-bars></div>
+    </div>
+    <p>The key detail: <strong>temperature only reweights, it never removes</strong>. Even at a very low temperature, "moon" still has a tiny non-zero chance. That is why truncation methods exist.</p>
+    <p>In code, the whole idea fits in a few lines (plain JavaScript, no library):</p>
+<pre><code>function softmaxWithTemperature(logits, T) {
+  const scaled = logits.map(l =&gt; l / T);
+  const max = Math.max(...scaled);              // subtract max for numeric stability
+  const exps = scaled.map(s =&gt; Math.exp(s - max));
+  const sum = exps.reduce((a, b) =&gt; a + b, 0);
+  return exps.map(e =&gt; e / sum);
+}
+
+softmaxWithTemperature([3, 2, 0.5, -2], 0.2); // ≈ [0.993, 0.007, 0.000, 0.000]
+softmaxWithTemperature([3, 2, 0.5, -2], 2.0); // ≈ [0.506, 0.307, 0.145, 0.042]</code></pre>
+
+    <h2 id="trunc">3. Top-k, top-p, min-p: trimming the long tail</h2>
+    <p>Truncation methods cut unlikely tokens out of the pool, then rescale the survivors back to 100%.</p>
+    <ul>
+      <li><strong>Top-k</strong> (Fan et al., 2018): keep the <em>k</em> most likely tokens, period. Simple but rigid. For "The capital of France is…", k = 50 keeps 49 useless options. For "My favorite food is…", k = 50 cuts perfectly good answers.</li>
+      <li><strong>Top-p, or nucleus sampling</strong> (Holtzman et al., 2020): sort tokens, add probabilities until the running total reaches <em>p</em> (say 0.9), drop the rest. The pool adapts: if "Paris" alone is 95%, the pool is one token; if the top food is only 1%, the pool may hold hundreds.</li>
+      <li><strong>Min-p</strong> (Nguyen et al., ICLR 2025): keep any token whose probability is at least a fraction of the top token's. With min_p = 0.1 and a top token at 90%, the cutoff is 9%; with a top token at 5%, the cutoff is 0.5%. It is popular in open-model runtimes. A later re-analysis argues its edge over top-p shrinks once quality and diversity are measured together, so treat it as a good option, not a solved problem.</li>
+    </ul>
+    <div class="table-wrap"><table>
+      <tr><th>Method</th><th>What it changes</th><th>Main weakness</th></tr>
+      <tr><td>Temperature</td><td>Shape of the whole distribution</td><td>Never removes bad candidates</td></tr>
+      <tr><td>Top-k</td><td>Fixed number of candidates</td><td>Same k is wrong for confident and uncertain steps</td></tr>
+      <tr><td>Top-p</td><td>Candidates covering p of the mass</td><td>Lets lots of noise in when the model is unsure</td></tr>
+      <tr><td>Min-p</td><td>Cutoff relative to the top token</td><td>Not offered by most hosted APIs</td></tr>
+    </table></div>
+
+    <h2 id="myths">4. Four myths worth dropping</h2>
+    <h3>"Temperature 0 means deterministic"</h3>
+    <p>Not quite. T = 0 is effectively greedy decoding, but hosted models run on batched GPU hardware where tiny floating-point differences can flip a near-tie. Expect "much more consistent," not "identical every time."</p>
+    <h3>"Low temperature = more accurate"</h3>
+    <p>Temperature changes how often the model picks its <em>own</em> favorite. If the favorite is wrong, low temperature just makes it wrong more consistently. This links back to the hallucinations lesson: a confident guess is still a guess.</p>
+    <h3>"More knobs = more control"</h3>
+    <p>Temperature and top-p interact. A high temperature flattens the distribution; a low top-p then cuts most of that new variety away. One guide calls this the two settings quietly cancelling each other. Tune one at a time.</p>
+    <h3>"Same numbers, same behavior everywhere"</h3>
+    <p>Runtimes apply the steps in different orders (llama.cpp applies temperature last in its default chain; Hugging Face Transformers applies it first), and some providers remap the value internally. Defaults also differ: per Let's Data Science, Claude and OpenAI default to temperature 1.0, while Gemini also sets top-p 0.95 and top-k 40.</p>
+
+    <h2 id="gone">5. Why reasoning models are taking the dial away</h2>
+    <p>This is the part that changed recently. Anthropic's own API primer (read directly on platform.claude.com, October 2026) now says:</p>
+    <ul>
+      <li>Temperature <strong>must be 1 (or unset) whenever thinking is enabled</strong>, on all models.</li>
+      <li>On <strong>Claude 4.7 and later</strong> (which includes the current Opus 5.5, Sonnet 5.5 and Haiku 5.5), <code>temperature</code> is <strong>deprecated</strong> and only its default value is accepted, even with thinking off.</li>
+      <li>On Claude 5 and later, thinking is on by default. Depth is steered with the <code>effort</code> parameter, not with sampling settings.</li>
+    </ul>
+    <p>Before that, developers already hit a smaller version of this. Starting with Claude Sonnet 4.5 and Opus 4.1, sending both <code>temperature</code> and <code>top_p</code> returns a 400 error ("cannot both be specified for this model"), as AWS Bedrock's docs and several open-source bug reports confirm. Many tools broke because their defaults sent both.</p>
+    <p><strong>Why would a provider remove a knob?</strong> Anthropic does not explain it in the primer, so what follows is my interpretation, not an official reason. A reasoning model is tuned to think and then answer under one sampling setup. Its quality comes from the reasoning, not from how sharply the last word is picked. Lowering temperature on the thinking can make it repetitive or get it stuck; raising it can derail a long chain. Locking the dial removes a setting that mostly let people make the model worse, and moves control to levers that act on the behavior itself: effort, prompts, and schemas.</p>
+    <div class="callout"><strong>In practice:</strong> if old code sends <code>temperature: 0</code> to a current Claude model, expect an error, not a "safer" answer. Remove the parameter rather than fighting it.</div>
+
+    <h2 id="do">6. What to use instead</h2>
+    <ol>
+      <li><strong>Consistency of format:</strong> use structured outputs or strict tool schemas, so the shape is guaranteed regardless of sampling.</li>
+      <li><strong>Consistency of content:</strong> show examples in the prompt and state the rules explicitly (the few-shot lesson from October 9 applies directly).</li>
+      <li><strong>Depth vs. speed:</strong> adjust <code>effort</code> (or pick a smaller, faster model) instead of lowering temperature.</li>
+      <li><strong>Reliability on a hard question:</strong> ask several times and compare or vote. Variety between runs becomes a signal: if answers disagree, the model is unsure.</li>
+      <li><strong>Open or older models</strong> where the knobs still exist: a common starting point is temperature 0–0.3 for code and extraction, around 0.7 for chat, around 1.0+ for brainstorming, and only one truncation method at a time. Test on your own prompts; no single setting wins everywhere.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://platform.claude.com/docs/en/claude_api_primer" target="_blank" rel="noopener">Claude Platform Docs — "API usage primer for Claude" (read directly, Oct 15, 2026): temperature rules with thinking, deprecation on Claude 4.7+, effort parameter</a></li>
+      <li><a href="https://letsdatascience.com/blog/llm-sampling-temperature-top-k-top-p-and-min-p-explained" target="_blank" rel="noopener">Let's Data Science — "LLM Sampling: Temperature, Top-K, Top-P, and Min-P Explained" (Feb 11, 2026, updated Sep 6, 2026; read directly): worked example, method history, sampler order, provider defaults</a></li>
+      <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-request-response.html" target="_blank" rel="noopener">AWS Bedrock — Anthropic Claude Messages API parameters (via search summary): Sonnet 4.5 / Haiku 4.5 accept only one of temperature or top_p</a></li>
+      <li><a href="https://github.com/browseros-ai/BrowserOS/issues/208" target="_blank" rel="noopener">GitHub — BrowserOS issue #208 (via search summary): "temperature and top_p cannot both be specified for this model"</a></li>
+      <li><a href="https://www.f22labs.com/blogs/what-are-temperature-top_p-and-top_k-in-ai/" target="_blank" rel="noopener">F22 Labs — "What are temperature, top_p and top_k in AI" (2026, via search summary): starting ranges and the temperature-0 caveat</a></li>
+      <li>Original papers, cited via Let's Data Science: Holtzman et al., "The Curious Case of Neural Text Degeneration" (ICLR 2020); Fan et al. (ACL 2018); Nguyen et al., min-p (ICLR 2025).</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "LLM concepts explained"; no Anthropic/Claude announcement dated today was found. The reason providers lock the temperature dial on reasoning models is my interpretation, not an official statement.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Conceitos de LLMs explicados</span>
+      <h1>Temperature, top-p e o botão que está sumindo</h1>
+      <p class="subtitle">Cada palavra que um modelo escreve é um sorteio com dado viciado. Temperature e top-p decidem o quanto o dado está viciado. Como eles funcionam, os mitos em volta deles e por que os modelos Claude mais recentes nem deixam mais você mexer na temperatura.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#draw-pt">O próximo token é um sorteio, não uma consulta</a></li>
+        <li><a href="#temp-pt">Temperature: um botão de contraste</a></li>
+        <li><a href="#trunc-pt">Top-k, top-p, min-p: cortando a cauda longa</a></li>
+        <li><a href="#myths-pt">Quatro mitos para abandonar</a></li>
+        <li><a href="#gone-pt">Por que modelos de raciocínio estão tirando o botão</a></li>
+        <li><a href="#do-pt">O que usar no lugar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="draw-pt">1. O próximo token é um sorteio, não uma consulta</h2>
+    <p>Você já viu na lição sobre <em>tokens</em> que o modelo escreve um token por vez. A cada passo, a última camada gera uma nota bruta, chamada <strong>logit</strong>, para cada token do vocabulário. Logits podem ser negativos ou grandes e não somam nada em especial. Uma função chamada <strong>softmax</strong> transforma essas notas em probabilidades que somam 100%.</p>
+    <p>Aí o modelo precisa escolher um. A estratégia mais simples, <strong>decodificação gulosa</strong> (greedy), sempre pega o primeiro colocado. Parece seguro, mas pesquisas desde Holtzman et al. (ICLR 2020) mostraram que, em texto aberto, ela tende a entrar em loop e se repetir. Por isso a maioria dos sistemas <strong>amostra</strong>: sorteia um token, com peso proporcional à probabilidade. Temperature e top-p são os controles desse sorteio.</p>
+    <div class="callout"><strong>Analogia:</strong> imagine um pote de bolinhas em que cada cor é uma palavra candidata e a quantidade de bolinhas é a probabilidade dela. Amostrar é enfiar a mão sem olhar. A temperature muda quantas bolinhas de cada cor estão no pote. O top-p joga fora as cores raras antes de você pegar.</div>
+
+    <h2 id="temp-pt">2. Temperature: um botão de contraste</h2>
+    <p>A temperature (<code>T</code>) divide cada logit antes do softmax. Abaixo de 1, as diferenças entre as notas aumentam, então o favorito fica ainda mais provável. Acima de 1, as diferenças diminuem e a distribuição achata. Pense no controle de contraste de uma foto: pouco contraste deixa tudo cinza; muito contraste deixa o claro mais branco e o escuro preto.</p>
+    <p>Este é o exemplo do Let's Data Science para o início <em>"The mouse ate the…"</em> ("O rato comeu o…"); conferi as contas:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Token</th><th>Logit</th><th>T = 0,2</th><th>T = 1,0</th><th>T = 2,0</th></tr>
+      <tr><td>cheese (queijo)</td><td>3,0</td><td>99,3%</td><td>68,6%</td><td>50,6%</td></tr>
+      <tr><td>crumb (farelo)</td><td>2,0</td><td>0,7%</td><td>25,3%</td><td>30,7%</td></tr>
+      <tr><td>cable (cabo)</td><td>0,5</td><td>~0%</td><td>5,6%</td><td>14,5%</td></tr>
+      <tr><td>moon (lua)</td><td>-2,0</td><td>~0%</td><td>0,5%</td><td>4,2%</td></tr>
+    </table></div>
+    <p>Teste você mesmo com os mesmos quatro logits:</p>
+    <div class="bars" id="demo-pt">
+      <div class="slider-row"><span>Temperature</span><input type="range" min="0.1" max="3" step="0.1" value="1" data-demo><output>1.0</output></div>
+      <div data-bars></div>
+    </div>
+    <p>O detalhe principal: <strong>temperature só redistribui o peso, nunca elimina</strong>. Mesmo com temperatura muito baixa, "moon" ainda tem uma chance minúscula. É por isso que existem os métodos de corte.</p>
+    <p>Em código, a ideia inteira cabe em poucas linhas (JavaScript puro, sem biblioteca):</p>
+<pre><code>function softmaxWithTemperature(logits, T) {
+  const scaled = logits.map(l =&gt; l / T);
+  const max = Math.max(...scaled);              // subtrai o máximo para estabilidade numérica
+  const exps = scaled.map(s =&gt; Math.exp(s - max));
+  const sum = exps.reduce((a, b) =&gt; a + b, 0);
+  return exps.map(e =&gt; e / sum);
+}
+
+softmaxWithTemperature([3, 2, 0.5, -2], 0.2); // ≈ [0.993, 0.007, 0.000, 0.000]
+softmaxWithTemperature([3, 2, 0.5, -2], 2.0); // ≈ [0.506, 0.307, 0.145, 0.042]</code></pre>
+
+    <h2 id="trunc-pt">3. Top-k, top-p, min-p: cortando a cauda longa</h2>
+    <p>Métodos de corte tiram do sorteio os tokens improváveis e reescalam os sobreviventes para somar 100% de novo.</p>
+    <ul>
+      <li><strong>Top-k</strong> (Fan et al., 2018): fica com os <em>k</em> tokens mais prováveis e pronto. Simples, mas rígido. Em "A capital da França é…", k = 50 mantém 49 opções inúteis. Em "Minha comida favorita é…", k = 50 corta respostas perfeitamente boas.</li>
+      <li><strong>Top-p, ou nucleus sampling</strong> (Holtzman et al., 2020): ordena os tokens, vai somando probabilidades até chegar a <em>p</em> (digamos 0,9) e descarta o resto. O tamanho se adapta: se "Paris" sozinho tem 95%, sobra um token; se a comida favorita mais provável tem só 1%, podem sobrar centenas.</li>
+      <li><strong>Min-p</strong> (Nguyen et al., ICLR 2025): mantém qualquer token cuja probabilidade seja pelo menos uma fração da do primeiro colocado. Com min_p = 0,1 e o favorito em 90%, o corte é 9%; com o favorito em 5%, o corte é 0,5%. É popular em runtimes de modelos abertos. Uma reanálise posterior argumenta que a vantagem sobre o top-p diminui quando se mede qualidade e diversidade juntas, então trate como boa opção, não como problema resolvido.</li>
+    </ul>
+    <div class="table-wrap"><table>
+      <tr><th>Método</th><th>O que muda</th><th>Principal fraqueza</th></tr>
+      <tr><td>Temperature</td><td>Formato da distribuição inteira</td><td>Nunca remove candidatos ruins</td></tr>
+      <tr><td>Top-k</td><td>Número fixo de candidatos</td><td>O mesmo k erra em passos confiantes e incertos</td></tr>
+      <tr><td>Top-p</td><td>Candidatos que cobrem p da massa</td><td>Deixa entrar muito ruído quando o modelo está em dúvida</td></tr>
+      <tr><td>Min-p</td><td>Corte relativo ao favorito</td><td>A maioria das APIs hospedadas não oferece</td></tr>
+    </table></div>
+
+    <h2 id="myths-pt">4. Quatro mitos para abandonar</h2>
+    <h3>"Temperature 0 é determinístico"</h3>
+    <p>Não exatamente. T = 0 equivale à decodificação gulosa, mas modelos hospedados rodam em GPUs com processamento em lote, onde diferenças minúsculas de ponto flutuante podem desempatar um quase-empate para o outro lado. Espere "bem mais consistente", não "idêntico sempre".</p>
+    <h3>"Temperatura baixa = mais correto"</h3>
+    <p>A temperature muda com que frequência o modelo escolhe o <em>próprio</em> favorito. Se o favorito está errado, temperatura baixa só faz ele errar com mais consistência. Isso conversa com a lição sobre alucinações: chute confiante continua sendo chute.</p>
+    <h3>"Mais botões = mais controle"</h3>
+    <p>Temperature e top-p interagem. Uma temperature alta achata a distribuição; um top-p baixo depois corta quase toda essa variedade nova. Um guia descreve isso como os dois ajustes se anulando em silêncio. Ajuste um de cada vez.</p>
+    <h3>"Mesmos números, mesmo comportamento em todo lugar"</h3>
+    <p>Runtimes aplicam as etapas em ordens diferentes (o llama.cpp aplica a temperature por último na cadeia padrão; o Hugging Face Transformers aplica primeiro), e alguns provedores remapeiam o valor internamente. Os padrões também mudam: segundo o Let's Data Science, Claude e OpenAI usam temperature 1,0 por padrão, enquanto o Gemini também define top-p 0,95 e top-k 40.</p>
+
+    <h2 id="gone-pt">5. Por que modelos de raciocínio estão tirando o botão</h2>
+    <p>Esta é a parte que mudou recentemente. O próprio primer da API da Anthropic (lido diretamente em platform.claude.com, outubro de 2026) agora diz:</p>
+    <ul>
+      <li>A temperature <strong>precisa ser 1 (ou não ser enviada) sempre que o thinking estiver ligado</strong>, em todos os modelos.</li>
+      <li>No <strong>Claude 4.7 em diante</strong> (o que inclui os atuais Opus 5.5, Sonnet 5.5 e Haiku 5.5), <code>temperature</code> está <strong>depreciada</strong> e só o valor padrão é aceito, mesmo com thinking desligado.</li>
+      <li>No Claude 5 em diante, o thinking vem ligado por padrão. A profundidade é controlada pelo parâmetro <code>effort</code>, não por ajustes de amostragem.</li>
+    </ul>
+    <p>Antes disso, desenvolvedores já tinham esbarrado numa versão menor da mudança. A partir do Claude Sonnet 4.5 e do Opus 4.1, enviar <code>temperature</code> e <code>top_p</code> juntos retorna erro 400 ("cannot both be specified for this model"), como confirmam a documentação do AWS Bedrock e vários relatos de bug em projetos open source. Muitas ferramentas quebraram porque mandavam os dois por padrão.</p>
+    <p><strong>Por que um provedor tiraria um botão?</strong> A Anthropic não explica isso no primer, então o que segue é interpretação minha, não motivo oficial. Um modelo de raciocínio é ajustado para pensar e depois responder sob uma configuração de amostragem específica. A qualidade vem do raciocínio, não de quão "afiada" é a escolha da última palavra. Baixar a temperatura no pensamento pode deixá-lo repetitivo ou travado; subir pode descarrilar uma cadeia longa. Travar o botão elimina um ajuste que, na maior parte das vezes, só servia para piorar o modelo, e move o controle para alavancas que agem no comportamento: effort, prompt e schemas.</p>
+    <div class="callout"><strong>Na prática:</strong> se um código antigo manda <code>temperature: 0</code> para um modelo Claude atual, espere um erro, não uma resposta "mais segura". Remova o parâmetro em vez de brigar com ele.</div>
+
+    <h2 id="do-pt">6. O que usar no lugar</h2>
+    <ol>
+      <li><strong>Consistência de formato:</strong> use structured outputs ou schemas de ferramenta estritos, para o formato ser garantido independentemente da amostragem.</li>
+      <li><strong>Consistência de conteúdo:</strong> mostre exemplos no prompt e escreva as regras explicitamente (a lição de few-shot de 9 de outubro se aplica direto).</li>
+      <li><strong>Profundidade vs. velocidade:</strong> ajuste o <code>effort</code> (ou escolha um modelo menor e mais rápido) em vez de baixar a temperatura.</li>
+      <li><strong>Confiabilidade numa pergunta difícil:</strong> pergunte várias vezes e compare ou faça votação. A variação entre execuções vira sinal: se as respostas discordam, o modelo está em dúvida.</li>
+      <li><strong>Modelos abertos ou antigos</strong>, onde os botões ainda existem: um ponto de partida comum é temperature 0–0,3 para código e extração, perto de 0,7 para conversa, 1,0 ou mais para brainstorming, e um único método de corte por vez. Teste nos seus próprios prompts; nenhum ajuste vence em tudo.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://platform.claude.com/docs/en/claude_api_primer" target="_blank" rel="noopener">Claude Platform Docs — "API usage primer for Claude" (lido diretamente em 15/10/2026): regras de temperature com thinking, depreciação no Claude 4.7+, parâmetro effort</a></li>
+      <li><a href="https://letsdatascience.com/blog/llm-sampling-temperature-top-k-top-p-and-min-p-explained" target="_blank" rel="noopener">Let's Data Science — "LLM Sampling: Temperature, Top-K, Top-P, and Min-P Explained" (11/02/2026, atualizado em 06/09/2026; lido diretamente): exemplo numérico, histórico dos métodos, ordem dos samplers, padrões dos provedores</a></li>
+      <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-parameters-anthropic-claude-messages-request-response.html" target="_blank" rel="noopener">AWS Bedrock — parâmetros da Messages API do Anthropic Claude (via resumo de busca): Sonnet 4.5 / Haiku 4.5 aceitam só um entre temperature e top_p</a></li>
+      <li><a href="https://github.com/browseros-ai/BrowserOS/issues/208" target="_blank" rel="noopener">GitHub — issue #208 do BrowserOS (via resumo de busca): "temperature and top_p cannot both be specified for this model"</a></li>
+      <li><a href="https://www.f22labs.com/blogs/what-are-temperature-top_p-and-top_k-in-ai/" target="_blank" rel="noopener">F22 Labs — "What are temperature, top_p and top_k in AI" (2026, via resumo de busca): faixas de partida e a ressalva sobre temperature 0</a></li>
+      <li>Artigos originais, citados via Let's Data Science: Holtzman et al., "The Curious Case of Neural Text Degeneration" (ICLR 2020); Fan et al. (ACL 2018); Nguyen et al., min-p (ICLR 2025).</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Conceitos fundamentais de LLMs explicados"; não foi encontrado anúncio da Anthropic/Claude datado de hoje. O motivo de provedores travarem a temperatura em modelos de raciocínio é interpretação minha, não declaração oficial.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Temperature &amp; sampling</span>
+</footer>
+
+<script>
+  var LOGITS = [3, 2, 0.5, -2];
+  var WORDS = ['cheese', 'crumb', 'cable', 'moon'];
+  function softmaxT(logits, T) {
+    var scaled = logits.map(function(l) { return l / T; });
+    var max = Math.max.apply(null, scaled);
+    var exps = scaled.map(function(s) { return Math.exp(s - max); });
+    var sum = exps.reduce(function(a, b) { return a + b; }, 0);
+    return exps.map(function(e) { return e / sum; });
+  }
+  function renderDemo(box) {
+    var input = box.querySelector('[data-demo]');
+    var out = box.querySelector('output');
+    var bars = box.querySelector('[data-bars]');
+    var T = parseFloat(input.value);
+    out.textContent = T.toFixed(1);
+    var probs = softmaxT(LOGITS, T);
+    bars.innerHTML = probs.map(function(p, i) {
+      var pct = (p * 100);
+      return '<div class="bar-row"><span>' + WORDS[i] + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct.toFixed(1) + '%"></div></div><span class="bar-val">' + (pct < 0.1 ? '&lt;0.1' : pct.toFixed(1)) + '%</span></div>';
+    }).join('');
+  }
+  document.querySelectorAll('.bars').forEach(function(box) {
+    var input = box.querySelector('[data-demo]');
+    input.addEventListener('input', function() { renderDemo(box); });
+    renderDemo(box);
+  });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>
