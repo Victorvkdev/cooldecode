@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Reading Anthropic's S-1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 24px 0; }
+  .stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+  .stat .num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 24px; color: #fff; line-height: 1.2; }
+  .stat .lbl { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .calc label { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 4px; }
+  .calc input { width: 100%; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+  .calc-out { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 26px; color: #fff; }
+  .calc-out small { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 13px; color: var(--text-dim); display: block; margin-top: 2px; }
+  .quiz { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .q { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .q:last-of-type { border-bottom: none; }
+  .q-text { margin-bottom: 8px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .btn:hover { border-color: var(--accent); color: #fff; }
+  .btn.right { border-color: #22c55e; color: #86efac; }
+  .btn.wrong { border-color: #ef4444; color: #fca5a5; }
+  .fb { font-size: 13.5px; color: var(--text-dim); margin-top: 8px; display: none; }
+  .score { margin-top: 12px; font-size: 14px; color: var(--text-dim); }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Anthropic files to go public: how to read an AI lab's S-1</h1>
+      <p class="subtitle">This morning Anthropic made its IPO prospectus public. It is the first time anyone outside the company can see audited numbers for how a frontier AI lab makes and spends money, and who actually controls it. Here is what the document says, what the press added on top, and how to tell the two apart.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What happened, and what an S-1 is</a></li>
+        <li><a href="#growth">The revenue side: growth that is hard to believe</a></li>
+        <li><a href="#cost">The cost side: compute, commitments and an $80B loss</a></li>
+        <li><a href="#customers">Customers, and the 900% metric</a></li>
+        <li><a href="#control">Who controls the company</a></li>
+        <li><a href="#risks">The risk section, and what it means for Claude users</a></li>
+        <li><a href="#quiz">Exercise: filed fact or press report?</a></li>
+      </ol>
+    </div>
+
+    <div class="callout"><strong>Not financial advice.</strong> This lesson explains a public document so you can read the news critically. It is not a recommendation to buy or avoid any stock, and I am not a financial advisor.</div>
+
+    <h2 id="what">1. What happened, and what an S-1 is</h2>
+    <p>On <strong>October 26, 2026</strong>, Anthropic, PBC publicly filed a <strong>Form S-1</strong> with the U.S. Securities and Exchange Commission (SEC) for an initial public offering of its Class A common stock. It plans to list on the <strong>Nasdaq Global Select Market under the ticker "ANT"</strong>. The number of shares and the price range are still blank. Anthropic's own announcement is three sentences long plus legal text; the substance is in the filing itself.</p>
+    <p>An S-1 is the document a U.S. company must file before selling shares to the public for the first time. Think of it as the company's README, changelog and known-issues list rolled into one, written under legal liability. It must contain audited financial statements, a description of the business, how the money raised will be used, who owns and controls the company, and a long list of <strong>risk factors</strong>. Lying in it is a federal offense, which is why it is worth more than any press release.</p>
+    <p>The usual path from here:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Step</th><th>What it means</th><th>Status for Anthropic</th></tr>
+      <tr><td>Confidential draft</td><td>Company sends a draft to the SEC privately for feedback</td><td>Done, announced June 1, 2026</td></tr>
+      <tr><td>Public S-1</td><td>Draft becomes public; everyone can read it</td><td>Done today, Oct 26</td></tr>
+      <tr><td>Amendments (S-1/A)</td><td>Company fills in share count and price range</td><td>Pending</td></tr>
+      <tr><td>Roadshow</td><td>Bankers pitch large investors and gauge demand</td><td>Pending</td></tr>
+      <tr><td>Effective + pricing</td><td>SEC declares the filing effective; final price is set</td><td>Reported for Nov 19 or 20 (not confirmed by the company)</td></tr>
+    </table></div>
+    <p>Goldman Sachs and Morgan Stanley lead a syndicate of more than twenty banks, according to Unite.AI's summary of the filing's cover page.</p>
+
+    <h2 id="growth">2. The revenue side: growth that is hard to believe</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">$16.3B</div><div class="lbl">revenue, six months to June 2026 (Yahoo Finance)</div></div>
+      <div class="stat"><div class="num">$4.6B</div><div class="lbl">revenue in all of 2025 (Yahoo Finance)</div></div>
+      <div class="stat"><div class="num">+1,368%</div><div class="lbl">year-over-year growth, Q2 2026 (filing, via Unite.AI)</div></div>
+      <div class="stat"><div class="num">$6.6M</div><div class="lbl">revenue per employee, trailing 12 months (filing, via Unite.AI)</div></div>
+    </div>
+    <p>Half a year of 2026 brought in about 3.5 times the revenue of all of 2025. For comparison, revenue per employee went from $1.4 million in September 2025 to more than $6.6 million a year later. Most software companies are considered efficient at a few hundred thousand dollars per employee.</p>
+    <p>The filing calls Claude's uptake "the fastest enterprise adoption of any technology in history". That is the company's own claim, made in a document where it is legally accountable for facts but has room for adjectives. The numbers are the part to trust; the superlatives are marketing.</p>
+    <div class="callout"><strong>Why it matters to a developer:</strong> the S-1 says the business is mostly enterprise and API usage, sold directly and through AWS, Google Cloud, Microsoft Azure, consultancies (Accenture, Deloitte, KPMG, PwC) and data platforms (Salesforce, Snowflake). Products like Claude Code and Cowork are named as growth drivers. In plain terms: the tools you use every day are the core of the business, not a side project.</div>
+
+    <h2 id="cost">3. The cost side: compute, commitments and an $80B loss</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">$9B</div><div class="lbl">AI infrastructure spend, H1 2026 (vs $7.3B in all of 2025)</div></div>
+      <div class="stat"><div class="num">$450B+</div><div class="lbl">planned cloud spending in coming years (Amazon, Google and others)</div></div>
+      <div class="stat"><div class="num">$80.7B</div><div class="lbl">net loss through June, "the vast majority" accounting charges</div></div>
+      <div class="stat"><div class="num">$112.4B</div><div class="lbl">cash and equivalents, June 30 (plus $19.3B short-term investments)</div></div>
+    </div>
+    <p>Two figures need careful reading.</p>
+    <h3>Revenue growth vs compute growth</h3>
+    <p>For the quarter ended June 30, revenue grew 1,368% year over year while compute and infrastructure expenses grew 300%. When revenue grows much faster than its biggest cost, each dollar of revenue gets cheaper to serve. That is the single most important signal an investor wants from an AI lab, because the standard fear is the opposite: that every new customer costs more GPUs than they pay for.</p>
+    <h3>The $80.7B loss</h3>
+    <p>A headline loss that large sounds like a company on fire. Yahoo Finance reports that "the vast majority" was due to accounting charges. In general, large non-cash charges at companies about to go public come from things like changes in the value of convertible notes or warrants, or stock-based compensation. Those reduce the reported profit without money leaving the bank. The press coverage I read did not break down which charges applied here, so treat this as "the loss is mostly on paper, according to the reporting", and check the income statement in the filing before you repeat a number.</p>
+    <div class="callout"><strong>Reading habit:</strong> when a company reports a giant loss and a giant cash pile in the same document, look for the <em>cash flow statement</em>. Net loss tells you accounting profit; cash flow tells you whether money is actually running out.</div>
+
+    <h2 id="customers">4. Customers, and the 900% metric</h2>
+    <p>As of September 30, 2026, the filing reports:</p>
+    <ul>
+      <li>more than <strong>11,900</strong> customers paying $100,000 or more per year;</li>
+      <li>more than <strong>1,900</strong> paying $1 million or more;</li>
+      <li>about <strong>250</strong> paying $10 million or more.</li>
+    </ul>
+    <p>And then a number that needs explaining: <strong>Net Revenue Retention (NRR) of about 900%</strong>.</p>
+    <p>NRR answers one question: <em>take the customers you already had a year ago; how much are they paying now compared with then?</em> New customers are excluded. 100% means existing customers pay exactly the same. Above 100% means they expanded. Strong software companies brag about 120% to 130%. 900% means the average qualified customer from a year ago now pays nine times as much.</p>
+    <p>The filing's definition excludes Claude Pro and Max subscribers, so this is about API and enterprise accounts. Try the arithmetic:</p>
+    <div class="calc" id="calc-en">
+      <div class="calc-grid">
+        <div><label>Same customers, revenue a year ago ($)</label><input type="number" data-f="before" value="1000000" min="1"></div>
+        <div><label>Same customers, revenue now ($)</label><input type="number" data-f="after" value="9000000" min="0"></div>
+      </div>
+      <div class="calc-out"><span data-out="nrr">–</span><small data-out="note"></small></div>
+    </div>
+    <h3>The other side of the coin: concentration</h3>
+    <p>Yahoo Finance reports that <strong>roughly one-fifth of revenue came from two customers</strong>. The filing lists customer and distribution-channel concentration as a risk. Some of the largest partners (Amazon, Google) are also investors and cloud suppliers, a triangle the risk section calls out directly. If one of two giant customers shifts work to another model, the revenue line moves noticeably.</p>
+
+    <h2 id="control">5. Who controls the company</h2>
+    <p>Anthropic is a <strong>public benefit corporation</strong> (PBC) in Delaware. Its stated purpose is "the responsible development and maintenance of advanced AI for the long-term benefit of humanity". The board must balance that purpose with shareholder returns, rather than maximize returns alone. The share structure is built to protect that, and it is unusual:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Class</th><th>Who holds it</th><th>What it does</th></tr>
+      <tr><td><strong>A</strong></td><td>Public investors after the IPO</td><td>One vote per share, full economic rights</td></tr>
+      <tr><td><strong>F</strong></td><td>One single share, held by a Founder LLC of the seven co-founders</td><td>Carries <strong>50.1% of total voting power</strong> on general matters; no economic rights</td></tr>
+      <tr><td><strong>T</strong></td><td>Long-Term Benefit Trust (five financially disinterested trustees)</td><td>Elects and removes the directors who form a <strong>majority of the board</strong>; no economic rights</td></tr>
+      <tr><td><strong>N</strong></td><td>Mostly strategic partners; also the Public Benefit Fund</td><td>No general voting rights; converts to A when sold to an unaffiliated buyer</td></tr>
+      <tr><td><strong>E</strong></td><td>Employees</td><td>Limited voting rights</td></tr>
+    </table></div>
+    <p>Put simply: people who buy ANT shares will own part of the profits but will not control the company. The founders hold the majority of votes on shareholder matters, and the Trust picks most of the board. Because of that, Anthropic qualifies as a "controlled company" under Nasdaq rules, which allows it to skip some governance requirements. The filing says it will use only one of those exemptions, for the nominating committee.</p>
+    <p>The <strong>Anthropic Public Benefit Fund</strong> covered in our <em>Oct 20 lesson</em> shows up here with numbers: 846,840,960 Class N shares, 5% of fully diluted shares as of June 30, plus up to 2% more each time the share price climbs 50% above the previous milestone, starting from the IPO price.</p>
+    <div class="callout"><strong>Analogy:</strong> a popular open-source project that accepts sponsors. Sponsors fund the work and benefit when it succeeds, but the maintainers keep merge rights and a steering committee decides direction. Buying a sponsorship does not give you commit access.</div>
+
+    <h2 id="risks">6. The risk section, and what it means for Claude users</h2>
+    <p>The risk-factor summary, as reported, includes: dependence on building advanced models and getting enough compute; keeping co-founders and key researchers; competition; misuse of models or failure of safeguards; <strong>misaligned or autonomous model behavior</strong>; customer and channel concentration; limited operating history; a shifting regulatory and political environment; reliance on cloud providers that are also investors and customers; and concentrated voting power.</p>
+    <p>Yahoo Finance highlights that the filing describes scenarios where models could cause real-world harm, and warns this could limit the company's ability to cover damages. It is rare for a company to list "our product might act in ways we did not anticipate" as a formal investment risk. For an AI lab, it is an honest description of the field.</p>
+    <h3>What actually changes for you</h3>
+    <ul>
+      <li><strong>More transparency, on a schedule.</strong> A public company publishes quarterly results. Pricing changes, usage trends and compute costs will show up in filings, not only in blog posts.</li>
+      <li><strong>Pressure on margins.</strong> Public investors watch gross margin closely. Expect more emphasis on efficiency: cheaper models, caching, effort controls. Many of those are already good for developers.</li>
+      <li><strong>Nothing changes overnight.</strong> The API, the models and the plans you use are not affected by the filing itself.</li>
+    </ul>
+
+    <h2 id="quiz">7. Exercise: filed fact or press report?</h2>
+    <p>The most useful skill from today is separating what the company <em>filed</em> (legally accountable) from what the press <em>reported</em> from sources (often right, but not verified). Sort each item:</p>
+    <div class="quiz" id="quiz-en">
+      <div class="q" data-answer="filed"><div class="q-text">The ticker will be "ANT" on Nasdaq Global Select.</div><div class="btn-row"><button class="btn" data-pick="filed">Filed</button><button class="btn" data-pick="press">Press report</button></div><div class="fb">Filed. It is in Anthropic's own announcement and the S-1 cover.</div></div>
+      <div class="q" data-answer="press"><div class="q-text">The IPO will price on November 19 or 20.</div><div class="btn-row"><button class="btn" data-pick="filed">Filed</button><button class="btn" data-pick="press">Press report</button></div><div class="fb">Press report. A Fox Business reporter cited sources; the filing has no date and says the sale starts "as soon as practicable" after it becomes effective.</div></div>
+      <div class="q" data-answer="filed"><div class="q-text">One share of Class F stock carries 50.1% of the voting power.</div><div class="btn-row"><button class="btn" data-pick="filed">Filed</button><button class="btn" data-pick="press">Press report</button></div><div class="fb">Filed. It is in the governance section of the S-1.</div></div>
+      <div class="q" data-answer="press"><div class="q-text">Bankers aim to raise up to $100 billion at a valuation near $2 trillion.</div><div class="btn-row"><button class="btn" data-pick="filed">Filed</button><button class="btn" data-pick="press">Press report</button></div><div class="fb">Press report, and sources disagree (other outlets cite about $1.5 trillion). The share count and price range in the filing are still blank.</div></div>
+      <div class="q" data-answer="filed"><div class="q-text">Net Revenue Retention was about 900% as of September 30.</div><div class="btn-row"><button class="btn" data-pick="filed">Filed</button><button class="btn" data-pick="press">Press report</button></div><div class="fb">Filed, with a definition that excludes Pro and Max subscribers. Always read the definition next to a metric.</div></div>
+      <div class="score" data-out="score"></div>
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.anthropic.com/news/s1-sec" target="_blank" rel="noopener">Anthropic — "Anthropic files S-1 with the SEC for proposed initial public offering" (Oct 26, 2026, read directly): filing, Class A stock, Nasdaq "ANT", share count and price not set</a></li>
+      <li><a href="https://www.unite.ai/anthropic-files-s-1-registration-statement-for-nasdaq-ipo/" target="_blank" rel="noopener">Unite.AI — "Anthropic Files S-1 Registration Statement for Nasdaq IPO" (Oct 26, 2026, read directly): underwriters, customer counts, NRR and its definition, growth rates, cash, share classes, Public Benefit Fund, risk summary. Note: written by an AI research agent and reviewed by Unite.AI's editors.</a></li>
+      <li><a href="https://finance.yahoo.com/technology/article/anthropic-publicly-files-ipo-prospectus-noting-strong-revenue-growth-and-massive-spending-131807138.html" target="_blank" rel="noopener">Yahoo Finance — Daniel Howley, "Anthropic publicly files IPO prospectus noting strong revenue growth and massive spending" (Oct 26, 2026, read directly): H1 revenue, 2025 revenue, infrastructure spend, net loss, customer concentration, $450B cloud plans, harm scenarios</a></li>
+      <li><a href="https://www.investing.com/news/stock-market-news/anthropic-said-to-plan-9-am-s1-filing-as-midnovember-ipo-remains-on-track-4972374" target="_blank" rel="noopener">Investing.com — "Anthropic said to plan 9 a.m. S-1 filing as mid-November IPO remains on track" (Oct 26, 2026, read directly): Nov 19-20 date, citing a Fox Business reporter's sources</a></li>
+      <li><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm" target="_blank" rel="noopener">SEC EDGAR — Anthropic, PBC Form S-1 (Oct 26, 2026): the primary document. Not read directly for this lesson; figures above come from the coverage listed.</a></li>
+      <li>Search summaries consulted for orientation (not read in full): CNBC live updates ($6.2B debt, data-center moratoriums as a risk), Fox News live updates (raise of up to $100B, ~$1.5T valuation), Crypto Briefing (~$2T valuation). CNBC's page did not load.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: the category rotation pointed to "Prompt engineering in practice", but the priority rule in AI_TRACK.md applies: a real Anthropic announcement dated today. The rotation stays where it was. Financial figures are from press summaries of the filing and should be checked against the S-1 before being quoted.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>A Anthropic pede para abrir capital: como ler o S-1 de um laboratório de IA</h1>
+      <p class="subtitle">Hoje de manhã a Anthropic tornou público o prospecto do seu IPO. É a primeira vez que alguém de fora pode ver números auditados de como um laboratório de IA de ponta ganha e gasta dinheiro, e quem de fato manda nele. Aqui está o que o documento diz, o que a imprensa acrescentou por cima e como separar uma coisa da outra.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#what-pt">O que aconteceu, e o que é um S-1</a></li>
+        <li><a href="#growth-pt">O lado da receita: um crescimento difícil de acreditar</a></li>
+        <li><a href="#cost-pt">O lado do custo: computação, compromissos e um prejuízo de US$ 80 bi</a></li>
+        <li><a href="#customers-pt">Clientes, e a métrica de 900%</a></li>
+        <li><a href="#control-pt">Quem controla a empresa</a></li>
+        <li><a href="#risks-pt">A seção de riscos, e o que muda para quem usa o Claude</a></li>
+        <li><a href="#quiz-pt">Exercício: fato registrado ou relato da imprensa?</a></li>
+      </ol>
+    </div>
+
+    <div class="callout"><strong>Não é recomendação de investimento.</strong> Esta lição explica um documento público para você ler as notícias com senso crítico. Não é sugestão de comprar ou evitar nenhuma ação, e eu não sou consultor financeiro.</div>
+
+    <h2 id="what-pt">1. O que aconteceu, e o que é um S-1</h2>
+    <p>Em <strong>26 de outubro de 2026</strong>, a Anthropic, PBC protocolou publicamente um <strong>Formulário S-1</strong> na SEC (a CVM dos EUA) para uma oferta pública inicial de suas ações Classe A. A ideia é listar na <strong>Nasdaq Global Select Market com o ticker "ANT"</strong>. A quantidade de ações e a faixa de preço ainda estão em branco. O anúncio da própria Anthropic tem três frases e um texto jurídico; o conteúdo de verdade está no documento.</p>
+    <p>O S-1 é o documento que uma empresa americana precisa registrar antes de vender ações ao público pela primeira vez. Pense nele como README, changelog e lista de problemas conhecidos da empresa juntos, escritos sob responsabilidade legal. Ele traz demonstrações financeiras auditadas, descrição do negócio, uso do dinheiro captado, quem é dono e quem controla, e uma lista longa de <strong>fatores de risco</strong>. Mentir nele é crime federal, por isso ele vale mais do que qualquer comunicado à imprensa.</p>
+    <p>O caminho normal daqui em diante:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Etapa</th><th>O que significa</th><th>Situação da Anthropic</th></tr>
+      <tr><td>Rascunho confidencial</td><td>A empresa manda uma versão para a SEC em sigilo, para receber comentários</td><td>Feito, anunciado em 1º/06/2026</td></tr>
+      <tr><td>S-1 público</td><td>O rascunho vira público; qualquer pessoa pode ler</td><td>Feito hoje, 26/10</td></tr>
+      <tr><td>Emendas (S-1/A)</td><td>A empresa preenche quantidade de ações e faixa de preço</td><td>Pendente</td></tr>
+      <tr><td>Roadshow</td><td>Os bancos apresentam a oferta a grandes investidores e medem a demanda</td><td>Pendente</td></tr>
+      <tr><td>Efetivação + precificação</td><td>A SEC declara o registro efetivo; o preço final é definido</td><td>Noticiado para 19 ou 20/11 (não confirmado pela empresa)</td></tr>
+    </table></div>
+    <p>Goldman Sachs e Morgan Stanley lideram um sindicato de mais de vinte bancos, segundo o resumo da capa do documento feito pela Unite.AI.</p>
+
+    <h2 id="growth-pt">2. O lado da receita: um crescimento difícil de acreditar</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">US$ 16,3 bi</div><div class="lbl">receita nos seis meses até junho de 2026 (Yahoo Finance)</div></div>
+      <div class="stat"><div class="num">US$ 4,6 bi</div><div class="lbl">receita em todo o ano de 2025 (Yahoo Finance)</div></div>
+      <div class="stat"><div class="num">+1.368%</div><div class="lbl">crescimento anual, 2º tri de 2026 (documento, via Unite.AI)</div></div>
+      <div class="stat"><div class="num">US$ 6,6 mi</div><div class="lbl">receita por funcionário, últimos 12 meses (documento, via Unite.AI)</div></div>
+    </div>
+    <p>Meio ano de 2026 trouxe cerca de 3,5 vezes a receita de 2025 inteiro. A receita por funcionário foi de US$ 1,4 milhão em setembro de 2025 para mais de US$ 6,6 milhões um ano depois. Uma empresa de software já é considerada eficiente com algumas centenas de milhares de dólares por funcionário.</p>
+    <p>O documento chama a adoção do Claude de "a adoção corporativa mais rápida de qualquer tecnologia da história". Essa frase é da própria empresa, num documento em que ela responde legalmente pelos fatos, mas tem espaço para adjetivos. Confie nos números; os superlativos são marketing.</p>
+    <div class="callout"><strong>Por que importa para quem programa:</strong> o S-1 mostra que o negócio é sobretudo uso corporativo e de API, vendido direto e por AWS, Google Cloud, Microsoft Azure, consultorias (Accenture, Deloitte, KPMG, PwC) e plataformas de dados (Salesforce, Snowflake). Produtos como Claude Code e Cowork aparecem como motores de crescimento. Em resumo: as ferramentas que você usa todo dia são o centro do negócio, não um projeto paralelo.</div>
+
+    <h2 id="cost-pt">3. O lado do custo: computação, compromissos e um prejuízo de US$ 80 bi</h2>
+    <div class="stats">
+      <div class="stat"><div class="num">US$ 9 bi</div><div class="lbl">gasto com infraestrutura de IA no 1º semestre de 2026 (contra US$ 7,3 bi em 2025 inteiro)</div></div>
+      <div class="stat"><div class="num">US$ 450 bi+</div><div class="lbl">gasto planejado com nuvem nos próximos anos (Amazon, Google e outros)</div></div>
+      <div class="stat"><div class="num">US$ 80,7 bi</div><div class="lbl">prejuízo líquido até junho, "a grande maioria" lançamentos contábeis</div></div>
+      <div class="stat"><div class="num">US$ 112,4 bi</div><div class="lbl">caixa e equivalentes em 30/06 (mais US$ 19,3 bi em aplicações de curto prazo)</div></div>
+    </div>
+    <p>Dois números pedem leitura cuidadosa.</p>
+    <h3>Crescimento da receita vs crescimento da computação</h3>
+    <p>No trimestre encerrado em 30 de junho, a receita cresceu 1.368% contra o mesmo período do ano anterior, enquanto as despesas com computação e infraestrutura cresceram 300%. Quando a receita cresce muito mais rápido do que o maior custo, cada dólar de receita fica mais barato de entregar. É o sinal que um investidor mais quer ver num laboratório de IA, porque o medo clássico é o contrário: que cada cliente novo custe mais GPU do que paga.</p>
+    <h3>O prejuízo de US$ 80,7 bi</h3>
+    <p>Um prejuízo desse tamanho na manchete parece empresa pegando fogo. O Yahoo Finance relata que "a grande maioria" veio de lançamentos contábeis. Em geral, grandes despesas que não saem do caixa em empresas prestes a abrir capital vêm de coisas como mudança no valor de notas conversíveis ou warrants, ou remuneração em ações. Elas reduzem o lucro contábil sem tirar dinheiro do banco. A cobertura que li não detalhou quais lançamentos se aplicam aqui, então trate como "o prejuízo é sobretudo no papel, segundo a imprensa" e confira a demonstração de resultados no documento antes de repetir algum número.</p>
+    <div class="callout"><strong>Hábito de leitura:</strong> quando uma empresa mostra um prejuízo gigante e um caixa gigante no mesmo documento, procure a <em>demonstração de fluxo de caixa</em>. O prejuízo líquido mostra o resultado contábil; o fluxo de caixa mostra se o dinheiro está de fato acabando.</div>
+
+    <h2 id="customers-pt">4. Clientes, e a métrica de 900%</h2>
+    <p>Em 30 de setembro de 2026, o documento informa:</p>
+    <ul>
+      <li>mais de <strong>11.900</strong> clientes pagando US$ 100 mil ou mais por ano;</li>
+      <li>mais de <strong>1.900</strong> pagando US$ 1 milhão ou mais;</li>
+      <li>cerca de <strong>250</strong> pagando US$ 10 milhões ou mais.</li>
+    </ul>
+    <p>E depois um número que precisa de explicação: <strong>Net Revenue Retention (NRR) de cerca de 900%</strong>.</p>
+    <p>A NRR responde uma pergunta: <em>pegue os clientes que você já tinha um ano atrás; quanto eles pagam agora, comparado com antes?</em> Clientes novos ficam de fora. 100% quer dizer que os clientes antigos pagam exatamente o mesmo. Acima de 100%, eles aumentaram o uso. Empresas de software fortes se gabam de 120% a 130%. 900% quer dizer que o cliente qualificado médio de um ano atrás hoje paga nove vezes mais.</p>
+    <p>A definição do documento exclui assinantes do Claude Pro e Max, então o número é sobre contas de API e corporativas. Faça a conta:</p>
+    <div class="calc" id="calc-pt">
+      <div class="calc-grid">
+        <div><label>Mesmos clientes, receita há um ano (US$)</label><input type="number" data-f="before" value="1000000" min="1"></div>
+        <div><label>Mesmos clientes, receita hoje (US$)</label><input type="number" data-f="after" value="9000000" min="0"></div>
+      </div>
+      <div class="calc-out"><span data-out="nrr">–</span><small data-out="note"></small></div>
+    </div>
+    <h3>O outro lado da moeda: concentração</h3>
+    <p>O Yahoo Finance relata que <strong>cerca de um quinto da receita veio de dois clientes</strong>. O documento lista concentração de clientes e de canais de venda como risco. Alguns dos maiores parceiros (Amazon, Google) também são investidores e fornecedores de nuvem, um triângulo que a seção de riscos cita diretamente. Se um desses dois clientes gigantes migrar trabalho para outro modelo, a linha de receita sente.</p>
+
+    <h2 id="control-pt">5. Quem controla a empresa</h2>
+    <p>A Anthropic é uma <strong>public benefit corporation</strong> (PBC) de Delaware. O propósito declarado é "o desenvolvimento e a manutenção responsáveis de IA avançada para o benefício de longo prazo da humanidade". O conselho precisa equilibrar esse propósito com o retorno aos acionistas, em vez de só maximizar o retorno. A estrutura de ações foi montada para proteger isso, e é incomum:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Classe</th><th>Quem detém</th><th>O que faz</th></tr>
+      <tr><td><strong>A</strong></td><td>Investidores do mercado depois do IPO</td><td>Um voto por ação, direitos econômicos plenos</td></tr>
+      <tr><td><strong>F</strong></td><td>Uma única ação, de uma Founder LLC formada pelos sete cofundadores</td><td>Tem <strong>50,1% do poder de voto total</strong> em assuntos gerais; sem direitos econômicos</td></tr>
+      <tr><td><strong>T</strong></td><td>Long-Term Benefit Trust (cinco curadores sem interesse financeiro)</td><td>Elege e destitui os conselheiros que formam a <strong>maioria do conselho</strong>; sem direitos econômicos</td></tr>
+      <tr><td><strong>N</strong></td><td>Sobretudo parceiros estratégicos; também o Public Benefit Fund</td><td>Sem direito de voto geral; vira Classe A quando vendida a um comprador não ligado</td></tr>
+      <tr><td><strong>E</strong></td><td>Funcionários</td><td>Direito de voto limitado</td></tr>
+    </table></div>
+    <p>Em resumo: quem comprar ações ANT vai ser dono de parte dos lucros, mas não vai controlar a empresa. Os fundadores têm a maioria dos votos nas decisões de acionistas, e o Trust escolhe a maior parte do conselho. Por isso a Anthropic se enquadra como "controlled company" pelas regras da Nasdaq, o que permite dispensar algumas exigências de governança. O documento diz que vai usar só uma dessas dispensas, a do comitê de indicação.</p>
+    <p>O <strong>Anthropic Public Benefit Fund</strong>, tema da <em>lição de 20/10</em>, aparece aqui com números: 846.840.960 ações Classe N, 5% das ações totalmente diluídas em 30 de junho, mais até 2% a cada vez que o preço da ação subir 50% acima do marco anterior, a partir do preço do IPO.</p>
+    <div class="callout"><strong>Analogia:</strong> um projeto open source popular que aceita patrocinadores. Os patrocinadores financiam o trabalho e ganham quando ele dá certo, mas os mantenedores ficam com o direito de merge e um comitê decide a direção. Comprar um patrocínio não te dá permissão de commit.</div>
+
+    <h2 id="risks-pt">6. A seção de riscos, e o que muda para quem usa o Claude</h2>
+    <p>O resumo dos fatores de risco, segundo a cobertura, inclui: dependência de criar modelos avançados e conseguir computação suficiente; reter cofundadores e pesquisadores-chave; concorrência; uso indevido dos modelos ou falha das salvaguardas; <strong>comportamento desalinhado ou autônomo dos modelos</strong>; concentração de clientes e canais; histórico operacional curto; um ambiente regulatório e político instável; dependência de provedores de nuvem que também são investidores e clientes; e poder de voto concentrado.</p>
+    <p>O Yahoo Finance destaca que o documento descreve cenários em que os modelos poderiam causar danos no mundo real, e avisa que isso pode limitar a capacidade da empresa de cobrir indenizações. É raro uma empresa colocar "nosso produto pode agir de formas que não previmos" como risco formal de investimento. Para um laboratório de IA, é uma descrição honesta da área.</p>
+    <h3>O que muda de verdade para você</h3>
+    <ul>
+      <li><strong>Mais transparência, com calendário.</strong> Empresa aberta publica resultado todo trimestre. Mudanças de preço, tendências de uso e custo de computação vão aparecer em relatórios oficiais, não só em posts de blog.</li>
+      <li><strong>Pressão nas margens.</strong> Investidores do mercado olham a margem bruta de perto. Espere mais ênfase em eficiência: modelos mais baratos, caching, controles de esforço. Muita coisa disso já é boa para quem desenvolve.</li>
+      <li><strong>Nada muda da noite para o dia.</strong> A API, os modelos e os planos que você usa não são afetados pelo registro em si.</li>
+    </ul>
+
+    <h2 id="quiz-pt">7. Exercício: fato registrado ou relato da imprensa?</h2>
+    <p>A habilidade mais útil de hoje é separar o que a empresa <em>registrou</em> (com responsabilidade legal) do que a imprensa <em>relatou</em> a partir de fontes (muitas vezes certo, mas sem verificação). Classifique cada item:</p>
+    <div class="quiz" id="quiz-pt">
+      <div class="q" data-answer="filed"><div class="q-text">O ticker vai ser "ANT" na Nasdaq Global Select.</div><div class="btn-row"><button class="btn" data-pick="filed">Registrado</button><button class="btn" data-pick="press">Imprensa</button></div><div class="fb">Registrado. Está no anúncio da Anthropic e na capa do S-1.</div></div>
+      <div class="q" data-answer="press"><div class="q-text">O IPO vai ser precificado em 19 ou 20 de novembro.</div><div class="btn-row"><button class="btn" data-pick="filed">Registrado</button><button class="btn" data-pick="press">Imprensa</button></div><div class="fb">Imprensa. Uma repórter da Fox Business citou fontes; o documento não tem data e diz que a venda começa "assim que possível" depois de ele ser declarado efetivo.</div></div>
+      <div class="q" data-answer="filed"><div class="q-text">Uma única ação Classe F tem 50,1% do poder de voto.</div><div class="btn-row"><button class="btn" data-pick="filed">Registrado</button><button class="btn" data-pick="press">Imprensa</button></div><div class="fb">Registrado. Está na seção de governança do S-1.</div></div>
+      <div class="q" data-answer="press"><div class="q-text">Os bancos querem captar até US$ 100 bilhões com valuation perto de US$ 2 trilhões.</div><div class="btn-row"><button class="btn" data-pick="filed">Registrado</button><button class="btn" data-pick="press">Imprensa</button></div><div class="fb">Imprensa, e as fontes discordam (outros veículos citam cerca de US$ 1,5 trilhão). A quantidade de ações e a faixa de preço no documento ainda estão em branco.</div></div>
+      <div class="q" data-answer="filed"><div class="q-text">A Net Revenue Retention era de cerca de 900% em 30 de setembro.</div><div class="btn-row"><button class="btn" data-pick="filed">Registrado</button><button class="btn" data-pick="press">Imprensa</button></div><div class="fb">Registrado, com uma definição que exclui assinantes Pro e Max. Sempre leia a definição ao lado de uma métrica.</div></div>
+      <div class="score" data-out="score"></div>
+    </div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.anthropic.com/news/s1-sec" target="_blank" rel="noopener">Anthropic — "Anthropic files S-1 with the SEC for proposed initial public offering" (26/10/2026, lido diretamente): registro, ações Classe A, Nasdaq "ANT", quantidade e preço não definidos</a></li>
+      <li><a href="https://www.unite.ai/anthropic-files-s-1-registration-statement-for-nasdaq-ipo/" target="_blank" rel="noopener">Unite.AI — "Anthropic Files S-1 Registration Statement for Nasdaq IPO" (26/10/2026, lido diretamente): bancos coordenadores, número de clientes, NRR e sua definição, taxas de crescimento, caixa, classes de ações, Public Benefit Fund, resumo de riscos. Obs.: escrito por um agente de pesquisa de IA e revisado pelos editores da Unite.AI.</a></li>
+      <li><a href="https://finance.yahoo.com/technology/article/anthropic-publicly-files-ipo-prospectus-noting-strong-revenue-growth-and-massive-spending-131807138.html" target="_blank" rel="noopener">Yahoo Finance — Daniel Howley, "Anthropic publicly files IPO prospectus noting strong revenue growth and massive spending" (26/10/2026, lido diretamente): receita do 1º semestre, receita de 2025, gasto com infraestrutura, prejuízo líquido, concentração de clientes, plano de US$ 450 bi em nuvem, cenários de dano</a></li>
+      <li><a href="https://www.investing.com/news/stock-market-news/anthropic-said-to-plan-9-am-s1-filing-as-midnovember-ipo-remains-on-track-4972374" target="_blank" rel="noopener">Investing.com — "Anthropic said to plan 9 a.m. S-1 filing as mid-November IPO remains on track" (26/10/2026, lido diretamente): data de 19-20/11, citando fontes de uma repórter da Fox Business</a></li>
+      <li><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026067168/anthropicpbc-sx1.htm" target="_blank" rel="noopener">SEC EDGAR — Formulário S-1 da Anthropic, PBC (26/10/2026): o documento primário. Não foi lido diretamente para esta lição; os números acima vêm da cobertura listada.</a></li>
+      <li>Resumos de busca consultados só para orientação (não lidos por inteiro): CNBC ao vivo (US$ 6,2 bi em dívida, moratórias de data centers como risco), Fox News ao vivo (captação de até US$ 100 bi, valuation de ~US$ 1,5 tri), Crypto Briefing (valuation de ~US$ 2 tri). A página da CNBC não carregou.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Prompt engineering na prática", mas vale a regra de prioridade do AI_TRACK.md: um anúncio real da Anthropic com data de hoje. A rotação fica onde estava. Os números financeiros vêm de resumos do documento feitos pela imprensa e devem ser conferidos no S-1 antes de serem citados.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Anthropic S-1</span>
+</footer>
+
+<script>
+  function calcNrr(box) {
+    var pt = box.id.slice(-2) === 'pt';
+    var before = parseFloat(box.querySelector('[data-f="before"]').value) || 0;
+    var after = parseFloat(box.querySelector('[data-f="after"]').value) || 0;
+    var out = box.querySelector('[data-out="nrr"]');
+    var note = box.querySelector('[data-out="note"]');
+    if (before <= 0) { out.textContent = '–'; note.textContent = ''; return; }
+    var nrr = Math.round(after / before * 100);
+    out.textContent = 'NRR ' + nrr.toLocaleString(pt ? 'pt-BR' : 'en-US') + '%';
+    var msg;
+    if (nrr < 100) msg = pt ? 'Clientes antigos estão gastando menos (churn ou redução).' : 'Existing customers are spending less (churn or downgrades).';
+    else if (nrr <= 130) msg = pt ? 'Faixa de uma empresa de software forte.' : 'The range of a strong software company.';
+    else if (nrr < 300) msg = pt ? 'Excepcional: clientes antigos crescem muito rápido.' : 'Exceptional: existing customers are growing very fast.';
+    else msg = pt ? 'Fora da curva: cada cliente antigo multiplicou o gasto.' : 'Off the charts: each existing customer multiplied its spend.';
+    note.textContent = msg;
+  }
+  document.querySelectorAll('.calc').forEach(function(box) {
+    box.querySelectorAll('input').forEach(function(el) { el.addEventListener('input', function() { calcNrr(box); }); });
+    calcNrr(box);
+  });
+
+  document.querySelectorAll('.quiz').forEach(function(quiz) {
+    var pt = quiz.id.slice(-2) === 'pt';
+    var total = quiz.querySelectorAll('.q').length;
+    function update() {
+      var answered = quiz.querySelectorAll('.q[data-done]').length;
+      var right = quiz.querySelectorAll('.q[data-done="1"]').length;
+      quiz.querySelector('[data-out="score"]').textContent = answered ? (pt ? 'Acertos: ' + right + ' de ' + answered + ' (total ' + total + ')' : 'Correct: ' + right + ' of ' + answered + ' (total ' + total + ')') : '';
+    }
+    quiz.querySelectorAll('.q').forEach(function(q) {
+      q.querySelectorAll('[data-pick]').forEach(function(b) {
+        b.addEventListener('click', function() {
+          if (q.dataset.done) return;
+          var ok = b.dataset.pick === q.dataset.answer;
+          q.dataset.done = ok ? '1' : '0';
+          b.classList.add(ok ? 'right' : 'wrong');
+          if (!ok) q.querySelector('[data-pick="' + q.dataset.answer + '"]').classList.add('right');
+          q.querySelector('.fb').style.display = 'block';
+          update();
+        });
+      });
+    });
+  });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

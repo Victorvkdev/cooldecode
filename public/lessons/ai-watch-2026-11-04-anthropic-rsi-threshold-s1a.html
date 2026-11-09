@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The RSI threshold in Anthropic's S-1/A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  blockquote { margin: 20px 0; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 12.5px; color: var(--text-dim); font-style: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 16px; }
+  .calc label { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 4px; }
+  .calc input[type=range] { width: 100%; accent-color: var(--accent); }
+  .calc-out { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; color: #fff; line-height: 1.5; }
+  .calc-out small { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 13px; color: var(--text-dim); display: block; margin-top: 4px; }
+  .chart { display: grid; grid-template-columns: repeat(36, 1fr); gap: 2px; align-items: end; height: 130px; margin: 14px 0 6px; border-bottom: 1px solid var(--border); position: relative; }
+  .chart .b { background: var(--bg-card-2); border: 1px solid var(--border); border-bottom: none; border-radius: 3px 3px 0 0; min-height: 2px; }
+  .chart .b.over { background: rgba(124,58,237,0.45); border-color: rgba(124,58,237,0.6); }
+  .chart .b.seen { background: var(--accent); border-color: var(--accent); }
+  .chart .line { position: absolute; left: 0; right: 0; border-top: 1px dashed var(--text-dim); pointer-events: none; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: var(--text-dim); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>"May imminently meet": Anthropic's S-1/A and the recursive self-improvement threshold</h1>
+      <p class="subtitle">On November 2, Anthropic amended its IPO filing. Among the new financials was a new risk factor: the company says future models may soon cross its own threshold for AI-driven acceleration of AI research, and admits it may only notice after the fact. What the text says, what it does not say, and why the detection problem is the real story.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What changed in the filing</a></li>
+        <li><a href="#rsi">RSI, and the line Anthropic actually drew</a></li>
+        <li><a href="#loop">How we got here: "closing the loop"</a></li>
+        <li><a href="#lag">The detection problem</a></li>
+        <li><a href="#sim">Try it: acceleration vs a lagging indicator</a></li>
+        <li><a href="#response">What Anthropic says it will do</a></li>
+        <li><a href="#read">Reading it critically</a></li>
+        <li><a href="#you">What this means for you as a developer</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What changed in the filing</h2>
+    <p>An <strong>S-1</strong> is the registration document a company files with the US SEC before going public; an <strong>S-1/A</strong> is an amendment. We covered the first public S-1 on October 26. The amended version, filed on Monday, November 2, added language to the <strong>Risk Factors</strong> section. ShiftDelete.Net reports that the key sentence was not in the October 26 draft. As quoted by TechCrunch:</p>
+    <blockquote>"Our increasing use of AI systems to accelerate our own research and development may cause the capabilities of our models to advance more rapidly than our ability to develop, validate, and implement corresponding safety, alignment, and security measures. As a result, we have in the past not identified, and may in the future not identify, a significant acceleration in our rate of development until after it has occurred."
+      <cite>Anthropic S-1/A, Risk Factors, as quoted by TechCrunch (Nov 2, 2026)</cite></blockquote>
+    <blockquote>"Our internal estimates and our expectations regarding future models, rather than our current models, indicate that we may imminently meet our Responsible Scaling Policy's definition of 'dramatically accelerated progress attributable to AI.' We have not designated any of our current models as exceeding this threshold, and we continue to assess the underlying data."
+      <cite>Same filing, same source</cite></blockquote>
+    <p>Three claims to separate, because headlines blurred them:</p>
+    <ul>
+      <li><strong>Past:</strong> Anthropic says it has already used AI to build models whose capability jumps it did not recognize at the time.</li>
+      <li><strong>Present:</strong> no current model has been designated as over the threshold.</li>
+      <li><strong>Near future:</strong> internal estimates about <em>future</em> models say the threshold may be met "imminently".</li>
+    </ul>
+
+    <h2 id="rsi">2. RSI, and the line Anthropic actually drew</h2>
+    <p><strong>Recursive self-improvement (RSI)</strong> is the idea of AI getting good enough at AI research that each generation speeds up the making of the next, so progress compounds. TechCrunch notes the term became popular this year and was often dismissed as a buzzword, too vague to define or prove. Optimists see a productivity engine; pessimists see a point after which humans can no longer keep up.</p>
+    <p>Anthropic did not say "we have reached RSI". It tied the warning to a concrete line in its <strong>Responsible Scaling Policy (RSP)</strong>, the document that sets which safeguards must be in place at which capability levels. The filing says the RSP is how it plans to "monitor and mitigate the risks as we approach what has been termed 'recursive self-improvement.'"</p>
+    <div class="callout"><strong>What the threshold means (secondhand):</strong> ShiftDelete.Net describes the RSP definition, now at version 3.4, as AI <strong>doubling the rate of overall AI progress</strong>, "so that one year brings what would normally take two". We did not read the RSP text directly today, so treat the exact wording and version number as unverified. The important idea holds either way: the line is about the <em>speed</em> of progress and how much of it is attributable to AI, not about any single benchmark score.</div>
+
+    <h2 id="loop">3. How we got here: "closing the loop"</h2>
+    <p>This did not come out of nowhere. Earlier AI Watch lessons tracked the steps:</p>
+    <div class="table-wrap"><table>
+      <tr><th>When</th><th>Signal</th><th>Source</th></tr>
+      <tr><td>Sep 17, 2026</td><td>Claude "leads" 26% of Anthropic's model R&amp;D work in August, up from ~0% in February</td><td>Our Sep 21 lesson</td></tr>
+      <tr><td>Sep 2026</td><td>Over 90% of contributions to Anthropic's codebase written by Claude</td><td>S-1/A, as reported by ShiftDelete.Net</td></tr>
+      <tr><td>Oct 26, 2026</td><td>First public S-1 filed for the Nasdaq IPO</td><td>Our Oct 26 lesson</td></tr>
+      <tr><td>Nov 2, 2026</td><td>S-1/A adds the "imminently" risk factor</td><td>TechCrunch, Dataconomy, ShiftDelete.Net</td></tr>
+    </table></div>
+    <p>According to ShiftDelete.Net, the filing calls the cycle of each model helping build the next one <strong>"closing the loop"</strong>. When most code and a growing share of research is done by the model, the speed of the next model starts to depend on the current one. That feedback is exactly what the RSP line is trying to measure.</p>
+
+    <h2 id="lag">4. The detection problem</h2>
+    <p>The most interesting sentence is the admission that acceleration was not noticed "until after it has occurred". ShiftDelete.Net reports the filing attributes this to <strong>lagging indicators</strong>: much of the evidence about AI-driven speed-up only shows up after a model is trained and evaluated.</p>
+    <div class="callout"><strong>Analogy:</strong> measuring your speed on a road trip by checking how many towns you passed yesterday. It is accurate, but always one day old. If you start accelerating hard today, the number you look at still says "normal" until tomorrow, and by then you are already much farther down the road.</div>
+    <p>This is a familiar problem in software too. If your only performance metric is a monthly report, a regression shipped on day 2 is visible on day 30. The usual fix is the same in both worlds: <strong>leading indicators</strong> (things that move <em>before</em> the outcome) and <strong>gates</strong> that require a human decision before the next step, instead of relying on noticing in time.</p>
+
+    <h2 id="sim">5. Try it: acceleration vs a lagging indicator</h2>
+    <p>A toy model, not Anthropic's data. Each bar is one month of progress, measured in "baseline months" (1.0 = the normal pace). AI help makes the pace curve upward over three years. The dashed line is the 2x threshold. Light purple = the threshold has been crossed but nobody has seen it yet; solid purple = the lagging indicator finally shows it.</p>
+    <div class="calc" id="accel-en">
+      <div class="calc-grid">
+        <div><label>Speed-up reached by month 36: <b data-v="s">3.0</b>x</label><input type="range" data-f="s" min="1.5" max="5" step="0.1" value="3"></div>
+        <div><label>Indicator lag: <b data-v="lag">4</b> months</label><input type="range" data-f="lag" min="0" max="12" step="1" value="4"></div>
+      </div>
+      <div class="chart" data-role="chart"></div>
+      <div class="legend"><span><i style="background:var(--bg-card-2);border:1px solid var(--border)"></i>below threshold</span><span><i style="background:rgba(124,58,237,0.45)"></i>crossed, not yet visible</span><span><i style="background:var(--accent)"></i>visible to the indicator</span></div>
+      <div class="calc-out" style="margin-top:14px" data-role="out"></div>
+    </div>
+    <p>Notice two things. A longer lag means more progress happens "in the dark". And the faster the curve bends, the more that same lag costs, because each unseen month carries more than one baseline month of progress.</p>
+
+    <h2 id="response">6. What Anthropic says it will do</h2>
+    <ul>
+      <li><strong>Keep humans in the loop:</strong> "We do not anticipate being able to safely use Claude to fully autonomously design and build successive generations of frontier models without meaningful human supervision or understanding, if and when that becomes technically possible." (quoted by TechCrunch)</li>
+      <li><strong>Change the RSP:</strong> the filing says it is "considering updates to our Responsible Scaling Policy to keep humans in control of frontier model development". ShiftDelete.Net reports this could mean requiring human review and approval of certain research decisions.</li>
+      <li><strong>Security before training:</strong> ShiftDelete.Net also reports the filing says Anthropic recently delayed pre-training a new frontier base model by more than a month to tighten security around model weights.</li>
+    </ul>
+    <p>"Considering" is the operative word: no RSP change has been announced yet.</p>
+
+    <h2 id="read">7. Reading it critically</h2>
+    <p>A risk factor is a legal document with its own incentives. Keep these in mind:</p>
+    <ul>
+      <li><strong>Disclosure and marketing at once.</strong> TechCrunch and Gizmodo (via ShiftDelete.Net) both point out that "our AI is so capable it may soon build itself" is also an attractive message to investors.</li>
+      <li><strong>Companies over-disclose risks on purpose.</strong> Naming a risk in an S-1 protects against later lawsuits. That is a reason to read carefully, not a reason to dismiss: it is still rare for a frontier lab to put "imminent" next to a capability threshold in a regulatory filing.</li>
+      <li><strong>The data is private.</strong> The "internal estimates" behind "imminently" are not published. Outsiders cannot check them.</li>
+      <li><strong>"Imminently" has no date.</strong> It could mean the next model or the one after. Do not turn it into a deadline.</li>
+    </ul>
+    <p>The most concrete, checkable part is the admission about the past: Anthropic says it has already missed acceleration while it was happening. That is a statement about measurement, and it is the part the RSP update would have to fix.</p>
+
+    <h2 id="you">8. What this means for you as a developer</h2>
+    <h3>Expect a faster model cadence</h3>
+    <p>If more of the R&amp;D loop runs through models, releases can come faster. In 2026 alone this track covered Opus 5, Fable/Mythos 5.1, Opus 5.5, Sonnet 5.5 and Haiku 5.5. Build so that swapping a model is cheap: keep the model name in config, pin versions in production, and keep a small evaluation set you can re-run on every new release.</p>
+    <h3>Apply the same lesson to your own agents</h3>
+    <p>The detection problem is not unique to AI labs. If you let a coding agent run long tasks, a weekly review of what it merged is a lagging indicator. Leading indicators look like: diff size limits, required tests, permission modes that ask before risky actions (see our Oct 28 lesson), and a human approval step before deploy.</p>
+    <h3>A short exercise</h3>
+    <p>In the simulator, set the speed-up to 4x and the lag to 6 months. How many baseline months of progress happen between crossing the threshold and seeing it? Then cut the lag to 1 month. That difference is the value of a better indicator.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://techcrunch.com/2026/11/02/anthropic-warns-that-its-very-close-to-rsi-capability-aka-self-building-ai/" target="_blank" rel="noopener">TechCrunch — "Anthropic warns that it's very close to RSI capability, aka self-building AI", Julie Bort, Nov 2, 2026 (read directly): the risk-factor quotes, the human-supervision quote, skeptic view</a></li>
+      <li><a href="https://shiftdelete.net/en/anthropic-recursive-self-improvement" target="_blank" rel="noopener">ShiftDelete.Net — "Anthropic Says Recursive Self-Improvement May Be Imminent", Nov 3, 2026 (read directly): sentence absent from the Oct 26 draft, RSP v3.4 "doubling" description, 90% of codebase contributions, "closing the loop", lagging indicators, human review proposal, pre-training delay, Gizmodo's critique</a></li>
+      <li><a href="https://dataconomy.com/2026/11/03/anthropic-says-it-may-soon-reach-recursive-self-improvement/" target="_blank" rel="noopener">Dataconomy — "Anthropic says it may soon reach recursive self-improvement", Nov 3, 2026 (read directly): confirms the threshold wording and that no current model is designated over it</a></li>
+      <li><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm" target="_blank" rel="noopener">SEC EDGAR — Anthropic, PBC, Form S-1/A (Nov 2, 2026). Not read directly today; quotes come from the coverage above.</a></li>
+      <li><a href="/lessons/ai-watch-2026-09-21-claude-leads-rd.html">Cooldecode AI Watch, Sep 21, 2026 — Claude leads 26% of Anthropic's R&amp;D</a> · <a href="/lessons/ai-watch-2026-10-26-anthropic-s1-ipo.html">Oct 26, 2026 — Anthropic's S-1</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "Prompt engineering in practice", but the priority rule for real Anthropic/Claude news applied (S-1/A filed Nov 2, covered Nov 2-3). The RSP text was not read directly; its definition and version come from ShiftDelete.Net. Other recent items seen and not used today: text watermark expanded to older models (Nov 3, topic already covered on Aug 11) and beta message threads in the Messages API (Nov 2). The simulator is illustrative and does not use Anthropic's data.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>"Pode atingir em breve": o S-1/A da Anthropic e o limiar de autoaperfeiçoamento recursivo</h1>
+      <p class="subtitle">Em 2 de novembro, a Anthropic alterou o documento do seu IPO. Junto com os números financeiros novos veio um fator de risco novo: a empresa diz que modelos futuros podem cruzar em breve o próprio limiar de aceleração da pesquisa em IA feita pela IA, e admite que talvez só perceba depois. O que o texto diz, o que ele não diz e por que o problema de detecção é a parte mais importante.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#what-pt">O que mudou no documento</a></li>
+        <li><a href="#rsi-pt">RSI, e a linha que a Anthropic de fato traçou</a></li>
+        <li><a href="#loop-pt">Como chegamos aqui: "fechando o ciclo"</a></li>
+        <li><a href="#lag-pt">O problema de detecção</a></li>
+        <li><a href="#sim-pt">Teste: aceleração vs um indicador atrasado</a></li>
+        <li><a href="#response-pt">O que a Anthropic diz que vai fazer</a></li>
+        <li><a href="#read-pt">Lendo com senso crítico</a></li>
+        <li><a href="#you-pt">O que isso significa para você, dev</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que mudou no documento</h2>
+    <p>O <strong>S-1</strong> é o documento de registro que uma empresa entrega à SEC (a CVM dos EUA) antes de abrir capital; o <strong>S-1/A</strong> é uma emenda a ele. Cobrimos o primeiro S-1 público em 26 de outubro. A versão emendada, entregue na segunda, 2 de novembro, acrescentou texto à seção de <strong>Fatores de Risco</strong>. Segundo a ShiftDelete.Net, a frase principal não estava no rascunho de 26 de outubro. Como citado pelo TechCrunch (tradução nossa):</p>
+    <blockquote>"Nosso uso crescente de sistemas de IA para acelerar nossa própria pesquisa e desenvolvimento pode fazer as capacidades dos nossos modelos avançarem mais rápido do que nossa capacidade de desenvolver, validar e implementar as medidas correspondentes de segurança, alinhamento e proteção. Como resultado, no passado não identificamos, e no futuro podemos não identificar, uma aceleração significativa no nosso ritmo de desenvolvimento até depois de ela ter acontecido."
+      <cite>S-1/A da Anthropic, Fatores de Risco, citado pelo TechCrunch (02/11/2026)</cite></blockquote>
+    <blockquote>"Nossas estimativas internas e nossas expectativas sobre modelos futuros, e não sobre os modelos atuais, indicam que podemos atingir em breve a definição da nossa Responsible Scaling Policy de 'progresso dramaticamente acelerado atribuível à IA'. Não classificamos nenhum dos nossos modelos atuais como acima desse limiar e continuamos avaliando os dados."
+      <cite>Mesmo documento, mesma fonte</cite></blockquote>
+    <p>Três afirmações para separar, porque as manchetes misturaram tudo:</p>
+    <ul>
+      <li><strong>Passado:</strong> a Anthropic diz que já usou IA para construir modelos cujos saltos de capacidade ela não reconheceu na época.</li>
+      <li><strong>Presente:</strong> nenhum modelo atual foi classificado como acima do limiar.</li>
+      <li><strong>Futuro próximo:</strong> estimativas internas sobre modelos <em>futuros</em> dizem que o limiar pode ser atingido "em breve".</li>
+    </ul>
+
+    <h2 id="rsi-pt">2. RSI, e a linha que a Anthropic de fato traçou</h2>
+    <p><strong>Autoaperfeiçoamento recursivo (RSI, na sigla em inglês)</strong> é a ideia de a IA ficar boa o suficiente em pesquisa de IA para que cada geração acelere a criação da próxima, e o progresso vire bola de neve. O TechCrunch lembra que o termo ficou popular este ano e muitas vezes foi descartado como palavra da moda, vago demais para definir ou provar. Otimistas veem um motor de produtividade; pessimistas veem um ponto a partir do qual humanos não conseguem mais acompanhar.</p>
+    <p>A Anthropic não disse "atingimos o RSI". Ela amarrou o alerta a uma linha concreta da sua <strong>Responsible Scaling Policy (RSP)</strong>, o documento que define quais salvaguardas precisam existir em cada nível de capacidade. O texto diz que a RSP é como a empresa planeja "monitorar e mitigar os riscos à medida que nos aproximamos do que tem sido chamado de 'autoaperfeiçoamento recursivo'".</p>
+    <div class="callout"><strong>O que o limiar significa (de segunda mão):</strong> a ShiftDelete.Net descreve a definição da RSP, hoje na versão 3.4, como a IA <strong>dobrar o ritmo do progresso geral em IA</strong>, "de modo que um ano entregue o que normalmente levaria dois". Não lemos o texto da RSP diretamente hoje, então trate a redação exata e o número da versão como não verificados. A ideia central vale de qualquer jeito: a linha é sobre a <em>velocidade</em> do progresso e quanto dele vem da IA, não sobre a nota em um benchmark específico.</div>
+
+    <h2 id="loop-pt">3. Como chegamos aqui: "fechando o ciclo"</h2>
+    <p>Isso não surgiu do nada. Lições anteriores do IA Watch acompanharam os passos:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Quando</th><th>Sinal</th><th>Fonte</th></tr>
+      <tr><td>17/09/2026</td><td>Claude "lidera" 26% do P&amp;D de modelos da Anthropic em agosto, partindo de ~0% em fevereiro</td><td>Nossa lição de 21/09</td></tr>
+      <tr><td>Set/2026</td><td>Mais de 90% das contribuições à base de código da Anthropic escritas pelo Claude</td><td>S-1/A, segundo a ShiftDelete.Net</td></tr>
+      <tr><td>26/10/2026</td><td>Primeiro S-1 público para o IPO na Nasdaq</td><td>Nossa lição de 26/10</td></tr>
+      <tr><td>02/11/2026</td><td>S-1/A acrescenta o fator de risco "em breve"</td><td>TechCrunch, Dataconomy, ShiftDelete.Net</td></tr>
+    </table></div>
+    <p>Segundo a ShiftDelete.Net, o documento chama o ciclo de cada modelo ajudar a construir o próximo de <strong>"closing the loop"</strong> (fechar o ciclo). Quando a maior parte do código e uma fatia crescente da pesquisa são feitas pelo modelo, a velocidade do próximo modelo passa a depender do atual. É exatamente esse efeito de realimentação que a linha da RSP tenta medir.</p>
+
+    <h2 id="lag-pt">4. O problema de detecção</h2>
+    <p>A frase mais interessante é a admissão de que a aceleração não foi percebida "até depois de ter acontecido". A ShiftDelete.Net relata que o documento atribui isso a <strong>indicadores atrasados</strong> (lagging indicators): boa parte da evidência de aceleração causada pela IA só aparece depois que um modelo é treinado e avaliado.</p>
+    <div class="callout"><strong>Analogia:</strong> medir sua velocidade numa viagem de carro contando quantas cidades você passou ontem. É preciso, mas sempre tem um dia de atraso. Se você pisa fundo hoje, o número que você olha ainda diz "normal" até amanhã, e aí você já está muito mais longe na estrada.</div>
+    <p>É um problema conhecido em software também. Se a sua única métrica de performance é um relatório mensal, uma regressão publicada no dia 2 só aparece no dia 30. A correção costuma ser a mesma nos dois mundos: <strong>indicadores antecedentes</strong> (leading indicators, coisas que se mexem <em>antes</em> do resultado) e <strong>portões</strong> que exigem uma decisão humana antes do próximo passo, em vez de contar com perceber a tempo.</p>
+
+    <h2 id="sim-pt">5. Teste: aceleração vs um indicador atrasado</h2>
+    <p>Um modelo de brinquedo, não são dados da Anthropic. Cada barra é um mês de progresso, medido em "meses de referência" (1,0 = o ritmo normal). A ajuda da IA faz o ritmo curvar para cima ao longo de três anos. A linha tracejada é o limiar de 2x. Roxo claro = o limiar já foi cruzado mas ninguém viu ainda; roxo forte = o indicador atrasado finalmente mostra.</p>
+    <div class="calc" id="accel-pt">
+      <div class="calc-grid">
+        <div><label>Aceleração no mês 36: <b data-v="s">3,0</b>x</label><input type="range" data-f="s" min="1.5" max="5" step="0.1" value="3"></div>
+        <div><label>Atraso do indicador: <b data-v="lag">4</b> meses</label><input type="range" data-f="lag" min="0" max="12" step="1" value="4"></div>
+      </div>
+      <div class="chart" data-role="chart"></div>
+      <div class="legend"><span><i style="background:var(--bg-card-2);border:1px solid var(--border)"></i>abaixo do limiar</span><span><i style="background:rgba(124,58,237,0.45)"></i>cruzado, ainda invisível</span><span><i style="background:var(--accent)"></i>visível para o indicador</span></div>
+      <div class="calc-out" style="margin-top:14px" data-role="out"></div>
+    </div>
+    <p>Repare em duas coisas. Um atraso maior significa mais progresso acontecendo "no escuro". E quanto mais rápido a curva dobra, mais caro fica o mesmo atraso, porque cada mês não visto carrega mais de um mês de referência de progresso.</p>
+
+    <h2 id="response-pt">6. O que a Anthropic diz que vai fazer</h2>
+    <ul>
+      <li><strong>Manter humanos no processo:</strong> "Não prevemos conseguir usar o Claude com segurança para projetar e construir de forma totalmente autônoma gerações sucessivas de modelos de fronteira sem supervisão ou compreensão humana significativa, se e quando isso se tornar tecnicamente possível." (citado pelo TechCrunch, tradução nossa)</li>
+      <li><strong>Mudar a RSP:</strong> o documento diz que a empresa está "considerando atualizações na Responsible Scaling Policy para manter humanos no controle do desenvolvimento de modelos de fronteira". A ShiftDelete.Net relata que isso pode significar exigir revisão e aprovação humana de certas decisões de pesquisa.</li>
+      <li><strong>Segurança antes do treino:</strong> a ShiftDelete.Net também relata que, segundo o documento, a Anthropic adiou recentemente em mais de um mês o pré-treino de um novo modelo-base de fronteira para reforçar a segurança dos pesos do modelo.</li>
+    </ul>
+    <p>"Considerando" é a palavra-chave: nenhuma mudança na RSP foi anunciada ainda.</p>
+
+    <h2 id="read-pt">7. Lendo com senso crítico</h2>
+    <p>Um fator de risco é um documento jurídico com incentivos próprios. Tenha isto em mente:</p>
+    <ul>
+      <li><strong>Divulgação e marketing ao mesmo tempo.</strong> O TechCrunch e o Gizmodo (via ShiftDelete.Net) apontam que "nossa IA é tão capaz que logo pode se construir sozinha" também é uma mensagem atraente para investidores.</li>
+      <li><strong>Empresas listam riscos em excesso de propósito.</strong> Nomear um risco no S-1 protege contra processos futuros. Isso é motivo para ler com cuidado, não para descartar: continua raro um laboratório de fronteira colocar "em breve" ao lado de um limiar de capacidade num documento regulatório.</li>
+      <li><strong>Os dados são privados.</strong> As "estimativas internas" por trás do "em breve" não são publicadas. Quem está de fora não consegue conferir.</li>
+      <li><strong>"Em breve" não tem data.</strong> Pode ser o próximo modelo ou o seguinte. Não transforme isso num prazo.</li>
+    </ul>
+    <p>A parte mais concreta e verificável é a admissão sobre o passado: a Anthropic diz que já deixou passar uma aceleração enquanto ela acontecia. É uma afirmação sobre medição, e é a parte que uma atualização da RSP teria que resolver.</p>
+
+    <h2 id="you-pt">8. O que isso significa para você, dev</h2>
+    <h3>Espere lançamentos de modelos mais frequentes</h3>
+    <p>Se mais do ciclo de P&amp;D passa pelos modelos, os lançamentos podem vir mais rápido. Só em 2026 esta trilha cobriu Opus 5, Fable/Mythos 5.1, Opus 5.5, Sonnet 5.5 e Haiku 5.5. Construa de um jeito que trocar de modelo seja barato: deixe o nome do modelo em configuração, fixe versões em produção e mantenha um pequeno conjunto de avaliação que você possa rodar de novo a cada lançamento.</p>
+    <h3>Aplique a mesma lição aos seus agentes</h3>
+    <p>O problema de detecção não é exclusivo de laboratórios de IA. Se você deixa um agente de código rodar tarefas longas, uma revisão semanal do que ele mergeou é um indicador atrasado. Indicadores antecedentes são coisas como: limite de tamanho de diff, testes obrigatórios, modos de permissão que perguntam antes de ações arriscadas (veja nossa lição de 28/10) e um passo de aprovação humana antes do deploy.</p>
+    <h3>Um exercício rápido</h3>
+    <p>No simulador, coloque a aceleração em 4x e o atraso em 6 meses. Quantos meses de referência de progresso acontecem entre cruzar o limiar e enxergá-lo? Depois reduza o atraso para 1 mês. Essa diferença é o valor de um indicador melhor.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://techcrunch.com/2026/11/02/anthropic-warns-that-its-very-close-to-rsi-capability-aka-self-building-ai/" target="_blank" rel="noopener">TechCrunch — "Anthropic warns that it's very close to RSI capability, aka self-building AI", Julie Bort, 02/11/2026 (lido diretamente): citações dos fatores de risco, citação sobre supervisão humana, visão cética</a></li>
+      <li><a href="https://shiftdelete.net/en/anthropic-recursive-self-improvement" target="_blank" rel="noopener">ShiftDelete.Net — "Anthropic Says Recursive Self-Improvement May Be Imminent", 03/11/2026 (lido diretamente): frase ausente do rascunho de 26/10, descrição de "dobrar o ritmo" na RSP v3.4, 90% das contribuições ao código, "closing the loop", indicadores atrasados, proposta de revisão humana, adiamento do pré-treino, crítica do Gizmodo</a></li>
+      <li><a href="https://dataconomy.com/2026/11/03/anthropic-says-it-may-soon-reach-recursive-self-improvement/" target="_blank" rel="noopener">Dataconomy — "Anthropic says it may soon reach recursive self-improvement", 03/11/2026 (lido diretamente): confirma a redação do limiar e que nenhum modelo atual está classificado acima dele</a></li>
+      <li><a href="https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm" target="_blank" rel="noopener">SEC EDGAR — Anthropic, PBC, Form S-1/A (02/11/2026). Não lido diretamente hoje; as citações vêm da cobertura acima.</a></li>
+      <li><a href="/lessons/ai-watch-2026-09-21-claude-leads-rd.html">Cooldecode IA Watch, 21/09/2026 — Claude lidera 26% do P&amp;D da Anthropic</a> · <a href="/lessons/ai-watch-2026-10-26-anthropic-s1-ipo.html">26/10/2026 — O S-1 da Anthropic</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Prompt engineering na prática", mas valeu a regra de prioridade para notícia real da Anthropic/Claude (S-1/A entregue em 02/11, coberto em 02-03/11). O texto da RSP não foi lido diretamente; definição e versão vêm da ShiftDelete.Net. Outros itens recentes vistos e não usados hoje: marca d'água de texto ampliada para modelos antigos (03/11, tema já coberto em 11/08) e message threads em beta na Messages API (02/11). O simulador é ilustrativo e não usa dados da Anthropic.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">The RSI threshold</span>
+</footer>
+
+<script>
+  /* ---------- acceleration vs lagging indicator ---------- */
+  function initSim(box) {
+    var lang = box.id.slice(-2), chart = box.querySelector('[data-role=chart]'), out = box.querySelector('[data-role=out]');
+    var N = 36, MAXRATE = 5;
+    for (var i = 0; i < N; i++) { var b = document.createElement('div'); b.className = 'b'; chart.appendChild(b); }
+    var line = document.createElement('div'); line.className = 'line'; line.style.bottom = (2 / MAXRATE * 130) + 'px'; chart.appendChild(line);
+    function fmt(x, d) { var s = x.toFixed(d); return lang === 'pt' ? s.replace('.', ',') : s; }
+    function render() {
+      var s = parseFloat(box.querySelector('[data-f=s]').value), lag = parseInt(box.querySelector('[data-f=lag]').value, 10);
+      box.querySelector('[data-v=s]').textContent = fmt(s, 1);
+      box.querySelector('[data-v=lag]').textContent = lag;
+      var rates = [], cross = -1;
+      for (var m = 0; m < N; m++) {
+        var r = 1 + (s - 1) * Math.pow((m + 1) / N, 2);
+        rates.push(r);
+        if (cross < 0 && r >= 2) cross = m;
+      }
+      var seen = cross < 0 ? -1 : cross + lag;
+      chart.querySelectorAll('.b').forEach(function(el, m) {
+        el.style.height = Math.min(130, rates[m] / MAXRATE * 130) + 'px';
+        el.classList.toggle('seen', seen >= 0 && m >= seen);
+        el.classList.toggle('over', cross >= 0 && m >= cross && (seen < 0 || m < seen));
+      });
+      if (cross < 0) {
+        out.innerHTML = lang === 'pt' ? 'O ritmo nunca chega a 2x nos 36 meses.<small>Aumente a aceleração para ver o limiar ser cruzado.</small>'
+          : 'The pace never reaches 2x within 36 months.<small>Raise the speed-up to see the threshold crossed.</small>';
+        return;
+      }
+      var dark = 0, end = Math.min(N, seen);
+      for (var k = cross; k < end; k++) dark += rates[k];
+      var tail = seen >= N ? (lang === 'pt' ? ' (depois do fim do gráfico)' : ' (after the end of the chart)') : '';
+      out.innerHTML = (lang === 'pt'
+        ? 'Limiar cruzado no mês ' + (cross + 1) + '; visto no mês ' + (seen + 1) + tail + '.'
+          + '<small>Nesse intervalo invisível aconteceram ' + fmt(dark, 1) + ' meses de referência de progresso em ' + (end - cross) + ' meses de calendário.</small>'
+        : 'Threshold crossed in month ' + (cross + 1) + '; seen in month ' + (seen + 1) + tail + '.'
+          + '<small>In that unseen window, ' + fmt(dark, 1) + ' baseline months of progress happened in ' + (end - cross) + ' calendar months.</small>');
+    }
+    box.querySelectorAll('input').forEach(function(el) { el.addEventListener('input', render); });
+    render();
+  }
+  document.querySelectorAll('[id^="accel-"]').forEach(function(b) { if (b.classList.contains('calc')) initSim(b); });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

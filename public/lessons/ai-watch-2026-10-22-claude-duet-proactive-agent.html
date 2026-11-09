@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Claude Duet, the agent that messages you first</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.6; color: #d4d4d8; margin: 20px 0; }
+  pre code { background: none; border: none; padding: 0; color: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 32px 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+  .layer { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 14px; }
+  .layer b { display: block; font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 15px; margin-bottom: 6px; }
+  .layer .q { color: var(--accent); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px; }
+  .layer span { color: var(--text-dim); font-size: 13.5px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .quiz { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 24px 0; }
+  .quiz .item { border-top: 1px solid var(--border); padding: 14px 0; }
+  .quiz .item:first-of-type { border-top: none; }
+  .quiz .act { font-weight: 500; margin-bottom: 8px; }
+  .quiz .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .quiz button.opt { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; }
+  .quiz button.opt:hover { border-color: var(--accent); }
+  .quiz button.opt.right { background: rgba(34,197,94,0.15); border-color: #22c55e; }
+  .quiz button.opt.wrong { background: rgba(239,68,68,0.12); border-color: #ef4444; }
+  .quiz .why { font-size: 13.5px; color: var(--text-dim); margin-top: 8px; display: none; }
+  .quiz .score { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; margin-top: 12px; }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic/Claude news</span>
+      <h1>Claude Duet: the agent that messages you first</h1>
+      <p class="subtitle">On October 21, Anthropic opened a research preview of Claude Duet, a separate app where Claude stops waiting for prompts. It sends a morning brief, watches your connected apps, keeps working on its own virtual machine while you're away, and asks before it does anything you can't take back. Here is how a "proactive" agent is built, where the safety lines are drawn, and what it costs you in plan limits.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What shipped</a></li>
+        <li><a href="#flip">Reactive vs proactive: flipping who starts the conversation</a></li>
+        <li><a href="#loop">How the loop works under the hood</a></li>
+        <li><a href="#gates">Three tiers of action: alone, with approval, never</a></li>
+        <li><a href="#quiz">Exercise: sort the actions</a></li>
+        <li><a href="#cost">The meter is running: why "every few hours"</a></li>
+        <li><a href="#big">The bigger picture and what to watch</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What shipped</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Detail</th><th>What Anthropic says</th></tr>
+      <tr><td><strong>Status</strong></td><td>Research preview by waitlist, announced Oct 21, 2026</td></tr>
+      <tr><td><strong>Who</strong></td><td>Pro and Max subscribers in the US first. Team and Enterprise aren't in the announced rollout</td></tr>
+      <tr><td><strong>Where</strong></td><td>Standalone iOS and Android apps, plus claude.ai. It's separate from the main Claude app for now</td></tr>
+      <tr><td><strong>Model</strong></td><td>Built around Claude Opus 5.5</td></tr>
+      <tr><td><strong>Context</strong></td><td>Inherits your memory, skills and connected apps from your Claude account</td></tr>
+      <tr><td><strong>Runtime</strong></td><td>Its own virtual machine with its own browser, so it works with your laptop and phone off</td></tr>
+      <tr><td><strong>Integrations</strong></td><td>Can use the 6,000+ connectors and plugins in the Claude Marketplace (Gmail, Slack, QuickBooks, Stripe, Gusto, HubSpot, Docusign, Shopify...)</td></tr>
+      <tr><td><strong>Price</strong></td><td>Included in Pro/Max during the preview, but shares the plan's usage limits</td></tr>
+    </table>
+    </div>
+    <p>Anthropic says it built Duet for "professionals and small business owners with more on their plates than they can track". The examples are all work: chasing unpaid invoices, running payroll, prepping a client call. Personal errands like booking tickets are, in Anthropic's words, "not quite as strong" yet.</p>
+
+    <h2 id="flip">2. Reactive vs proactive: flipping who starts the conversation</h2>
+    <p>Every chatbot you've used is <strong>reactive</strong>: nothing happens until you type. Even an agent like Claude Code, which can run for an hour on its own, starts because you gave it a task. A <strong>proactive</strong> agent adds one thing: a trigger that isn't you. Something on a schedule or an incoming event wakes it up, and the agent decides whether that's worth your attention.</p>
+    <div class="layers">
+      <div class="layer"><span class="q">Chat</span><b>You ask, it answers</b><span>One turn at a time. Stops when the reply ends.</span></div>
+      <div class="layer"><span class="q">Task agent</span><b>You assign, it works</b><span>Runs many steps alone, but only after you start it.</span></div>
+      <div class="layer"><span class="q">Proactive agent</span><b>It notices, then asks</b><span>Wakes on a schedule, reads your world, and comes to you first.</span></div>
+    </div>
+    <p>That sounds like a small change. It isn't. The hard part of a proactive agent isn't doing the task, it's <strong>judgment about interruptions</strong>. An agent that pings you about every new email is worse than no agent. One that stays quiet while a client meeting collides with your flight is useless. Anthropic says as much: Duet "still might misread a thread or miscalibrate what's urgent", and they're tuning when it messages you based on tester feedback.</p>
+    <div class="callout"><strong>The examples Anthropic chose all show judgment, not execution.</strong> A real-estate broker's agent noticed a property showing booked on the wrong day. A brand strategist's agent saw a client call sitting right before her flight and offered to move it. Nobody asked for either. That's the product's whole bet.</div>
+
+    <h2 id="loop">3. How the loop works under the hood</h2>
+    <p>Anthropic doesn't publish Duet's internals, but the announcement describes enough to sketch the generic pattern every proactive agent follows. In pseudocode:</p>
+<pre><code>every few hours:                       # a schedule, not a live stream
+    updates = read(connected_apps)     # mail, calendar, invoices, chat...
+    for item in updates:
+        score = judge(item, memory, user_prefs)
+        if score == "needs you":   notify(user, summary(item))
+        if score == "can wait":    add_to(morning_brief)
+        if score == "ignore":      pass
+
+on user message (text or voice, one thread):
+    plan = decide_apps_and_steps(task)
+    run_in_vm(plan)                    # own browser, own machine
+    for step in plan:
+        if step.is_irreversible:  wait_for(user_approval(step.preview))
+        if step.is_forbidden:     refuse()
+    notify(user, "done" or "needs review")</code></pre>
+    <p>Three design choices stand out:</p>
+    <ul>
+      <li><strong>Polling, not streaming.</strong> Duet checks your accounts every few hours instead of watching continuously. That's a cost decision (more in section 6).</li>
+      <li><strong>One ongoing thread.</strong> A quick reply and a week-long project start in the same conversation, so the agent keeps context instead of you re-explaining.</li>
+      <li><strong>Its own computer.</strong> Running in a cloud VM is what makes "keeps working when you step away" possible. The trade-off: for now, you can't watch its browser.</li>
+    </ul>
+
+    <h2 id="gates">4. Three tiers of action: alone, with approval, never</h2>
+    <p>The most useful idea to take from this launch, even if you never use Duet, is how it splits actions by <strong>reversibility</strong> and <strong>blast radius</strong>:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Tier</th><th>Examples</th><th>Why</th></tr>
+      <tr><td><strong>Does it alone</strong></td><td>Reading, drafting, preparing work, building a dashboard</td><td>Nothing leaves your control; a bad draft is just deleted</td></tr>
+      <tr><td><strong>Shows you, then waits</strong></td><td>Sending a message, making a payment, signing a document, deleting anything</td><td>Irreversible or visible to other people</td></tr>
+      <tr><td><strong>Never, even if you approve</strong></td><td>Trading securities, moving money between accounts</td><td>Damage too high for a one-tap "yes" to be enough</td></tr>
+    </table>
+    </div>
+    <p>On top of that sits a separate filter for <strong>where information goes</strong>. Anthropic shipped Duet with a new classifier and a safety system prompt that check each outgoing message:</p>
+    <ul>
+      <li><strong>Strictest tier</strong> (credit card numbers, government ID): requests to share it are rejected.</li>
+      <li><strong>Sensitive tier</strong> (health, personal finances): only goes out when you explicitly told Duet to send it.</li>
+    </ul>
+    <p>And the rest of the stack reuses things Anthropic built for other agents: credentials handled like in Claude Managed Agents (Duet never sees your passwords or tokens), an auto-mode classifier approving actions (the same one used in Claude Code), and prompt-injection defenses from its browser-use research. Purchases go through Stripe's Link with a virtual card, so your real card number is never shared.</p>
+    <div class="callout"><strong>Why this matters for anything you build:</strong> if you ever wire an LLM to real APIs, copy this structure. Classify every tool as read-only, needs-confirmation or blocked <em>in code</em>, not in the prompt. A prompt can be talked out of a rule. A missing API permission can't.</div>
+
+    <h2 id="quiz">5. Exercise: sort the actions</h2>
+    <div class="quiz" id="quiz-en">
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:8px;">Based on the rules Anthropic published, how would Duet treat each action?</p>
+    </div>
+
+    <h2 id="cost">6. The meter is running: why "every few hours"</h2>
+    <p>Duet doesn't have its own price. During the preview it draws from the same usage limits as your chats, and it uses them differently. Anthropic is explicit:</p>
+    <ul>
+      <li>Background checks count toward your limits, even when they find nothing.</li>
+      <li>It checks every few hours "because checking nonstop would use up your plan's limits much faster".</li>
+      <li>Big tasks (a financial model, a deck) need many more model turns and background work.</li>
+    </ul>
+    <p>This is a structural tension worth understanding. Every check means the model reads your inbox and calendar, which is a lot of input tokens. Check more often and you catch things sooner but burn your quota; check less and the agent misses the urgent thing. You can tell it what you want to hear about and how often, which is effectively you setting that trade-off yourself. TECHi's analysis points out the open question: if background checks prove expensive, Anthropic may eventually need a separate agent tier.</p>
+
+    <h2 id="big">7. The bigger picture and what to watch</h2>
+    <p>Duet doesn't arrive alone. Coverage from CNBC, TECHi and Inc42 frames it as Anthropic's answer to OpenAI's always-on "Dots" agents and Meta's Muse agent, both launched in recent weeks. The pattern is converging across labs: morning brief, background work, a ping only when a decision is needed. When everyone ships the same concept, the competition moves to <strong>trust</strong> (would you let it near your invoices?) and <strong>distribution</strong> (which apps does it already connect to?). Anthropic is clearly betting on the first: the safety section is the longest part of the announcement.</p>
+    <p>Things to watch:</p>
+    <ol>
+      <li><strong>Judgment quality.</strong> Does it interrupt at the right moments, or do testers turn notifications off?</li>
+      <li><strong>Metering.</strong> Do people leave it on, or do usage limits push it into a paid add-on?</li>
+      <li><strong>Rollout.</strong> When Team/Enterprise and non-US users get access, and whether Duet merges into the main Claude app.</li>
+    </ol>
+
+    <p style="margin-top:56px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">Claude (Anthropic) — "Introducing Claude Duet" (Oct 21, 2026; read directly)</a></li>
+      <li><a href="https://www.techi.com/anthropic-claude-duet-proactive-agent-opus-55/" target="_blank" rel="noopener">TECHi — "Anthropic Launches Claude Duet, a 6,000-Connector Proactive Agent on Opus 5.5" (Oct 22, 2026; read directly)</a></li>
+      <li><a href="https://www.cnbc.com/2026/10/21/anthropic-preview-of-claude-duet-personal-ai-agent-take-on-muse-dots.html" target="_blank" rel="noopener">CNBC — "Anthropic announces preview of Claude Duet, a personal AI agent to take on Muse, Dots" (Oct 21, 2026; search summary only)</a></li>
+      <li><a href="https://inc42.com/buzz/anthropic-takes-on-openai-meta-with-new-proactive-ai-agent-claude-duet/" target="_blank" rel="noopener">Inc42 — "Anthropic Takes On OpenAI, Meta With New Proactive AI Agent Claude Duet" (Oct 2026; search summary only)</a></li>
+      <li><a href="https://www.digitaltrends.com/computing/anthropic-unveils-claude-duet-ai-agent/" target="_blank" rel="noopener">Digital Trends — "Anthropic unveils Claude Duet" (Oct 2026; search summary only)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: the pseudocode in section 3 is an illustration of the generic proactive-agent pattern, not Anthropic's actual implementation. Details about OpenAI's Dots and Meta's Muse come from press coverage, not from those companies directly.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Claude Duet: o agente que fala com você primeiro</h1>
+      <p class="subtitle">Em 21 de outubro, a Anthropic abriu um research preview do Claude Duet, um app separado em que o Claude para de esperar comando. Ele manda um resumo de manhã, acompanha seus apps conectados, continua trabalhando numa máquina virtual própria enquanto você está fora e pede autorização antes de fazer qualquer coisa que não dá pra desfazer. Veja como um agente "proativo" é montado, onde ficam as linhas de segurança e quanto isso custa nos limites do seu plano.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#what-pt">O que foi lançado</a></li>
+        <li><a href="#flip-pt">Reativo vs proativo: quem começa a conversa</a></li>
+        <li><a href="#loop-pt">Como o ciclo funciona por baixo</a></li>
+        <li><a href="#gates-pt">Três níveis de ação: sozinho, com aprovação, nunca</a></li>
+        <li><a href="#ex-pt">Exercício: classifique as ações</a></li>
+        <li><a href="#cost-pt">O taxímetro está rodando: por que "a cada poucas horas"</a></li>
+        <li><a href="#big-pt">O panorama e o que acompanhar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que foi lançado</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Item</th><th>O que a Anthropic diz</th></tr>
+      <tr><td><strong>Status</strong></td><td>Research preview com lista de espera, anunciado em 21/10/2026</td></tr>
+      <tr><td><strong>Quem</strong></td><td>Assinantes Pro e Max nos EUA primeiro. Team e Enterprise não estão no cronograma anunciado</td></tr>
+      <tr><td><strong>Onde</strong></td><td>Apps próprios para iOS e Android, além do claude.ai. Por enquanto fica separado do app principal do Claude</td></tr>
+      <tr><td><strong>Modelo</strong></td><td>Construído em cima do Claude Opus 5.5</td></tr>
+      <tr><td><strong>Contexto</strong></td><td>Herda memória, skills e apps conectados da sua conta do Claude</td></tr>
+      <tr><td><strong>Execução</strong></td><td>Máquina virtual e navegador próprios, então trabalha com seu notebook e celular desligados</td></tr>
+      <tr><td><strong>Integrações</strong></td><td>Usa os mais de 6.000 conectores e plugins do Claude Marketplace (Gmail, Slack, QuickBooks, Stripe, Gusto, HubSpot, Docusign, Shopify...)</td></tr>
+      <tr><td><strong>Preço</strong></td><td>Incluído no Pro/Max durante o preview, mas divide os limites de uso do plano</td></tr>
+    </table>
+    </div>
+    <p>A Anthropic diz que fez o Duet para "profissionais e donos de pequenos negócios com mais coisa no prato do que conseguem acompanhar". Os exemplos são todos de trabalho: cobrar fatura atrasada, rodar folha de pagamento, preparar uma call com cliente. Tarefas pessoais, como comprar ingresso, ainda "não são tão fortes", nas palavras da própria empresa.</p>
+
+    <h2 id="flip-pt">2. Reativo vs proativo: quem começa a conversa</h2>
+    <p>Todo chatbot que você já usou é <strong>reativo</strong>: nada acontece até você digitar. Mesmo um agente como o Claude Code, que roda uma hora sozinho, só começa porque você deu a tarefa. Um agente <strong>proativo</strong> acrescenta uma coisa: um gatilho que não é você. Um agendamento ou um evento acorda o agente, e ele decide se aquilo merece sua atenção.</p>
+    <div class="layers">
+      <div class="layer"><span class="q">Chat</span><b>Você pergunta, ele responde</b><span>Um turno por vez. Para quando a resposta acaba.</span></div>
+      <div class="layer"><span class="q">Agente de tarefa</span><b>Você delega, ele executa</b><span>Faz vários passos sozinho, mas só depois que você manda.</span></div>
+      <div class="layer"><span class="q">Agente proativo</span><b>Ele percebe, depois pergunta</b><span>Acorda num horário, lê o seu mundo e vem até você.</span></div>
+    </div>
+    <p>Parece uma mudança pequena, mas não é. O difícil num agente proativo não é executar a tarefa, é <strong>saber quando interromper</strong>. Um agente que avisa a cada e-mail novo é pior do que nenhum. Um que fica quieto enquanto a reunião com o cliente bate com o seu voo não serve pra nada. A própria Anthropic admite: o Duet "ainda pode interpretar mal uma conversa ou calibrar errado o que é urgente", e eles estão ajustando quando ele manda mensagem com base no retorno dos testers.</p>
+    <div class="callout"><strong>Os exemplos que a Anthropic escolheu mostram julgamento, não execução.</strong> O agente de uma corretora de imóveis notou uma visita marcada no dia errado. O de uma estrategista de marca viu uma call com cliente logo antes do voo dela e ofereceu remarcar. Ninguém pediu nenhuma das duas coisas. É essa a aposta inteira do produto.</div>
+
+    <h2 id="loop-pt">3. Como o ciclo funciona por baixo</h2>
+    <p>A Anthropic não publica os detalhes internos do Duet, mas o anúncio descreve o suficiente para desenhar o padrão genérico que todo agente proativo segue. Em pseudocódigo:</p>
+<pre><code>a cada poucas horas:                   # agendamento, não fluxo contínuo
+    novidades = ler(apps_conectados)   # e-mail, agenda, faturas, chat...
+    para item em novidades:
+        nota = julgar(item, memoria, preferencias)
+        se nota == "precisa de você": avisar(usuario, resumo(item))
+        se nota == "pode esperar":    incluir_no(resumo_da_manha)
+        se nota == "ignorar":         nada
+
+quando o usuário mandar mensagem (texto ou voz, uma só conversa):
+    plano = escolher_apps_e_passos(tarefa)
+    executar_na_vm(plano)              # navegador e máquina próprios
+    para passo em plano:
+        se passo.irreversivel: esperar(aprovacao(passo.previa))
+        se passo.proibido:     recusar()
+    avisar(usuario, "pronto" ou "precisa revisar")</code></pre>
+    <p>Três escolhas de design chamam atenção:</p>
+    <ul>
+      <li><strong>Consulta periódica, não monitoramento contínuo.</strong> O Duet olha suas contas a cada poucas horas em vez de vigiar o tempo todo. É uma decisão de custo (mais na seção 6).</li>
+      <li><strong>Uma conversa contínua.</strong> Uma resposta rápida e um projeto de uma semana começam no mesmo lugar, então o agente mantém o contexto e você não precisa reexplicar.</li>
+      <li><strong>Computador próprio.</strong> Rodar numa VM na nuvem é o que permite "continua trabalhando quando você sai". A contrapartida: por enquanto você não consegue ver o navegador dele.</li>
+    </ul>
+
+    <h2 id="gates-pt">4. Três níveis de ação: sozinho, com aprovação, nunca</h2>
+    <p>A ideia mais útil desse lançamento, mesmo que você nunca use o Duet, é como ele separa ações por <strong>reversibilidade</strong> e <strong>raio de estrago</strong>:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Nível</th><th>Exemplos</th><th>Por quê</th></tr>
+      <tr><td><strong>Faz sozinho</strong></td><td>Ler, rascunhar, preparar trabalho, montar um dashboard</td><td>Nada sai do seu controle; um rascunho ruim é só apagar</td></tr>
+      <tr><td><strong>Mostra e espera</strong></td><td>Enviar mensagem, fazer pagamento, assinar documento, apagar qualquer coisa</td><td>Irreversível ou visível para outras pessoas</td></tr>
+      <tr><td><strong>Nunca, nem com aprovação</strong></td><td>Negociar ações, transferir dinheiro entre contas</td><td>Estrago grande demais para um "sim" de um toque bastar</td></tr>
+    </table>
+    </div>
+    <p>Por cima disso há um filtro separado para <strong>para onde a informação vai</strong>. A Anthropic lançou o Duet com um classificador novo e um system prompt de segurança que verificam cada mensagem enviada:</p>
+    <ul>
+      <li><strong>Nível mais restrito</strong> (número de cartão, documento de identidade): pedidos para compartilhar são recusados.</li>
+      <li><strong>Nível sensível</strong> (saúde, finanças pessoais): só sai quando você mandou explicitamente o Duet enviar.</li>
+    </ul>
+    <p>O resto reaproveita peças que a Anthropic construiu para outros agentes: credenciais tratadas como no Claude Managed Agents (o Duet nunca vê suas senhas nem tokens), um classificador do modo automático aprovando ações (o mesmo do Claude Code) e defesas contra prompt injection vindas da pesquisa com uso de navegador. Compras passam pelo Link, da Stripe, com cartão virtual, então o número do seu cartão real nunca é compartilhado.</p>
+    <div class="callout"><strong>Por que isso importa para qualquer coisa que você construir:</strong> se um dia ligar um LLM em APIs reais, copie essa estrutura. Classifique cada ferramenta como só-leitura, precisa-confirmar ou bloqueada <em>no código</em>, não no prompt. Dá pra convencer um prompt a quebrar uma regra. Uma permissão de API que não existe, não.</div>
+
+    <h2 id="ex-pt">5. Exercício: classifique as ações</h2>
+    <div class="quiz" id="quiz-pt">
+      <p style="font-size:14px;color:var(--text-dim);margin-bottom:8px;">Pelas regras que a Anthropic publicou, como o Duet trataria cada ação?</p>
+    </div>
+
+    <h2 id="cost-pt">6. O taxímetro está rodando: por que "a cada poucas horas"</h2>
+    <p>O Duet não tem preço próprio. Durante o preview, ele consome os mesmos limites de uso das suas conversas, só que de um jeito diferente. A Anthropic é explícita:</p>
+    <ul>
+      <li>As verificações em segundo plano contam nos seus limites, mesmo quando não encontram nada.</li>
+      <li>Ele verifica a cada poucas horas "porque verificar sem parar consumiria os limites do plano muito mais rápido".</li>
+      <li>Tarefas grandes (um modelo financeiro, uma apresentação) exigem muito mais turnos do modelo e trabalho em segundo plano.</li>
+    </ul>
+    <p>Vale entender essa tensão estrutural. Cada verificação significa o modelo lendo sua caixa de entrada e sua agenda, o que dá muitos tokens de entrada. Verificar mais vezes pega as coisas antes, mas queima sua cota; verificar menos faz o agente perder o que era urgente. Você pode dizer a ele o que quer saber e com que frequência, o que na prática é você mesmo definindo essa troca. A análise do TECHi aponta a dúvida que fica: se as verificações em segundo plano saírem caras, a Anthropic pode acabar precisando de um plano separado só para agentes.</p>
+
+    <h2 id="big-pt">7. O panorama e o que acompanhar</h2>
+    <p>O Duet não chega sozinho. CNBC, TECHi e Inc42 tratam o lançamento como a resposta da Anthropic aos agentes sempre ligados "Dots", da OpenAI, e ao agente Muse, da Meta, ambos lançados nas últimas semanas. O padrão está convergindo entre os laboratórios: resumo de manhã, trabalho em segundo plano, aviso só quando há uma decisão a tomar. Quando todo mundo lança o mesmo conceito, a disputa passa para <strong>confiança</strong> (você deixaria ele mexer nas suas faturas?) e <strong>distribuição</strong> (com quais apps ele já conversa?). A Anthropic claramente aposta na primeira: a seção de segurança é a parte mais longa do anúncio.</p>
+    <p>O que acompanhar:</p>
+    <ol>
+      <li><strong>Qualidade do julgamento.</strong> Ele interrompe na hora certa, ou os testers acabam desligando as notificações?</li>
+      <li><strong>Consumo.</strong> As pessoas deixam ele ligado, ou os limites de uso empurram para um add-on pago?</li>
+      <li><strong>Expansão.</strong> Quando Team/Enterprise e usuários fora dos EUA ganham acesso, e se o Duet vai se fundir ao app principal do Claude.</li>
+    </ol>
+
+    <p style="margin-top:56px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">Claude (Anthropic) — "Introducing Claude Duet" (21/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.techi.com/anthropic-claude-duet-proactive-agent-opus-55/" target="_blank" rel="noopener">TECHi — "Anthropic Launches Claude Duet, a 6,000-Connector Proactive Agent on Opus 5.5" (22/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.cnbc.com/2026/10/21/anthropic-preview-of-claude-duet-personal-ai-agent-take-on-muse-dots.html" target="_blank" rel="noopener">CNBC — "Anthropic announces preview of Claude Duet, a personal AI agent to take on Muse, Dots" (21/10/2026; só resumo de busca)</a></li>
+      <li><a href="https://inc42.com/buzz/anthropic-takes-on-openai-meta-with-new-proactive-ai-agent-claude-duet/" target="_blank" rel="noopener">Inc42 — "Anthropic Takes On OpenAI, Meta With New Proactive AI Agent Claude Duet" (out/2026; só resumo de busca)</a></li>
+      <li><a href="https://www.digitaltrends.com/computing/anthropic-unveils-claude-duet-ai-agent/" target="_blank" rel="noopener">Digital Trends — "Anthropic unveils Claude Duet" (out/2026; só resumo de busca)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: o pseudocódigo da seção 3 ilustra o padrão genérico de agente proativo, não a implementação real da Anthropic. Detalhes sobre o Dots (OpenAI) e o Muse (Meta) vêm da cobertura da imprensa, não das empresas diretamente.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Claude Duet</span>
+</footer>
+
+<script>
+  var QUIZ = [
+    { en: "Read your inbox and draft replies to three missed client emails", pt: "Ler sua caixa de entrada e rascunhar respostas para três e-mails de clientes", a: 0,
+      why: { en: "Reading and drafting stay inside your control. Nothing is sent yet.", pt: "Ler e rascunhar não sai do seu controle. Nada foi enviado ainda." } },
+    { en: "Send an invoice reminder to a customer", pt: "Enviar um lembrete de fatura para um cliente", a: 1,
+      why: { en: "Sending a message reaches another person and can't be unsent, so Duet shows it and waits.", pt: "Enviar mensagem chega a outra pessoa e não dá pra desfazer, então o Duet mostra e espera." } },
+    { en: "Move $2,000 from savings to checking", pt: "Transferir R$ 2.000 da poupança para a conta corrente", a: 2,
+      why: { en: "Moving money between accounts is off-limits even with your approval.", pt: "Transferir dinheiro entre contas é proibido mesmo com sua aprovação." } },
+    { en: "Build a sales forecast dashboard from your CRM data", pt: "Montar um dashboard de previsão de vendas com os dados do CRM", a: 0,
+      why: { en: "Preparing work is what it does alone. You review the result.", pt: "Preparar trabalho é o que ele faz sozinho. Você revisa o resultado." } },
+    { en: "Delete an old calendar event", pt: "Apagar um evento antigo da agenda", a: 1,
+      why: { en: "Deleting anything requires approval, no matter how small.", pt: "Apagar qualquer coisa exige aprovação, por menor que seja." } },
+    { en: "Paste your credit card number into an email to a supplier", pt: "Colar o número do seu cartão num e-mail para um fornecedor", a: 2,
+      why: { en: "Card numbers are the strictest tier: the sensitive-information classifier rejects sharing them.", pt: "Número de cartão é o nível mais restrito: o classificador de informação sensível recusa compartilhar." } },
+    { en: "Buy office supplies with Stripe Link", pt: "Comprar material de escritório com o Link da Stripe", a: 1,
+      why: { en: "A payment: Duet confirms the item, Link asks you to approve the spend, and a virtual card pays.", pt: "É um pagamento: o Duet confirma o item, o Link pede sua aprovação e um cartão virtual paga." } }
+  ];
+  var LABELS = { en: ["Does it alone", "Asks first", "Never"], pt: ["Faz sozinho", "Pede antes", "Nunca"] };
+  function buildQuiz(lang) {
+    var box = document.getElementById('quiz-' + lang);
+    var score = 0, answered = 0;
+    var scoreEl = document.createElement('div'); scoreEl.className = 'score';
+    QUIZ.forEach(function (q) {
+      var item = document.createElement('div'); item.className = 'item';
+      var act = document.createElement('div'); act.className = 'act'; act.textContent = q[lang];
+      var opts = document.createElement('div'); opts.className = 'opts';
+      var why = document.createElement('div'); why.className = 'why'; why.textContent = q.why[lang];
+      var done = false;
+      LABELS[lang].forEach(function (label, i) {
+        var b = document.createElement('button'); b.className = 'opt'; b.textContent = label;
+        b.onclick = function () {
+          if (done) return; done = true; answered++;
+          if (i === q.a) { b.classList.add('right'); score++; }
+          else { b.classList.add('wrong'); opts.children[q.a].classList.add('right'); }
+          why.style.display = 'block';
+          scoreEl.textContent = (lang === 'en' ? 'Score: ' : 'Acertos: ') + score + ' / ' + answered + (answered === QUIZ.length ? (lang === 'en' ? ' — done' : ' — fim') : '');
+        };
+        opts.appendChild(b);
+      });
+      item.appendChild(act); item.appendChild(opts); item.appendChild(why); box.appendChild(item);
+    });
+    box.appendChild(scoreEl);
+  }
+  buildQuiz('en'); buildQuiz('pt');
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+    document.getElementById('footer-right').textContent = 'Claude Duet';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The prompt diet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 0 0 16px; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); font-size: 13px; }
+  blockquote { margin: 20px 0; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 12.5px; color: var(--text-dim); font-style: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0 24px; }
+  .ba > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; }
+  .ba .lbl { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 6px; }
+  .ba .after .lbl { color: var(--accent); }
+  .ba .after { border-color: rgba(124,58,237,0.45); }
+  @media (max-width: 640px) { .ba { grid-template-columns: 1fr; } }
+  .lint { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .lint textarea { width: 100%; min-height: 210px; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; line-height: 1.6; resize: vertical; }
+  .lint textarea:focus { outline: none; border-color: var(--accent); }
+  .lint-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
+  .lint button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .lint button.ghost { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+  .lint-score { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
+  .lint-list { list-style: none; padding: 0; margin: 0; }
+  .lint-list li { background: var(--bg-card-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 13.5px; margin-bottom: 8px; }
+  .lint-list li b { color: #fff; }
+  .lint-list li .hit { font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; color: #c4b5fd; display: block; margin-top: 4px; }
+  .lint-list li.ok { border-left-color: #22c55e; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>The prompt diet: how to cut 80% of an old prompt without losing quality</h1>
+      <p class="subtitle">Anthropic says it deleted over 80% of Claude Code's system prompt for its newest models with no measurable loss on its coding evals. Most of us are still carrying prompts written for older models: ALL CAPS rules, "double-check everything", walls of examples, the same instruction three times. A practical audit: what to cut, what to rewrite, what to keep, and a small linter to try it on your own prompt.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why">Why old prompts age badly</a></li>
+        <li><a href="#six">Six "then vs now" shifts</a></li>
+        <li><a href="#rewrite">A full before/after refactor</a></li>
+        <li><a href="#lint">Try it: a prompt-diet linter</a></li>
+        <li><a href="#keep">What you should NOT cut</a></li>
+        <li><a href="#process">A safe process for slimming a prompt</a></li>
+        <li><a href="#caveats">Caveats</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why">1. Why old prompts age badly</h2>
+    <p>A prompt is written against a specific model's weaknesses. In 2024 a model might ignore an instruction unless you shouted it, forget a rule placed at the start of a long context, or invent a tool call unless you showed three examples. So we shouted, repeated and over-specified. Those patches stayed in the file after the weakness went away.</p>
+    <p>In a July 24, 2026 post, Anthropic's Thariq Shihipar described what happened when the Claude Code team audited its own prompt: <strong>"We removed over 80% of Claude Code's system prompt for models like Claude Opus 5 and Claude Fable 5 with no measurable loss on our coding evaluations."</strong> The diagnosis was that Claude was being <em>overconstrained</em>. Reading internal transcripts, they found single requests carrying contradictory messages like "leave documentation as appropriate" and "DO NOT add comments", coming from the system prompt, a skill and the user at the same time. The model can usually untangle that, but it has to spend effort deciding which voice to obey.</p>
+    <div class="callout"><strong>The core idea:</strong> every old rule has a cost now. It either does nothing (wasted tokens), or it fights the model's own judgement on the cases where the rule is wrong, or it contradicts another rule somewhere else in the context.</div>
+
+    <h2 id="six">2. Six "then vs now" shifts</h2>
+    <p>These come from Anthropic's July post and its prompt engineering guide. One item (self-verification) comes from a third-party summary, flagged below.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Then</th><th>Now</th><th>Why</th></tr>
+      <tr><td>Give hard rules ("never write multi-line comments")</td><td>State the principle and let the model judge ("match the surrounding code's comment density")</td><td>Hard rules are wrong for some subset of cases; newer models handle the judgement</td></tr>
+      <tr><td>Show examples of how to use each tool</td><td>Design expressive interfaces (clear parameter names, enums, short descriptions)</td><td>Anthropic found tool-usage examples narrow the model's exploration</td></tr>
+      <tr><td>Put everything up front</td><td>Progressive disclosure: load detailed guidance only when needed (skills, linked files)</td><td>Rarely-used instructions dilute the ones that matter right now</td></tr>
+      <tr><td>Repeat key instructions (top, bottom, tool description)</td><td>Say it once, in the place where it applies</td><td>Older models over-weighted the end of the context; newer ones don't need the echo</td></tr>
+      <tr><td>"NEVER do X" / "Don't use bullet points"</td><td>Say what to do, with the reason ("write flowing paragraphs, because this is read aloud")</td><td>A positive target plus a reason generalizes to cases you didn't list</td></tr>
+      <tr><td>"Before you finish, double-check every number"</td><td>Define what "done" looks like and how it can be verified</td><td>Per MindStudio's reading of Anthropic's Opus guidance, generic self-check instructions now add a slow, redundant pass</td></tr>
+    </table></div>
+
+    <h3>A closer look at three of them</h3>
+    <p><strong>Rules → judgement.</strong> Anthropic shared its own before and after. Old system prompt: <em>"In code: default to writing no comments. Never write multi-paragraph docstrings or multi-line comment blocks — one short line max."</em> New one: <em>"Write code that reads like the surrounding code: match its comment density, naming, and idiom."</em> The new line is shorter <em>and</em> right in more situations, for example in a codebase where long docstrings are the convention.</p>
+    <p><strong>Examples → interfaces.</strong> This looks like it contradicts our October 9 lesson ("Show, don't tell"). It doesn't, if you separate two jobs. Examples are still the best way to pin down an <em>output format</em> (a summary style, a JSON shape). What the Claude Code team dropped were examples of <em>how to use tools</em>, because they anchor the model to the cases you happened to show. Their alternative: make the tool explain itself. A <code>status</code> parameter typed as <code>"pending" | "in_progress" | "completed"</code> already teaches the workflow; one sentence ("keep exactly one item in_progress") covers the rest.</p>
+    <p><strong>Prohibition → target + reason.</strong> Anthropic's guide: "NEVER use bullet points" is less effective than explaining that you prefer flowing prose and why. A reason gives the model a principle to apply to cases you never wrote down. If the reason is "this will be read by a text-to-speech engine", the model can also avoid tables, emoji and ellipses without you listing each one.</p>
+
+    <h2 id="rewrite">3. A full before/after refactor</h2>
+    <p>A generic system prompt for an internal "release notes writer" bot, written the 2024 way:</p>
+<pre><code>You are a WORLD-CLASS technical writer with 20 years of experience.
+IMPORTANT: You MUST follow ALL rules below. This is CRITICAL.
+
+RULES:
+1. NEVER use emojis.
+2. NEVER use the word "simply".
+3. DO NOT write more than 200 words.
+4. ALWAYS use bullet points.
+5. Before answering, double-check every item against the commit list.
+6. Do not invent features.
+
+Example 1: [40 lines of a past release note]
+Example 2: [40 lines of another one]
+Example 3: [40 lines of another one]
+
+REMEMBER: NEVER use emojis and NEVER exceed 200 words!!!</code></pre>
+    <p>The same intent, rewritten:</p>
+<pre><code>You turn a list of merged commits into release notes for customers of a
+B2B web app. Readers are account admins, not developers: they want to know
+what changed for them and whether they need to do anything.
+
+Write a short bulleted list (about 200 words at most, since it is shown
+inside an in-app banner), grouped as New, Improved and Fixed. Use a plain,
+calm tone; no emojis, since the banner renders them inconsistently.
+
+Only describe changes that appear in the commits. If a commit is unclear,
+leave it out and list its hash under "Needs review" at the end.
+
+Done means: every bullet maps to at least one commit, nothing internal-only
+(refactors, CI) is mentioned, and an admin could act on it without asking.
+
+Format reference: &lt;one short example of a past note&gt;</code></pre>
+    <p>What changed and why:</p>
+    <ul>
+      <li><strong>Persona removed.</strong> "World-class, 20 years" adds nothing measurable; the audience and purpose do the work. (MindStudio cites a 162-persona test with no gain for Claude; we didn't read that study directly.)</li>
+      <li><strong>Urgency removed.</strong> "IMPORTANT / CRITICAL / MUST" in caps. Newer models tend to over-react to urgency language, and if everything is critical, nothing is.</li>
+      <li><strong>Every constraint now has a reason.</strong> The 200-word limit is tied to the banner, the emoji ban to rendering. If the banner gets bigger, the model (and the next human editing the prompt) knows the rule is related to it.</li>
+      <li><strong>"Double-check" became a definition of done.</strong> Instead of asking for a vague second pass, the prompt states what a correct result looks like, which is also something you can test.</li>
+      <li><strong>"Don't invent" became an escape hatch.</strong> Giving the model a legitimate place to put uncertain items ("Needs review") works better than forbidding guesses.</li>
+      <li><strong>Three examples became one.</strong> Enough to pin the format; fewer details to over-copy.</li>
+      <li><strong>The closing echo is gone.</strong> Said once, in context.</li>
+    </ul>
+    <p>Roughly: from ~140 lines (with examples) to ~20, and every remaining line explains itself.</p>
+
+    <h2 id="lint">4. Try it: a prompt-diet linter</h2>
+    <p>Paste any prompt (or keep the sample). This runs in your browser with simple pattern matching. It is a checklist, not a judge: a flag means "look at this line", not "this is wrong".</p>
+    <div class="lint" id="lint-en">
+      <textarea spellcheck="false"></textarea>
+      <div class="lint-bar">
+        <button data-act="run">Audit prompt</button>
+        <button class="ghost" data-act="sample">Load sample</button>
+        <span class="lint-score"></span>
+      </div>
+      <ul class="lint-list"></ul>
+    </div>
+
+    <h2 id="keep">5. What you should NOT cut</h2>
+    <p>The diet is about removing patches, not information. Keep:</p>
+    <ul>
+      <li><strong>Things the model cannot know.</strong> Your audience, your business rules, where the output goes, the quirks of your codebase. Anthropic's advice for CLAUDE.md files is exactly this: keep it light, but "spend most of the tokens on gotchas", and skip what the model can see for itself in the files.</li>
+      <li><strong>Hard constraints that really are hard.</strong> Security boundaries, legal wording, data that must never leave a system. The blog itself says to avoid over-constraining "except in highly important areas".</li>
+      <li><strong>Format examples where the format is the product.</strong> A parser downstream that breaks on a different shape is a real constraint; one good example is cheap insurance.</li>
+      <li><strong>Anything your evals show still helps.</strong> If removing a line makes results worse on your test set, it stays, whatever any guide says.</li>
+    </ul>
+
+    <h2 id="process">6. A safe process for slimming a prompt</h2>
+    <ol>
+      <li><strong>Collect 10-30 real inputs</strong> and save the current outputs. That is your baseline.</li>
+      <li><strong>Remove in groups, not all at once:</strong> first urgency/caps, then duplicated instructions, then personas, then tool examples.</li>
+      <li><strong>Rewrite every surviving "never" as a target plus a reason.</strong></li>
+      <li><strong>Move rare, long guidance out</strong> into a file or skill the model loads on demand.</li>
+      <li><strong>Re-run the same inputs</strong> after each step and compare. Keep a change only if outputs are as good or better.</li>
+      <li><strong>Apply the colleague test</strong> (Anthropic's "golden rule", as summarized by MindStudio): would a smart new teammate with zero context understand what to do and why?</li>
+    </ol>
+    <p>If you use Claude Code, the July post says Anthropic packaged these practices into a <code>/doctor</code> check that helps right-size skills and CLAUDE.md files. We have not tested it for this lesson.</p>
+
+    <h2 id="caveats">7. Caveats</h2>
+    <ul>
+      <li><strong>Model-specific.</strong> The 80% figure is about Claude Code on Opus 5 / Fable 5-class models and Anthropic's own coding evals. A smaller or older model, or another vendor's, may still need the scaffolding.</li>
+      <li><strong>"No measurable loss" ≠ "no change".</strong> It means no drop on their benchmarks, not identical behaviour in every case.</li>
+      <li><strong>The self-verification point is secondhand.</strong> It comes from MindStudio's reading of Anthropic's Opus guidance; we could not open Anthropic's prompting docs page directly today. A specific, checkable verification step (run the tests, compare totals with the source) is still a good idea; what loses value is the generic "double-check your work".</li>
+      <li><strong>Shorter is not the goal.</strong> Clearer is. Anthropic's guide puts it well: the best prompt "achieves your goals reliably with the minimum necessary structure".</li>
+    </ul>
+
+    <h2>Sources</h2>
+    <ul class="sources">
+      <li>Claude blog (Anthropic), Thariq Shihipar — "The new rules of context engineering for Claude 5 generation models", Jul 24, 2026. <a href="https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models">claude.com</a></li>
+      <li>Claude (Anthropic) — "Best practices for prompt engineering for 2026", Nov 10, 2025 (page updated with Claude 5-era notes). <a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering">claude.com</a></li>
+      <li>MindStudio, Luis Chavez-Mattos — "How to Prompt Claude the Right Way in 2026", Sep 18, 2026 (third-party summary). <a href="https://www.mindstudio.ai/blog/claude-prompting-best-practices-2026/">mindstudio.ai</a></li>
+    </ul>
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>A dieta do prompt: como cortar 80% de um prompt antigo sem perder qualidade</h1>
+      <p class="subtitle">A Anthropic diz que apagou mais de 80% do system prompt do Claude Code para os modelos mais novos, sem perda mensurável nos seus testes de código. A maioria de nós ainda carrega prompts escritos para modelos antigos: regras em CAIXA ALTA, "confira tudo duas vezes", paredes de exemplos, a mesma instrução três vezes. Uma auditoria prática: o que cortar, o que reescrever, o que manter, e um pequeno linter para testar no seu próprio prompt.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#pt-why">Por que prompts antigos envelhecem mal</a></li>
+        <li><a href="#pt-six">Seis mudanças "antes vs agora"</a></li>
+        <li><a href="#pt-rewrite">Uma refatoração completa, antes e depois</a></li>
+        <li><a href="#pt-lint">Teste: um linter de dieta de prompt</a></li>
+        <li><a href="#pt-keep">O que você NÃO deve cortar</a></li>
+        <li><a href="#pt-process">Um processo seguro para enxugar um prompt</a></li>
+        <li><a href="#pt-caveats">Ressalvas</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-why">1. Por que prompts antigos envelhecem mal</h2>
+    <p>Um prompt é escrito contra as fraquezas de um modelo específico. Em 2024, um modelo podia ignorar uma instrução se você não gritasse, esquecer uma regra colocada no começo de um contexto longo, ou inventar uma chamada de ferramenta se você não mostrasse três exemplos. Então a gente gritava, repetia e especificava demais. Esses remendos ficaram no arquivo depois que a fraqueza sumiu.</p>
+    <p>Num post de 24 de julho de 2026, Thariq Shihipar, da Anthropic, contou o que aconteceu quando o time do Claude Code auditou o próprio prompt: <strong>"Removemos mais de 80% do system prompt do Claude Code para modelos como Claude Opus 5 e Claude Fable 5, sem perda mensurável nas nossas avaliações de código."</strong> O diagnóstico foi que o Claude estava <em>restrito demais</em>. Lendo transcrições internas, eles acharam pedidos únicos carregando mensagens contraditórias como "deixe documentação quando apropriado" e "NÃO adicione comentários", vindas do system prompt, de uma skill e do usuário ao mesmo tempo. O modelo geralmente consegue desatar esse nó, mas gasta esforço decidindo qual voz obedecer.</p>
+    <div class="callout"><strong>A ideia central:</strong> toda regra antiga tem um custo agora. Ou ela não faz nada (tokens desperdiçados), ou ela briga com o julgamento do próprio modelo nos casos em que a regra está errada, ou ela contradiz outra regra em algum outro ponto do contexto.</div>
+
+    <h2 id="pt-six">2. Seis mudanças "antes vs agora"</h2>
+    <p>Elas vêm do post de julho da Anthropic e do guia de prompt engineering dela. Um item (autoverificação) vem de um resumo de terceiros, sinalizado abaixo.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Antes</th><th>Agora</th><th>Por quê</th></tr>
+      <tr><td>Dar regras rígidas ("nunca escreva comentários de várias linhas")</td><td>Dizer o princípio e deixar o modelo julgar ("siga a densidade de comentários do código ao redor")</td><td>Regras rígidas erram em parte dos casos; modelos novos dão conta do julgamento</td></tr>
+      <tr><td>Mostrar exemplos de como usar cada ferramenta</td><td>Desenhar interfaces expressivas (nomes de parâmetro claros, enums, descrições curtas)</td><td>A Anthropic viu que exemplos de uso de ferramenta estreitam a exploração do modelo</td></tr>
+      <tr><td>Colocar tudo de uma vez no começo</td><td>Revelação progressiva: carregar orientação detalhada só quando precisa (skills, arquivos linkados)</td><td>Instruções raramente usadas diluem as que importam agora</td></tr>
+      <tr><td>Repetir instruções-chave (topo, final, descrição da ferramenta)</td><td>Dizer uma vez, no lugar onde se aplica</td><td>Modelos antigos davam peso demais ao fim do contexto; os novos não precisam do eco</td></tr>
+      <tr><td>"NUNCA faça X" / "Não use bullet points"</td><td>Dizer o que fazer, com o motivo ("escreva parágrafos corridos, porque isso vai ser lido em voz alta")</td><td>Um alvo positivo com motivo se generaliza para casos que você não listou</td></tr>
+      <tr><td>"Antes de terminar, confira cada número duas vezes"</td><td>Definir o que é "pronto" e como dá pra verificar</td><td>Segundo a leitura da MindStudio sobre o guia do Opus, instruções genéricas de autoconferência hoje só adicionam uma passada lenta e redundante</td></tr>
+    </table></div>
+
+    <h3>Olhando mais de perto três delas</h3>
+    <p><strong>Regras → julgamento.</strong> A Anthropic mostrou o próprio antes e depois. System prompt antigo: <em>"Em código: por padrão, não escreva comentários. Nunca escreva docstrings de vários parágrafos ou blocos de comentário de várias linhas — no máximo uma linha curta."</em> O novo: <em>"Escreva código que leia como o código ao redor: siga a densidade de comentários, os nomes e o estilo dele."</em> A linha nova é mais curta <em>e</em> acerta em mais situações, por exemplo num codebase onde docstrings longas são a convenção.</p>
+    <p><strong>Exemplos → interfaces.</strong> Isso parece contradizer a nossa lição de 9 de outubro ("Mostre, não diga"). Não contradiz, se você separar dois trabalhos. Exemplos continuam sendo o melhor jeito de fixar um <em>formato de saída</em> (um estilo de resumo, um formato de JSON). O que o time do Claude Code tirou foram exemplos de <em>como usar ferramentas</em>, porque eles prendem o modelo aos casos que você calhou de mostrar. A alternativa deles: fazer a ferramenta se explicar sozinha. Um parâmetro <code>status</code> tipado como <code>"pending" | "in_progress" | "completed"</code> já ensina o fluxo; uma frase ("mantenha exatamente um item in_progress") cobre o resto.</p>
+    <p><strong>Proibição → alvo + motivo.</strong> Pelo guia da Anthropic, "NUNCA use bullet points" funciona pior do que explicar que você prefere texto corrido e por quê. Um motivo dá ao modelo um princípio para aplicar em casos que você nunca escreveu. Se o motivo é "isso vai ser lido por um sintetizador de voz", o modelo também consegue evitar tabelas, emojis e reticências sem você listar cada um.</p>
+
+    <h2 id="pt-rewrite">3. Uma refatoração completa, antes e depois</h2>
+    <p>Um system prompt genérico de um bot interno "redator de release notes", escrito do jeito de 2024:</p>
+<pre><code>Você é um redator técnico de NÍVEL MUNDIAL com 20 anos de experiência.
+IMPORTANTE: Você DEVE seguir TODAS as regras abaixo. Isso é CRÍTICO.
+
+REGRAS:
+1. NUNCA use emojis.
+2. NUNCA use a palavra "simplesmente".
+3. NÃO escreva mais de 200 palavras.
+4. SEMPRE use bullet points.
+5. Antes de responder, confira cada item com a lista de commits.
+6. Não invente funcionalidades.
+
+Exemplo 1: [40 linhas de uma release note antiga]
+Exemplo 2: [40 linhas de outra]
+Exemplo 3: [40 linhas de outra]
+
+LEMBRE-SE: NUNCA use emojis e NUNCA passe de 200 palavras!!!</code></pre>
+    <p>A mesma intenção, reescrita:</p>
+<pre><code>Você transforma uma lista de commits mergeados em release notes para
+clientes de um web app B2B. Quem lê são admins de conta, não devs: querem
+saber o que mudou pra eles e se precisam fazer alguma coisa.
+
+Escreva uma lista curta em bullets (umas 200 palavras no máximo, porque
+aparece dentro de um banner no app), agrupada em Novo, Melhorado e
+Corrigido. Tom simples e calmo; sem emojis, porque o banner renderiza
+emojis de forma inconsistente.
+
+Só descreva mudanças que aparecem nos commits. Se um commit não estiver
+claro, deixe de fora e liste o hash dele em "Precisa de revisão" no fim.
+
+Pronto significa: cada bullet corresponde a pelo menos um commit, nada
+puramente interno (refactors, CI) aparece, e um admin consegue agir sem
+precisar perguntar.
+
+Referência de formato: &lt;um exemplo curto de uma nota antiga&gt;</code></pre>
+    <p>O que mudou e por quê:</p>
+    <ul>
+      <li><strong>Persona removida.</strong> "Nível mundial, 20 anos" não acrescenta nada mensurável; o público e o propósito fazem o trabalho. (A MindStudio cita um teste com 162 personas sem ganho para o Claude; não lemos esse estudo diretamente.)</li>
+      <li><strong>Urgência removida.</strong> "IMPORTANTE / CRÍTICO / DEVE" em caixa alta. Modelos novos tendem a reagir demais a linguagem de urgência, e se tudo é crítico, nada é.</li>
+      <li><strong>Toda restrição agora tem motivo.</strong> O limite de 200 palavras está ligado ao banner, a proibição de emoji à renderização. Se o banner crescer, o modelo (e a próxima pessoa que editar o prompt) sabe de onde a regra vem.</li>
+      <li><strong>"Confira" virou definição de pronto.</strong> Em vez de pedir uma segunda passada vaga, o prompt diz como é um resultado correto, o que também é algo que você consegue testar.</li>
+      <li><strong>"Não invente" virou válvula de escape.</strong> Dar ao modelo um lugar legítimo para itens incertos ("Precisa de revisão") funciona melhor do que proibir chute.</li>
+      <li><strong>Três exemplos viraram um.</strong> Suficiente para fixar o formato, com menos detalhe para ser copiado à toa.</li>
+      <li><strong>O eco do final sumiu.</strong> Dito uma vez, no contexto certo.</li>
+    </ul>
+    <p>Mais ou menos: de ~140 linhas (com os exemplos) para ~20, e cada linha que sobrou se explica sozinha.</p>
+
+    <h2 id="pt-lint">4. Teste: um linter de dieta de prompt</h2>
+    <p>Cole qualquer prompt (ou use o exemplo). Roda no seu navegador com correspondência de padrões simples. É um checklist, não um juiz: um alerta quer dizer "olhe essa linha", não "isso está errado".</p>
+    <div class="lint" id="lint-pt">
+      <textarea spellcheck="false"></textarea>
+      <div class="lint-bar">
+        <button data-act="run">Auditar prompt</button>
+        <button class="ghost" data-act="sample">Carregar exemplo</button>
+        <span class="lint-score"></span>
+      </div>
+      <ul class="lint-list"></ul>
+    </div>
+
+    <h2 id="pt-keep">5. O que você NÃO deve cortar</h2>
+    <p>A dieta é sobre tirar remendos, não informação. Mantenha:</p>
+    <ul>
+      <li><strong>O que o modelo não tem como saber.</strong> Seu público, suas regras de negócio, pra onde a saída vai, as manias do seu codebase. O conselho da Anthropic para arquivos CLAUDE.md é exatamente esse: deixe leve, mas "gaste a maior parte dos tokens nas pegadinhas", e pule o que o modelo consegue ver sozinho nos arquivos.</li>
+      <li><strong>Restrições que são duras de verdade.</strong> Limites de segurança, texto jurídico, dados que nunca podem sair de um sistema. O próprio post diz para evitar restringir demais "exceto em áreas muito importantes".</li>
+      <li><strong>Exemplos de formato quando o formato é o produto.</strong> Um parser lá na frente que quebra com outro formato é uma restrição real; um bom exemplo é um seguro barato.</li>
+      <li><strong>Tudo que seus testes mostram que ainda ajuda.</strong> Se tirar uma linha piora os resultados no seu conjunto de testes, ela fica, diga o guia que disser.</li>
+    </ul>
+
+    <h2 id="pt-process">6. Um processo seguro para enxugar um prompt</h2>
+    <ol>
+      <li><strong>Junte 10 a 30 entradas reais</strong> e salve as saídas atuais. Essa é sua linha de base.</li>
+      <li><strong>Tire em grupos, não tudo de uma vez:</strong> primeiro urgência/caixa alta, depois instruções duplicadas, depois personas, depois exemplos de ferramenta.</li>
+      <li><strong>Reescreva todo "nunca" que sobreviver como alvo + motivo.</strong></li>
+      <li><strong>Mova orientação longa e rara para fora</strong>, num arquivo ou skill que o modelo carrega sob demanda.</li>
+      <li><strong>Rode as mesmas entradas de novo</strong> depois de cada passo e compare. Só mantenha uma mudança se as saídas ficarem iguais ou melhores.</li>
+      <li><strong>Aplique o teste do colega</strong> (a "regra de ouro" da Anthropic, no resumo da MindStudio): um colega esperto, recém-chegado e sem nenhum contexto entenderia o que fazer e por quê?</li>
+    </ol>
+    <p>Se você usa o Claude Code, o post de julho diz que a Anthropic empacotou essas práticas numa verificação <code>/doctor</code> que ajuda a dimensionar skills e arquivos CLAUDE.md. Não testamos isso para esta lição.</p>
+
+    <h2 id="pt-caveats">7. Ressalvas</h2>
+    <ul>
+      <li><strong>Depende do modelo.</strong> O número de 80% é sobre o Claude Code em modelos da classe Opus 5 / Fable 5 e nos testes de código da própria Anthropic. Um modelo menor ou mais antigo, ou de outra empresa, pode ainda precisar dos andaimes.</li>
+      <li><strong>"Sem perda mensurável" ≠ "nada mudou".</strong> Quer dizer que não caiu nos benchmarks deles, não que o comportamento é idêntico em todo caso.</li>
+      <li><strong>O ponto sobre autoverificação é de segunda mão.</strong> Vem da leitura da MindStudio sobre o guia do Opus; não conseguimos abrir hoje a página de prompting da documentação da Anthropic. Um passo de verificação específico e checável (rodar os testes, comparar totais com a fonte) continua sendo boa ideia; o que perde valor é o genérico "confira seu trabalho".</li>
+      <li><strong>Curto não é o objetivo.</strong> Claro é. O guia da Anthropic resume bem: o melhor prompt é o que "atinge seus objetivos de forma confiável com o mínimo de estrutura necessária".</li>
+    </ul>
+
+    <h2>Fontes</h2>
+    <ul class="sources">
+      <li>Blog do Claude (Anthropic), Thariq Shihipar — "The new rules of context engineering for Claude 5 generation models", 24/07/2026. <a href="https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models">claude.com</a></li>
+      <li>Claude (Anthropic) — "Best practices for prompt engineering for 2026", 10/11/2025 (página atualizada com notas da era Claude 5). <a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering">claude.com</a></li>
+      <li>MindStudio, Luis Chavez-Mattos — "How to Prompt Claude the Right Way in 2026", 18/09/2026 (resumo de terceiros). <a href="https://www.mindstudio.ai/blog/claude-prompting-best-practices-2026/">mindstudio.ai</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    <span id="footer-left">Cooldecode · AI Watch</span>
+    <span class="accent">2026-11-05</span>
+  </footer>
+
+</div>
+
+<script>
+  var SAMPLES = {
+    en: "You are a WORLD-CLASS technical writer with 20 years of experience.\nIMPORTANT: You MUST follow ALL rules below. This is CRITICAL.\n\n1. NEVER use emojis.\n2. DO NOT write more than 200 words.\n3. ALWAYS use bullet points.\n4. Before answering, double-check every item against the commit list.\n5. Do not invent features.\n\nExample 1: ...\nExample 2: ...\nExample 3: ...\n\nREMEMBER: NEVER use emojis!!!",
+    pt: "Você é um redator técnico de NÍVEL MUNDIAL com 20 anos de experiência.\nIMPORTANTE: Você DEVE seguir TODAS as regras abaixo. Isso é CRÍTICO.\n\n1. NUNCA use emojis.\n2. NÃO escreva mais de 200 palavras.\n3. SEMPRE use bullet points.\n4. Antes de responder, confira duas vezes cada item com a lista de commits.\n5. Não invente funcionalidades.\n\nExemplo 1: ...\nExemplo 2: ...\nExemplo 3: ...\n\nLEMBRE-SE: NUNCA use emojis!!!"
+  };
+
+  var MSG = {
+    en: {
+      caps: ["Shouting", "ALL-CAPS words. Newer models tend to over-react to emphasis; keep caps for real acronyms."],
+      urgency: ["Urgency language", "Words like IMPORTANT / CRITICAL / MUST. If everything is critical, nothing is. Explain the stakes instead."],
+      negative: ["Prohibitions without a target", "\"Never / don't\" rules. Rewrite as what to do, plus why."],
+      persona: ["Inflated persona", "\"World-class expert\" style roles. Describe the audience and the goal instead."],
+      verify: ["Generic self-check", "\"Double-check\" style lines. Replace with a concrete definition of done or a checkable step."],
+      examples: ["Many examples", "3+ examples. One is usually enough to pin a format; tool-usage examples can narrow exploration."],
+      repeat: ["Repeated instruction", "The same key term appears in several rules. Say it once, where it applies."],
+      noreason: ["Rules without reasons", "Few lines explain why (no 'because/since/so that'). Reasons help the model generalize."],
+      bang: ["Exclamation marks", "Multiple '!' add emphasis, not information."],
+      clean: "No old-habit patterns found. Still worth testing against real inputs.",
+      score: function(n, l) { return n + " flag" + (n === 1 ? "" : "s") + " · " + l + " lines"; },
+      empty: "Paste a prompt first."
+    },
+    pt: {
+      caps: ["Gritaria", "Palavras em CAIXA ALTA. Modelos novos tendem a reagir demais à ênfase; deixe caixa alta para siglas de verdade."],
+      urgency: ["Linguagem de urgência", "Palavras como IMPORTANTE / CRÍTICO / DEVE. Se tudo é crítico, nada é. Explique o que está em jogo."],
+      negative: ["Proibições sem alvo", "Regras de \"nunca / não\". Reescreva como o que fazer, mais o porquê."],
+      persona: ["Persona inflada", "Papéis tipo \"especialista de nível mundial\". Descreva o público e o objetivo."],
+      verify: ["Autoconferência genérica", "Linhas tipo \"confira duas vezes\". Troque por uma definição concreta de pronto ou um passo verificável."],
+      examples: ["Muitos exemplos", "3 ou mais exemplos. Um costuma bastar para fixar formato; exemplos de uso de ferramenta podem estreitar a exploração."],
+      repeat: ["Instrução repetida", "O mesmo termo-chave aparece em várias regras. Diga uma vez, onde se aplica."],
+      noreason: ["Regras sem motivo", "Poucas linhas explicam o porquê (sem 'porque/pois/para que'). Motivos ajudam o modelo a generalizar."],
+      bang: ["Pontos de exclamação", "Vários '!' acrescentam ênfase, não informação."],
+      clean: "Nenhum padrão de hábito antigo encontrado. Ainda vale testar com entradas reais.",
+      score: function(n, l) { return n + " alerta" + (n === 1 ? "" : "s") + " · " + l + " linhas"; },
+      empty: "Cole um prompt primeiro."
+    }
+  };
+
+  function esc(s) { return s.replace(/[&<>]/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+  function audit(text, lang) {
+    var m = MSG[lang], out = [];
+    var lines = text.split('\n').filter(function(l) { return l.trim(); });
+    function hits(re) { return lines.filter(function(l) { return re.test(l); }); }
+    function add(key, arr) { if (arr.length) out.push({ k: key, hits: arr.slice(0, 3) }); }
+
+    var acronyms = /^(JSON|API|URL|HTML|CSS|SQL|CI|PR|ID|UI|UX|AI|IA|LLM|MCP|HTTP|PDF|B2B|OK|EN|PT)$/;
+    add('caps', lines.filter(function(l) {
+      return (l.match(/\b[A-ZÀ-Ý]{4,}\b/g) || []).some(function(w) { return !acronyms.test(w); });
+    }));
+    add('urgency', hits(/\b(IMPORTANT|CRITICAL|MUST|ESSENTIAL|IMPORTANTE|CR[IÍ]TICO|DEVE|ESSENCIAL|OBRIGAT[OÓ]RIO)\b/));
+    add('negative', hits(/\b(never|don'?t|do not|avoid|nunca|n[aã]o (use|fa[cç]a|escreva|invente|coloque|adicione)|jamais|evite)\b/i));
+    add('persona', hits(/\b(you are an?|voc[eê] [eé] (um|uma))\b.*\b(expert|world[- ]class|senior|best|specialist|especialista|n[ií]vel mundial|s[eê]nior|melhor)\b/i));
+    add('verify', hits(/(double[- ]check|check (your|all|every)|verify (your|everything)|confira duas vezes|confira (tudo|cada)|revise tudo|cheque duas vezes)/i));
+    var ex = hits(/^\s*(example|exemplo)\s*\d*\s*[:\-]/i);
+    if (ex.length >= 3) out.push({ k: 'examples', hits: [ex.length + ' ×  ' + ex[0].trim()] });
+
+    var words = {}, rep = [];
+    var stop = /^(that|this|with|from|your|have|will|each|every|para|como|cada|isso|esse|essa|mais|com|seus?|suas?|todas?|todos?|before|antes|answer|responder|rules?|regras?|write|escreva|exemplo|example)$/i;
+    lines.forEach(function(l) {
+      var seen = {};
+      (l.toLowerCase().match(/[a-zà-ÿ]{5,}/g) || []).forEach(function(w) {
+        if (stop.test(w) || seen[w]) return; seen[w] = 1; words[w] = (words[w] || 0) + 1;
+      });
+    });
+    Object.keys(words).forEach(function(w) { if (words[w] >= 2 && rep.length < 3) rep.push('"' + w + '" × ' + words[w]); });
+    add('repeat', rep);
+
+    var ruleLines = hits(/\b(never|always|must|don'?t|do not|nunca|sempre|deve|n[aã]o)\b/i);
+    var reasons = hits(/\b(because|since|so that|as it|porque|pois|para que|j[aá] que|since)\b/i);
+    if (ruleLines.length >= 3 && reasons.length < Math.ceil(ruleLines.length / 3)) out.push({ k: 'noreason', hits: [ruleLines.length + ' rules / ' + reasons.length + ' reasons'] });
+    add('bang', hits(/!{2,}/));
+    return { list: out, n: lines.length };
+  }
+
+  function initLint(box, lang) {
+    var ta = box.querySelector('textarea'), list = box.querySelector('.lint-list'), score = box.querySelector('.lint-score');
+    ta.value = SAMPLES[lang];
+    function run() {
+      var m = MSG[lang];
+      if (!ta.value.trim()) { list.innerHTML = ''; score.textContent = m.empty; return; }
+      var r = audit(ta.value, lang);
+      score.textContent = m.score(r.list.length, r.n);
+      if (!r.list.length) { list.innerHTML = '<li class="ok">' + m.clean + '</li>'; return; }
+      list.innerHTML = r.list.map(function(f) {
+        return '<li><b>' + m[f.k][0] + '</b> — ' + m[f.k][1] + f.hits.map(function(h) { return '<span class="hit">' + esc(h.trim()) + '</span>'; }).join('') + '</li>';
+      }).join('');
+    }
+    box.querySelector('[data-act="run"]').addEventListener('click', run);
+    box.querySelector('[data-act="sample"]').addEventListener('click', function() { ta.value = SAMPLES[lang]; run(); });
+    run();
+  }
+  initLint(document.getElementById('lint-en'), 'en');
+  initLint(document.getElementById('lint-pt'), 'pt');
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

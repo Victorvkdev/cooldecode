@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The gated frontier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 0 0 16px; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); font-size: 13px; }
+  blockquote { margin: 20px 0; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 12.5px; color: var(--text-dim); font-style: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0 24px; }
+  .ba > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; }
+  .ba .lbl { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 6px; }
+  .ba .after .lbl { color: var(--accent); }
+  .ba .after { border-color: rgba(124,58,237,0.45); }
+  @media (max-width: 640px) { .ba { grid-template-columns: 1fr; } }
+  .lint { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .lint textarea { width: 100%; min-height: 210px; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; line-height: 1.6; resize: vertical; }
+  .lint textarea:focus { outline: none; border-color: var(--accent); }
+  .lint-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
+  .lint button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .lint button.ghost { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+  .lint-score { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
+  .lint-list { list-style: none; padding: 0; margin: 0; }
+  .lint-list li { background: var(--bg-card-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 13.5px; margin-bottom: 8px; }
+  .lint-list li b { color: #fff; }
+  .lint-list li .hit { font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; color: #c4b5fd; display: block; margin-top: 4px; }
+  .lint-list li.ok { border-left-color: #22c55e; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+<body>
+<div class="wrapper">
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+  <div class="lang-switch"><div class="lang-switch-inner">
+    <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+  </div></div>
+<div data-lang="en">
+<header><span class="badge">AI Watch · Industry landscape</span><h1>The gated frontier: when the strongest models are not for sale</h1><p class="subtitle">In the past few weeks, the most capable releases from OpenAI and Google shipped behind applications and allow-lists, while the models you can actually call are one step behind. What that changes for anyone building on LLMs.</p></header>
+<div class="toc"><div class="card-title">Contents</div><ol><li><a href="#what">What happened</a></li><li><a href="#why">Why gate a model</a></li><li><a href="#impact">What it means for builders</a></li><li><a href="#open">The open-weights counterweight</a></li><li><a href="#take">Takeaway</a></li><li><a href="#sources">Sources</a></li></ol></div>
+    <h2 id="what">1. What happened</h2>
+    <p>Looking at the model release trackers for November 2026, a pattern stands out: the headline releases are not the ones you can call from an API today.</p>
+    <ul>
+      <li><strong>OpenAI:</strong> GPT-6 Cyber is the main November release. It is aimed at vulnerability research, most people need to apply for access, and its listed price is $20 per million input tokens and $100 per million output tokens. GPT-6 Rosalind remains limited to approved research through OpenAI's trusted-access program. ChatGPT Images 2.6 (Nov. 4) is the broadly available item.</li>
+      <li><strong>Google:</strong> Gemini 4 Carbon was announced on October 28, but it is gated to cyber defenders, with no public API and no presence yet in the Gemini app, Workspace or Gemini Enterprise. What did reach general availability was a smaller model, Gemini Omni 1.2 Flash (Nov. 5).</li>
+      <li><strong>Anthropic:</strong> our <a href="ai-watch-2026-11-04-anthropic-rsi-threshold-s1a.html">Nov. 4 lesson</a> covered how Anthropic's own filing frames frontier capability, which is the same conversation from the company side.</li>
+    </ul>
+    <div class="callout"><strong>Caveat on sources:</strong> these figures come mostly from release trackers and aggregator blogs, not from official announcements, and the sources disagree on some dates (for example, Gemini 4 Argon appears as Sept. 30 on one page and Oct. 13 on another). Treat names, prices and dates as "reported", and confirm on the vendors' own pages before depending on them.</div>
+
+    <h2 id="why">2. Why gate a model at all</h2>
+    <p>Three motives usually show up together, and it is worth separating them:</p>
+    <ul>
+      <li><strong>Dual-use risk.</strong> A model that is very good at finding vulnerabilities helps defenders and attackers alike. Releasing it first to vetted defenders buys time to patch. Both flagship gated models in this cycle are cyber-focused, which is not a coincidence.</li>
+      <li><strong>Capacity and cost.</strong> A $100-per-million-output-token price tells you these models are expensive to serve. Limiting access also limits compute demand.</li>
+      <li><strong>Evaluation in the wild.</strong> A small trusted group gives real-world feedback and misuse signals before a general launch.</li>
+    </ul>
+    <p>Notice that only the first is a safety argument. The other two are plain operations and business reasons, so "gated" does not automatically mean "dangerous".</p>
+
+    <h2 id="impact">3. What it means if you build on LLMs</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Old assumption</th><th>New reality</th><th>What to do</th></tr>
+      <tr><td>"The newest announced model is the one I can use"</td><td>Announcement and availability are decoupled</td><td>Check the API model list, not the press release</td></tr>
+      <tr><td>Benchmarks of the best model describe my product</td><td>Headline benchmarks may be for models you cannot call</td><td>Evaluate the models you can actually ship on</td></tr>
+      <tr><td>Models are interchangeable behind one provider</td><td>Capabilities differ by access tier</td><td>Keep a model-agnostic layer and an eval set</td></tr>
+      <tr><td>Old model IDs live on</td><td>Old IDs get rerouted (Google: from Dec. 1, gemini-2.5-pro/flash requests go to newer models automatically)</td><td>Pin versions and re-run evals before deprecation dates</td></tr>
+    </table></div>
+
+    <h3>Practical checklist</h3>
+    <ul>
+      <li>Keep a small eval set (20 to 50 real tasks from your product) so you can compare any new model in an afternoon.</li>
+      <li>Route through a thin abstraction: model name in config, not scattered through code.</li>
+      <li>Track cost per task, not price per token, because pricier tiers can still be cheaper if they need fewer retries.</li>
+      <li>Read deprecation notices as a calendar of work, not as news.</li>
+    </ul>
+
+    <h2 id="open">4. The open-weights counterweight</h2>
+    <p>The same trackers show Moonshot's Kimi K3.1 Pro weights released a few days before GPT-6 Cyber. When closed vendors restrict their top tier, open-weight models become the only way to run frontier-adjacent capability on your own infrastructure, with all the trade-offs that brings (hosting cost, no vendor safety layer, your own responsibility for misuse controls).</p>
+
+    <h2 id="take">5. Takeaway</h2>
+    <p>The industry is splitting into a <em>demo tier</em> (what is announced, scored and discussed) and a <em>shipping tier</em> (what you can call and rely on). Good engineering practice is to build against the second and watch the first.</p>
+
+    <h2 id="sources">Sources</h2>
+    <ul class="sources">
+      <li><a href="https://csuite.so/blog/ai-models-roundup-november-2026">CSuite, "AI models roundup, November 2026"</a> (Nov. 2026)</li>
+      <li><a href="https://opper.ai/model-releases">Opper, "AI Model Release Tracker, November 2026"</a> (Nov. 2026)</li>
+      <li><a href="https://hellogrowth.ai/en/blog/google-ai-news-november-2026">HelloGrowth, "Google AI news November 2026"</a> (Nov. 2026)</li>
+      <li><a href="https://llm-stats.com/ai-news">LLM Stats, "LLM News Today (November 2026)"</a></li>
+    </ul>
+</div>
+<div data-lang="pt" style="display:none">
+<header><span class="badge">AI Watch · Panorama da indústria</span><h1>A fronteira restrita: quando os modelos mais fortes não estão à venda</h1><p class="subtitle">Nas últimas semanas, os lançamentos mais capazes da OpenAI e do Google saíram atrás de formulários e listas de acesso, enquanto os modelos que você realmente consegue chamar ficam um passo atrás. O que isso muda para quem constrói em cima de LLMs.</p></header>
+<div class="toc"><div class="card-title">Conteúdo</div><ol><li><a href="#what">O que aconteceu</a></li><li><a href="#why">Por que restringir</a></li><li><a href="#impact">O que muda para quem constrói</a></li><li><a href="#open">Contrapeso dos pesos abertos</a></li><li><a href="#take">Conclusão</a></li><li><a href="#sources">Fontes</a></li></ol></div>
+    <h2 id="what">1. O que aconteceu</h2>
+    <p>Olhando os rastreadores de lançamentos de modelos de novembro de 2026, um padrão aparece: os lançamentos de destaque não são os que você consegue chamar por API hoje.</p>
+    <ul>
+      <li><strong>OpenAI:</strong> o GPT-6 Cyber é o principal lançamento de novembro. Ele é voltado a pesquisa de vulnerabilidades, a maioria das pessoas precisa solicitar acesso, e o preço listado é US$ 20 por milhão de tokens de entrada e US$ 100 por milhão de saída. O GPT-6 Rosalind segue restrito a pesquisa aprovada, pelo programa de acesso confiável da OpenAI. O ChatGPT Images 2.6 (4/nov) é o item de acesso amplo.</li>
+      <li><strong>Google:</strong> o Gemini 4 Carbon foi anunciado em 28 de outubro, mas está restrito a defensores de segurança, sem API pública e ainda fora do app Gemini, do Workspace e do Gemini Enterprise. O que chegou à disponibilidade geral foi um modelo menor, o Gemini Omni 1.2 Flash (5/nov).</li>
+      <li><strong>Anthropic:</strong> nossa <a href="ai-watch-2026-11-04-anthropic-rsi-threshold-s1a.html">lição de 4/nov</a> mostrou como o próprio documento da Anthropic enquadra a capacidade de fronteira, a mesma conversa vista do lado da empresa.</li>
+    </ul>
+    <div class="callout"><strong>Ressalva sobre fontes:</strong> esses números vêm principalmente de rastreadores de lançamentos e blogs agregadores, não de anúncios oficiais, e as fontes divergem em algumas datas (por exemplo, o Gemini 4 Argon aparece como 30/set numa página e 13/out em outra). Trate nomes, preços e datas como "reportados" e confirme nas páginas dos próprios fornecedores antes de depender deles.</div>
+
+    <h2 id="why">2. Por que restringir um modelo</h2>
+    <p>Três motivos costumam aparecer juntos, e vale separá-los:</p>
+    <ul>
+      <li><strong>Risco de uso duplo.</strong> Um modelo muito bom em achar vulnerabilidades ajuda defensores e atacantes. Liberar primeiro para defensores verificados ganha tempo para corrigir. Os dois modelos restritos deste ciclo são focados em segurança cibernética, o que não é coincidência.</li>
+      <li><strong>Capacidade e custo.</strong> Um preço de US$ 100 por milhão de tokens de saída mostra que esses modelos são caros de servir. Limitar o acesso também limita a demanda por computação.</li>
+      <li><strong>Avaliação no mundo real.</strong> Um grupo pequeno e confiável dá feedback real e sinais de uso indevido antes do lançamento geral.</li>
+    </ul>
+    <p>Repare que só o primeiro é argumento de segurança. Os outros dois são razões operacionais e de negócio, então "restrito" não significa automaticamente "perigoso".</p>
+
+    <h2 id="impact">3. O que isso significa para quem constrói com LLMs</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Suposição antiga</th><th>Realidade nova</th><th>O que fazer</th></tr>
+      <tr><td>"O modelo mais novo anunciado é o que posso usar"</td><td>Anúncio e disponibilidade são coisas separadas</td><td>Confira a lista de modelos da API, não o comunicado</td></tr>
+      <tr><td>Benchmarks do melhor modelo descrevem meu produto</td><td>Benchmarks de destaque podem ser de modelos que você não pode chamar</td><td>Avalie os modelos que você realmente pode colocar em produção</td></tr>
+      <tr><td>Modelos são intercambiáveis dentro de um fornecedor</td><td>Capacidades variam por nível de acesso</td><td>Mantenha uma camada agnóstica de modelo e um conjunto de avaliação</td></tr>
+      <tr><td>IDs antigos de modelo continuam existindo</td><td>IDs antigos são redirecionados (Google: a partir de 1º/dez, chamadas a gemini-2.5-pro/flash vão automaticamente para modelos mais novos)</td><td>Fixe versões e rode as avaliações antes das datas de descontinuação</td></tr>
+    </table></div>
+
+    <h3>Checklist prático</h3>
+    <ul>
+      <li>Mantenha um conjunto pequeno de avaliação (20 a 50 tarefas reais do seu produto) para comparar qualquer modelo novo numa tarde.</li>
+      <li>Passe por uma abstração fina: nome do modelo em configuração, não espalhado pelo código.</li>
+      <li>Acompanhe custo por tarefa, não preço por token, porque níveis mais caros podem sair mais baratos se precisarem de menos tentativas.</li>
+      <li>Leia avisos de descontinuação como um calendário de trabalho, não como notícia.</li>
+    </ul>
+
+    <h2 id="open">4. O contrapeso dos pesos abertos</h2>
+    <p>Os mesmos rastreadores mostram os pesos do Kimi K3.1 Pro, da Moonshot, liberados poucos dias antes do GPT-6 Cyber. Quando fornecedores fechados restringem o topo da linha, modelos de pesos abertos viram o único caminho para rodar capacidade próxima da fronteira na sua própria infraestrutura, com todas as contrapartidas (custo de hospedagem, sem camada de segurança do fornecedor, responsabilidade sua pelos controles contra uso indevido).</p>
+
+    <h2 id="take">5. Conclusão</h2>
+    <p>A indústria está se dividindo em uma <em>camada de vitrine</em> (o que é anunciado, pontuado e comentado) e uma <em>camada de produção</em> (o que você pode chamar e em que pode confiar). A boa prática de engenharia é construir em cima da segunda e acompanhar a primeira.</p>
+
+    <h2 id="sources">Fontes</h2>
+    <ul class="sources">
+      <li><a href="https://csuite.so/blog/ai-models-roundup-november-2026">CSuite, "AI models roundup, November 2026"</a> (nov/2026)</li>
+      <li><a href="https://opper.ai/model-releases">Opper, "AI Model Release Tracker, November 2026"</a> (nov/2026)</li>
+      <li><a href="https://hellogrowth.ai/en/blog/google-ai-news-november-2026">HelloGrowth, "Google AI news November 2026"</a> (nov/2026)</li>
+      <li><a href="https://llm-stats.com/ai-news">LLM Stats, "LLM News Today (November 2026)"</a></li>
+    </ul>
+</div>
+  <footer><span id="footer-left">Cooldecode · AI Watch</span><span class="accent">2026-11-09</span></footer>
+</div>
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) { el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none'; });
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.setlang === lang); });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Who spent the tokens? Usage and Cost Analytics API and pooled budgets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+    --ok: #34d399; --bad: #f87171; --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; word-break: break-word; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; word-break: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .sim { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .sim .row { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 14px; }
+  .sim label { display: block; font-size: 13px; color: var(--text-dim); margin: 0 0 4px; }
+  .sim input[type=number] { width: 100%; max-width: 160px; background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-family: inherit; font-size: 14px; }
+  .bar { height: 14px; background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin: 6px 0 10px; }
+  .bar > i { display: block; height: 100%; background: var(--ok); transition: width .2s, background .2s; }
+  .sim-note { font-size: 13.5px; color: var(--text-dim); min-height: 20px; }
+  .tag { font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; }
+  footer { margin-top: 64px; padding: 24px 24px 40px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · What's new at Anthropic</span>
+      <h1>Who spent the tokens? Claude's new Usage and Cost Analytics API and pooled budgets</h1>
+      <p class="subtitle">Between October 28 and 29, Anthropic shipped three things that all answer the same question: where is our Claude spend going, and who should be allowed to use more of it? An API for the numbers, reports for the story behind them, and shared budgets for the guardrails.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#why-en">Why this matters</a></li>
+        <li><a href="#api-en">The Usage and Cost Analytics API (Oct 29)</a></li>
+        <li><a href="#reports-en">Smart reports and in-app surveys (Oct 28)</a></li>
+        <li><a href="#pool-en">Pooled group budgets, and a simulator</a></li>
+        <li><a href="#practice-en">Putting it together</a></li>
+        <li><a href="#limits-en">What I could not verify</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why-en">1. Why this matters</h2>
+    <p>Last lesson's point was that the price per token is not the bill. The natural next question is how you find out what the bill actually is, <em>per model, per project and per person</em>. Until a team can see that, "cost per task" stays a guess. These releases are Anthropic's answer for organizations: the raw data (API), the interpretation (reports) and the control (budgets).</p>
+    <div class="callout"><strong>Two different audiences.</strong> The API is for <strong>Claude Console and Claude Enterprise organizations</strong> and is something an engineer wires into a dashboard. Smart reports, surveys and pooled budgets are <strong>Claude Enterprise</strong> features that admins use from the product. If you use Claude personally, none of this changes your day, but it shows how teams are expected to manage AI spend.</div>
+
+    <h2 id="api-en">2. The Usage and Cost Analytics API (Oct 29)</h2>
+    <p>According to the Claude Developer Platform release notes of October 29, 2026, this is a new <strong>beta</strong> API that reports token usage and cost for Console and Enterprise organizations. Two endpoints:</p>
+    <pre><code>GET /v1/organizations/analytics/usage
+GET /v1/organizations/analytics/cost
+
+# beta header required:
+anthropic-beta: analytics-usage-cost-2026-08-24</code></pre>
+    <p>Results can be <strong>filtered and grouped</strong> by dimensions such as model, workspace, API key, and the user or service account behind each request. That last dimension is the new useful one: you can attribute spend to a person or a service, not only to a key.</p>
+    <h3 style="font-family:'Space Grotesk',sans-serif;color:#fff;font-size:17px;margin:24px 0 10px;">What it replaces</h3>
+    <p>The older Usage and Cost API is now <strong>legacy</strong>, and so are four Enterprise Analytics API endpoints: <code>usage_report</code>, <code>cost_report</code>, <code>user_usage_report</code> and <code>user_cost_report</code>. They all <strong>remain supported</strong>, and Anthropic published migration guides. Practical reading: nothing breaks today, but new integrations should start on the new endpoints.</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Question</th><th>Group by</th></tr>
+      <tr><td>Which model is eating the budget?</td><td>model</td></tr>
+      <tr><td>Which project or environment?</td><td>workspace</td></tr>
+      <tr><td>Which integration or script?</td><td>API key</td></tr>
+      <tr><td>Which person or service account?</td><td>requester (user or service account)</td></tr>
+    </table>
+    </div>
+    <p>The exact request parameters and response shape are in Anthropic's docs; I did not read them, so check the reference before writing code.</p>
+
+    <h2 id="reports-en">3. Smart reports and in-app surveys (Oct 28)</h2>
+    <p>Numbers tell you <em>how much</em>; the October 28 Enterprise announcement tries to tell you <em>why</em>. It made three features generally available.</p>
+    <ul>
+      <li><strong>Smart reports.</strong> Pick a team, a date range and products. Claude analyzes a <em>sample</em> of that team's transcripts, groups the work into workstreams, and shows spend per workstream, deliverables, and common friction (for example a missing connector or a failed tool call). Each report ends with a consolidated list of recommendations, such as recurring workflows worth turning into skills, or rules to add to a code repository. Anthropic states they are not meant for evaluating individual performance or for employment decisions.</li>
+      <li><strong>In-app surveys.</strong> A short card after a reply, with default questions about value: the most valuable thing done recently, how Claude changed the time it took, what a teammate should copy, and what would break or slow down first if access vanished. Admins can edit questions, audience and timing, and export responses to a spreadsheet.</li>
+      <li><strong>Pooled group budgets.</strong> Covered next.</li>
+    </ul>
+
+    <h2 id="pool-en">4. Pooled group budgets, and a simulator</h2>
+    <p>Instead of a fixed allowance per person, a group gets <strong>one shared monthly budget</strong>. The motivation: heavy users no longer hit an individual limit early in the month while teammates leave budget unused. Two rules matter:</p>
+    <ol>
+      <li><strong>Every request counts against both</strong> the group budget and the member's own limit, and a member stops at whichever runs out first. Member limits stay as a guardrail against unusually high individual use.</li>
+      <li>Admins with billing permissions get <strong>email alerts at 50%, 75%, 95% and 100%</strong> of the budget. Someone who hits a limit can request more from inside Claude, and the request goes to admins for review. The setup suggests an amount based on the group's recent usage.</li>
+    </ol>
+    <p>Try it. This is a simplified model of the rules above, not Anthropic's implementation.</p>
+    <div class="sim" data-sim="en">
+      <div class="row">
+        <div><label>Group budget (monthly, $)</label><input type="number" data-k="pool" value="1000" min="0"></div>
+        <div><label>Per-member limit ($)</label><input type="number" data-k="lim" value="300" min="0"></div>
+        <div><label>Group spend so far ($)</label><input type="number" data-k="spent" value="720" min="0"></div>
+        <div><label>This member's spend ($)</label><input type="number" data-k="mine" value="250" min="0"></div>
+      </div>
+      <div class="bar"><i data-bar></i></div>
+      <div class="sim-note" data-out></div>
+    </div>
+
+    <h2 id="practice-en">5. Putting it together</h2>
+    <ol>
+      <li><strong>Measure.</strong> Pull usage and cost grouped by model and workspace; this gives you real tokens per task for the cost-per-task comparison from the last lesson.</li>
+      <li><strong>Understand.</strong> Use reports or your own review to find which workstreams are expensive and which are valuable (they are not always the same).</li>
+      <li><strong>Control.</strong> Set a pooled budget with alert thresholds, keep per-member limits as a safety net.</li>
+      <li><strong>Re-check.</strong> New models and prices land every few weeks, so repeat the loop.</li>
+    </ol>
+    <div class="callout"><strong>Takeaway:</strong> AI spend is becoming an operations topic with the same tooling as cloud spend: an analytics API, per-team views and shared budgets with alerts. The habit worth building is attributing cost to a project or person from day one, because retrofitting it later is painful.</div>
+
+    <h2 id="limits-en">6. What I could not verify</h2>
+    <ul>
+      <li>The API request parameters, response fields, rate limits and which plans can use each feature in detail: not read; only the release-note summary.</li>
+      <li>Both announcements were read through the Releasebot mirror of Anthropic's release notes, not directly on Anthropic's own pages.</li>
+      <li>Availability can vary by configuration (Anthropic says so, including for HIPAA configurations and customer-managed encryption keys).</li>
+    </ul>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">Releasebot — Anthropic release notes (read directly, updated Oct 29, 2026): Claude Developer Platform, Oct 29 (Usage and Cost Analytics API, beta) and Oct 28 (request size limit to 128 MB)</a></li>
+      <li><a href="https://claude.com/resources/articles/smart-reports-surveys-pooled-budgets" target="_blank" rel="noopener">Claude — "Smart reports, surveys, and pooled group budgets for Claude Enterprise" (Oct 28, 2026; text read via the Releasebot copy)</a></li>
+      <li><a href="https://docs.claude.com/en/release-notes/overview.md" target="_blank" rel="noopener">Claude Docs — release notes (original source cited by Releasebot; not opened directly)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: strict rotation pointed to "What's new at Anthropic". The same date also had a Claude for Legal artifacts gallery and an API request-size increase (32 MB to 128 MB); I picked the cost-visibility theme because it continues yesterday's lesson.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic</span>
+      <h1>Quem gastou os tokens? A nova API de Uso e Custo do Claude e os orçamentos compartilhados</h1>
+      <p class="subtitle">Entre 28 e 29 de outubro, a Anthropic lançou três coisas que respondem à mesma pergunta: para onde está indo o gasto com Claude, e quem deve poder usar mais dele? Uma API para os números, relatórios para a história por trás deles e orçamentos compartilhados como proteção.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#why-pt">Por que isso importa</a></li>
+        <li><a href="#api-pt">A API de Uso e Custo (29/10)</a></li>
+        <li><a href="#reports-pt">Relatórios inteligentes e pesquisas no app (28/10)</a></li>
+        <li><a href="#pool-pt">Orçamentos compartilhados por grupo, e um simulador</a></li>
+        <li><a href="#practice-pt">Juntando tudo</a></li>
+        <li><a href="#limits-pt">O que eu não consegui verificar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="why-pt">1. Por que isso importa</h2>
+    <p>O ponto da lição anterior foi que o preço por token não é a fatura. A pergunta seguinte é como descobrir qual é a fatura de verdade, <em>por modelo, por projeto e por pessoa</em>. Enquanto um time não enxerga isso, "custo por tarefa" é chute. Esses lançamentos são a resposta da Anthropic para organizações: os dados brutos (API), a interpretação (relatórios) e o controle (orçamentos).</p>
+    <div class="callout"><strong>Dois públicos diferentes.</strong> A API é para <strong>organizações do Claude Console e do Claude Enterprise</strong> e é algo que um engenheiro liga a um painel. Relatórios inteligentes, pesquisas e orçamentos compartilhados são recursos do <strong>Claude Enterprise</strong> que admins usam dentro do produto. Se você usa o Claude de forma pessoal, nada muda no seu dia, mas mostra como times devem gerenciar gasto com IA.</div>
+
+    <h2 id="api-pt">2. A API de Uso e Custo (29/10)</h2>
+    <p>Segundo as release notes da Claude Developer Platform de 29/10/2026, é uma API nova em <strong>beta</strong> que reporta uso de tokens e custo de organizações do Console e do Enterprise. Dois endpoints:</p>
+    <pre><code>GET /v1/organizations/analytics/usage
+GET /v1/organizations/analytics/cost
+
+# header beta obrigatório:
+anthropic-beta: analytics-usage-cost-2026-08-24</code></pre>
+    <p>Os resultados podem ser <strong>filtrados e agrupados</strong> por dimensões como modelo, workspace, chave de API e o usuário ou conta de serviço por trás de cada requisição. Essa última dimensão é a nova e útil: dá para atribuir o gasto a uma pessoa ou a um serviço, não só a uma chave.</p>
+    <h3 style="font-family:'Space Grotesk',sans-serif;color:#fff;font-size:17px;margin:24px 0 10px;">O que ela substitui</h3>
+    <p>A API de Uso e Custo antiga agora é <strong>legada</strong>, e também quatro endpoints da Enterprise Analytics API: <code>usage_report</code>, <code>cost_report</code>, <code>user_usage_report</code> e <code>user_cost_report</code>. Todos <strong>continuam suportados</strong>, e a Anthropic publicou guias de migração. Leitura prática: nada quebra hoje, mas integrações novas devem começar pelos endpoints novos.</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Pergunta</th><th>Agrupar por</th></tr>
+      <tr><td>Qual modelo está consumindo o orçamento?</td><td>modelo</td></tr>
+      <tr><td>Qual projeto ou ambiente?</td><td>workspace</td></tr>
+      <tr><td>Qual integração ou script?</td><td>chave de API</td></tr>
+      <tr><td>Qual pessoa ou conta de serviço?</td><td>solicitante (usuário ou conta de serviço)</td></tr>
+    </table>
+    </div>
+    <p>Os parâmetros exatos da requisição e o formato da resposta estão na documentação da Anthropic; eu não li, então confira a referência antes de escrever código.</p>
+
+    <h2 id="reports-pt">3. Relatórios inteligentes e pesquisas no app (28/10)</h2>
+    <p>Números dizem <em>quanto</em>; o anúncio de 28/10 para o Enterprise tenta dizer <em>por quê</em>. Três recursos ficaram disponíveis para todos.</p>
+    <ul>
+      <li><strong>Relatórios inteligentes.</strong> Escolha um time, um período e os produtos. O Claude analisa uma <em>amostra</em> das transcrições do time, agrupa o trabalho em frentes, e mostra gasto por frente, entregas e pontos de atrito comuns (por exemplo um conector faltando ou uma chamada de ferramenta que falhou). Cada relatório termina com uma lista consolidada de recomendações, como fluxos recorrentes que valem virar skills, ou regras para adicionar a um repositório de código. A Anthropic afirma que não servem para avaliar desempenho individual nem para decisões de emprego.</li>
+      <li><strong>Pesquisas no app.</strong> Um cartão curto depois de uma resposta, com perguntas padrão sobre valor: a coisa mais valiosa feita recentemente, como o Claude mudou o tempo gasto, o que um colega deveria copiar, e o que quebraria ou ficaria mais lento primeiro se o acesso sumisse. Admins editam perguntas, público e momento, e exportam as respostas para planilha.</li>
+      <li><strong>Orçamentos compartilhados por grupo.</strong> Veja a seguir.</li>
+    </ul>
+
+    <h2 id="pool-pt">4. Orçamentos compartilhados por grupo, e um simulador</h2>
+    <p>Em vez de uma cota fixa por pessoa, o grupo recebe <strong>um orçamento mensal compartilhado</strong>. A motivação: quem usa muito não bate num limite individual no começo do mês enquanto colegas deixam orçamento sobrando. Duas regras importam:</p>
+    <ol>
+      <li><strong>Toda requisição conta nos dois</strong>, no orçamento do grupo e no limite do próprio membro, e o membro para no que acabar primeiro. Os limites por membro continuam como proteção contra uso individual anormalmente alto.</li>
+      <li>Admins com permissão de cobrança recebem <strong>alertas por e-mail a 50%, 75%, 95% e 100%</strong> do orçamento. Quem bate num limite pode pedir mais de dentro do Claude, e o pedido vai para revisão dos admins. A configuração sugere um valor com base no uso recente do grupo.</li>
+    </ol>
+    <p>Teste. É um modelo simplificado das regras acima, não a implementação da Anthropic.</p>
+    <div class="sim" data-sim="pt">
+      <div class="row">
+        <div><label>Orçamento do grupo (mensal, $)</label><input type="number" data-k="pool" value="1000" min="0"></div>
+        <div><label>Limite por membro ($)</label><input type="number" data-k="lim" value="300" min="0"></div>
+        <div><label>Gasto do grupo até agora ($)</label><input type="number" data-k="spent" value="720" min="0"></div>
+        <div><label>Gasto deste membro ($)</label><input type="number" data-k="mine" value="250" min="0"></div>
+      </div>
+      <div class="bar"><i data-bar></i></div>
+      <div class="sim-note" data-out></div>
+    </div>
+
+    <h2 id="practice-pt">5. Juntando tudo</h2>
+    <ol>
+      <li><strong>Meça.</strong> Puxe uso e custo agrupados por modelo e workspace; isso dá tokens reais por tarefa para a comparação de custo por tarefa da lição anterior.</li>
+      <li><strong>Entenda.</strong> Use relatórios ou sua própria revisão para achar quais frentes são caras e quais são valiosas (nem sempre são as mesmas).</li>
+      <li><strong>Controle.</strong> Defina um orçamento compartilhado com alertas e mantenha limites por membro como rede de segurança.</li>
+      <li><strong>Reveja.</strong> Modelos e preços novos saem a cada poucas semanas, então repita o ciclo.</li>
+    </ol>
+    <div class="callout"><strong>Conclusão:</strong> gasto com IA está virando assunto de operações, com as mesmas ferramentas do gasto em nuvem: API de análise, visões por time e orçamentos compartilhados com alertas. O hábito que vale construir é atribuir custo a um projeto ou pessoa desde o primeiro dia, porque adaptar depois dói.</div>
+
+    <h2 id="limits-pt">6. O que eu não consegui verificar</h2>
+    <ul>
+      <li>Parâmetros da requisição, campos da resposta, limites de taxa e quais planos acessam cada recurso em detalhe: não li; só o resumo das release notes.</li>
+      <li>Os dois anúncios foram lidos pelo espelho do Releasebot das release notes da Anthropic, não diretamente nas páginas da própria Anthropic.</li>
+      <li>A disponibilidade pode variar por configuração (a Anthropic diz isso, inclusive para configurações HIPAA e chaves de criptografia gerenciadas pelo cliente).</li>
+    </ul>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">Releasebot — release notes da Anthropic (lido diretamente, atualizado em 29/10/2026): Claude Developer Platform, 29/10 (API de Uso e Custo, beta) e 28/10 (limite de requisição para 128 MB)</a></li>
+      <li><a href="https://claude.com/resources/articles/smart-reports-surveys-pooled-budgets" target="_blank" rel="noopener">Claude — "Smart reports, surveys, and pooled group budgets for Claude Enterprise" (28/10/2026; texto lido pela cópia do Releasebot)</a></li>
+      <li><a href="https://docs.claude.com/en/release-notes/overview.md" target="_blank" rel="noopener">Claude Docs — release notes (fonte original citada pelo Releasebot; não aberta diretamente)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação estrita apontou para "Novidades da Anthropic". Na mesma data também saíram a galeria de artifacts do Claude for Legal e o aumento do limite de requisição da API (32 MB para 128 MB); escolhi o tema de visibilidade de custo porque dá continuidade à lição de ontem.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Anthropic news · usage &amp; cost</span>
+</footer>
+
+<script>
+  (function() {
+    function v(box, k) { return Math.max(0, parseFloat(box.querySelector('[data-k="' + k + '"]').value) || 0); }
+    function render(box) {
+      var en = box.dataset.sim === 'en';
+      var pool = v(box, 'pool'), lim = v(box, 'lim'), spent = v(box, 'spent'), mine = v(box, 'mine');
+      var pct = pool > 0 ? spent / pool * 100 : 0;
+      var bar = box.querySelector('[data-bar]');
+      bar.style.width = Math.min(100, pct) + '%';
+      bar.style.background = pct >= 95 ? 'var(--bad)' : pct >= 75 ? 'var(--warn)' : 'var(--ok)';
+      var alerts = [50, 75, 95, 100].filter(function(t) { return pct >= t; });
+      var poolLeft = Math.max(0, pool - spent), memLeft = Math.max(0, lim - mine);
+      var room = Math.min(poolLeft, memLeft);
+      var blocker = poolLeft <= memLeft ? (en ? 'the group budget' : 'o orçamento do grupo') : (en ? "the member's own limit" : 'o limite do próprio membro');
+      var txt;
+      if (en) {
+        txt = 'Group at ' + pct.toFixed(0) + '% of budget. Alerts sent so far: ' + (alerts.length ? alerts.join('%, ') + '%' : 'none') + '. ';
+        txt += room > 0 ? 'This member can still spend $' + room.toFixed(0) + ' before ' + blocker + ' stops them.' : 'This member is stopped by ' + blocker + ' and can request more from admins.';
+      } else {
+        txt = 'Grupo em ' + pct.toFixed(0) + '% do orçamento. Alertas enviados até agora: ' + (alerts.length ? alerts.join('%, ') + '%' : 'nenhum') + '. ';
+        txt += room > 0 ? 'Este membro ainda pode gastar $' + room.toFixed(0) + ' antes de ' + blocker + ' pará-lo.' : 'Este membro está bloqueado por ' + blocker + ' e pode pedir mais aos admins.';
+      }
+      box.querySelector('[data-out]').textContent = txt;
+    }
+    document.querySelectorAll('[data-sim]').forEach(function(box) {
+      box.querySelectorAll('input').forEach(function(i) { i.addEventListener('input', function() { render(box); }); });
+      render(box);
+    });
+  })();
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

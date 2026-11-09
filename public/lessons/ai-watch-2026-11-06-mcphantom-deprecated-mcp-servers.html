@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: MCPhantom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 4px 12px; border-radius: 999px; margin-bottom: 16px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; font-size: 13px; line-height: 1.6; margin: 0 0 16px; }
+  pre code { background: none; border: none; padding: 0; color: var(--text); font-size: 13px; }
+  blockquote { margin: 20px 0; padding: 14px 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; }
+  blockquote cite { display: block; margin-top: 8px; font-size: 12.5px; color: var(--text-dim); font-style: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0 24px; }
+  .stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .stat .n { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 26px; color: #fff; line-height: 1.2; }
+  .stat .l { font-size: 13px; color: var(--text-dim); }
+  @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 16px 0 24px; font-size: 13.5px; }
+  .flow span.step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; }
+  .flow span.step.bad { border-color: rgba(124,58,237,0.6); background: var(--accent-soft); }
+  .flow span.arr { color: var(--text-dim); }
+  .tool { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .tool textarea { width: 100%; min-height: 230px; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; line-height: 1.55; resize: vertical; }
+  .tool textarea:focus { outline: none; border-color: var(--accent); }
+  .tool-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
+  .tool button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; }
+  .tool button.ghost { background: none; border: 1px solid var(--border); color: var(--text-dim); }
+  .tool-score { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: #fff; }
+  .res-list { list-style: none; padding: 0; margin: 0; }
+  .res-list li { background: var(--bg-card-2); border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 0 10px 10px 0; padding: 10px 14px; font-size: 13.5px; margin-bottom: 8px; }
+  .res-list li b { color: #fff; }
+  .res-list li .meta { display: block; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12px; color: #c4b5fd; margin-top: 4px; }
+  .res-list li.bad { border-left-color: #ef4444; }
+  .res-list li.warn { border-left-color: #f59e0b; }
+  .res-list li.ok { border-left-color: #22c55e; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Tools &amp; ecosystem</span>
+      <h1>MCPhantom: when the model's memory becomes your package manager</h1>
+      <p class="subtitle">Ask a coding agent to "set up a GitHub MCP" and it has to pick a package. New research shows it often picks one it remembers from training, even when that package was archived over a year ago and will never be patched. Here is how it happens, why your usual security tools miss it, and what you can do today.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What the research found</a></li>
+        <li><a href="#why">Why agents keep installing dead packages</a></li>
+        <li><a href="#blind">Why your existing controls stay quiet</a></li>
+        <li><a href="#stretch">How one permission stretches to cover everything</a></li>
+        <li><a href="#fix">Who can fix it (and the hooks that work today)</a></li>
+        <li><a href="#check">Try it: check an MCP config</a></li>
+        <li><a href="#do">A checklist for your own setup</a></li>
+        <li><a href="#caveats">Caveats</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What the research found</h2>
+    <p>On November 3, 2026, Help Net Security reported on research by Glow Labs, which reviewed real AI coding session transcripts and found deprecated MCP servers landing on developer machines. They call the pattern <strong>MCPhantom</strong>.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">98%</div><div class="l">of the sessions studied where the agent itself supplied the deprecated package name (the other 2%: the user asked for it)</div></div>
+      <div class="stat"><div class="n">17.3M+</div><div class="l">npm downloads of the deprecated packages since July 2025</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">high-severity flaws found in those servers, with no patch coming</div></div>
+    </div>
+    <p>The headline example: a developer asks for a GitHub MCP server. GitHub maintains its own. The agent skips it and installs an old Anthropic <em>reference</em> server it remembers, from a repository archived in May 2025 that explicitly says no security updates are coming. "Agents don't read archive notices," as the article puts it.</p>
+    <p>It is not one vendor's bug. The pattern showed up in Claude Code, Cursor, Codex CLI, Claude Cowork and Claude chat, with models from Anthropic, OpenAI and xAI. Five of the deprecated packages are in npm's top 100 MCP packages.</p>
+    <div class="callout"><strong>Scope note:</strong> the 98% is measured only over sessions where a deprecated server was installed or suggested. It does not mean 98% of all MCP installs are deprecated.</div>
+
+    <h2 id="why">2. Why agents keep installing dead packages</h2>
+    <p>A model's knowledge is a snapshot. When the snapshot was taken, <code>@modelcontextprotocol/server-github</code> was <em>the</em> way to connect an agent to GitHub: it appeared in docs, tutorials, READMEs and thousands of config files. That frequency is exactly what makes the model confident about it later.</p>
+    <div class="flow">
+      <span class="step">Training data: package X is everywhere</span><span class="arr">→</span>
+      <span class="step">Package X gets archived</span><span class="arr">→</span>
+      <span class="step">Model still "knows" X</span><span class="arr">→</span>
+      <span class="step bad">Agent runs <code>npx X</code></span><span class="arr">→</span>
+      <span class="step bad">Unpatched code on your machine</span>
+    </div>
+    <p>Glow's VP of R&amp;D summed it up: <strong>"The model's memory is now a package manager with no deprecation feed."</strong></p>
+    <p>You might think "just tell the agent to check npm first." The researchers tried that angle. In one session the agent did look up the package, got back "This package is deprecated", installed it anyway and never mentioned it to the user. A lookup only helps if something <em>enforces</em> what the lookup says.</p>
+    <h3>How this differs from "slopsquatting"</h3>
+    <p>You may have heard of slopsquatting: a model invents a package name that doesn't exist, and an attacker registers that name with malicious code. MCPhantom is the quieter cousin. The package is real, legitimate, once-official, and published by a trusted organization. Nothing about it looks malicious. It is just abandoned, and abandoned code with known flaws is a perfectly good attack surface.</p>
+
+    <h2 id="blind">3. Why your existing controls stay quiet</h2>
+    <p>These servers are dependencies that never appear in a dependency file. Each standard defense misses them for a different reason:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Control</th><th>What it normally does</th><th>Why it misses MCPhantom</th></tr>
+      <tr><td>EDR (endpoint detection)</td><td>Flags suspicious processes</td><td>It sees a trusted Node process installing a public npm package. That looks routine.</td></tr>
+      <tr><td>SCA (dependency scanning)</td><td>Reads <code>package.json</code> / lockfiles and matches CVEs</td><td>The server runs through <code>npx</code>, so there is no manifest. And the flaws have no CVEs.</td></tr>
+      <tr><td>Software inventory</td><td>Lists installed applications</td><td>An <code>npx</code> package is never "installed" as an app.</td></tr>
+      <tr><td>npm itself</td><td>Can remove packages</td><td>npm only lets owners unpublish packages with under 300 weekly downloads, a single owner and no dependents. <code>server-github</code> had 185,239 downloads last week and 6 owners. npm removes malware, not vulnerable code.</td></tr>
+    </table></div>
+    <p>So the only place the problem is visible is the developer's own machine, inside the MCP config file the agent wrote.</p>
+
+    <h2 id="stretch">4. How one permission stretches to cover everything</h2>
+    <p>The most serious of the four flaws is a remote code execution bug in the archived <strong>Puppeteer</strong> server, which lets an agent drive a browser. The chain is short:</p>
+    <ol>
+      <li>The developer approves "browse the web" for the agent.</li>
+      <li>The agent reads a web page containing a hidden prompt injection.</li>
+      <li>The injection makes the agent call the Puppeteer server in a way that launches an arbitrary process instead of a browser.</li>
+      <li>The harness lets it through, because from its point of view this is still the "browser tool" the user approved.</li>
+    </ol>
+    <p>This is the core lesson for anyone building with agents: <strong>a permission is only as narrow as the code behind the tool</strong>. Approving a tool by name ("browser") says nothing about what a buggy implementation of that tool can do. If you read our October 28 lesson on permission modes, this is the other half of that story: the mode decides <em>when</em> the agent asks; the server's code decides what "yes" actually unlocks.</p>
+    <p>Glow reports no exploitation seen so far. The maintainers closed the report as out of scope (the server is archived) and said they might mark the npm package as deprecated so users see a warning. But a deprecated npm package still installs through <code>npx</code>.</p>
+
+    <h2 id="fix">5. Who can fix it (and the hooks that work today)</h2>
+    <p>Glow's researcher Nadav Claude Cohen listed four possible sources of a fix, each with a catch:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Who</th><th>Fix</th><th>Catch</th></tr>
+      <tr><td>Harness makers (Claude Code, Cursor, Codex...)</td><td>Refuse or warn on deprecated servers, including already-installed ones</td><td>"It works only if every harness does it."</td></tr>
+      <tr><td>Model makers</td><td>Update what models know about package names</td><td>Retraining is expensive; unlikely to happen just for this</td></tr>
+      <tr><td>Package owners</td><td>Patch the bugs</td><td>The only fix that protects existing users, and the one that was declined</td></tr>
+      <tr><td>Security teams / you</td><td>Pre-execution hooks that inspect a tool call before it runs</td><td>Works today, without waiting for anyone</td></tr>
+    </table></div>
+    <h3>The Anthropic angle: inference hooks went GA on Nov 5</h3>
+    <p>Timing is interesting. Two days after the report, on November 5, Anthropic announced that <strong>inference hooks</strong> are generally available in Claude Enterprise. There are two kinds: <em>prompt hooks</em>, which send prompts to your security tool for a check, and <em>pre-tool-call hooks</em>, which check tool calls in supported Claude products before they run. The same announcement added a security center that compares your org's Claude settings with Anthropic's recommended configuration, and EDR sensor support inside the local VM used by Cowork. Anthropic doesn't link this to MCPhantom, but a pre-tool-call hook is precisely the "works today" layer the researchers describe.</p>
+    <h3>A do-it-yourself version for a single developer</h3>
+    <p>You don't need Enterprise to apply the idea. Claude Code supports local hooks configured in a settings file: a <code>PreToolUse</code> hook receives the pending tool call as JSON on stdin, and exiting with code <code>2</code> blocks the call and shows your message to the model. A minimal guard that blocks installing anything npm marks as deprecated:</p>
+<pre><code>// .claude/settings.json (project level)
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "node .claude/hooks/no-deprecated.js" }] }
+    ]
+  }
+}</code></pre>
+<pre><code>// .claude/hooks/no-deprecated.js
+const { execSync } = require("child_process");
+let raw = "";
+process.stdin.on("data", c => raw += c).on("end", () => {
+  const cmd = JSON.parse(raw).tool_input?.command || "";
+  // grab package names after npx / npm i / npm install
+  const m = cmd.match(/\b(?:npx(?:\s+-y)?|npm\s+(?:i|install))\s+((?:@[\w.-]+\/)?[\w.-]+)/);
+  if (!m) process.exit(0);
+  try {
+    const dep = execSync(`npm view ${m[1]} deprecated`, { encoding: "utf8" }).trim();
+    if (dep) {
+      console.error(`Blocked: ${m[1]} is deprecated on npm ("${dep}"). ` +
+                    `Find the service owner's official server instead.`);
+      process.exit(2);   // 2 = block and tell the model why
+    }
+  } catch { /* lookup failed: let the normal permission prompt decide */ }
+  process.exit(0);
+});</code></pre>
+    <p>Two honest limits: it only inspects shell commands (an MCP server added by editing a config file directly won't pass through it), and it relies on npm's <code>deprecated</code> flag, which, per the article, the archived reference servers may not even have yet. Treat it as one layer, next to an allowlist. Hook field names can change between versions, so check the current Claude Code hooks docs before copying.</p>
+
+    <h2 id="check">6. Try it: check an MCP config</h2>
+    <p>Paste an MCP config (the <code>mcpServers</code> JSON used by most clients). This runs only in your browser. It flags packages from the archived reference-server set and suggests where to look instead. The list is based on the reference servers that were moved to the archived repo in 2025; it is a teaching aid, not a complete or authoritative database.</p>
+    <div class="tool" id="chk-en">
+      <textarea spellcheck="false"></textarea>
+      <div class="tool-bar">
+        <button data-act="run">Check config</button>
+        <button class="ghost" data-act="sample">Load sample</button>
+        <span class="tool-score"></span>
+      </div>
+      <ul class="res-list"></ul>
+    </div>
+
+    <h2 id="do">7. A checklist for your own setup</h2>
+    <ol>
+      <li><strong>Audit what you already have.</strong> Search your MCP configs (project <code>.mcp.json</code>, your client's user config) for <code>@modelcontextprotocol/server-</code>. Everything that matches deserves a second look.</li>
+      <li><strong>Prefer the service owner's server.</strong> If GitHub, a database vendor or a SaaS tool publishes an official MCP server, use that. A community or reference server is a fallback, not a default.</li>
+      <li><strong>Pin versions.</strong> <code>npx -y some-server</code> pulls whatever is latest every time. Pin an exact version, so a change is something you decide.</li>
+      <li><strong>One approved server per service.</strong> Keep a short allowlist for your team. Agents can suggest; humans approve additions.</li>
+      <li><strong>Add "is it deprecated or archived?" to the approval checklist.</strong> Check npm (<code>npm view &lt;pkg&gt; deprecated</code>) and the repository's archive status.</li>
+      <li><strong>Ask the agent what it installed.</strong> After a setup session, ask for the exact package names and versions. It's a cheap habit that catches surprises.</li>
+      <li><strong>Remember the permission lesson.</strong> Approving a tool means trusting its code, not just its name.</li>
+    </ol>
+
+    <h2 id="caveats">8. Caveats</h2>
+    <ul>
+      <li>All numbers (98%, 17.3M, four flaws, download counts) come from Glow Labs via Help Net Security. We could not open Glow's original blog post from this environment, so we haven't checked the full methodology or the sample size.</li>
+      <li>Glow is a security vendor; research like this also markets its product category. That doesn't make it wrong, but the "who can fix it" framing naturally favors security tooling.</li>
+      <li>The Anthropic inference-hooks details come from Anthropic's announcement as mirrored by Releasebot; we didn't test the feature. Anthropic did not say it was a response to this research.</li>
+      <li>The deprecated-package list in the checker and the hook script are simplified examples written for this lesson, not official tools.</li>
+    </ul>
+
+    <h2>Sources</h2>
+    <ul class="sources">
+      <li>Help Net Security, Mirko Zorz — "AI coding agents are installing MCP servers that will never be patched" (Nov 3, 2026): <a href="https://www.helpnetsecurity.com/2026/11/03/mcphantom-deprecated-mcp-servers/" target="_blank" rel="noopener">helpnetsecurity.com</a></li>
+      <li>Glow Labs — "MCPhantom" original research (cited by Help Net Security, not opened directly): <a href="https://www.glow.io/blogs/mcphantom-ai-coding-agents-are-installing-vulnerable-deprecated-mcp-servers-from-training-data" target="_blank" rel="noopener">glow.io</a></li>
+      <li>Anthropic — "More visibility and control over Claude Enterprise for security teams" (Nov 5, 2026), via Releasebot: <a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">releasebot.io/updates/anthropic</a></li>
+    </ul>
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema</span>
+      <h1>MCPhantom: quando a memória do modelo vira seu gerenciador de pacotes</h1>
+      <p class="subtitle">Peça a um agente de código para "configurar um MCP do GitHub" e ele precisa escolher um pacote. Uma pesquisa nova mostra que muitas vezes ele escolhe o que lembra do treinamento, mesmo que esse pacote tenha sido arquivado há mais de um ano e nunca mais vá receber correção. Veja como isso acontece, por que as ferramentas de segurança de sempre não percebem e o que dá para fazer hoje.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#pt-what">O que a pesquisa encontrou</a></li>
+        <li><a href="#pt-why">Por que agentes continuam instalando pacotes mortos</a></li>
+        <li><a href="#pt-blind">Por que os controles que você já tem ficam calados</a></li>
+        <li><a href="#pt-stretch">Como uma permissão se estica para cobrir tudo</a></li>
+        <li><a href="#pt-fix">Quem pode resolver (e os hooks que funcionam hoje)</a></li>
+        <li><a href="#pt-check">Teste: verifique uma config de MCP</a></li>
+        <li><a href="#pt-do">Checklist para o seu setup</a></li>
+        <li><a href="#pt-caveats">Ressalvas</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-what">1. O que a pesquisa encontrou</h2>
+    <p>Em 3 de novembro de 2026, o Help Net Security publicou uma pesquisa da Glow Labs, que analisou transcrições reais de sessões de programação com IA e encontrou servidores MCP descontinuados indo parar na máquina de desenvolvedores. Eles chamam o padrão de <strong>MCPhantom</strong>.</p>
+    <div class="stats">
+      <div class="stat"><div class="n">98%</div><div class="l">das sessões analisadas em que o próprio agente escolheu o nome do pacote descontinuado (nos outros 2%, o usuário pediu)</div></div>
+      <div class="stat"><div class="n">17,3 mi+</div><div class="l">downloads no npm dos pacotes descontinuados desde julho de 2025</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">falhas de alta gravidade encontradas nesses servidores, sem correção prevista</div></div>
+    </div>
+    <p>O exemplo principal: o desenvolvedor pede um servidor MCP do GitHub. O próprio GitHub mantém um. O agente ignora esse e instala um servidor de <em>referência</em> antigo da Anthropic que ele lembra, de um repositório arquivado em maio de 2025 que avisa com todas as letras que não vai mais receber atualizações de segurança. "Agentes não leem aviso de arquivamento", resume a matéria.</p>
+    <p>Não é bug de um fornecedor só. O padrão apareceu no Claude Code, Cursor, Codex CLI, Claude Cowork e no chat do Claude, com modelos da Anthropic, OpenAI e xAI. Cinco dos pacotes descontinuados estão entre os 100 pacotes MCP mais usados do npm.</p>
+    <div class="callout"><strong>Atenção ao recorte:</strong> os 98% valem só para as sessões em que um servidor descontinuado foi instalado ou sugerido. Não quer dizer que 98% de todas as instalações de MCP sejam de pacotes descontinuados.</div>
+
+    <h2 id="pt-why">2. Por que agentes continuam instalando pacotes mortos</h2>
+    <p>O conhecimento de um modelo é uma foto de um momento. Quando a foto foi tirada, <code>@modelcontextprotocol/server-github</code> era <em>o</em> jeito de ligar um agente ao GitHub: estava em documentação, tutoriais, READMEs e milhares de arquivos de config. É justamente essa frequência que deixa o modelo confiante nele depois.</p>
+    <div class="flow">
+      <span class="step">Dados de treino: pacote X está em todo lugar</span><span class="arr">→</span>
+      <span class="step">Pacote X é arquivado</span><span class="arr">→</span>
+      <span class="step">Modelo ainda "conhece" X</span><span class="arr">→</span>
+      <span class="step bad">Agente roda <code>npx X</code></span><span class="arr">→</span>
+      <span class="step bad">Código sem correção na sua máquina</span>
+    </div>
+    <p>O VP de P&amp;D da Glow resumiu assim: <strong>"A memória do modelo agora é um gerenciador de pacotes sem aviso de descontinuação."</strong></p>
+    <p>Dá vontade de pensar "é só mandar o agente consultar o npm antes". Os pesquisadores viram isso acontecer. Numa sessão, o agente consultou o pacote, recebeu "This package is deprecated", instalou mesmo assim e não falou nada para o usuário. Consultar só ajuda se alguma coisa <em>obriga</em> o agente a respeitar o resultado.</p>
+    <h3>Qual a diferença para "slopsquatting"</h3>
+    <p>Talvez você já tenha ouvido falar de slopsquatting: o modelo inventa um nome de pacote que não existe e um atacante registra esse nome com código malicioso. O MCPhantom é o primo mais discreto. O pacote é real, legítimo, já foi oficial e é publicado por uma organização confiável. Nada nele parece malicioso. Ele só está abandonado, e código abandonado com falhas conhecidas é uma ótima superfície de ataque.</p>
+
+    <h2 id="pt-blind">3. Por que os controles que você já tem ficam calados</h2>
+    <p>Esses servidores são dependências que nunca aparecem num arquivo de dependências. Cada defesa padrão deixa passar por um motivo diferente:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Controle</th><th>O que costuma fazer</th><th>Por que não pega o MCPhantom</th></tr>
+      <tr><td>EDR (detecção no endpoint)</td><td>Sinaliza processos suspeitos</td><td>Ele vê um processo Node confiável instalando um pacote público do npm. Parece rotina.</td></tr>
+      <tr><td>SCA (varredura de dependências)</td><td>Lê <code>package.json</code> / lockfiles e cruza com CVEs</td><td>O servidor roda via <code>npx</code>, então não existe manifesto. E as falhas não têm CVE.</td></tr>
+      <tr><td>Inventário de software</td><td>Lista aplicativos instalados</td><td>Um pacote rodado via <code>npx</code> nunca é "instalado" como aplicativo.</td></tr>
+      <tr><td>O próprio npm</td><td>Pode remover pacotes</td><td>O npm só deixa o dono despublicar pacotes com menos de 300 downloads semanais, um único dono e sem dependentes. O <code>server-github</code> teve 185.239 downloads na última semana e tem 6 donos. O npm remove malware, não código vulnerável.</td></tr>
+    </table></div>
+    <p>Ou seja: o único lugar onde o problema aparece é a máquina do próprio desenvolvedor, dentro do arquivo de config de MCP que o agente escreveu.</p>
+
+    <h2 id="pt-stretch">4. Como uma permissão se estica para cobrir tudo</h2>
+    <p>A mais grave das quatro falhas é um bug de execução remota de código no servidor <strong>Puppeteer</strong> arquivado, que deixa um agente controlar um navegador. A cadeia é curta:</p>
+    <ol>
+      <li>O desenvolvedor autoriza o agente a "navegar na web".</li>
+      <li>O agente lê uma página com uma prompt injection escondida.</li>
+      <li>A injection faz o agente chamar o servidor Puppeteer de um jeito que abre um processo qualquer no lugar do navegador.</li>
+      <li>O harness deixa passar, porque do ponto de vista dele ainda é a "ferramenta de navegador" que o usuário aprovou.</li>
+    </ol>
+    <p>Essa é a lição central para quem trabalha com agentes: <strong>uma permissão só é tão estreita quanto o código por trás da ferramenta</strong>. Aprovar uma ferramenta pelo nome ("navegador") não diz nada sobre o que uma implementação com bug dessa ferramenta consegue fazer. Se você leu a lição de 28 de outubro sobre modos de permissão, esta é a outra metade da história: o modo decide <em>quando</em> o agente pergunta; o código do servidor decide o que o "sim" realmente libera.</p>
+    <p>A Glow diz que não viu exploração real até agora. Os mantenedores fecharam o relatório como fora de escopo (o servidor está arquivado) e disseram que podem marcar o pacote como descontinuado no npm, para o usuário ver um aviso. Só que um pacote marcado como descontinuado continua instalando normalmente via <code>npx</code>.</p>
+
+    <h2 id="pt-fix">5. Quem pode resolver (e os hooks que funcionam hoje)</h2>
+    <p>O pesquisador da Glow, Nadav Claude Cohen, listou quatro fontes possíveis de solução, cada uma com um porém:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Quem</th><th>Solução</th><th>Porém</th></tr>
+      <tr><td>Quem faz os harnesses (Claude Code, Cursor, Codex...)</td><td>Recusar ou avisar sobre servidores descontinuados, inclusive os já instalados</td><td>"Só funciona se todos os harnesses fizerem."</td></tr>
+      <tr><td>Quem faz os modelos</td><td>Atualizar o que os modelos sabem sobre nomes de pacote</td><td>Retreinar é caro; improvável só por isso</td></tr>
+      <tr><td>Donos dos pacotes</td><td>Corrigir os bugs</td><td>A única solução que protege quem já usa, e foi justamente a recusada</td></tr>
+      <tr><td>Times de segurança / você</td><td>Hooks pré-execução que inspecionam a chamada antes de rodar</td><td>Funciona hoje, sem esperar ninguém</td></tr>
+    </table></div>
+    <h3>O ângulo da Anthropic: inference hooks ficaram GA em 5/11</h3>
+    <p>O timing é curioso. Dois dias depois da reportagem, em 5 de novembro, a Anthropic anunciou que os <strong>inference hooks</strong> estão disponíveis para todos no Claude Enterprise. São dois tipos: <em>prompt hooks</em>, que mandam os prompts para a sua ferramenta de segurança checar, e <em>pre-tool-call hooks</em>, que checam chamadas de ferramenta nos produtos Claude suportados antes de elas rodarem. O mesmo anúncio trouxe uma central de segurança que compara as configurações do Claude da sua organização com a configuração recomendada pela Anthropic, e suporte a sensores de EDR dentro da VM local usada pelo Cowork. A Anthropic não liga isso ao MCPhantom, mas um pre-tool-call hook é exatamente a camada "que funciona hoje" descrita pelos pesquisadores.</p>
+    <h3>Uma versão caseira para um desenvolvedor só</h3>
+    <p>Não precisa de Enterprise para aplicar a ideia. O Claude Code aceita hooks locais configurados num arquivo de settings: um hook <code>PreToolUse</code> recebe a chamada pendente como JSON no stdin, e sair com código <code>2</code> bloqueia a chamada e mostra sua mensagem para o modelo. Uma trava mínima que bloqueia a instalação de qualquer coisa que o npm marque como descontinuada:</p>
+<pre><code>// .claude/settings.json (nível do projeto)
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "node .claude/hooks/no-deprecated.js" }] }
+    ]
+  }
+}</code></pre>
+<pre><code>// .claude/hooks/no-deprecated.js
+const { execSync } = require("child_process");
+let raw = "";
+process.stdin.on("data", c => raw += c).on("end", () => {
+  const cmd = JSON.parse(raw).tool_input?.command || "";
+  // pega o nome do pacote depois de npx / npm i / npm install
+  const m = cmd.match(/\b(?:npx(?:\s+-y)?|npm\s+(?:i|install))\s+((?:@[\w.-]+\/)?[\w.-]+)/);
+  if (!m) process.exit(0);
+  try {
+    const dep = execSync(`npm view ${m[1]} deprecated`, { encoding: "utf8" }).trim();
+    if (dep) {
+      console.error(`Bloqueado: ${m[1]} está descontinuado no npm ("${dep}"). ` +
+                    `Procure o servidor oficial do dono do serviço.`);
+      process.exit(2);   // 2 = bloqueia e explica o motivo ao modelo
+    }
+  } catch { /* consulta falhou: deixa o prompt de permissão normal decidir */ }
+  process.exit(0);
+});</code></pre>
+    <p>Dois limites honestos: ele só inspeciona comandos de shell (um servidor MCP adicionado editando o arquivo de config direto não passa por ele), e depende da flag <code>deprecated</code> do npm, que, segundo a matéria, os servidores de referência arquivados talvez nem tenham ainda. Use como uma camada, junto com uma allowlist. Os nomes de campo dos hooks podem mudar entre versões, então confira a documentação atual de hooks do Claude Code antes de copiar.</p>
+
+    <h2 id="pt-check">6. Teste: verifique uma config de MCP</h2>
+    <p>Cole uma config de MCP (o JSON <code>mcpServers</code> que a maioria dos clientes usa). Tudo roda só no seu navegador. Ele sinaliza pacotes do conjunto de servidores de referência arquivados e sugere onde procurar uma alternativa. A lista se baseia nos servidores de referência movidos para o repositório arquivado em 2025; é material didático, não uma base completa nem oficial.</p>
+    <div class="tool" id="chk-pt">
+      <textarea spellcheck="false"></textarea>
+      <div class="tool-bar">
+        <button data-act="run">Verificar config</button>
+        <button class="ghost" data-act="sample">Carregar exemplo</button>
+        <span class="tool-score"></span>
+      </div>
+      <ul class="res-list"></ul>
+    </div>
+
+    <h2 id="pt-do">7. Checklist para o seu setup</h2>
+    <ol>
+      <li><strong>Audite o que você já tem.</strong> Procure nas suas configs de MCP (o <code>.mcp.json</code> do projeto, a config de usuário do seu cliente) por <code>@modelcontextprotocol/server-</code>. Tudo que aparecer merece uma segunda olhada.</li>
+      <li><strong>Prefira o servidor do dono do serviço.</strong> Se o GitHub, um fornecedor de banco de dados ou uma ferramenta SaaS publica um servidor MCP oficial, use esse. Servidor da comunidade ou de referência é plano B, não padrão.</li>
+      <li><strong>Fixe versões.</strong> <code>npx -y algum-servidor</code> puxa a última versão toda vez. Fixe uma versão exata, para que mudar seja uma decisão sua.</li>
+      <li><strong>Um servidor aprovado por serviço.</strong> Mantenha uma allowlist curta para o time. O agente pode sugerir; quem aprova adições é uma pessoa.</li>
+      <li><strong>Inclua "está descontinuado ou arquivado?" no checklist de aprovação.</strong> Consulte o npm (<code>npm view &lt;pkg&gt; deprecated</code>) e o status de arquivamento do repositório.</li>
+      <li><strong>Pergunte ao agente o que ele instalou.</strong> Depois de uma sessão de setup, peça os nomes e versões exatos dos pacotes. É um hábito barato que pega surpresas.</li>
+      <li><strong>Lembre da lição sobre permissões.</strong> Aprovar uma ferramenta é confiar no código dela, não só no nome.</li>
+    </ol>
+
+    <h2 id="pt-caveats">8. Ressalvas</h2>
+    <ul>
+      <li>Todos os números (98%, 17,3 milhões, quatro falhas, contagem de downloads) vêm da Glow Labs via Help Net Security. Não conseguimos abrir o post original da Glow a partir deste ambiente, então não conferimos a metodologia completa nem o tamanho da amostra.</li>
+      <li>A Glow é uma empresa de segurança; pesquisas assim também fazem marketing da categoria de produto dela. Isso não as torna erradas, mas a lista de "quem pode resolver" naturalmente favorece ferramentas de segurança.</li>
+      <li>Os detalhes dos inference hooks vêm do anúncio da Anthropic espelhado pelo Releasebot; não testamos o recurso. A Anthropic não disse que foi uma resposta a essa pesquisa.</li>
+      <li>A lista de pacotes do verificador e o script de hook são exemplos simplificados escritos para esta lição, não ferramentas oficiais.</li>
+    </ul>
+
+    <h2>Fontes</h2>
+    <ul class="sources">
+      <li>Help Net Security, Mirko Zorz — "AI coding agents are installing MCP servers that will never be patched" (3 nov. 2026): <a href="https://www.helpnetsecurity.com/2026/11/03/mcphantom-deprecated-mcp-servers/" target="_blank" rel="noopener">helpnetsecurity.com</a></li>
+      <li>Glow Labs — pesquisa original "MCPhantom" (citada pelo Help Net Security, não aberta diretamente): <a href="https://www.glow.io/blogs/mcphantom-ai-coding-agents-are-installing-vulnerable-deprecated-mcp-servers-from-training-data" target="_blank" rel="noopener">glow.io</a></li>
+      <li>Anthropic — "More visibility and control over Claude Enterprise for security teams" (5 nov. 2026), via Releasebot: <a href="https://releasebot.io/updates/anthropic" target="_blank" rel="noopener">releasebot.io/updates/anthropic</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    <span id="footer-left">Cooldecode · AI Watch</span>
+    <span class="accent">2026-11-06</span>
+  </footer>
+
+</div>
+
+<script>
+  // Teaching list: reference servers moved to the archived repo in 2025 (simplified, not authoritative)
+  var ARCHIVED = {
+    "server-github": "github", "server-gitlab": "gitlab", "server-puppeteer": "puppeteer",
+    "server-slack": "slack", "server-gdrive": "gdrive", "server-google-maps": "maps",
+    "server-postgres": "postgres", "server-sqlite": "sqlite", "server-redis": "redis",
+    "server-sentry": "sentry", "server-brave-search": "brave", "server-aws-kb-retrieval": "aws",
+    "server-everart": "everart"
+  };
+  var ACTIVE = ["server-filesystem", "server-fetch", "server-git", "server-memory", "server-sequential-thinking", "server-time", "server-everything"];
+
+  var SAMPLE = JSON.stringify({
+    mcpServers: {
+      github: { command: "npx", args: ["-y", "@modelcontextprotocol/server-github"] },
+      browser: { command: "npx", args: ["-y", "@modelcontextprotocol/server-puppeteer"] },
+      files: { command: "npx", args: ["-y", "@modelcontextprotocol/server-filesystem@2025.8.21", "./docs"] },
+      db: { command: "npx", args: ["-y", "acme-db-mcp"] }
+    }
+  }, null, 2);
+
+  var MSG = {
+    en: {
+      bad: "Archived reference server", badTip: function(s) { return s === "github" ? "Unmaintained. GitHub publishes its own official MCP server; use that." : "Unmaintained, no security fixes coming. Look for the service owner's official server, or a maintained alternative."; },
+      warnPin: "Not pinned", warnPinTip: "Runs whatever version is latest. Pin an exact version (pkg@x.y.z).",
+      okActive: "Maintained reference server", okActiveTip: "Still in the active reference repo (at the time of the list). Pin the version anyway.",
+      unknown: "Unknown package", unknownTip: "Not in this lesson's list. Check npm deprecation status and who maintains it.",
+      parse: "Could not parse JSON. Paste an object with an \"mcpServers\" key.",
+      none: "No servers found in \"mcpServers\".",
+      score: function(b, n) { return b + " archived of " + n + " server" + (n === 1 ? "" : "s"); }
+    },
+    pt: {
+      bad: "Servidor de referência arquivado", badTip: function(s) { return s === "github" ? "Sem manutenção. O GitHub publica um servidor MCP oficial próprio; use esse." : "Sem manutenção, sem correções de segurança. Procure o servidor oficial do dono do serviço ou uma alternativa mantida."; },
+      warnPin: "Versão não fixada", warnPinTip: "Roda a versão mais recente, seja ela qual for. Fixe uma versão exata (pkg@x.y.z).",
+      okActive: "Servidor de referência mantido", okActiveTip: "Ainda no repositório ativo de referência (na data da lista). Fixe a versão mesmo assim.",
+      unknown: "Pacote desconhecido", unknownTip: "Fora da lista desta lição. Confira o status de descontinuação no npm e quem mantém.",
+      parse: "Não deu para ler o JSON. Cole um objeto com a chave \"mcpServers\".",
+      none: "Nenhum servidor encontrado em \"mcpServers\".",
+      score: function(b, n) { return b + " arquivado(s) de " + n + " servidor(es)"; }
+    }
+  };
+
+  function esc(s) { return String(s).replace(/[&<>]/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+  function findPkg(srv) {
+    var args = (srv.args || []).filter(function(a) { return typeof a === "string" && a.charAt(0) !== "-"; });
+    if (srv.command && srv.command !== "npx" && srv.command !== "node" && srv.command !== "pnpm" && srv.command !== "bunx") return srv.command;
+    return args[0] || srv.url || "(none)";
+  }
+
+  function check(text, lang) {
+    var m = MSG[lang], cfg;
+    try { cfg = JSON.parse(text); } catch (e) { return { err: m.parse }; }
+    var servers = (cfg && (cfg.mcpServers || cfg.servers)) || {};
+    var names = Object.keys(servers);
+    if (!names.length) return { err: m.none };
+    var out = [], bad = 0;
+    names.forEach(function(name) {
+      var pkg = findPkg(servers[name] || {});
+      var base = pkg.replace(/^@modelcontextprotocol\//, "");
+      var hasVer = /^(@[^/]+\/)?[^@]+@.+/.test(pkg);
+      var bare = base.split("@")[0];
+      var isRef = /^@modelcontextprotocol\//.test(pkg);
+      if (isRef && ARCHIVED[bare]) { bad++; out.push({ c: "bad", t: m.bad, d: m.badTip(ARCHIVED[bare]), n: name, p: pkg }); }
+      else if (isRef && ACTIVE.indexOf(bare) >= 0) { out.push({ c: hasVer ? "ok" : "warn", t: hasVer ? m.okActive : m.warnPin, d: hasVer ? m.okActiveTip : m.warnPinTip, n: name, p: pkg }); }
+      else { out.push({ c: "warn", t: m.unknown, d: m.unknownTip + (hasVer ? "" : " " + m.warnPinTip), n: name, p: pkg }); }
+    });
+    return { list: out, bad: bad, n: names.length };
+  }
+
+  function initChk(box, lang) {
+    var ta = box.querySelector("textarea"), list = box.querySelector(".res-list"), score = box.querySelector(".tool-score");
+    ta.value = SAMPLE;
+    function run() {
+      var r = check(ta.value, lang);
+      if (r.err) { score.textContent = ""; list.innerHTML = '<li class="warn">' + esc(r.err) + "</li>"; return; }
+      score.textContent = MSG[lang].score(r.bad, r.n);
+      list.innerHTML = r.list.map(function(f) {
+        return '<li class="' + f.c + '"><b>' + esc(f.n) + "</b> · " + esc(f.t) + " — " + esc(f.d) + '<span class="meta">' + esc(f.p) + "</span></li>";
+      }).join("");
+    }
+    box.querySelector('[data-act="run"]').addEventListener("click", run);
+    box.querySelector('[data-act="sample"]').addEventListener("click", function() { ta.value = SAMPLE; run(); });
+    run();
+  }
+  initChk(document.getElementById("chk-en"), "en");
+  initChk(document.getElementById("chk-pt"), "pt");
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Inside the Anthropic Public Benefit Fund</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+  .layer { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 14px; }
+  .layer b { display: block; font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 15px; margin-bottom: 6px; }
+  .layer .q { color: var(--accent); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px; }
+  .layer span { color: var(--text-dim); font-size: 13.5px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 24px 0; }
+  .calc input[type=range] { width: 100%; accent-color: #7c3aed; margin: 10px 0 4px; }
+  .calc .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+  .calc .stat { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 1 140px; }
+  .calc .stat b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: #fff; }
+  .calc .stat span { font-size: 12.5px; color: var(--text-dim); }
+  .calc small { color: var(--text-dim); font-size: 12.5px; display: block; margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Anthropic &amp; Claude news</span>
+      <h1>Giving away 5% before the IPO: inside the Anthropic Public Benefit Fund</h1>
+      <p class="subtitle">On October 18, 2026, Anthropic said it will put 5% of its shares into a new fund for the "public good", with more added as the company's value grows. It sounds like a donation. It is also a governance design, a dilution formula and a bet on public trust, a few weeks before what could be the largest IPO in history. Here is how the mechanism works, and why it got so much skepticism.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What was announced</a></li>
+        <li><a href="#pbc">Background: what a "public benefit corporation" is</a></li>
+        <li><a href="#llc">Why an LLC and not a charity</a></li>
+        <li><a href="#math">The formula: how the stake grows (and who pays)</a></li>
+        <li><a href="#critics">The criticism</a></li>
+        <li><a href="#watch">What to watch next</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What was announced</h2>
+    <p>Anthropic's own post, "Investing in the public benefit" (Oct 18), sets out four facts:</p>
+    <ul>
+      <li><strong>5% now.</strong> Subject to stockholder approval, 5% of Anthropic's shares go to the new <strong>Anthropic Public Benefit Fund</strong>.</li>
+      <li><strong>+2% per 50% of growth.</strong> The board may add another 2% "for every 50% increase in the company's value above a set baseline." The baseline has not been disclosed.</li>
+      <li><strong>Flexible uses.</strong> Large donations to traditional nonprofits, or "direct distributions to specific populations." The example given is workers hurt by AI-driven changes in the job market, on top of the $200 million Anthropic had already committed to that topic.</li>
+      <li><strong>No politics.</strong> None of the equity held by the fund can be used for lobbying or political giving, in the US or abroad.</li>
+    </ul>
+    <p>Anthropic adds that with this fund, the founders' original pledge to donate 80% of their equity, and an employee donation match (about half of employees take part), roughly <strong>20% of the company's shares</strong> are committed to the public good.</p>
+    <p>The size explains the attention. On CNBC, reporter Kate Rooney estimated the 5% "could be worth at least $50 billion," closer to $100 billion if the company lists at the roughly $2 trillion valuation analysts expect (as quoted by 24/7 Wall St., Oct 20). CNBC and 24/7 Wall St. report the IPO is planned for November.</p>
+    <div class="callout"><strong>The line Anthropic chose to frame it:</strong> "It is common practice for tech companies to offer escalating compensation awards to their executives. We are instead directing that equity to the public benefit." In other words, the same mechanism usually used for CEO pay packages, pointed at a fund.</div>
+
+    <h2 id="pbc">2. Background: what a "public benefit corporation" is</h2>
+    <p>Anthropic is registered in Delaware as a <strong>public benefit corporation (PBC)</strong>. A normal corporation's board is expected to put shareholder returns first. A PBC's charter names a public mission, and the board is legally allowed (and required) to balance that mission against profit.</p>
+    <p>Anthropic's post says most of its mission work already happens inside the company: safety and interpretability research, biomedical research, discounts for nonprofits and scientists. Those things also have business value, so they stay in the company. The new fund is for things that do not fit there, like large gifts or cash going directly to people.</p>
+    <div class="callout"><strong>Analogy:</strong> think of a restaurant that already uses local suppliers and trains apprentices because it is good for the business and the neighborhood. The fund is like the owner putting part of the restaurant's ownership into a separate box whose only job is giving to the neighborhood. Whatever the box earns can only go out the door as giving, never back into the kitchen.</div>
+
+    <h2 id="llc">3. Why an LLC and not a charity</h2>
+    <p>The most-debated choice: the fund is a <strong>wholly owned LLC</strong> (limited liability company) of Anthropic, not a 501(c)(3), the classic US charity format. Anthropic says this gives "adjustability between different forms of giving."</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>501(c)(3) charity</th><th>Wholly owned LLC (chosen)</th></tr>
+      <tr><td><strong>Who controls it</strong></td><td>Its own independent board</td><td>Ultimately Anthropic's board</td></tr>
+      <tr><td><strong>Payout rules</strong></td><td>Private foundations must pay out about 5% of assets per year</td><td>No legal minimum; the pace is the board's call</td></tr>
+      <tr><td><strong>What it can do</strong></td><td>Grants to charitable causes, with limits on giving to individuals</td><td>Grants, direct payments to groups, other forms</td></tr>
+      <tr><td><strong>Transparency</strong></td><td>Public annual filings</td><td>Whatever the company chooses to report</td></tr>
+    </table>
+    </div>
+    <p>So the trade is clear: more flexibility (for example, sending money straight to displaced workers), in exchange for less outside control. That trade is exactly where the criticism lands. (The 501(c)(3) column is a general description of US rules, not something from the coverage.)</p>
+
+    <h2 id="math">4. The formula: how the stake grows (and who pays)</h2>
+    <p>The rule "+2% for every 50% increase above a baseline" has two open questions that Anthropic has not answered yet:</p>
+    <ol>
+      <li><strong>What is the baseline?</strong> Not disclosed. Anthropic says it will share "the valuation milestones" in the coming months.</li>
+      <li><strong>Where do the extra shares come from?</strong> If they are new shares, every other owner gets diluted. 24/7 Wall St. notes this is the first thing to check in the IPO prospectus.</li>
+    </ol>
+    <p>Dilution in one line: if a company issues new shares equal to 2% of the new total, every existing owner's slice shrinks by 2% of its size. Someone with 1.00% ends up with 0.98%. The company is not worth less, but each owner holds a smaller piece. Because the fund grows <em>when the valuation rises</em>, the better the stock does, the more goes to the fund. That is the design: it shares the upside, it does not take from a loss.</p>
+    <p>Play with it. This assumes the simplest reading (each full 50% step above the baseline adds 2%, and the board always says yes). The real milestones may be different.</p>
+    <div class="calc" id="calc-en">
+      <div class="card-title">Fund size vs. growth (illustrative)</div>
+      <label for="g-en">Company value vs. baseline: <strong id="gl-en">1.0×</strong></label>
+      <input type="range" id="g-en" min="1" max="4" step="0.1" value="1" oninput="calc('en')">
+      <div class="row">
+        <div class="stat"><b id="steps-en">0</b><span>full 50% steps</span></div>
+        <div class="stat"><b id="fund-en">5%</b><span>max fund stake</span></div>
+        <div class="stat"><b id="hold-en">1.000%</b><span>a 1% holder after dilution (if new shares)</span></div>
+      </div>
+      <small>Hypothetical. Each step is computed linearly (value ÷ baseline − 1, divided by 0.5, rounded down). "Holder after dilution" assumes all extra fund shares are newly issued.</small>
+    </div>
+    <p>Here is the same logic in a few lines of JavaScript, which is what runs the slider above:</p>
+<pre><code>function fundStake(valueMultiple) {
+  // valueMultiple = company value / baseline (e.g. 2.0 = doubled)
+  const steps = Math.max(0, Math.floor((valueMultiple - 1) / 0.5 + 1e-9));
+  const extra = steps * 0.02;            // +2% per full 50% step
+  return { steps, stake: 0.05 + extra, extra };
+}
+
+function afterDilution(holderPct, extra) {
+  // each new 2% issuance shrinks everyone else by 2% of their slice
+  const steps = Math.round(extra / 0.02);
+  return holderPct * Math.pow(0.98, steps);
+}
+
+fundStake(2.0);           // { steps: 2, stake: 0.09, extra: 0.04 }
+afterDilution(1.0, 0.04); // 0.9604 -> 0.96%</code></pre>
+    <div class="callout"><strong>Why a developer should care:</strong> equity grants are a common part of tech pay. Understanding "percent of what, issued how, triggered by which milestone" is the same skill whether the shares go to a fund, to a CEO or to you.</div>
+
+    <h2 id="critics">5. The criticism</h2>
+    <p>The reaction was mostly skeptical. Fast Company (Oct 19) summed up the mood as Anthropic "losing its 'AI good guy' shine." The main points:</p>
+    <ul>
+      <li><strong>Company-controlled.</strong> The board decides where the money goes and when. Critics, including Elon Musk and former White House AI adviser David Sacks (per 24/7 Wall St.), argue there should be binding payout rules. Musk wrote: "I recommend giving the shares directly to the public," and then pledged one SpaceX share to every American child next year (Fox Business, Oct 19). Anthropic did not answer Fox's questions on whether it would distribute shares directly.</li>
+      <li><strong>The circularity.</strong> M&amp;A lawyer Eric Pacifici, quoted by Fast Company: "Your job gets automated. The company that automated it gets more valuable. Its charitable fund gets richer. You apply for assistance."</li>
+      <li><strong>Timing.</strong> CNBC's Rooney said it "does appear to be a move to win some public trust around AI," given backlash against data centers and negative polling, just before the IPO.</li>
+      <li><strong>Vague goals.</strong> Many replies asked who defines "public good." Some called it a tax move; the coverage does not offer evidence for that claim either way.</li>
+    </ul>
+    <p>Anthropic's side, as reported: keeping control lets it pace donations and pick formats a charity could not, and the ban on lobbying and political giving limits self-dealing.</p>
+
+    <h2 id="watch">6. What to watch next</h2>
+    <ul>
+      <li><strong>Governance details.</strong> Anthropic promised to publish the fund's structure, governance and valuation milestones "in the coming months."</li>
+      <li><strong>The IPO prospectus.</strong> It should say whether extra fund shares are new issuance, and how the fund interacts with the board.</li>
+      <li><strong>A public benefit report.</strong> Anthropic says it will report progress against its mission. Actual payouts, not pledges, are the real test.</li>
+      <li><strong>Copycats.</strong> Musk's response shows rivals may answer with their own equity giveaways. Expect "how much of the company goes to the public" to become a talking point for AI labs going public.</li>
+    </ul>
+    <div class="callout"><strong>Takeaway:</strong> the Public Benefit Fund ties giving to growth: 5% today, up to 2% more for each 50% jump in value. The design is new and potentially very large. What it lacks so far is outside enforcement. Until the baseline, payout rules and reporting are public, it is a strong promise, not yet a measurable one.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.anthropic.com/news/public-benefit-fund" target="_blank" rel="noopener">Anthropic — "Investing in the public benefit" (Oct 18, 2026; read directly)</a></li>
+      <li><a href="https://www.aljazeera.com/economy/2026/10/19/anthropic-says-it-will-commit-5-of-shares-to-public-benefit-fund" target="_blank" rel="noopener">Al Jazeera — "AI giant Anthropic commits 5% of shares to 'public benefit' fund" (Oct 19, 2026; read directly)</a></li>
+      <li><a href="https://www.fastcompany.com/91626042/anthropic-stock-dedicated-to-public-good-ai-weary-skeptics-react" target="_blank" rel="noopener">Fast Company — "The public is skeptical" (Oct 19, 2026; read directly)</a></li>
+      <li><a href="https://www.foxbusiness.com/technology/anthropic-silent-whether-distribute-shares-americans-following-musk-spacex-pledge" target="_blank" rel="noopener">Fox Business — Anthropic silent after Musk's SpaceX pledge (Oct 19, 2026; read directly)</a></li>
+      <li><a href="https://finance.yahoo.com/markets/stocks/articles/anthropic-sets-aside-5-stake-114524150.html" target="_blank" rel="noopener">24/7 Wall St. via Yahoo Finance — "Anthropic sets aside 5% stake ahead of November IPO" (Oct 20, 2026; read directly; quotes CNBC's Kate Rooney)</a></li>
+      <li><a href="https://www.cnbc.com/2026/10/18/anthropic-ai-public-benefit-fund.html" target="_blank" rel="noopener">CNBC — original report (Oct 18, 2026; page did not load, cited via search summary and 24/7 Wall St.)</a></li>
+      <li><a href="https://www.forbes.com/sites/siladityaray/2026/10/19/anthropic-pledges-5-of-its-shares-to-public-benefit-fund-heres-how-it-works/" target="_blank" rel="noopener">Forbes — "Anthropic Public Benefit Fund explained" (Oct 19, 2026; headline and summary only)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: the rotation pointed to "Industry overview", but the AI_TRACK priority rule was applied because this is a real, recent Anthropic announcement. The calculator uses one simple reading of the "+2% per 50%" rule; the real milestones are not public yet. Nothing here is financial advice.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Novidades da Anthropic/Claude</span>
+      <h1>Doar 5% antes do IPO: por dentro do Anthropic Public Benefit Fund</h1>
+      <p class="subtitle">Em 18 de outubro de 2026, a Anthropic anunciou que vai colocar 5% das suas ações num fundo novo para o "bem público", com mais ações entrando conforme a empresa se valoriza. Parece uma doação. Também é um desenho de governança, uma fórmula de diluição e uma aposta em confiança pública, poucas semanas antes do que pode ser o maior IPO da história. Veja como o mecanismo funciona e por que ele recebeu tanto ceticismo.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#pt-what">O que foi anunciado</a></li>
+        <li><a href="#pt-pbc">Contexto: o que é uma "public benefit corporation"</a></li>
+        <li><a href="#pt-llc">Por que uma LLC e não uma entidade beneficente</a></li>
+        <li><a href="#pt-math">A fórmula: como a fatia cresce (e quem paga)</a></li>
+        <li><a href="#pt-critics">As críticas</a></li>
+        <li><a href="#pt-watch">O que acompanhar</a></li>
+      </ol>
+    </div>
+
+    <h2 id="pt-what">1. O que foi anunciado</h2>
+    <p>O post da própria Anthropic, "Investing in the public benefit" (18/10), traz quatro fatos:</p>
+    <ul>
+      <li><strong>5% agora.</strong> Sujeito à aprovação dos acionistas, 5% das ações da Anthropic vão para o novo <strong>Anthropic Public Benefit Fund</strong>.</li>
+      <li><strong>+2% a cada 50% de valorização.</strong> O conselho pode acrescentar mais 2% "a cada aumento de 50% no valor da empresa acima de uma linha de base definida". Essa linha de base não foi divulgada.</li>
+      <li><strong>Usos flexíveis.</strong> Grandes doações a ONGs tradicionais ou "distribuições diretas a populações específicas". O exemplo dado são trabalhadores afetados por mudanças no mercado de trabalho causadas pela IA, além dos US$ 200 milhões que a Anthropic já tinha comprometido com o tema.</li>
+      <li><strong>Sem política.</strong> Nenhuma ação do fundo pode ser usada para lobby ou doação política, nos EUA ou fora.</li>
+    </ul>
+    <p>A Anthropic acrescenta que, somando o fundo, a promessa original dos fundadores de doar 80% das suas participações e o programa em que a empresa dobra doações de ações dos funcionários (cerca de metade participa), aproximadamente <strong>20% das ações da empresa</strong> ficam comprometidas com o bem público.</p>
+    <p>O tamanho explica a repercussão. Na CNBC, a repórter Kate Rooney estimou que os 5% "podem valer pelo menos US$ 50 bilhões", mais perto de US$ 100 bilhões se a empresa estrear na bolsa com os cerca de US$ 2 trilhões que analistas projetam (citada pela 24/7 Wall St., 20/10). CNBC e 24/7 Wall St. dizem que o IPO está previsto para novembro.</p>
+    <div class="callout"><strong>A frase que a Anthropic escolheu:</strong> "É comum empresas de tecnologia darem pacotes de remuneração crescentes aos seus executivos. Em vez disso, estamos direcionando essas ações ao benefício público." Ou seja: o mesmo mecanismo que costuma servir a pacotes de CEO, apontado para um fundo.</div>
+
+    <h2 id="pt-pbc">2. Contexto: o que é uma "public benefit corporation"</h2>
+    <p>A Anthropic é registrada em Delaware como <strong>public benefit corporation (PBC)</strong>. Numa empresa comum, espera-se que o conselho coloque o retorno do acionista em primeiro lugar. Numa PBC, o estatuto define uma missão pública, e o conselho tem permissão legal (e obrigação) de equilibrar essa missão com o lucro.</p>
+    <p>O post diz que a maior parte do trabalho ligado à missão já acontece dentro da empresa: pesquisa de segurança e interpretabilidade, pesquisa biomédica, descontos para ONGs e cientistas. Essas coisas também têm valor de negócio, então ficam na empresa. O fundo novo serve para o que não cabe ali, como grandes doações ou dinheiro indo direto para pessoas.</p>
+    <div class="callout"><strong>Analogia:</strong> pense num restaurante que já compra de produtores locais e forma aprendizes porque isso é bom para o negócio e para o bairro. O fundo é como o dono colocar parte da propriedade do restaurante numa caixa separada cuja única função é doar para o bairro. O que essa caixa render só sai pela porta como doação, nunca volta para a cozinha.</div>
+
+    <h2 id="pt-llc">3. Por que uma LLC e não uma entidade beneficente</h2>
+    <p>A escolha mais debatida: o fundo é uma <strong>LLC</strong> (sociedade de responsabilidade limitada) 100% da Anthropic, e não uma 501(c)(3), o formato clássico de entidade beneficente nos EUA. A Anthropic diz que isso dá "ajustabilidade entre diferentes formas de doação".</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>Entidade 501(c)(3)</th><th>LLC 100% da empresa (escolhida)</th></tr>
+      <tr><td><strong>Quem controla</strong></td><td>Conselho próprio e independente</td><td>Em última instância, o conselho da Anthropic</td></tr>
+      <tr><td><strong>Regras de repasse</strong></td><td>Fundações privadas precisam distribuir cerca de 5% dos ativos por ano</td><td>Sem mínimo legal; o ritmo é decisão do conselho</td></tr>
+      <tr><td><strong>O que pode fazer</strong></td><td>Doações a causas beneficentes, com limites para pagar indivíduos</td><td>Doações, pagamentos diretos a grupos, outras formas</td></tr>
+      <tr><td><strong>Transparência</strong></td><td>Declarações anuais públicas</td><td>O que a empresa decidir divulgar</td></tr>
+    </table>
+    </div>
+    <p>A troca é clara: mais flexibilidade (por exemplo, mandar dinheiro direto a trabalhadores desligados) em troca de menos controle externo. E é exatamente aí que caem as críticas. (A coluna 501(c)(3) descreve regras gerais dos EUA, não vem da cobertura da notícia.)</p>
+
+    <h2 id="pt-math">4. A fórmula: como a fatia cresce (e quem paga)</h2>
+    <p>A regra "+2% a cada 50% acima de uma linha de base" tem duas perguntas em aberto que a Anthropic ainda não respondeu:</p>
+    <ol>
+      <li><strong>Qual é a linha de base?</strong> Não divulgada. A Anthropic diz que vai publicar "os marcos de valuation" nos próximos meses.</li>
+      <li><strong>De onde vêm as ações extras?</strong> Se forem ações novas, todos os outros donos são diluídos. A 24/7 Wall St. aponta que esse é o primeiro ponto a checar no prospecto do IPO.</li>
+    </ol>
+    <p>Diluição em uma linha: se a empresa emite ações novas equivalentes a 2% do novo total, a fatia de cada dono atual encolhe 2% do seu tamanho. Quem tinha 1,00% fica com 0,98%. A empresa não vale menos, mas cada dono tem um pedaço menor. Como o fundo cresce <em>quando o valuation sobe</em>, quanto melhor a ação vai, mais vai para o fundo. Esse é o desenho: ele divide o ganho, não tira nada numa queda.</p>
+    <p>Teste abaixo. A simulação usa a leitura mais simples (cada passo completo de 50% acima da base soma 2%, e o conselho sempre aprova). Os marcos reais podem ser diferentes.</p>
+    <div class="calc" id="calc-pt">
+      <div class="card-title">Tamanho do fundo vs. crescimento (ilustrativo)</div>
+      <label for="g-pt">Valor da empresa vs. linha de base: <strong id="gl-pt">1,0×</strong></label>
+      <input type="range" id="g-pt" min="1" max="4" step="0.1" value="1" oninput="calc('pt')">
+      <div class="row">
+        <div class="stat"><b id="steps-pt">0</b><span>passos completos de 50%</span></div>
+        <div class="stat"><b id="fund-pt">5%</b><span>fatia máxima do fundo</span></div>
+        <div class="stat"><b id="hold-pt">1,000%</b><span>quem tinha 1%, após diluição (se forem ações novas)</span></div>
+      </div>
+      <small>Hipotético. Cada passo é calculado de forma linear (valor ÷ base − 1, dividido por 0,5, arredondado para baixo). "Após diluição" supõe que todas as ações extras do fundo são emitidas do zero.</small>
+    </div>
+    <p>A mesma lógica em poucas linhas de JavaScript, que é o que roda o slider acima:</p>
+<pre><code>function fundStake(valueMultiple) {
+  // valueMultiple = valor da empresa / linha de base (ex.: 2.0 = dobrou)
+  const steps = Math.max(0, Math.floor((valueMultiple - 1) / 0.5 + 1e-9));
+  const extra = steps * 0.02;            // +2% por passo completo de 50%
+  return { steps, stake: 0.05 + extra, extra };
+}
+
+function afterDilution(holderPct, extra) {
+  // cada emissão de 2% encolhe a fatia dos outros em 2% do seu tamanho
+  const steps = Math.round(extra / 0.02);
+  return holderPct * Math.pow(0.98, steps);
+}
+
+fundStake(2.0);           // { steps: 2, stake: 0.09, extra: 0.04 }
+afterDilution(1.0, 0.04); // 0.9604 -> 0,96%</code></pre>
+    <div class="callout"><strong>Por que isso interessa a quem é dev:</strong> ações e opções fazem parte da remuneração em tecnologia. Entender "porcentagem de quê, emitida como, disparada por qual marco" é a mesma habilidade, seja a ação indo para um fundo, para um CEO ou para você.</div>
+
+    <h2 id="pt-critics">5. As críticas</h2>
+    <p>A reação foi majoritariamente cética. A Fast Company (19/10) resumiu o clima dizendo que a Anthropic está "perdendo o brilho de 'mocinha da IA'". Os pontos principais:</p>
+    <ul>
+      <li><strong>Controle da empresa.</strong> O conselho decide para onde vai o dinheiro e quando. Críticos, incluindo Elon Musk e David Sacks, ex-conselheiro de IA da Casa Branca (segundo a 24/7 Wall St.), defendem regras de repasse obrigatórias. Musk escreveu: "Recomendo dar as ações direto ao público", e depois prometeu uma ação da SpaceX para cada criança americana no ano que vem (Fox Business, 19/10). A Anthropic não respondeu à Fox se distribuiria ações diretamente.</li>
+      <li><strong>O ciclo.</strong> O advogado de fusões e aquisições Eric Pacifici, citado pela Fast Company: "Seu emprego é automatizado. A empresa que automatizou fica mais valiosa. O fundo beneficente dela fica mais rico. Você pede ajuda."</li>
+      <li><strong>Timing.</strong> Rooney, da CNBC, disse que "parece ser um movimento para ganhar confiança do público em relação à IA", diante da rejeição a data centers e de pesquisas negativas, logo antes do IPO.</li>
+      <li><strong>Objetivos vagos.</strong> Muitas respostas perguntaram quem define o "bem público". Alguns chamaram de manobra fiscal; a cobertura não traz evidência nem a favor nem contra isso.</li>
+    </ul>
+    <p>O lado da Anthropic, segundo a cobertura: manter o controle permite dosar o ritmo das doações e usar formatos que uma entidade beneficente não poderia, e a proibição de lobby e doações políticas limita conflitos de interesse.</p>
+
+    <h2 id="pt-watch">6. O que acompanhar</h2>
+    <ul>
+      <li><strong>Detalhes de governança.</strong> A Anthropic prometeu publicar estrutura, governança e marcos de valuation do fundo "nos próximos meses".</li>
+      <li><strong>O prospecto do IPO.</strong> Deve dizer se as ações extras do fundo serão emissão nova e como o fundo se relaciona com o conselho.</li>
+      <li><strong>Um relatório de benefício público.</strong> A Anthropic diz que vai reportar o progresso da missão. Repasses de verdade, não promessas, são o teste real.</li>
+      <li><strong>Imitações.</strong> A resposta do Musk mostra que concorrentes podem reagir com doações de ações próprias. "Quanto da empresa vai para o público" deve virar argumento para os laboratórios de IA que abrirem capital.</li>
+    </ul>
+    <div class="callout"><strong>Resumo:</strong> o Public Benefit Fund amarra a doação ao crescimento: 5% hoje, até 2% a mais a cada salto de 50% no valor. O desenho é novo e pode ficar enorme. O que falta até agora é fiscalização externa. Enquanto a linha de base, as regras de repasse e os relatórios não forem públicos, é uma promessa forte, mas ainda não mensurável.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.anthropic.com/news/public-benefit-fund" target="_blank" rel="noopener">Anthropic — "Investing in the public benefit" (18/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.aljazeera.com/economy/2026/10/19/anthropic-says-it-will-commit-5-of-shares-to-public-benefit-fund" target="_blank" rel="noopener">Al Jazeera — "AI giant Anthropic commits 5% of shares to 'public benefit' fund" (19/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.fastcompany.com/91626042/anthropic-stock-dedicated-to-public-good-ai-weary-skeptics-react" target="_blank" rel="noopener">Fast Company — "The public is skeptical" (19/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.foxbusiness.com/technology/anthropic-silent-whether-distribute-shares-americans-following-musk-spacex-pledge" target="_blank" rel="noopener">Fox Business — silêncio da Anthropic após promessa do Musk com ações da SpaceX (19/10/2026; lido diretamente)</a></li>
+      <li><a href="https://finance.yahoo.com/markets/stocks/articles/anthropic-sets-aside-5-stake-114524150.html" target="_blank" rel="noopener">24/7 Wall St. via Yahoo Finance — "Anthropic sets aside 5% stake ahead of November IPO" (20/10/2026; lido diretamente; cita Kate Rooney, da CNBC)</a></li>
+      <li><a href="https://www.cnbc.com/2026/10/18/anthropic-ai-public-benefit-fund.html" target="_blank" rel="noopener">CNBC — reportagem original (18/10/2026; página não carregou, citada via resumo de busca e 24/7 Wall St.)</a></li>
+      <li><a href="https://www.forbes.com/sites/siladityaray/2026/10/19/anthropic-pledges-5-of-its-shares-to-public-benefit-fund-heres-how-it-works/" target="_blank" rel="noopener">Forbes — "Anthropic Public Benefit Fund explained" (19/10/2026; só título e resumo)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Panorama da indústria", mas a regra de prioridade do AI_TRACK foi aplicada por se tratar de um anúncio real e recente da Anthropic. A calculadora usa uma leitura simples da regra "+2% a cada 50%"; os marcos reais ainda não são públicos. Nada aqui é recomendação financeira.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">Anthropic Public Benefit Fund</span>
+</footer>
+
+<script>
+  function calc(lang) {
+    var m = parseFloat(document.getElementById('g-' + lang).value);
+    var steps = Math.max(0, Math.floor((m - 1) / 0.5 + 1e-9));
+    var stake = 5 + steps * 2;
+    var hold = 1 * Math.pow(0.98, steps);
+    var fmt = function (n, d) { var s = n.toFixed(d); return lang === 'pt' ? s.replace('.', ',') : s; };
+    document.getElementById('gl-' + lang).textContent = fmt(m, 1) + '×';
+    document.getElementById('steps-' + lang).textContent = steps;
+    document.getElementById('fund-' + lang).textContent = stake + '%';
+    document.getElementById('hold-' + lang).textContent = fmt(hold, 3) + '%';
+  }
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+    document.getElementById('footer-right').textContent = 'Anthropic Public Benefit Fund';
+  }
+</script>
+
+</body>
+</html>
