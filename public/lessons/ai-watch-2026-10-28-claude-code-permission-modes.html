@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Six permission modes and a very long variable name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+    --ok: #34d399; --bad: #f87171; --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; word-break: break-word; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; word-break: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .layers { display: grid; gap: 10px; margin: 20px 0; }
+  .layers > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 14.5px; }
+  .layers b { font-family: 'Space Grotesk', sans-serif; color: #fff; }
+  .layers .n { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; text-align: center; line-height: 22px; margin-right: 8px; }
+  .sim { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .sim-modes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .sim-modes button { background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; padding: 6px 10px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; cursor: pointer; }
+  .sim-modes button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .sim-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; cursor: pointer; }
+  .sim-toggle input { accent-color: var(--accent); }
+  .sim table { margin: 8px 0 0; }
+  .sim td:last-child { white-space: nowrap; }
+  .res { font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .res.run { color: var(--ok); } .res.ask { color: var(--warn); } .res.deny { color: var(--bad); } .res.cls { color: #c4b5fd; }
+  .sim-note { font-size: 13px; color: var(--text-dim); margin-top: 10px; min-height: 20px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; padding-bottom: 40px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } .sim td:last-child { white-space: normal; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Tools &amp; ecosystem</span>
+      <h1>Six permission modes and a very long variable name: how a coding agent decides when to ask</h1>
+      <p class="subtitle">On October 27, Claude Code shipped an environment variable called <code>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS</code>. The joke writes itself, but the change is a good excuse to understand the whole permission system of a coding agent: what each mode allows, which checks survive every mode, and why the real safety line is somewhere else.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#news-en">The news: the last prompt you can now turn off</a></li>
+        <li><a href="#modes-en">The six modes, side by side</a></li>
+        <li><a href="#layers-en">Modes are only the baseline: four layers</a></li>
+        <li><a href="#critical-en">Critical paths: the check behind <code>rm -rf ~</code></a></li>
+        <li><a href="#var-en">What the new variable does (and when it does nothing)</a></li>
+        <li><a href="#sim-en">Try it: who runs, who asks, who is denied</a></li>
+        <li><a href="#choose-en">Choosing a mode for a real situation</a></li>
+        <li><a href="#lesson-en">The general lesson for any agent tool</a></li>
+      </ol>
+    </div>
+
+    <h2 id="news-en">1. The news: the last prompt you can now turn off</h2>
+    <p>Claude Code has long had a flag, <code>--dangerously-skip-permissions</code>, that starts a session in <code>bypassPermissions</code> mode, where the agent runs tools without asking. The Register reports the mode first appeared in v1.0.18, in June 2025. What fewer people knew: even that mode never approved <em>everything</em>. A short list of actions still stopped for a human, and the most visible one was deleting a "critical path" such as your home directory.</p>
+    <p>With v2.1.311 (released around October 26–27, 2026), an Anthropic engineer, Daisy Hollman, posted that this last guardrail can now be disabled too, by starting Claude Code with <code>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1</code>. Readers assumed it was a joke; she replied "Not a joke!". The Register noted that the change was not in the v2.1.311 changelog at the time of its article. The official permission-modes documentation now describes it in detail, with a warning that <code>rm -rf ~</code> can then run without asking.</p>
+    <div class="callout"><strong>Why this is news at all:</strong> nothing got more dangerous by default. The change only affects people who already chose the most permissive mode <em>and</em> explicitly set a second, oddly named variable in their shell. The interesting part is what it reveals about how the permission system is built.</div>
+
+    <h2 id="modes-en">2. The six modes, side by side</h2>
+    <p>A permission mode decides which actions the agent can take <strong>without asking you first</strong>. Claude Code has six. The table below follows the official docs; "Manual" is the name the UI shows for the config value <code>default</code>.</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Mode</th><th>Runs without asking</th><th>Meant for</th></tr>
+      <tr><td><code>default</code> (Manual)</td><td>Reads only</td><td>Reviewing every action, sensitive work</td></tr>
+      <tr><td><code>acceptEdits</code></td><td>Reads, file edits, common filesystem commands (<code>mkdir</code>, <code>touch</code>, <code>mv</code>, <code>cp</code>…)</td><td>Iterating on code you are reviewing</td></tr>
+      <tr><td><code>plan</code></td><td>Reads (plus classifier-approved commands when auto mode is available); edits wait for an approved plan</td><td>Exploring before changing anything</td></tr>
+      <tr><td><code>auto</code></td><td>Everything, with a second model (the <em>classifier</em>) reviewing actions in the background</td><td>Long tasks, less prompt fatigue</td></tr>
+      <tr><td><code>dontAsk</code></td><td>Reads in your working directories and pre-approved tools; anything that would prompt is <strong>denied</strong></td><td>Locked-down CI and scripts</td></tr>
+      <tr><td><code>bypassPermissions</code></td><td>Everything</td><td>Isolated containers and VMs only</td></tr>
+    </table>
+    </div>
+    <p>Two details worth noticing. First, <code>auto</code> is now the built-in starting mode for interactive terminal and VS Code sessions on v2.1.283 or later (it became the default in August, as covered here on Aug 12). Second, <code>dontAsk</code> is the opposite of what its name suggests to some people: it does not "skip asking and do it", it "skips asking and refuses". That makes it the right choice for a CI job, where nobody is around to answer.</p>
+
+    <h2 id="layers-en">3. Modes are only the baseline: four layers</h2>
+    <p>The most common misunderstanding is to treat the mode as the whole story. In practice there are layers, and some of them apply no matter which mode you pick:</p>
+    <div class="layers">
+      <div><span class="n">1</span><b>Rules.</b> You can write <em>allow</em>, <em>ask</em> and <em>deny</em> rules per tool, such as <code>Bash(git push *)</code>. <strong>Deny rules block in every mode, including <code>bypassPermissions</code>.</strong> Allow rules, on the other hand, have no effect in <code>bypassPermissions</code> (everything is already allowed).</div>
+      <div><span class="n">2</span><b>The mode.</b> Decides the default answer for whatever no rule covers.</div>
+      <div><span class="n">3</span><b>Things no mode auto-approves.</b> Explicit ask rules, tools that need a human by design (such as a "ask the user a question" tool), connector tools your organization marked as "ask", and recognized <code>rm</code>/<code>rmdir</code> on critical paths. This list is what the new variable shortens.</div>
+      <div><span class="n">4</span><b>Isolation.</b> A sandbox, container or VM limits what an action can <em>reach</em> once it runs. The docs put it plainly: modes decide whether Claude asks; the sandbox and isolation decide what an action can touch.</div>
+    </div>
+    <p>In <code>auto</code> mode the order is fixed: rules resolve first; then reads and edits inside the working directory are auto-approved; everything else goes to the classifier; if the classifier blocks, the agent receives the reason (often a rule name like <code>[Data Exfiltration]</code>) and has to try something else.</p>
+
+    <h2 id="critical-en">4. Critical paths: the check behind <code>rm -rf ~</code></h2>
+    <p>Before any <code>rm</code> or <code>rmdir</code> runs, Claude Code inspects the target. It treats as critical, among others:</p>
+    <ul>
+      <li>the filesystem root and its direct children (<code>/usr</code>, <code>/etc</code>…);</li>
+      <li>your home directory, and Windows drive roots;</li>
+      <li>your working directory and its parents;</li>
+      <li>a glob right under a shell variable, like <code>rm -rf "$DIR"/*</code>, because if <code>$DIR</code> is empty, that becomes <code>rm -rf /*</code>.</li>
+    </ul>
+    <p>No allow rule and no hook that returns "allow" can approve such a removal. What happens depends on the mode:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Mode</th><th>Critical-path removal</th></tr>
+      <tr><td><code>default</code>, <code>acceptEdits</code>, <code>plan</code></td><td>Asks you</td></tr>
+      <tr><td><code>auto</code></td><td>Asks in the terminal with a 2-minute countdown; elsewhere (desktop app, IDE chat panel, headless runs) denies</td></tr>
+      <tr><td><code>dontAsk</code></td><td>Denies</td></tr>
+      <tr><td><code>bypassPermissions</code></td><td>Asks in the terminal with a 2-minute countdown; <strong>runs without asking if the new variable is set</strong></td></tr>
+    </table>
+    </div>
+    <p>The countdown is a nice piece of design for unattended sessions: if nobody answers in two minutes, the command is denied and the agent is told to find another way, so the session keeps working. After three unanswered prompts, further critical removals are denied immediately until you send a new message.</p>
+    <div class="callout"><strong>The docs are honest about the limit:</strong> this is a check on the text of <code>rm</code> and <code>rmdir</code> commands. A command the check does not recognize gets no special handling, and "other approved commands can delete critical paths too". A script that calls a delete function, or <code>find … -delete</code>, is not an <code>rm</code>. The check is a seatbelt for the obvious case, not a wall.</div>
+
+    <h2 id="var-en">5. What the new variable does (and when it does nothing)</h2>
+    <pre><code># macOS / Linux / WSL — only in a disposable environment
+export CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1
+claude --permission-mode bypassPermissions</code></pre>
+    <p>Its scope is deliberately narrow:</p>
+    <ul>
+      <li>It only works in <code>bypassPermissions</code> mode itself, not in plan mode.</li>
+      <li>It is read from the <strong>launch environment only</strong>. Put it in a settings file's <code>env</code> block and it is ignored, so a repository cannot quietly switch it on for you.</li>
+      <li>It has no effect when something else answers permission prompts (a hook, a callback in the SDK), when a deny or ask rule covers Bash, when the session runs in the desktop app or IDE chat panel, or when <code>claude</code> is started from inside another session.</li>
+      <li>Claude Code prints a startup line saying whether it took effect, and the docs say: if you see that line and did not set the variable, find where it is set and remove it.</li>
+    </ul>
+    <p>Around it sit other guards that existed before: on Linux and macOS, <code>bypassPermissions</code> refuses to start as root or under <code>sudo</code> (unless inside a recognized sandbox); cloud sessions ignore <code>bypassPermissions</code> and <code>dontAsk</code> from checked-in settings files; and administrators can disable the mode entirely with <code>permissions.disableBypassPermissionsMode: "disable"</code> in managed settings.</p>
+
+    <h2 id="sim-en">6. Try it: who runs, who asks, who is denied</h2>
+    <p>Pick a mode. The table shows what happens to six typical actions in an interactive terminal session with no custom rules except one deny rule for <code>git push --force</code>. This is a simplified model of the documented behavior, not a full emulator.</p>
+    <div class="sim" data-sim="en">
+      <div class="sim-modes"></div>
+      <label class="sim-toggle"><input type="checkbox" data-env> <span>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1</span></label>
+      <table><tbody data-rows></tbody></table>
+      <div class="sim-note" data-note></div>
+    </div>
+
+    <h2 id="choose-en">7. Choosing a mode for a real situation</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Situation</th><th>Reasonable choice</th></tr>
+      <tr><td>Unfamiliar codebase, or anything touching production credentials</td><td><code>default</code>, or <code>plan</code> first and then approve</td></tr>
+      <tr><td>Day-to-day feature work on your laptop</td><td><code>auto</code> (the default), optionally with the Bash sandbox on for defense in depth</td></tr>
+      <tr><td>CI job: "run the tests and summarize failures"</td><td><code>dontAsk</code> with an exact allowlist, e.g. <code>--allowedTools "Bash(npm test)" "Read"</code></td></tr>
+      <tr><td>Fully unattended batch job</td><td><code>bypassPermissions</code> <strong>inside a container or VM</strong>, as a non-root user, with nothing in it you cannot rebuild</td></tr>
+      <tr><td>…and you also want critical deletes without prompts</td><td>Only then the new variable, and only if the container is truly disposable</td></tr>
+    </table>
+    </div>
+
+    <h2 id="lesson-en">8. The general lesson for any agent tool</h2>
+    <p>Every serious coding agent (Claude Code, Codex, Copilot's agent, Cursor and others) ends up with the same three-part design: <strong>a mode</strong> for the default answer, <strong>rules</strong> for exceptions, and <strong>isolation</strong> for the blast radius. The Oct 19 lesson called it "a badge, a locked room and no spare keys". Today's change makes the split very visible:</p>
+    <ul>
+      <li><strong>Prompts are a user-experience layer.</strong> They help when a human is watching. They cannot stop a command the checker does not understand, and they offer no protection against prompt injection (the docs say this explicitly about <code>bypassPermissions</code>).</li>
+      <li><strong>The boundary is the environment.</strong> A container you can throw away makes "the agent deleted everything" a minor event. A laptop with your SSH keys and documents does not.</li>
+      <li><strong>Deny rules are the one control you can rely on across modes.</strong> If something must never happen (force-push to main, reading <code>.env</code>), write it as a deny rule rather than hoping a prompt will catch it.</li>
+    </ul>
+    <div class="callout"><strong>Checklist:</strong> know which mode your sessions start in · use <code>dontAsk</code>, not bypass, for CI · put "never" actions in deny rules · run bypass only in disposable containers as non-root · check the startup line for the long variable, and remove it if you did not set it on purpose.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807" target="_blank" rel="noopener">The Register — "Anthropic now lets Claude users jump out of plane without parachute", Thomas Claburn (Oct 27, 2026, read directly): v2.1.311, the variable, the engineer's post, missing changelog entry, mode history.</a></li>
+      <li><a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Claude Code Docs — "Choose a permission mode" (read directly, Oct 28, 2026): mode table, actions no mode auto-approves, classifier order, critical paths, countdown, the new variable and when it has no effect, root/sudo refusal, managed settings.</a></li>
+      <li>Not read directly: the engineer's post on X (quoted via The Register) and the v2.1.311 changelog (referenced via The Register and a Releasebot search summary).</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: the rotation pointed to "Tools &amp; ecosystem", and the most relevant recent Anthropic item (Claude Code v2.1.311, Oct 27) fits that category, so both rules agree. The simulator is a simplified reading of the docs for an interactive terminal session.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Ferramentas e ecossistema</span>
+      <h1>Seis modos de permissão e uma variável de nome enorme: como um agente de código decide quando perguntar</h1>
+      <p class="subtitle">Em 27 de outubro, o Claude Code passou a aceitar uma variável de ambiente chamada <code>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS</code>. A piada pronta é óbvia, mas a mudança é uma boa desculpa pra entender o sistema de permissões inteiro de um agente de código: o que cada modo libera, quais checagens sobrevivem a todos os modos e por que a linha de segurança de verdade fica em outro lugar.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#news-pt">A notícia: o último aviso agora pode ser desligado</a></li>
+        <li><a href="#modes-pt">Os seis modos, lado a lado</a></li>
+        <li><a href="#layers-pt">O modo é só a base: quatro camadas</a></li>
+        <li><a href="#critical-pt">Caminhos críticos: a checagem por trás do <code>rm -rf ~</code></a></li>
+        <li><a href="#var-pt">O que a variável nova faz (e quando não faz nada)</a></li>
+        <li><a href="#sim-pt">Teste: quem roda, quem pergunta, quem é negado</a></li>
+        <li><a href="#choose-pt">Escolhendo o modo pra cada situação</a></li>
+        <li><a href="#lesson-pt">A lição geral pra qualquer ferramenta de agente</a></li>
+      </ol>
+    </div>
+
+    <h2 id="news-pt">1. A notícia: o último aviso agora pode ser desligado</h2>
+    <p>O Claude Code tem há tempos uma flag, <code>--dangerously-skip-permissions</code>, que abre a sessão no modo <code>bypassPermissions</code>, em que o agente executa ferramentas sem pedir licença. Segundo o The Register, esse modo apareceu na v1.0.18, em junho de 2025. O que pouca gente sabia: nem esse modo aprovava <em>tudo</em>. Uma lista curta de ações ainda parava pra esperar um humano, e a mais conhecida era apagar um "caminho crítico", como a sua pasta pessoal.</p>
+    <p>Com a v2.1.311 (lançada por volta de 26–27/10/2026), uma engenheira da Anthropic, Daisy Hollman, avisou que essa última trava agora também pode ser desligada, iniciando o Claude Code com <code>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1</code>. Muita gente achou que era piada; ela respondeu "Not a joke!". O The Register observou que a mudança não estava no changelog da v2.1.311 quando a matéria saiu. A documentação oficial de modos de permissão agora descreve tudo em detalhe, com um aviso de que, com a variável ligada, um <code>rm -rf ~</code> pode rodar sem perguntar.</p>
+    <div class="callout"><strong>Por que isso é notícia:</strong> nada ficou mais perigoso por padrão. A mudança só afeta quem já escolheu o modo mais permissivo <em>e</em> ainda definiu, de propósito, uma segunda variável de nome esquisito no terminal. O interessante é o que ela revela sobre como o sistema de permissões foi montado.</div>
+
+    <h2 id="modes-pt">2. Os seis modos, lado a lado</h2>
+    <p>Um modo de permissão define quais ações o agente pode fazer <strong>sem te perguntar antes</strong>. O Claude Code tem seis. A tabela segue a documentação oficial; "Manual" é o nome que aparece na interface para o valor de configuração <code>default</code>.</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Modo</th><th>Roda sem perguntar</th><th>Pra quê</th></tr>
+      <tr><td><code>default</code> (Manual)</td><td>Só leituras</td><td>Revisar cada ação, trabalho sensível</td></tr>
+      <tr><td><code>acceptEdits</code></td><td>Leituras, edição de arquivos, comandos comuns de sistema de arquivos (<code>mkdir</code>, <code>touch</code>, <code>mv</code>, <code>cp</code>…)</td><td>Iterar em código que você está revisando</td></tr>
+      <tr><td><code>plan</code></td><td>Leituras (mais comandos aprovados pelo classificador, quando o modo auto está disponível); edições esperam um plano aprovado</td><td>Explorar antes de mudar qualquer coisa</td></tr>
+      <tr><td><code>auto</code></td><td>Tudo, com um segundo modelo (o <em>classificador</em>) revisando as ações em segundo plano</td><td>Tarefas longas, menos cansaço de aprovar</td></tr>
+      <tr><td><code>dontAsk</code></td><td>Leituras nas pastas de trabalho e ferramentas pré-aprovadas; o que pediria confirmação é <strong>negado</strong></td><td>CI e scripts travados</td></tr>
+      <tr><td><code>bypassPermissions</code></td><td>Tudo</td><td>Só containers e VMs isolados</td></tr>
+    </table>
+    </div>
+    <p>Dois detalhes. Primeiro, o <code>auto</code> agora é o modo inicial padrão em sessões interativas no terminal e no VS Code a partir da v2.1.283 (virou padrão em agosto, como vimos aqui em 12/08). Segundo, o <code>dontAsk</code> faz o contrário do que o nome sugere pra muita gente: não é "não pergunta e faz", é "não pergunta e recusa". Por isso ele é a escolha certa pra um job de CI, onde não tem ninguém pra responder.</p>
+
+    <h2 id="layers-pt">3. O modo é só a base: quatro camadas</h2>
+    <p>O erro mais comum é achar que o modo conta a história toda. Na prática existem camadas, e algumas valem seja qual for o modo:</p>
+    <div class="layers">
+      <div><span class="n">1</span><b>Regras.</b> Você pode escrever regras de <em>allow</em>, <em>ask</em> e <em>deny</em> por ferramenta, como <code>Bash(git push *)</code>. <strong>Regras de deny bloqueiam em todos os modos, inclusive no <code>bypassPermissions</code>.</strong> Já as regras de allow não têm efeito no <code>bypassPermissions</code> (lá tudo já está liberado).</div>
+      <div><span class="n">2</span><b>O modo.</b> Define a resposta padrão pro que nenhuma regra cobre.</div>
+      <div><span class="n">3</span><b>O que nenhum modo aprova sozinho.</b> Regras de ask explícitas, ferramentas que por natureza precisam de um humano (como uma ferramenta de "fazer uma pergunta ao usuário"), ferramentas de conector que a sua organização marcou como "ask" e <code>rm</code>/<code>rmdir</code> reconhecidos em caminhos críticos. É essa lista que a variável nova encurta.</div>
+      <div><span class="n">4</span><b>Isolamento.</b> Sandbox, container ou VM limitam o que uma ação consegue <em>alcançar</em> depois que roda. A documentação resume: o modo decide se o Claude pergunta; o sandbox e o isolamento decidem o que a ação consegue tocar.</div>
+    </div>
+    <p>No modo <code>auto</code> a ordem é fixa: primeiro as regras; depois leituras e edições dentro da pasta de trabalho são aprovadas direto; todo o resto vai pro classificador; se ele bloquear, o agente recebe o motivo (muitas vezes o nome de uma regra, como <code>[Data Exfiltration]</code>) e precisa tentar outro caminho.</p>
+
+    <h2 id="critical-pt">4. Caminhos críticos: a checagem por trás do <code>rm -rf ~</code></h2>
+    <p>Antes de qualquer <code>rm</code> ou <code>rmdir</code> rodar, o Claude Code olha o alvo. Ele considera críticos, entre outros:</p>
+    <ul>
+      <li>a raiz do sistema e as pastas logo abaixo dela (<code>/usr</code>, <code>/etc</code>…);</li>
+      <li>sua pasta pessoal e as raízes de drive no Windows;</li>
+      <li>a pasta de trabalho e as pastas acima dela;</li>
+      <li>um glob logo depois de uma variável de shell, como <code>rm -rf "$DIR"/*</code>, porque se <code>$DIR</code> estiver vazia isso vira <code>rm -rf /*</code>.</li>
+    </ul>
+    <p>Nenhuma regra de allow e nenhum hook que responda "allow" aprova uma remoção dessas. O que acontece depende do modo:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Modo</th><th>Remoção de caminho crítico</th></tr>
+      <tr><td><code>default</code>, <code>acceptEdits</code>, <code>plan</code></td><td>Pergunta</td></tr>
+      <tr><td><code>auto</code></td><td>Pergunta no terminal com contagem de 2 minutos; fora dele (app desktop, chat da IDE, execução headless) nega</td></tr>
+      <tr><td><code>dontAsk</code></td><td>Nega</td></tr>
+      <tr><td><code>bypassPermissions</code></td><td>Pergunta no terminal com contagem de 2 minutos; <strong>roda sem perguntar se a variável nova estiver ligada</strong></td></tr>
+    </table>
+    </div>
+    <p>A contagem regressiva é um bom desenho pra sessões sem ninguém olhando: se ninguém responde em dois minutos, o comando é negado e o agente é avisado pra achar outro caminho, então a sessão continua andando. Depois de três avisos sem resposta, as próximas remoções críticas são negadas na hora, até você mandar uma mensagem nova.</p>
+    <div class="callout"><strong>A documentação é honesta sobre o limite:</strong> isso é uma checagem no texto dos comandos <code>rm</code> e <code>rmdir</code>. Um comando que ela não reconhece não recebe tratamento especial, e "outros comandos aprovados também podem apagar caminhos críticos". Um script que chama uma função de apagar, ou um <code>find … -delete</code>, não é um <code>rm</code>. A checagem é um cinto de segurança pro caso óbvio, não um muro.</div>
+
+    <h2 id="var-pt">5. O que a variável nova faz (e quando não faz nada)</h2>
+    <pre><code># macOS / Linux / WSL — só em ambiente descartável
+export CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1
+claude --permission-mode bypassPermissions</code></pre>
+    <p>O alcance dela é propositalmente estreito:</p>
+    <ul>
+      <li>Só funciona no próprio modo <code>bypassPermissions</code>, não no modo plan.</li>
+      <li>É lida <strong>só do ambiente de inicialização</strong>. Se você colocar no bloco <code>env</code> de um arquivo de configurações, ela é ignorada, então um repositório não consegue ligá-la escondido pra você.</li>
+      <li>Não tem efeito quando outra coisa responde os pedidos de permissão (um hook, um callback no SDK), quando uma regra de deny ou ask cobre o Bash, quando a sessão roda no app desktop ou no chat da IDE, ou quando o <code>claude</code> é iniciado de dentro de outra sessão.</li>
+      <li>O Claude Code imprime uma linha na inicialização dizendo se ela pegou, e a documentação avisa: se você vê essa linha e não definiu a variável, descubra onde ela está definida e remova.</li>
+    </ul>
+    <p>Em volta dela continuam travas que já existiam: no Linux e no macOS, o <code>bypassPermissions</code> se recusa a iniciar como root ou com <code>sudo</code> (a não ser dentro de um sandbox reconhecido); sessões na nuvem ignoram <code>bypassPermissions</code> e <code>dontAsk</code> vindos de arquivos de configuração do repositório; e administradores podem desligar o modo de vez com <code>permissions.disableBypassPermissionsMode: "disable"</code> nas configurações gerenciadas.</p>
+
+    <h2 id="sim-pt">6. Teste: quem roda, quem pergunta, quem é negado</h2>
+    <p>Escolha um modo. A tabela mostra o que acontece com seis ações típicas numa sessão interativa no terminal, sem regras personalizadas além de uma regra de deny para <code>git push --force</code>. É um modelo simplificado do comportamento documentado, não um emulador completo.</p>
+    <div class="sim" data-sim="pt">
+      <div class="sim-modes"></div>
+      <label class="sim-toggle"><input type="checkbox" data-env> <span>CLAUDE_CODE_EVEN_MORE_DANGEROUSLY_SKIP_PERMISSIONS=1</span></label>
+      <table><tbody data-rows></tbody></table>
+      <div class="sim-note" data-note></div>
+    </div>
+
+    <h2 id="choose-pt">7. Escolhendo o modo pra cada situação</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Situação</th><th>Escolha razoável</th></tr>
+      <tr><td>Código que você não conhece, ou qualquer coisa perto de credenciais de produção</td><td><code>default</code>, ou <code>plan</code> primeiro e depois aprovar</td></tr>
+      <tr><td>Trabalho do dia a dia em features no seu notebook</td><td><code>auto</code> (o padrão), se quiser com o sandbox de Bash ligado como camada extra</td></tr>
+      <tr><td>Job de CI: "rode os testes e resuma as falhas"</td><td><code>dontAsk</code> com allowlist exata, ex.: <code>--allowedTools "Bash(npm test)" "Read"</code></td></tr>
+      <tr><td>Job em lote totalmente sem supervisão</td><td><code>bypassPermissions</code> <strong>dentro de container ou VM</strong>, como usuário não-root, sem nada lá dentro que você não consiga recriar</td></tr>
+      <tr><td>…e você ainda quer apagar caminhos críticos sem aviso</td><td>Só aí a variável nova, e só se o container for de fato descartável</td></tr>
+    </table>
+    </div>
+
+    <h2 id="lesson-pt">8. A lição geral pra qualquer ferramenta de agente</h2>
+    <p>Todo agente de código sério (Claude Code, Codex, o agente do Copilot, Cursor e outros) acaba no mesmo desenho em três partes: <strong>um modo</strong> pra resposta padrão, <strong>regras</strong> pras exceções e <strong>isolamento</strong> pro raio de estrago. A lição de 19/10 chamou isso de "um crachá, uma sala trancada e nenhuma chave reserva". A mudança de hoje deixa essa divisão bem visível:</p>
+    <ul>
+      <li><strong>Avisos de permissão são uma camada de experiência do usuário.</strong> Ajudam quando tem um humano olhando. Não param um comando que o verificador não entende, e não protegem contra prompt injection (a documentação diz isso com todas as letras sobre o <code>bypassPermissions</code>).</li>
+      <li><strong>A fronteira é o ambiente.</strong> Num container que você pode jogar fora, "o agente apagou tudo" é um incidente pequeno. Num notebook com suas chaves SSH e documentos, não.</li>
+      <li><strong>Regras de deny são o único controle que vale em todos os modos.</strong> Se algo nunca pode acontecer (force-push na main, ler o <code>.env</code>), escreva como regra de deny em vez de torcer pra um aviso pegar.</li>
+    </ul>
+    <div class="callout"><strong>Checklist:</strong> saiba em qual modo suas sessões começam · use <code>dontAsk</code>, não bypass, no CI · coloque as ações "nunca" em regras de deny · rode bypass só em containers descartáveis e sem root · confira a linha de inicialização da variável longa e remova se não foi você que ligou de propósito.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.theregister.com/ai-and-ml/2026/10/27/anthropic-now-lets-claude-users-jump-out-of-plane-without-parachute/5305807" target="_blank" rel="noopener">The Register — "Anthropic now lets Claude users jump out of plane without parachute", Thomas Claburn (27/10/2026, lido diretamente): v2.1.311, a variável, o post da engenheira, ausência no changelog, histórico dos modos.</a></li>
+      <li><a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">Claude Code Docs — "Choose a permission mode" (lido diretamente em 28/10/2026): tabela de modos, ações que nenhum modo aprova, ordem do classificador, caminhos críticos, contagem regressiva, a variável nova e quando ela não tem efeito, recusa como root/sudo, configurações gerenciadas.</a></li>
+      <li>Não lidos diretamente: o post da engenheira no X (citado via The Register) e o changelog da v2.1.311 (referenciado via The Register e um resumo de busca do Releasebot).</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Ferramentas e ecossistema", e o item recente mais relevante da Anthropic (Claude Code v2.1.311, 27/10) cabe nessa categoria, então as duas regras concordam. O simulador é uma leitura simplificada da documentação para uma sessão interativa no terminal.</p>
+
+  </div>
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Claude Code · permission modes</span>
+</footer>
+
+<script>
+  var MODES = ['default', 'acceptEdits', 'plan', 'auto', 'dontAsk', 'bypassPermissions'];
+  var ACTIONS = {
+    en: ['Read src/app.ts', 'Edit src/app.ts', 'mkdir build && mv a.txt build/', 'npm test', 'git push --force (deny rule)', 'rm -rf ~'],
+    pt: ['Ler src/app.ts', 'Editar src/app.ts', 'mkdir build && mv a.txt build/', 'npm test', 'git push --force (regra de deny)', 'rm -rf ~']
+  };
+  var WORDS = {
+    en: { run: 'Runs', ask: 'Asks', deny: 'Denied', cls: 'Classifier', askT: 'Asks · 2-min timer', askP: 'Asks · needs plan' },
+    pt: { run: 'Roda', ask: 'Pergunta', deny: 'Negado', cls: 'Classificador', askT: 'Pergunta · timer 2 min', askP: 'Pergunta · precisa de plano' }
+  };
+  var NOTES = {
+    en: {
+      'default': 'Manual mode: you approve everything except reads.',
+      'acceptEdits': 'Edits and common filesystem commands go through; arbitrary commands like npm test still ask.',
+      'plan': 'Read-only exploration; edits wait for you to approve a plan. With auto mode available, the classifier can approve some commands.',
+      'auto': 'Reads and in-folder edits are approved directly; other commands go to the classifier. Critical removals get a 2-minute prompt in the terminal.',
+      'dontAsk': 'Anything not pre-approved is refused instead of asked. Add an allowlist (e.g. Bash(npm test)) to let specific commands run.',
+      'bypassPermissions': 'Everything runs, except deny rules and the short list no mode auto-approves. Use only in a disposable container.',
+      envOff: 'The variable only matters in bypassPermissions mode.',
+      envOn: 'Variable on: rm -rf ~ now runs with no prompt. Deny rules still block.'
+    },
+    pt: {
+      'default': 'Modo Manual: você aprova tudo, menos leituras.',
+      'acceptEdits': 'Edições e comandos comuns de arquivo passam; comandos arbitrários como npm test ainda perguntam.',
+      'plan': 'Exploração só de leitura; edições esperam você aprovar um plano. Com o modo auto disponível, o classificador pode aprovar alguns comandos.',
+      'auto': 'Leituras e edições na pasta são aprovadas direto; outros comandos vão pro classificador. Remoções críticas têm aviso de 2 minutos no terminal.',
+      'dontAsk': 'O que não foi pré-aprovado é recusado em vez de perguntado. Adicione uma allowlist (ex.: Bash(npm test)) pra liberar comandos específicos.',
+      'bypassPermissions': 'Tudo roda, menos regras de deny e a lista curta que nenhum modo aprova. Use só em container descartável.',
+      envOff: 'A variável só importa no modo bypassPermissions.',
+      envOn: 'Variável ligada: rm -rf ~ agora roda sem perguntar. Regras de deny continuam bloqueando.'
+    }
+  };
+  // outcome per mode: [read, edit, fs, npm, denyRule, rmHome]
+  var TABLE = {
+    'default':           ['run', 'ask',  'ask', 'ask',  'deny', 'ask'],
+    'acceptEdits':       ['run', 'run',  'run', 'ask',  'deny', 'ask'],
+    'plan':              ['run', 'askP', 'ask', 'ask',  'deny', 'ask'],
+    'auto':              ['run', 'run',  'cls', 'cls',  'deny', 'askT'],
+    'dontAsk':           ['run', 'deny', 'deny','deny', 'deny', 'deny'],
+    'bypassPermissions': ['run', 'run',  'run', 'run',  'deny', 'askT']
+  };
+  function cssFor(k) { return k === 'askT' || k === 'askP' ? 'ask' : k; }
+  function renderSim(box) {
+    var lang = box.dataset.sim, mode = box.dataset.mode || 'auto';
+    var env = box.querySelector('[data-env]').checked;
+    box.querySelectorAll('.sim-modes button').forEach(function(b) { b.classList.toggle('on', b.dataset.mode === mode); });
+    var row = TABLE[mode].slice();
+    if (mode === 'bypassPermissions' && env) row[5] = 'run';
+    var html = '';
+    ACTIONS[lang].forEach(function(a, i) {
+      html += '<tr><td><code>' + a + '</code></td><td><span class="res ' + cssFor(row[i]) + '">' + WORDS[lang][row[i]] + '</span></td></tr>';
+    });
+    box.querySelector('[data-rows]').innerHTML = html;
+    var note = NOTES[lang][mode];
+    if (env) note += ' ' + (mode === 'bypassPermissions' ? NOTES[lang].envOn : NOTES[lang].envOff);
+    box.querySelector('[data-note]').textContent = note;
+  }
+  document.querySelectorAll('[data-sim]').forEach(function(box) {
+    var wrap = box.querySelector('.sim-modes');
+    MODES.forEach(function(m) {
+      var b = document.createElement('button');
+      b.textContent = m; b.dataset.mode = m;
+      b.addEventListener('click', function() { box.dataset.mode = m; renderSim(box); });
+      wrap.appendChild(b);
+    });
+    box.querySelector('[data-env]').addEventListener('change', function() { renderSim(box); });
+    renderSim(box);
+  });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

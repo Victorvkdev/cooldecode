@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Mixture of Experts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .calc label { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 4px; }
+  .calc input, .calc select { width: 100%; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+  .calc-out { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; color: #fff; line-height: 1.5; }
+  .calc-out small { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 13px; color: var(--text-dim); display: block; margin-top: 2px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .btn { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .btn:hover, .btn.on { border-color: var(--accent); color: #fff; }
+  .btn.on { background: var(--accent-soft); }
+  .experts { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 14px 0; }
+  .exp { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 2px; text-align: center; font-size: 12px; color: var(--text-dim); }
+  .exp.fire { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+  .tok { display: inline-block; background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; margin: 2px; font-size: 13px; cursor: pointer; }
+  .tok.sel { border-color: var(--accent); color: #fff; background: var(--accent-soft); }
+  .bars { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; align-items: end; height: 70px; margin: 10px 0 4px; }
+  .bar { background: var(--accent); border-radius: 4px 4px 0 0; min-height: 2px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM concepts explained</span>
+      <h1>Mixture of Experts: a huge model that only wakes up a small part of itself</h1>
+      <p class="subtitle">When a model is announced as "1 trillion parameters, 49 billion active", the second number is the one that sets the speed. Mixture of Experts (MoE) is the architecture behind that split, and it comes with a catch the headline never mentions: memory.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#dense">Dense models: everyone works on every token</a></li>
+        <li><a href="#moe">MoE: a router and a pool of experts</a></li>
+        <li><a href="#sim">Try it: route a sentence</a></li>
+        <li><a href="#counts">Total vs active parameters</a></li>
+        <li><a href="#balance">The training problem: expert collapse</a></li>
+        <li><a href="#catch">The catch: memory and serving</a></li>
+        <li><a href="#you">What this means for you as a developer</a></li>
+      </ol>
+    </div>
+
+    <h2 id="dense">1. Dense models: everyone works on every token</h2>
+    <p>A transformer block has two main parts: <strong>attention</strong> (covered in the attention and KV cache lesson) and a <strong>feed-forward network (FFN)</strong>, a small neural network applied to each token separately. The FFN holds a large share of the model's parameters. In a <strong>dense</strong> model, every token goes through the same FFN, in every layer. Double the parameters and you roughly double the work per token.</p>
+
+    <h2 id="moe">2. MoE: a router and a pool of experts</h2>
+    <p>A mixture-of-experts model replaces that single FFN with <strong>several FFNs called experts</strong>, plus a small learned network called the <strong>router</strong>. For each token, the router scores every expert, keeps the best <code>k</code> (this is "top-k"), sends the token only through those, and combines their outputs weighted by the router's scores. In Sebastian Raschka's simplified form: <code>MoE(x) = Σ g_i(x) · E_i(x)</code> over the chosen experts.</p>
+    <div class="callout"><strong>Analogy:</strong> a hospital. A dense model is a single doctor who handles every patient. An MoE model is a hospital with eight specialists and a triage nurse (the router). Each patient sees only two of them. The hospital knows a lot (eight doctors' worth), but each visit costs the time of two.</div>
+    <p>Three details worth knowing, all from the sources below:</p>
+    <ul>
+      <li><strong>Routing is per token and per layer.</strong> Two tokens of the same sentence can use different experts, and each layer makes its own choice.</li>
+      <li><strong>Only the FFN is replaced.</strong> Attention usually stays dense and runs for every token.</li>
+      <li><strong>Some designs add a shared expert</strong> that is always active next to the routed ones, to handle common patterns and let the others specialize.</li>
+    </ul>
+    <p>A tiny router in plain JavaScript:</p>
+<pre><code>function route(scores, k) {
+  // scores: one number per expert (the router's output)
+  const top = scores
+    .map((s, i) =&gt; ({ i, s }))
+    .sort((a, b) =&gt; b.s - a.s)
+    .slice(0, k);                          // keep the k best experts
+  const sum = top.reduce((t, e) =&gt; t + Math.exp(e.s), 0);
+  return top.map(e =&gt; ({ expert: e.i, weight: Math.exp(e.s) / sum }));
+}
+route([0.1, 2.0, -1, 0.4, 1.5, 0, -0.5, 0.2], 2);
+// [{expert: 1, weight: 0.62}, {expert: 4, weight: 0.38}]</code></pre>
+
+    <h2 id="sim">3. Try it: route a sentence</h2>
+    <p>This is a toy: the router scores here come from a fixed hash of each word, not from a trained model, so the experts do not "mean" anything. What it shows is the shape of the mechanism. Pick a word to see its experts, change <code>k</code>, and switch between a balanced router and a collapsed one.</p>
+    <div class="calc" id="simbox-en">
+      <div data-role="tokens"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn" data-k="1">top-1</button>
+        <button class="btn on" data-k="2">top-2</button>
+        <button class="btn" data-k="4">top-4</button>
+        <span style="width:12px"></span>
+        <button class="btn on" data-mode="balanced">Balanced router</button>
+        <button class="btn" data-mode="collapsed">Collapsed router</button>
+      </div>
+      <div class="experts" data-role="experts"></div>
+      <div class="calc-out" data-role="out"></div>
+      <div style="font-size:12.5px;color:var(--text-dim);margin-top:10px" data-role="barlabel"></div>
+      <div class="bars" data-role="bars"></div>
+    </div>
+    <p>In the collapsed mode, the router sends almost every token to the same one or two experts. Those become a bottleneck while the rest sit idle, which is what the training techniques in section 5 exist to prevent.</p>
+
+    <h2 id="counts">4. Total vs active parameters</h2>
+    <p>This creates two numbers. <strong>Total parameters</strong> count every expert stored in the checkpoint. <strong>Active parameters</strong> count the shared parts plus the experts actually selected for one token. Names like <code>235B-A22B</code> encode both: roughly 235 billion total, 22 billion active.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Model</th><th>Total</th><th>Active per token</th><th>Active share</th></tr>
+      <tr><td>Mixtral 8x7B</td><td>~47B</td><td>~13B</td><td>~28%</td></tr>
+      <tr><td>Grok-1</td><td>314B</td><td>~86B</td><td>~27%</td></tr>
+      <tr><td>DeepSeek-V3</td><td>671B</td><td>37B</td><td>~5.5%</td></tr>
+      <tr><td>Mistral Large 4 (our Oct 13 lesson)</td><td>~1T</td><td>~49B</td><td>~5%</td></tr>
+    </table></div>
+    <p>Figures for the first three come from the ZeroEntropy concept page; the fourth is from the earlier lesson on Mistral Large 4 and is the vendor's own number. This is why MoE took over the open-weight frontier: scaling laws say more parameters means better quality, and MoE lets you add parameters without paying the full compute bill on every token.</p>
+    <div class="callout"><strong>Careful with "active":</strong> active parameters are only an approximation of runtime cost. Attention, embeddings and the output layer still run, and routing adds its own overhead (scoring, sorting, moving tokens between chips). A 22B-active MoE will not necessarily have the latency of a dense 22B model (Raschka).</div>
+
+    <h2 id="balance">5. The training problem: expert collapse</h2>
+    <p>The router and the experts learn together. Left alone, gradient descent finds a lazy shortcut: send everything to one expert, train it hard, ignore the others. That is <strong>expert collapse</strong>, and the unused experts become dead weight.</p>
+    <p>The standard fixes, per ZeroEntropy and Raschka:</p>
+    <ul>
+      <li><strong>Auxiliary load-balancing loss:</strong> an extra penalty in training that grows when some experts get much more traffic than others (the Switch Transformer approach).</li>
+      <li><strong>Routing bias:</strong> DeepSeek's "auxiliary-loss-free" variant nudges the router scores toward under-used experts at each step.</li>
+      <li><strong>Expert capacity limits:</strong> cap how many tokens one expert may take per batch.</li>
+    </ul>
+    <p>Experts also do not become tidy "math expert" or "grammar expert" modules. Both sources say specialization is messier: it shows up more at the level of token types, syntax or position than at human-friendly topics. Think "emergent partitions", not "departments".</p>
+
+    <h2 id="catch">6. The catch: memory and serving</h2>
+    <p>Sparse activation saves arithmetic, not storage. Every expert must live somewhere, and the router can pick any of them for the next token. Try the sizing tool:</p>
+    <div class="calc" id="mem-en">
+      <div class="btn-row">
+        <button class="btn" data-p="47,13">Mixtral 8x7B</button>
+        <button class="btn" data-p="671,37">DeepSeek-V3</button>
+        <button class="btn" data-p="1000,49">1T / 49B class</button>
+      </div>
+      <div class="calc-grid">
+        <div><label>Total parameters (billions)</label><input type="number" data-f="total" value="47" min="1"></div>
+        <div><label>Active parameters (billions)</label><input type="number" data-f="active" value="13" min="1"></div>
+        <div><label>Precision</label>
+          <select data-f="bytes"><option value="2" selected>16-bit (2 bytes)</option><option value="1">FP8 (1 byte)</option><option value="0.5">4-bit (0.5 byte)</option></select></div>
+      </div>
+      <div class="calc-out"><span data-out="mem">–</span><small data-out="memnote"></small><span data-out="cmp" style="display:block;margin-top:8px"></span><small data-out="cmpnote"></small></div>
+    </div>
+    <p>With 16-bit weights, Mixtral's 47B parameters need about <strong>94 GB</strong> just to hold the weights, the same as a dense 47B model, even though each token only computes with about 13B of them (ZeroEntropy). The compute discount is real; the memory discount is zero. Practical consequences:</p>
+    <ul>
+      <li><strong>Size deployments by total parameters</strong>, then treat the speed as a bonus. ZeroEntropy warns that teams sizing by active count under-provision by 3-4x.</li>
+      <li><strong>Routing breaks the easy case for GPUs.</strong> Different tokens go to different experts, so batches fragment, and when experts are spread across chips, tokens must travel to the chip that owns their expert and back. This all-to-all communication can become a big share of serving time. Serving stacks like vLLM and SGLang have specialized MoE kernels, but throughput per active parameter is still worse than dense.</li>
+      <li><strong>The KV cache is not shrunk by MoE.</strong> MoE changes the FFN path; the cache lives in attention, so the memory lesson from the KV cache still applies on top.</li>
+    </ul>
+    <table>
+      <tr><th></th><th>Dense</th><th>MoE</th></tr>
+      <tr><td><strong>Compute per token</strong></td><td>Scales with all parameters</td><td>Scales with active parameters</td></tr>
+      <tr><td><strong>Memory for weights</strong></td><td>All parameters</td><td>All parameters (every expert)</td></tr>
+      <tr><td><strong>Training</strong></td><td>Simpler</td><td>Needs load balancing</td></tr>
+      <tr><td><strong>Fine-tuning and small-scale serving</strong></td><td>Easier</td><td>Harder, wants many devices</td></tr>
+      <tr><td><strong>Best fit</strong></td><td>Small, specialized models and simple setups</td><td>Frontier-scale capacity when the hardware stack can route efficiently</td></tr>
+    </table>
+
+    <h2 id="you">7. What this means for you as a developer</h2>
+    <h3>Read model names with two numbers in mind</h3>
+    <p>When a launch post says "1T parameters", ask: total or active? Cost and speed follow the active count; the hardware you need to self-host follows the total.</p>
+    <h3>Self-hosting an open MoE model</h3>
+    <p>Before downloading, compute <code>total parameters × bytes per weight</code> and compare with your GPU memory. Quantizing to 8 or 4 bits shrinks it (use the tool above), but it is a trade of some quality for fit.</p>
+    <h3>Using an API</h3>
+    <p>You never see the experts. For API users, MoE shows up only indirectly, as the reason a very large model can be priced and served at a speed that a dense model of the same total size could not manage. Whether a given closed model is dense or MoE is usually not published: ZeroEntropy says GPT-4 is "widely reported" as MoE and Claude "reportedly" dense, so treat both as unconfirmed.</p>
+    <h3>A short exercise</h3>
+    <p>A model is listed as <code>400B-A20B</code>. (1) What share of parameters is active per token? (2) How much memory do the weights alone need at FP8? Answers: (1) 20/400 = 5%. (2) 400B × 1 byte = about 400 GB, before any KV cache. Now check it in the tool above by typing 400 and 20.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://sebastianraschka.com/faq/docs/mixture-of-experts.html" target="_blank" rel="noopener">Sebastian Raschka — "Mixture-of-Experts (MoE) vs. Dense LLMs" (read directly, Nov 3, 2026): router and top-k, total vs active parameters, load balancing, all-to-all communication, shared experts, caveats on active-parameter cost</a></li>
+      <li><a href="https://www.zeroentropy.dev/concepts/mixture-of-experts/" target="_blank" rel="noopener">ZeroEntropy — "Mixture of Experts (MoE)" concept page (read directly, Nov 3, 2026): model sizes table, auxiliary loss and DeepSeek's variant, VRAM and serving problems, specialization. ZeroEntropy sells retrieval and embedding models; its model figures are secondhand summaries of public releases.</a></li>
+      <li><a href="/lessons/ai-watch-2026-10-13-mistral-large-4-le-chonk.html">Cooldecode AI Watch, Oct 13, 2026 — Mistral Large 4 (vendor-reported 1T / 49B active)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "LLM concepts explained"; searches found no new Anthropic/Claude announcement dated today (only rumors from low-quality sites about a new model and an IPO date, not used). Model sizes were not checked against the original papers. Whether Claude or GPT models are MoE is not confirmed by their makers.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Conceitos de LLMs explicados</span>
+      <h1>Mixture of Experts: um modelo enorme que só acorda uma pequena parte de si</h1>
+      <p class="subtitle">Quando um modelo é anunciado como "1 trilhão de parâmetros, 49 bilhões ativos", o segundo número é o que define a velocidade. Mixture of Experts (MoE) é a arquitetura por trás dessa divisão, e vem com uma pegadinha que a manchete nunca cita: memória.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#dense-pt">Modelos densos: todo mundo trabalha em todo token</a></li>
+        <li><a href="#moe-pt">MoE: um roteador e um grupo de especialistas</a></li>
+        <li><a href="#sim-pt">Teste: roteie uma frase</a></li>
+        <li><a href="#counts-pt">Parâmetros totais vs ativos</a></li>
+        <li><a href="#balance-pt">O problema do treino: colapso de especialistas</a></li>
+        <li><a href="#catch-pt">A pegadinha: memória e serviço</a></li>
+        <li><a href="#you-pt">O que isso significa para você, dev</a></li>
+      </ol>
+    </div>
+
+    <h2 id="dense-pt">1. Modelos densos: todo mundo trabalha em todo token</h2>
+    <p>Um bloco de transformer tem duas partes principais: a <strong>atenção</strong> (da lição sobre atenção e KV cache) e uma <strong>rede feed-forward (FFN)</strong>, uma redezinha neural aplicada a cada token separadamente. A FFN concentra boa parte dos parâmetros do modelo. Num modelo <strong>denso</strong>, todo token passa pela mesma FFN, em todas as camadas. Dobrar os parâmetros significa, grosso modo, dobrar o trabalho por token.</p>
+
+    <h2 id="moe-pt">2. MoE: um roteador e um grupo de especialistas</h2>
+    <p>Um modelo mixture-of-experts troca essa FFN única por <strong>várias FFNs chamadas especialistas (experts)</strong>, mais uma pequena rede aprendida chamada <strong>roteador (router)</strong>. Para cada token, o roteador dá uma nota a cada especialista, fica com os <code>k</code> melhores ("top-k"), manda o token só por eles e combina as saídas ponderadas pelas notas. Na forma simplificada de Sebastian Raschka: <code>MoE(x) = Σ g_i(x) · E_i(x)</code> sobre os especialistas escolhidos.</p>
+    <div class="callout"><strong>Analogia:</strong> um hospital. Um modelo denso é um único médico que atende todos os pacientes. Um modelo MoE é um hospital com oito especialistas e uma enfermeira de triagem (o roteador). Cada paciente passa só por dois deles. O hospital sabe muito (o conhecimento de oito médicos), mas cada consulta custa o tempo de dois.</div>
+    <p>Três detalhes importantes, todos das fontes abaixo:</p>
+    <ul>
+      <li><strong>O roteamento é por token e por camada.</strong> Dois tokens da mesma frase podem usar especialistas diferentes, e cada camada faz a própria escolha.</li>
+      <li><strong>Só a FFN é substituída.</strong> A atenção normalmente continua densa e roda para todo token.</li>
+      <li><strong>Alguns projetos adicionam um especialista compartilhado</strong>, sempre ativo ao lado dos roteados, para cuidar dos padrões comuns e deixar os outros se especializarem.</li>
+    </ul>
+    <p>Um roteador minúsculo em JavaScript puro:</p>
+<pre><code>function route(scores, k) {
+  // scores: um número por especialista (a saída do roteador)
+  const top = scores
+    .map((s, i) =&gt; ({ i, s }))
+    .sort((a, b) =&gt; b.s - a.s)
+    .slice(0, k);                          // fica com os k melhores
+  const sum = top.reduce((t, e) =&gt; t + Math.exp(e.s), 0);
+  return top.map(e =&gt; ({ expert: e.i, weight: Math.exp(e.s) / sum }));
+}
+route([0.1, 2.0, -1, 0.4, 1.5, 0, -0.5, 0.2], 2);
+// [{expert: 1, weight: 0.62}, {expert: 4, weight: 0.38}]</code></pre>
+
+    <h2 id="sim-pt">3. Teste: roteie uma frase</h2>
+    <p>Isto é um brinquedo: as notas do roteador aqui vêm de um hash fixo de cada palavra, não de um modelo treinado, então os especialistas não "significam" nada. O que ele mostra é o formato do mecanismo. Escolha uma palavra para ver seus especialistas, mude o <code>k</code> e alterne entre um roteador balanceado e um colapsado.</p>
+    <div class="calc" id="simbox-pt">
+      <div data-role="tokens"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn" data-k="1">top-1</button>
+        <button class="btn on" data-k="2">top-2</button>
+        <button class="btn" data-k="4">top-4</button>
+        <span style="width:12px"></span>
+        <button class="btn on" data-mode="balanced">Roteador balanceado</button>
+        <button class="btn" data-mode="collapsed">Roteador colapsado</button>
+      </div>
+      <div class="experts" data-role="experts"></div>
+      <div class="calc-out" data-role="out"></div>
+      <div style="font-size:12.5px;color:var(--text-dim);margin-top:10px" data-role="barlabel"></div>
+      <div class="bars" data-role="bars"></div>
+    </div>
+    <p>No modo colapsado, o roteador manda quase todos os tokens para o mesmo um ou dois especialistas. Eles viram gargalo enquanto o resto fica parado, e é isso que as técnicas de treino da seção 5 existem para evitar.</p>
+
+    <h2 id="counts-pt">4. Parâmetros totais vs ativos</h2>
+    <p>Isso cria dois números. <strong>Parâmetros totais</strong> contam todos os especialistas guardados no checkpoint. <strong>Parâmetros ativos</strong> contam as partes compartilhadas mais os especialistas realmente escolhidos para um token. Nomes como <code>235B-A22B</code> codificam os dois: cerca de 235 bilhões no total, 22 bilhões ativos.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Modelo</th><th>Total</th><th>Ativos por token</th><th>Fatia ativa</th></tr>
+      <tr><td>Mixtral 8x7B</td><td>~47B</td><td>~13B</td><td>~28%</td></tr>
+      <tr><td>Grok-1</td><td>314B</td><td>~86B</td><td>~27%</td></tr>
+      <tr><td>DeepSeek-V3</td><td>671B</td><td>37B</td><td>~5,5%</td></tr>
+      <tr><td>Mistral Large 4 (nossa lição de 13/10)</td><td>~1T</td><td>~49B</td><td>~5%</td></tr>
+    </table></div>
+    <p>Os números dos três primeiros vêm da página de conceitos da ZeroEntropy; o quarto vem da lição anterior sobre o Mistral Large 4 e é o número do próprio fabricante. Por isso o MoE dominou a fronteira dos modelos de pesos abertos: as leis de escala dizem que mais parâmetros significa mais qualidade, e o MoE permite somar parâmetros sem pagar a conta inteira de cálculo a cada token.</p>
+    <div class="callout"><strong>Cuidado com "ativo":</strong> parâmetros ativos são só uma aproximação do custo em execução. Atenção, embeddings e a camada de saída continuam rodando, e o roteamento acrescenta custo próprio (pontuar, ordenar, mover tokens entre chips). Um MoE de 22B ativos não necessariamente tem a latência de um modelo denso de 22B (Raschka).</div>
+
+    <h2 id="balance-pt">5. O problema do treino: colapso de especialistas</h2>
+    <p>O roteador e os especialistas aprendem juntos. Se ninguém intervir, a descida do gradiente acha um atalho preguiçoso: mandar tudo para um especialista, treiná-lo forte e ignorar os outros. Isso é o <strong>colapso de especialistas</strong>, e os especialistas sem uso viram peso morto.</p>
+    <p>As correções padrão, segundo ZeroEntropy e Raschka:</p>
+    <ul>
+      <li><strong>Perda auxiliar de balanceamento:</strong> uma penalidade extra no treino que cresce quando alguns especialistas recebem muito mais tráfego que outros (a abordagem do Switch Transformer).</li>
+      <li><strong>Viés de roteamento:</strong> a variante "sem perda auxiliar" da DeepSeek empurra as notas do roteador para os especialistas subutilizados a cada passo.</li>
+      <li><strong>Limites de capacidade:</strong> limitar quantos tokens um especialista aceita por lote.</li>
+    </ul>
+    <p>Os especialistas também não viram módulos arrumadinhos de "especialista em matemática" ou "em gramática". As duas fontes dizem que a especialização é mais bagunçada: aparece mais no nível de tipos de token, sintaxe ou posição do que em assuntos que um humano reconheceria. Pense em "partições emergentes", não em "departamentos".</p>
+
+    <h2 id="catch-pt">6. A pegadinha: memória e serviço</h2>
+    <p>Ativação esparsa economiza aritmética, não armazenamento. Todo especialista precisa estar em algum lugar, e o roteador pode escolher qualquer um para o próximo token. Teste a ferramenta de dimensionamento:</p>
+    <div class="calc" id="mem-pt">
+      <div class="btn-row">
+        <button class="btn" data-p="47,13">Mixtral 8x7B</button>
+        <button class="btn" data-p="671,37">DeepSeek-V3</button>
+        <button class="btn" data-p="1000,49">Classe 1T / 49B</button>
+      </div>
+      <div class="calc-grid">
+        <div><label>Parâmetros totais (bilhões)</label><input type="number" data-f="total" value="47" min="1"></div>
+        <div><label>Parâmetros ativos (bilhões)</label><input type="number" data-f="active" value="13" min="1"></div>
+        <div><label>Precisão</label>
+          <select data-f="bytes"><option value="2" selected>16 bits (2 bytes)</option><option value="1">FP8 (1 byte)</option><option value="0.5">4 bits (0,5 byte)</option></select></div>
+      </div>
+      <div class="calc-out"><span data-out="mem">–</span><small data-out="memnote"></small><span data-out="cmp" style="display:block;margin-top:8px"></span><small data-out="cmpnote"></small></div>
+    </div>
+    <p>Com pesos de 16 bits, os 47B parâmetros do Mixtral precisam de cerca de <strong>94 GB</strong> só para guardar os pesos, o mesmo de um modelo denso de 47B, embora cada token calcule com uns 13B deles (ZeroEntropy). O desconto de cálculo é real; o desconto de memória é zero. Consequências práticas:</p>
+    <ul>
+      <li><strong>Dimensione a infraestrutura pelos parâmetros totais</strong> e trate a velocidade como bônus. A ZeroEntropy avisa que times que dimensionam pelo número de ativos subestimam em 3-4x.</li>
+      <li><strong>O roteamento complica o caso fácil das GPUs.</strong> Tokens diferentes vão para especialistas diferentes, então os lotes se fragmentam, e quando os especialistas ficam espalhados em vários chips, os tokens precisam viajar até o chip do especialista e voltar. Essa comunicação all-to-all pode virar uma fatia grande do tempo de serviço. Stacks como vLLM e SGLang têm kernels especializados para MoE, mas a vazão por parâmetro ativo ainda é pior que a de um modelo denso.</li>
+      <li><strong>O KV cache não encolhe com MoE.</strong> O MoE muda o caminho da FFN; o cache vive na atenção, então a lição de memória do KV cache continua valendo por cima.</li>
+    </ul>
+    <table>
+      <tr><th></th><th>Denso</th><th>MoE</th></tr>
+      <tr><td><strong>Cálculo por token</strong></td><td>Cresce com todos os parâmetros</td><td>Cresce com os parâmetros ativos</td></tr>
+      <tr><td><strong>Memória dos pesos</strong></td><td>Todos os parâmetros</td><td>Todos os parâmetros (todo especialista)</td></tr>
+      <tr><td><strong>Treino</strong></td><td>Mais simples</td><td>Exige balanceamento de carga</td></tr>
+      <tr><td><strong>Fine-tuning e serviço em pequena escala</strong></td><td>Mais fácil</td><td>Mais difícil, pede vários dispositivos</td></tr>
+      <tr><td><strong>Melhor uso</strong></td><td>Modelos pequenos e especializados, setups simples</td><td>Capacidade de escala de fronteira quando o hardware roteia bem</td></tr>
+    </table>
+
+    <h2 id="you-pt">7. O que isso significa para você, dev</h2>
+    <h3>Leia nomes de modelo com dois números na cabeça</h3>
+    <p>Quando um post de lançamento diz "1T de parâmetros", pergunte: total ou ativo? Custo e velocidade seguem o número de ativos; o hardware necessário para hospedar por conta própria segue o total.</p>
+    <h3>Hospedando um modelo MoE aberto</h3>
+    <p>Antes de baixar, calcule <code>parâmetros totais × bytes por peso</code> e compare com a memória da sua GPU. Quantizar para 8 ou 4 bits reduz (use a ferramenta acima), mas é trocar um pouco de qualidade por encaixe.</p>
+    <h3>Usando uma API</h3>
+    <p>Você nunca vê os especialistas. Para quem usa API, o MoE aparece só indiretamente, como o motivo de um modelo muito grande poder ser vendido e servido numa velocidade que um modelo denso do mesmo tamanho total não alcançaria. Se um modelo fechado é denso ou MoE geralmente não é publicado: a ZeroEntropy diz que o GPT-4 é "amplamente reportado" como MoE e o Claude "reportadamente" denso, então trate ambos como não confirmados.</p>
+    <h3>Um exercício rápido</h3>
+    <p>Um modelo aparece como <code>400B-A20B</code>. (1) Que fatia dos parâmetros fica ativa por token? (2) Quanta memória só os pesos exigem em FP8? Respostas: (1) 20/400 = 5%. (2) 400B × 1 byte = cerca de 400 GB, antes de qualquer KV cache. Confira na ferramenta acima digitando 400 e 20.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://sebastianraschka.com/faq/docs/mixture-of-experts.html" target="_blank" rel="noopener">Sebastian Raschka — "Mixture-of-Experts (MoE) vs. Dense LLMs" (lido diretamente em 03/11/2026): roteador e top-k, parâmetros totais vs ativos, balanceamento de carga, comunicação all-to-all, especialistas compartilhados, ressalvas sobre o custo dos parâmetros ativos</a></li>
+      <li><a href="https://www.zeroentropy.dev/concepts/mixture-of-experts/" target="_blank" rel="noopener">ZeroEntropy — página de conceito "Mixture of Experts (MoE)" (lida diretamente em 03/11/2026): tabela de tamanhos de modelos, perda auxiliar e a variante da DeepSeek, problemas de VRAM e de serviço, especialização. A ZeroEntropy vende modelos de retrieval e embeddings; os números de modelos são resumos de segunda mão de lançamentos públicos.</a></li>
+      <li><a href="/lessons/ai-watch-2026-10-13-mistral-large-4-le-chonk.html">Cooldecode IA Watch, 13/10/2026 — Mistral Large 4 (1T / 49B ativos, número do fabricante)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Conceitos fundamentais de LLMs explicados"; as buscas não acharam anúncio novo da Anthropic/Claude datado de hoje (só boatos de sites de baixa qualidade sobre um novo modelo e uma data de IPO, não usados). Os tamanhos de modelos não foram conferidos nos papers originais. Se os modelos Claude ou GPT são MoE não é confirmado pelos fabricantes.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Mixture of Experts</span>
+</footer>
+
+<script>
+  /* ---------- router simulator ---------- */
+  var WORDS = { en: ['The','compiler','rejected','my','recursive','function'], pt: ['O','compilador','rejeitou','minha','função','recursiva'] };
+  function hash(str, n) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } h ^= n * 374761393; h = Math.imul(h ^ (h >>> 15), 2246822519); return ((h ^ (h >>> 13)) >>> 0) / 4294967295; }
+  function scoresFor(word, mode) {
+    var s = []; for (var e = 0; e < 8; e++) { s.push(hash(word.toLowerCase(), e) * 2 - 1 + (mode === 'collapsed' ? (e === 2 ? 2.4 : e === 5 ? 1.2 : 0) : 0)); }
+    return s;
+  }
+  function topk(s, k) { return s.map(function(v, i) { return { i: i, v: v }; }).sort(function(a, b) { return b.v - a.v; }).slice(0, k).map(function(x) { return x.i; }); }
+  function initSim(box) {
+    var lang = box.id.slice(-2), words = WORDS[lang], state = { k: 2, mode: 'balanced', sel: 1 };
+    var tokBox = box.querySelector('[data-role=tokens]'), expBox = box.querySelector('[data-role=experts]'),
+        out = box.querySelector('[data-role=out]'), bars = box.querySelector('[data-role=bars]'), barlabel = box.querySelector('[data-role=barlabel]');
+    words.forEach(function(w, i) {
+      var t = document.createElement('span'); t.className = 'tok'; t.textContent = w;
+      t.onclick = function() { state.sel = i; render(); }; tokBox.appendChild(t);
+    });
+    for (var e = 0; e < 8; e++) { var d = document.createElement('div'); d.className = 'exp'; d.textContent = 'E' + e; expBox.appendChild(d); bars.appendChild(document.createElement('div')); }
+    function render() {
+      tokBox.querySelectorAll('.tok').forEach(function(t, i) { t.classList.toggle('sel', i === state.sel); });
+      var chosen = topk(scoresFor(words[state.sel], state.mode), state.k);
+      expBox.querySelectorAll('.exp').forEach(function(x, i) { x.classList.toggle('fire', chosen.indexOf(i) >= 0); });
+      out.innerHTML = (lang === 'pt' ? '“' + words[state.sel] + '” usa ' : '“' + words[state.sel] + '” uses ') + chosen.map(function(i) { return 'E' + i; }).join(' + ')
+        + '<small>' + (lang === 'pt' ? state.k + ' de 8 especialistas ativos = ' : state.k + ' of 8 experts active = ') + (state.k / 8 * 100) + '%' + (lang === 'pt' ? ' dos especialistas calculam este token' : ' of the experts compute this token') + '</small>';
+      var counts = [0,0,0,0,0,0,0,0], total = 0;
+      for (var n = 0; n < 200; n++) { topk(scoresFor('tok' + n, state.mode), state.k).forEach(function(i) { counts[i]++; total++; }); }
+      var mx = Math.max.apply(null, counts);
+      bars.childNodes.forEach(function(b, i) { b.style.height = Math.max(2, counts[i] / mx * 70) + 'px'; });
+      barlabel.textContent = lang === 'pt' ? 'Carga por especialista em 200 tokens de exemplo (o mais carregado = ' + Math.round(mx / total * 100) + '% do tráfego; ideal = ' + (100 / 8) + '%)'
+        : 'Load per expert over 200 sample tokens (busiest = ' + Math.round(mx / total * 100) + '% of traffic; ideal = ' + (100 / 8) + '%)';
+    }
+    box.querySelectorAll('[data-k]').forEach(function(b) { b.onclick = function() { state.k = +b.dataset.k; box.querySelectorAll('[data-k]').forEach(function(x) { x.classList.toggle('on', x === b); }); render(); }; });
+    box.querySelectorAll('[data-mode]').forEach(function(b) { b.onclick = function() { state.mode = b.dataset.mode; box.querySelectorAll('[data-mode]').forEach(function(x) { x.classList.toggle('on', x === b); }); render(); }; });
+    render();
+  }
+
+  /* ---------- memory sizing tool ---------- */
+  function fmtGB(g, lang) { var s = g >= 1000 ? (g / 1000).toFixed(2) + ' TB' : g.toFixed(g >= 100 ? 0 : 1) + ' GB'; return lang === 'pt' ? s.replace('.', ',') : s; }
+  function initMem(box) {
+    var lang = box.id.slice(-2);
+    function calc() {
+      var v = {}; box.querySelectorAll('[data-f]').forEach(function(el) { v[el.dataset.f] = parseFloat(el.value) || 0; });
+      var mem = v.total * v.bytes, share = v.total ? v.active / v.total * 100 : 0, denseMem = v.active * v.bytes;
+      box.querySelector('[data-out=mem]').textContent = (lang === 'pt' ? 'Pesos em memória: ' : 'Weights in memory: ') + fmtGB(mem, lang);
+      box.querySelector('[data-out=memnote]').textContent = lang === 'pt' ? 'total × bytes por peso: todos os especialistas precisam caber' : 'total × bytes per weight: every expert has to fit';
+      box.querySelector('[data-out=cmp]').textContent = (lang === 'pt' ? 'Cálculo por token: ' : 'Compute per token: ') + share.toFixed(1).replace(lang === 'pt' ? '.' : 'x', lang === 'pt' ? ',' : 'x') + (lang === 'pt' ? '% dos parâmetros' : '% of the parameters');
+      box.querySelector('[data-out=cmpnote]').textContent = (lang === 'pt' ? 'Um modelo denso com o mesmo custo de cálculo (' : 'A dense model with the same compute cost (') + v.active + (lang === 'pt' ? 'B) precisaria de só ' : 'B) would need only ') + fmtGB(denseMem, lang) + (lang === 'pt' ? ' para os pesos.' : ' for weights.');
+    }
+    box.querySelectorAll('input,select').forEach(function(el) { el.addEventListener('input', calc); });
+    box.querySelectorAll('[data-p]').forEach(function(b) { b.onclick = function() { var p = b.dataset.p.split(','); box.querySelector('[data-f=total]').value = p[0]; box.querySelector('[data-f=active]').value = p[1]; calc(); }; });
+    calc();
+  }
+  document.querySelectorAll('[id^="simbox-"]').forEach(function(b) { if (b.classList.contains('calc')) initSim(b); });
+  document.querySelectorAll('[id^="mem-"]').forEach(function(b) { if (b.classList.contains('calc')) initMem(b); });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

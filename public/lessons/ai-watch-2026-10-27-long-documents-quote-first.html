@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Documents first, quotes next, answer last</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+    --ok: #34d399; --bad: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 20px 0; }
+  .compare > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+  .compare pre { margin: 8px 0 0; padding: 12px 14px; font-size: 12.5px; background: var(--bg-card-2); }
+  .tag-bad { color: var(--bad); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .tag-ok { color: var(--ok); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .checker { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .checker label { display: block; font-size: 12.5px; color: var(--text-dim); margin: 10px 0 4px; }
+  .checker textarea { width: 100%; min-height: 110px; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; line-height: 1.5; resize: vertical; }
+  .checker-out { margin-top: 14px; font-size: 14px; }
+  .checker-out div { padding: 6px 10px; border-radius: 8px; margin-bottom: 6px; background: var(--bg-card-2); border: 1px solid var(--border); }
+  .checker-out .ok { border-color: rgba(52,211,153,0.4); }
+  .checker-out .ok b { color: var(--ok); }
+  .checker-out .bad { border-color: rgba(248,113,113,0.45); }
+  .checker-out .bad b { color: var(--bad); }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; padding-bottom: 40px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Prompt engineering in practice</span>
+      <h1>Documents first, quotes next, answer last: prompting over long inputs</h1>
+      <p class="subtitle">When you paste a 40-page contract or three reports into a prompt, the model will answer. The question is whether the answer comes from the documents or from a plausible guess. Three small habits, plus one API feature, make the difference checkable.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#problem-en">The problem: an answer with no trail</a></li>
+        <li><a href="#order-en">Habit 1: data on top, question at the bottom</a></li>
+        <li><a href="#label-en">Habit 2: label every document</a></li>
+        <li><a href="#quote-en">Habit 3: quote first, answer second</a></li>
+        <li><a href="#example-en">Before and after: three contracts, one question</a></li>
+        <li><a href="#check-en">Check the quotes with code (try it)</a></li>
+        <li><a href="#api-en">When the API does it for you: Citations</a></li>
+        <li><a href="#limits-en">Limits and a checklist</a></li>
+      </ol>
+    </div>
+
+    <h2 id="problem-en">1. The problem: an answer with no trail</h2>
+    <p>Long inputs are where models are most useful and where mistakes are hardest to spot. You hand over a contract, a log dump or a set of meeting notes because you do not want to read all of it. That also means you cannot easily tell whether the answer you got is in the text, is a blend of two documents, or was filled in from general knowledge.</p>
+    <p>The <em>hallucinations</em> lesson (Oct 7) explained why models guess: they are trained to produce a fluent continuation, and "I could not find it" is rarely the most likely next sentence. The <em>attention</em> lesson (Oct 23) showed that every token can look at every earlier token, but that does not mean it looks at the right ones. Today's techniques work on both problems: they give the model a better layout to search, and they force it to show its evidence before it commits.</p>
+
+    <h2 id="order-en">2. Habit 1: data on top, question at the bottom</h2>
+    <p>Anthropic's current prompting guide is direct about this. For large inputs (it uses roughly 20K tokens and up as the threshold), place the long documents <strong>near the top</strong> of the prompt, <strong>above</strong> your question, instructions and examples. The guide reports that putting the query at the end improved response quality <strong>by up to 30%</strong> in Anthropic's tests, especially with complex, multi-document inputs.</p>
+    <p>A useful way to picture why: the model writes its answer immediately after the last thing it read. If the last thing is your question, the task is fresh and specific when generation starts. If the last thing is page 38 of a contract, the model has to reach back past all of it to find out what you even asked.</p>
+    <pre><code>[ documents ............................ ]   ← big, at the top
+[ instructions: how to work, what format ]
+[ the actual question                    ]   ← last, right before the answer</code></pre>
+    <div class="callout"><strong>Note on the 30%:</strong> this is Anthropic's own internal figure for Claude, described as "up to". Treat it as a reason to adopt the habit, not as a guaranteed gain on your task. The habit costs nothing, so the trade is easy.</div>
+
+    <h2 id="label-en">3. Habit 2: label every document</h2>
+    <p>With more than one document, give each one a wrapper and a name. Anthropic's docs suggest XML-style tags with a <code>source</code> and the content kept apart from the metadata:</p>
+    <pre><code>&lt;documents&gt;
+  &lt;document index="1"&gt;
+    &lt;source&gt;contract_vendor_a.pdf&lt;/source&gt;
+    &lt;document_content&gt;
+      ...full text...
+    &lt;/document_content&gt;
+  &lt;/document&gt;
+  &lt;document index="2"&gt;
+    &lt;source&gt;contract_vendor_b.pdf&lt;/source&gt;
+    &lt;document_content&gt;...&lt;/document_content&gt;
+  &lt;/document&gt;
+&lt;/documents&gt;</code></pre>
+    <p>This does two jobs. It stops the model from blending facts across documents ("Vendor A's price with Vendor B's term"), and it gives every later quote an address: you can ask for "the quote and the document index", and you can check both.</p>
+    <p>Anthropic's 2026 best-practices article notes that modern models need XML tags less than older ones did and that clear headings often work just as well. Multiple long documents is exactly the case where the article says tags still earn their place: you need to be sure where one piece of content ends and the next begins.</p>
+
+    <h2 id="quote-en">4. Habit 3: quote first, answer second</h2>
+    <p>This is the core of today's lesson. Instead of asking for the answer directly, ask the model to <strong>first copy the passages that matter, word for word</strong>, inside their own tag, and only then answer using those passages. The docs call this "grounding responses in quotes" and say it helps the model focus on the relevant content and ignore the rest of the document.</p>
+    <pre><code>First, find the passages in the documents that are relevant to the
+question. Copy them word for word inside &lt;quotes&gt; tags, one per line,
+each starting with the document index in brackets, like [2].
+
+Then answer the question inside &lt;answer&gt; tags, using only the quotes.
+If the quotes do not contain the answer, say so in &lt;answer&gt; instead
+of guessing.</code></pre>
+    <p>Why this works better than "be accurate":</p>
+    <ul>
+      <li><strong>It changes the order of work.</strong> The model has to locate the evidence before it writes a conclusion, instead of writing a conclusion and hoping it matches.</li>
+      <li><strong>It shrinks the problem.</strong> After the quote step, the answer is reasoning over five sentences instead of fifty pages.</li>
+      <li><strong>It gives the model an honest exit.</strong> An empty or weak <code>&lt;quotes&gt;</code> block makes "the documents do not say" the natural next step. Anthropic's best-practices article recommends giving this permission explicitly ("say so rather than speculating").</li>
+      <li><strong>It gives <em>you</em> a trail.</strong> A quote is a claim you can verify in seconds. A paraphrase is not.</li>
+    </ul>
+
+    <h2 id="example-en">5. Before and after: three contracts, one question</h2>
+    <p>Scenario: a small company is comparing three software vendors and wants to know which contract allows cancellation with the shortest notice.</p>
+    <div class="compare">
+      <div>
+        <span class="tag-bad">Before</span>
+        <pre><code>Which of these contracts has the
+shortest cancellation notice?
+
+[contract A pasted]
+[contract B pasted]
+[contract C pasted]</code></pre>
+        <p style="font-size:14px; margin:10px 0 0; color:var(--text-dim);">Question on top, documents unlabeled, no evidence step. You get a confident "Vendor B, 30 days" and no way to know if B's 30 days applies only to the renewal period.</p>
+      </div>
+      <div>
+        <span class="tag-ok">After</span>
+        <pre><code>&lt;documents&gt;
+  &lt;document index="1"&gt;&lt;source&gt;vendor_a&lt;/source&gt;...
+  &lt;document index="2"&gt;&lt;source&gt;vendor_b&lt;/source&gt;...
+  &lt;document index="3"&gt;&lt;source&gt;vendor_c&lt;/source&gt;...
+&lt;/documents&gt;
+
+I'm choosing a vendor and need to know how
+quickly we could leave each one.
+
+1. In &lt;quotes&gt;, copy every clause about
+   cancellation or termination notice,
+   word for word, prefixed with [index].
+2. In &lt;answer&gt;, give the notice period per
+   vendor and any condition attached to it.
+   If a contract is silent, write "not stated".
+
+Which contract has the shortest notice?</code></pre>
+      </div>
+    </div>
+    <p>The "after" version combines all three habits plus two from earlier lessons: it explains the <em>why</em> (choosing a vendor), and it defines an output contract ("not stated" when silent). It is longer, but every part of it removes a specific way to be wrong.</p>
+
+    <h2 id="check-en">6. Check the quotes with code (try it)</h2>
+    <p>The quote step pays off most when you verify it automatically. A quote that does not appear in the source, word for word, is a red flag: either the model paraphrased (fine, but not what you asked) or it invented the passage (not fine). The check is a few lines of code. Paste a source and some quotes below:</p>
+    <div class="checker" data-checker="en">
+      <label>Source document</label>
+      <textarea data-src>Either party may terminate this Agreement for convenience by giving the other party at least sixty (60) days' prior written notice. During any renewal term, the notice period is reduced to thirty (30) days. Fees paid in advance are non-refundable.</textarea>
+      <label>Quotes returned by the model (one per line)</label>
+      <textarea data-q>[1] Either party may terminate this Agreement for convenience by giving the other party at least sixty (60) days' prior written notice.
+[1] During any renewal term, the notice period is reduced to thirty (30) days.
+[1] Customer may cancel at any time with 30 days' notice.</textarea>
+      <div class="checker-out" data-out></div>
+    </div>
+    <p>The third quote is a typical failure: it sounds like the contract, it carries the right number, and it is not in the text. Notice it would also lead to a wrong conclusion ("30 days at any time" versus "30 days only during renewal"). The checker normalizes whitespace and curly quotes, then does a plain substring search. In production you would do the same thing in your backend before showing the answer.</p>
+    <pre><code>const norm = s =&gt; s.replace(/[“”]/g, '"').replace(/[‘’]/g, "'")
+                   .replace(/\s+/g, ' ').trim().toLowerCase();
+
+function checkQuotes(source, quotes) {
+  const src = norm(source);
+  return quotes.map(q =&gt; {
+    const text = q.replace(/^\[\d+\]\s*/, '');   // drop the [index] prefix
+    return { quote: text, found: src.includes(norm(text)) };
+  });
+}</code></pre>
+
+    <h2 id="api-en">7. When the API does it for you: Citations</h2>
+    <p>If you build on the Claude API, there is a feature that does the quote step natively. You send each document as a <code>document</code> content block with <code>citations: { enabled: true }</code>. The response comes back split into text blocks, each with a list of citations pointing to the exact location in your documents: character ranges for plain text, page ranges for PDFs, block ranges for custom content.</p>
+    <div class="table-wrap"><table>
+      <tr><th></th><th>Prompted quotes (habit 3)</th><th>Citations API feature</th></tr>
+      <tr><td><strong>Where it works</strong></td><td>Any model, any chat interface</td><td>Claude API and the cloud platforms that offer it; all active models</td></tr>
+      <tr><td><strong>Is the quote real?</strong></td><td>You must check it (section 6)</td><td>Pointers are guaranteed to be valid locations in the documents you sent</td></tr>
+      <tr><td><strong>Cost</strong></td><td>Quotes are output tokens you pay for</td><td>Slightly more input tokens; <code>cited_text</code> does not count as output tokens</td></tr>
+      <tr><td><strong>Granularity</strong></td><td>Whatever the model copies</td><td>Sentences for text and PDFs; your own chunks for custom content</td></tr>
+      <tr><td><strong>Combines with</strong></td><td>Anything</td><td>Prompt caching, batch processing; <strong>not</strong> structured outputs (that returns a 400 error)</td></tr>
+    </table></div>
+    <p>Anthropic's docs also say that in its evaluations the feature was significantly more likely to cite the most relevant passages than prompt-based approaches. As with the 30% figure, that is the vendor's own evaluation.</p>
+    <div class="callout"><strong>Practical choice:</strong> in a chat window or with another provider, use the prompted pattern and check quotes yourself. In an app built on the Claude API that shows sources to users, use Citations. If you need strict JSON output, you have to pick: Citations and structured outputs cannot be combined in one request, so either drop the JSON schema or fall back to prompted quotes inside a JSON field and check them yourself.</div>
+
+    <h2 id="limits-en">8. Limits and a checklist</h2>
+    <ul>
+      <li><strong>A real quote can still be misread.</strong> Verification proves the passage exists, not that the conclusion follows from it. In the contract example, a model could quote both clauses correctly and still say "30 days" without the renewal condition. Ask for conditions explicitly.</li>
+      <li><strong>It costs time and tokens.</strong> The quote step adds output. For a two-paragraph input, it is overkill; the docs frame these techniques around inputs of roughly 20K tokens and up.</li>
+      <li><strong>Missing quotes are not proof of absence.</strong> The model may have skipped a relevant clause. For high-stakes questions ("is there any penalty clause?"), run a second focused pass or search the text yourself.</li>
+      <li><strong>Long-context ability keeps improving.</strong> Anthropic says newer models handle the "lost in the middle" problem much better. The habits still help because they make the answer checkable, which does not go out of date.</li>
+    </ul>
+    <h3>Checklist for your next long-document prompt</h3>
+    <ol>
+      <li>Documents at the top, each wrapped and labeled with a source and index.</li>
+      <li>Say why you are asking, in one sentence.</li>
+      <li>Ask for word-for-word quotes in their own block, with the document index.</li>
+      <li>Ask for the answer in a separate block, based only on the quotes.</li>
+      <li>Say what to write when the documents are silent.</li>
+      <li>Put the question last.</li>
+      <li>Check the quotes with code, or use the Citations feature.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — "Prompting best practices", long context section (read directly, Oct 27, 2026): documents at the top for ~20K+ token inputs, query at the end "up to 30 percent" better in tests, document/source/document_content tags, grounding responses in quotes.</a></li>
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude — "Best practices for prompt engineering for 2026" (Nov 10, 2025, read directly): permission to express uncertainty, XML tags only where boundaries matter, improved context awareness on "lost in the middle", put critical details at the beginning or end.</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank" rel="noopener">Claude Platform Docs — "Citations" (read directly, Oct 27, 2026): enabling per document, sentence chunking, location formats, cited_text not counted as output tokens, guaranteed valid pointers, incompatibility with structured outputs, use with prompt caching.</a></li>
+      <li><a href="https://simonwillison.net/2024/Aug/26/long-context-prompting-tips/" target="_blank" rel="noopener">Simon Willison's Weblog — "Long context prompting tips" (Aug 26, 2024, read directly): independent write-up of the same guidance when it was first published, with the quote-extraction example.</a></li>
+      <li>Not read in full: Anthropic's 2023 research post "Prompting for long context" (the fetch was blocked); its finding that pulling quotes into a scratchpad helped in head-to-head comparisons is cited here only via a search summary and is not used as a main claim.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "Prompt engineering in practice". No major Anthropic/Claude announcement dated today was found; recent items (the S-1 filing, Claude Duet) were already covered, and the Claude for Nonprofits plugin (Oct 26) was judged too minor to override the rotation.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Prompt engineering na prática</span>
+      <h1>Documentos primeiro, citações depois, resposta no fim: prompts com entradas longas</h1>
+      <p class="subtitle">Quando você cola um contrato de 40 páginas ou três relatórios num prompt, o modelo vai responder. A questão é se a resposta saiu dos documentos ou de um chute plausível. Três hábitos simples, mais um recurso da API, tornam isso verificável.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#problem-pt">O problema: uma resposta sem rastro</a></li>
+        <li><a href="#order-pt">Hábito 1: dados em cima, pergunta embaixo</a></li>
+        <li><a href="#label-pt">Hábito 2: rotule cada documento</a></li>
+        <li><a href="#quote-pt">Hábito 3: primeiro cite, depois responda</a></li>
+        <li><a href="#example-pt">Antes e depois: três contratos, uma pergunta</a></li>
+        <li><a href="#check-pt">Confira as citações com código (teste aqui)</a></li>
+        <li><a href="#api-pt">Quando a API faz isso por você: Citations</a></li>
+        <li><a href="#limits-pt">Limites e um checklist</a></li>
+      </ol>
+    </div>
+
+    <h2 id="problem-pt">1. O problema: uma resposta sem rastro</h2>
+    <p>Entradas longas são onde os modelos mais ajudam e onde os erros são mais difíceis de perceber. Você entrega um contrato, um despejo de logs ou um monte de atas de reunião justamente porque não quer ler tudo. Só que isso também significa que você não consegue saber com facilidade se a resposta está no texto, se misturou dois documentos ou se foi completada com conhecimento geral.</p>
+    <p>A lição sobre <em>alucinações</em> (7/10) explicou por que os modelos chutam: eles são treinados para produzir uma continuação fluente, e "não encontrei" raramente é a frase mais provável. A lição sobre <em>atenção</em> (23/10) mostrou que cada token pode olhar para todos os anteriores, mas isso não garante que ele olhe para os certos. As técnicas de hoje atacam os dois problemas: dão ao modelo uma organização melhor para procurar e o obrigam a mostrar a evidência antes de concluir.</p>
+
+    <h2 id="order-pt">2. Hábito 1: dados em cima, pergunta embaixo</h2>
+    <p>O guia de prompting atual da Anthropic é direto nisso. Para entradas grandes (ele usa algo em torno de 20 mil tokens como referência), coloque os documentos longos <strong>no topo</strong> do prompt, <strong>acima</strong> da pergunta, das instruções e dos exemplos. O guia relata que colocar a pergunta no final melhorou a qualidade das respostas <strong>em até 30%</strong> nos testes da Anthropic, principalmente com entradas complexas de vários documentos.</p>
+    <p>Um jeito de visualizar o porquê: o modelo começa a escrever logo depois da última coisa que leu. Se a última coisa é a sua pergunta, a tarefa está fresca e específica quando a geração começa. Se a última coisa é a página 38 de um contrato, o modelo precisa voltar por cima de tudo isso só para descobrir o que você perguntou.</p>
+    <pre><code>[ documentos ............................ ]   ← grandes, no topo
+[ instruções: como trabalhar, que formato ]
+[ a pergunta em si                        ]   ← por último, logo antes da resposta</code></pre>
+    <div class="callout"><strong>Sobre os 30%:</strong> é um número interno da própria Anthropic, para o Claude, descrito como "até". Use como motivo para adotar o hábito, não como ganho garantido na sua tarefa. O hábito não custa nada, então a troca é fácil.</div>
+
+    <h2 id="label-pt">3. Hábito 2: rotule cada documento</h2>
+    <p>Com mais de um documento, dê a cada um uma embalagem e um nome. A documentação da Anthropic sugere tags no estilo XML, com um <code>source</code> e o conteúdo separado dos metadados:</p>
+    <pre><code>&lt;documents&gt;
+  &lt;document index="1"&gt;
+    &lt;source&gt;contrato_fornecedor_a.pdf&lt;/source&gt;
+    &lt;document_content&gt;
+      ...texto completo...
+    &lt;/document_content&gt;
+  &lt;/document&gt;
+  &lt;document index="2"&gt;
+    &lt;source&gt;contrato_fornecedor_b.pdf&lt;/source&gt;
+    &lt;document_content&gt;...&lt;/document_content&gt;
+  &lt;/document&gt;
+&lt;/documents&gt;</code></pre>
+    <p>Isso resolve duas coisas. Impede que o modelo misture fatos entre documentos ("o preço do fornecedor A com o prazo do fornecedor B") e dá um endereço para cada citação que vier depois: você pode pedir "a citação e o índice do documento" e conferir as duas coisas.</p>
+    <p>O artigo de boas práticas de 2026 da Anthropic observa que modelos modernos precisam menos de tags XML do que os antigos e que títulos claros muitas vezes funcionam igual. Vários documentos longos é exatamente o caso em que, segundo o artigo, as tags ainda valem a pena: você precisa ter certeza de onde um conteúdo termina e o próximo começa.</p>
+
+    <h2 id="quote-pt">4. Hábito 3: primeiro cite, depois responda</h2>
+    <p>Esse é o centro da lição de hoje. Em vez de pedir a resposta direto, peça ao modelo para <strong>primeiro copiar, palavra por palavra, os trechos que importam</strong>, numa tag própria, e só depois responder usando esses trechos. A documentação chama isso de "ancorar as respostas em citações" e diz que ajuda o modelo a focar no conteúdo relevante e ignorar o resto do documento.</p>
+    <pre><code>Primeiro, encontre os trechos dos documentos relevantes para a
+pergunta. Copie-os palavra por palavra dentro de tags &lt;quotes&gt;,
+um por linha, cada um começando com o índice do documento entre
+colchetes, assim: [2].
+
+Depois responda dentro de tags &lt;answer&gt;, usando só as citações.
+Se as citações não contiverem a resposta, diga isso no &lt;answer&gt;
+em vez de chutar.</code></pre>
+    <p>Por que isso funciona melhor do que "seja preciso":</p>
+    <ul>
+      <li><strong>Muda a ordem do trabalho.</strong> O modelo precisa localizar a evidência antes de escrever uma conclusão, em vez de escrever a conclusão e torcer para ela bater.</li>
+      <li><strong>Diminui o problema.</strong> Depois da etapa de citação, a resposta é um raciocínio sobre cinco frases, não sobre cinquenta páginas.</li>
+      <li><strong>Dá ao modelo uma saída honesta.</strong> Um bloco <code>&lt;quotes&gt;</code> vazio ou fraco torna "os documentos não dizem" o próximo passo natural. O artigo de boas práticas da Anthropic recomenda dar essa permissão de forma explícita ("diga isso em vez de especular").</li>
+      <li><strong>Dá um rastro para <em>você</em>.</strong> Uma citação é uma afirmação que você confere em segundos. Uma paráfrase não é.</li>
+    </ul>
+
+    <h2 id="example-pt">5. Antes e depois: três contratos, uma pergunta</h2>
+    <p>Cenário: uma pequena empresa está comparando três fornecedores de software e quer saber qual contrato permite cancelar com o menor aviso prévio.</p>
+    <div class="compare">
+      <div>
+        <span class="tag-bad">Antes</span>
+        <pre><code>Qual desses contratos tem o menor
+aviso prévio para cancelamento?
+
+[contrato A colado]
+[contrato B colado]
+[contrato C colado]</code></pre>
+        <p style="font-size:14px; margin:10px 0 0; color:var(--text-dim);">Pergunta no topo, documentos sem rótulo, nenhuma etapa de evidência. Você recebe um "Fornecedor B, 30 dias" cheio de confiança e não tem como saber se os 30 dias do B valem só no período de renovação.</p>
+      </div>
+      <div>
+        <span class="tag-ok">Depois</span>
+        <pre><code>&lt;documents&gt;
+  &lt;document index="1"&gt;&lt;source&gt;fornecedor_a&lt;/source&gt;...
+  &lt;document index="2"&gt;&lt;source&gt;fornecedor_b&lt;/source&gt;...
+  &lt;document index="3"&gt;&lt;source&gt;fornecedor_c&lt;/source&gt;...
+&lt;/documents&gt;
+
+Estou escolhendo um fornecedor e preciso saber
+com que rapidez conseguiríamos sair de cada um.
+
+1. Em &lt;quotes&gt;, copie toda cláusula sobre
+   cancelamento ou aviso de rescisão, palavra
+   por palavra, com o prefixo [índice].
+2. Em &lt;answer&gt;, informe o prazo de aviso de
+   cada fornecedor e qualquer condição ligada
+   a ele. Se o contrato for omisso, escreva
+   "não informado".
+
+Qual contrato tem o menor aviso prévio?</code></pre>
+      </div>
+    </div>
+    <p>A versão "depois" junta os três hábitos e mais dois de lições anteriores: explica o <em>porquê</em> (escolher um fornecedor) e define um contrato de saída ("não informado" quando o documento for omisso). É mais longa, mas cada parte elimina um jeito específico de errar.</p>
+
+    <h2 id="check-pt">6. Confira as citações com código (teste aqui)</h2>
+    <p>A etapa de citação rende mais quando você confere automaticamente. Uma citação que não aparece no texto original, palavra por palavra, é um sinal de alerta: ou o modelo parafraseou (tudo bem, mas não foi o que você pediu) ou inventou o trecho (aí não está nada bem). A conferência cabe em poucas linhas de código. Cole um texto e algumas citações abaixo:</p>
+    <div class="checker" data-checker="pt">
+      <label>Documento original</label>
+      <textarea data-src>Qualquer das partes poderá rescindir este Contrato por conveniência mediante aviso prévio por escrito de, no mínimo, 60 (sessenta) dias. Durante qualquer período de renovação, o prazo de aviso é reduzido para 30 (trinta) dias. Valores pagos antecipadamente não são reembolsáveis.</textarea>
+      <label>Citações devolvidas pelo modelo (uma por linha)</label>
+      <textarea data-q>[1] Qualquer das partes poderá rescindir este Contrato por conveniência mediante aviso prévio por escrito de, no mínimo, 60 (sessenta) dias.
+[1] Durante qualquer período de renovação, o prazo de aviso é reduzido para 30 (trinta) dias.
+[1] O Cliente pode cancelar a qualquer momento com 30 dias de aviso.</textarea>
+      <div class="checker-out" data-out></div>
+    </div>
+    <p>A terceira citação é uma falha típica: parece o contrato, traz o número certo e não está no texto. Repare que ela também levaria a uma conclusão errada ("30 dias a qualquer momento" contra "30 dias só na renovação"). O verificador normaliza espaços e aspas curvas e faz uma busca simples de substring. Em produção você faria o mesmo no backend antes de mostrar a resposta.</p>
+    <pre><code>const norm = s =&gt; s.replace(/[“”]/g, '"').replace(/[‘’]/g, "'")
+                   .replace(/\s+/g, ' ').trim().toLowerCase();
+
+function checkQuotes(source, quotes) {
+  const src = norm(source);
+  return quotes.map(q =&gt; {
+    const text = q.replace(/^\[\d+\]\s*/, '');   // remove o prefixo [índice]
+    return { quote: text, found: src.includes(norm(text)) };
+  });
+}</code></pre>
+
+    <h2 id="api-pt">7. Quando a API faz isso por você: Citations</h2>
+    <p>Se você desenvolve em cima da API do Claude, existe um recurso que faz a etapa de citação de forma nativa. Você envia cada documento como um bloco de conteúdo <code>document</code> com <code>citations: { enabled: true }</code>. A resposta volta dividida em blocos de texto, cada um com uma lista de citações apontando para o local exato nos seus documentos: intervalos de caracteres para texto puro, intervalos de páginas para PDFs, intervalos de blocos para conteúdo personalizado.</p>
+    <div class="table-wrap"><table>
+      <tr><th></th><th>Citações pedidas no prompt (hábito 3)</th><th>Recurso Citations da API</th></tr>
+      <tr><td><strong>Onde funciona</strong></td><td>Qualquer modelo, qualquer interface de chat</td><td>API do Claude e as plataformas de nuvem que a oferecem; todos os modelos ativos</td></tr>
+      <tr><td><strong>A citação é real?</strong></td><td>Você precisa conferir (seção 6)</td><td>Os ponteiros são garantidamente locais válidos nos documentos enviados</td></tr>
+      <tr><td><strong>Custo</strong></td><td>As citações são tokens de saída que você paga</td><td>Um pouco mais de tokens de entrada; <code>cited_text</code> não conta como token de saída</td></tr>
+      <tr><td><strong>Granularidade</strong></td><td>O que o modelo resolver copiar</td><td>Frases, para texto e PDF; seus próprios pedaços, para conteúdo personalizado</td></tr>
+      <tr><td><strong>Combina com</strong></td><td>Qualquer coisa</td><td>Prompt caching, processamento em lote; <strong>não</strong> com structured outputs (isso devolve erro 400)</td></tr>
+    </table></div>
+    <p>A documentação da Anthropic também diz que, nas avaliações dela, o recurso teve probabilidade significativamente maior de citar os trechos mais relevantes do que as abordagens baseadas em prompt. Assim como os 30%, é uma avaliação do próprio fornecedor.</p>
+    <div class="callout"><strong>Escolha prática:</strong> numa janela de chat ou com outro provedor, use o padrão pedido no prompt e confira as citações você mesmo. Num app feito em cima da API do Claude que mostra fontes para o usuário, use Citations. Se você precisa de JSON estrito, vai ter que escolher: Citations e structured outputs não podem ser combinados na mesma requisição, então ou você abre mão do schema JSON, ou volta para citações pedidas no prompt dentro de um campo do JSON e confere por conta própria.</div>
+
+    <h2 id="limits-pt">8. Limites e um checklist</h2>
+    <ul>
+      <li><strong>Uma citação real ainda pode ser mal interpretada.</strong> A conferência prova que o trecho existe, não que a conclusão decorre dele. No exemplo do contrato, o modelo poderia citar as duas cláusulas corretamente e ainda assim responder "30 dias" sem a condição da renovação. Peça as condições de forma explícita.</li>
+      <li><strong>Custa tempo e tokens.</strong> A etapa de citação aumenta a saída. Para uma entrada de dois parágrafos, é exagero; a documentação enquadra essas técnicas para entradas a partir de uns 20 mil tokens.</li>
+      <li><strong>Ausência de citação não prova ausência no texto.</strong> O modelo pode ter pulado uma cláusula relevante. Para perguntas críticas ("existe alguma cláusula de multa?"), rode uma segunda passada focada ou procure no texto você mesmo.</li>
+      <li><strong>A capacidade com contexto longo continua melhorando.</strong> A Anthropic diz que os modelos mais novos lidam bem melhor com o problema do "perdido no meio". Os hábitos continuam úteis porque tornam a resposta verificável, e isso não sai de moda.</li>
+    </ul>
+    <h3>Checklist para o seu próximo prompt com documento longo</h3>
+    <ol>
+      <li>Documentos no topo, cada um embalado e rotulado com origem e índice.</li>
+      <li>Diga em uma frase por que você está perguntando.</li>
+      <li>Peça citações palavra por palavra num bloco próprio, com o índice do documento.</li>
+      <li>Peça a resposta num bloco separado, baseada só nas citações.</li>
+      <li>Diga o que escrever quando os documentos forem omissos.</li>
+      <li>Coloque a pergunta por último.</li>
+      <li>Confira as citações com código, ou use o recurso Citations.</li>
+    </ol>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices" target="_blank" rel="noopener">Claude Platform Docs — "Prompting best practices", seção de contexto longo (lida diretamente, 27/10/2026): documentos no topo para entradas de ~20 mil tokens ou mais, pergunta no final "até 30%" melhor nos testes, tags document/source/document_content, ancorar respostas em citações.</a></li>
+      <li><a href="https://claude.com/resources/articles/best-practices-for-prompt-engineering" target="_blank" rel="noopener">Claude — "Best practices for prompt engineering for 2026" (10/11/2025, lido diretamente): permissão para expressar incerteza, tags XML só quando os limites importam, melhor percepção de contexto no "perdido no meio", detalhes críticos no começo ou no fim.</a></li>
+      <li><a href="https://platform.claude.com/docs/en/build-with-claude/citations" target="_blank" rel="noopener">Claude Platform Docs — "Citations" (lida diretamente, 27/10/2026): ativação por documento, divisão em frases, formatos de localização, cited_text fora da contagem de saída, ponteiros garantidamente válidos, incompatibilidade com structured outputs, uso com prompt caching.</a></li>
+      <li><a href="https://simonwillison.net/2024/Aug/26/long-context-prompting-tips/" target="_blank" rel="noopener">Simon Willison's Weblog — "Long context prompting tips" (26/08/2024, lido diretamente): resumo independente da mesma orientação quando ela foi publicada, com o exemplo de extração de citações.</a></li>
+      <li>Não lido na íntegra: o post de pesquisa da Anthropic de 2023, "Prompting for long context" (o acesso foi bloqueado); o resultado de que extrair citações num rascunho ajudou nas comparações diretas aparece aqui só via resumo de busca e não é usado como afirmação principal.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Prompt engineering na prática". Não foi encontrado anúncio relevante da Anthropic/Claude datado de hoje; os itens recentes (o S-1, o Claude Duet) já foram cobertos, e o plugin Claude for Nonprofits (26/10) foi considerado pequeno demais para furar a rotação.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Long documents · quote first</span>
+</footer>
+
+<script>
+  var LABELS = {
+    en: { found: 'Found verbatim', missing: 'Not in source', empty: 'Paste some quotes to check.', summary: function(ok, n) { return ok + ' of ' + n + ' quotes found in the source.'; } },
+    pt: { found: 'Encontrada no texto', missing: 'Não está no texto', empty: 'Cole algumas citações para conferir.', summary: function(ok, n) { return ok + ' de ' + n + ' citações encontradas no texto.'; } }
+  };
+  function norm(s) {
+    return s.replace(/[“”]/g, '"').replace(/[‘’]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+  function esc(s) { return s.replace(/[&<>"]/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function runCheck(box) {
+    var L = LABELS[box.dataset.checker];
+    var src = norm(box.querySelector('[data-src]').value);
+    var lines = box.querySelector('[data-q]').value.split('\n').map(function(l) { return l.trim(); }).filter(Boolean);
+    var out = box.querySelector('[data-out]');
+    if (!lines.length) { out.innerHTML = '<div>' + L.empty + '</div>'; return; }
+    var ok = 0, html = '';
+    lines.forEach(function(line) {
+      var text = line.replace(/^\[\d+\]\s*/, '');
+      var found = text.length > 0 && src.indexOf(norm(text)) !== -1;
+      if (found) ok++;
+      html += '<div class="' + (found ? 'ok' : 'bad') + '"><b>' + (found ? '✓ ' + L.found : '✗ ' + L.missing) + '</b> — ' + esc(text) + '</div>';
+    });
+    out.innerHTML = '<div>' + L.summary(ok, lines.length) + '</div>' + html;
+  }
+  document.querySelectorAll('[data-checker]').forEach(function(box) {
+    box.querySelectorAll('textarea').forEach(function(t) { t.addEventListener('input', function() { runCheck(box); }); });
+    runCheck(box);
+  });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

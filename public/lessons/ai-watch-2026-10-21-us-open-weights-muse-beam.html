@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The US answers on open weights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 32px 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 24px 0; }
+  .layer { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; font-size: 14px; }
+  .layer b { display: block; font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 15px; margin-bottom: 6px; }
+  .layer .q { color: var(--accent); font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 6px; }
+  .layer span { color: var(--text-dim); font-size: 13.5px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 24px 0; }
+  .calc label { font-size: 14px; color: var(--text-dim); display: block; margin-top: 12px; }
+  .calc input[type=range] { width: 100%; accent-color: #7c3aed; margin: 8px 0 4px; }
+  .calc select { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; margin-top: 6px; }
+  .calc .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .calc .stat { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; flex: 1 1 140px; }
+  .calc .stat b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: #fff; }
+  .calc .stat span { font-size: 12.5px; color: var(--text-dim); }
+  .calc small { color: var(--text-dim); font-size: 12.5px; display: block; margin-top: 12px; }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Industry landscape</span>
+      <h1>The US answers on open weights: Muse Spark Open vs Reflection Beam</h1>
+      <p class="subtitle">For most of 2026, the open-weight models at the top of the leaderboards came from Chinese labs (Kimi K3, GLM 5.3, Qwen3.8). Then, on October 15 and 16, two US labs released frontier-scale open models a day apart: Meta's Muse Spark Open and Reflection's Beam 1.0. Both have 1M-token contexts. Almost everything else about them points in opposite directions. Here is what "open weights" really means, how to read the two releases, and how to choose.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#what">What shipped, in one table</a></li>
+        <li><a href="#open">Open weights is not open source</a></li>
+        <li><a href="#moe">Two parameter counts: how mixture-of-experts works</a></li>
+        <li><a href="#calc">Calculator: how much memory does a model need?</a></li>
+        <li><a href="#bench">The benchmarks, and why you can't line them up</a></li>
+        <li><a href="#choose">How to choose</a></li>
+        <li><a href="#big">The bigger picture</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what">1. What shipped, in one table</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>Meta · Muse Spark Open</th><th>Reflection · Beam 1.0</th></tr>
+      <tr><td><strong>Released</strong></td><td>Oct 15, 2026</td><td>Oct 16, 2026</td></tr>
+      <tr><td><strong>Total parameters</strong></td><td>816B</td><td>501.3B</td></tr>
+      <tr><td><strong>Active per token</strong></td><td>~42B</td><td>~23.4B</td></tr>
+      <tr><td><strong>Context</strong></td><td>1M tokens</td><td>1M tokens</td></tr>
+      <tr><td><strong>Inputs</strong></td><td>Text, image, video, audio</td><td>Text only</td></tr>
+      <tr><td><strong>License</strong></td><td>Muse Model License (custom)</td><td>Apache 2.0</td></tr>
+      <tr><td><strong>Smallest official build</strong></td><td>NVFP4, ~530 GB</td><td>NVFP4, 273 GiB</td></tr>
+      <tr><td><strong>Where</strong></td><td>Hugging Face, SageMaker, Google Cloud, Microsoft Foundry; APIs via Together, Fireworks, Groq, OpenRouter and others</td><td>Hugging Face, Reflection API (free public beta), OpenRouter providers</td></tr>
+    </table>
+    </div>
+    <p>Muse Spark Open is the open-weight sibling of Muse Spark, the model Meta first launched closed in April. In the same window Meta also released <strong>Muse Wonder</strong> (Oct 12), its first closed frontier model, sold via the Meta Model API. So Meta now runs a two-track strategy: a closed top model and an open one a step below.</p>
+    <div class="callout"><strong>Meta's own framing:</strong> "the most capable US open-weight model to date." That is a claim against US rivals like Nvidia's Nemotron 3 Ultra and Thinking Machines' Inkling, which Meta's benchmarks beat by wide margins. Against the Chinese leaders it is a closer fight (see section 5).</div>
+
+    <h2 id="open">2. Open weights is not open source</h2>
+    <p>"Open weights" means you can download the trained numbers (the weights) and run the model yourself. It says nothing about the <strong>license</strong>, which is what decides what you're allowed to do. These two releases are a perfect example of the range:</p>
+    <div class="layers">
+      <div class="layer"><span class="q">Apache 2.0 · Beam</span><b>No triggers</b><span>Commercial use, modification, redistribution. Reflection's card says it doesn't forbid distillation or training on Beam's outputs. No revenue threshold, no notice your users must see.</span></div>
+      <div class="layer"><span class="q">Muse Model License · Muse</span><b>Free, with conditions</b><span>Every product built on it must "prominently display 'Built with Muse Spark Open'". Offering it as a hosted service with over $20M gross revenue in any 12 months requires notifying Meta and signing a separate deal. A usage policy bars military and critical-infrastructure use.</span></div>
+    </div>
+    <p>Why does this matter in practice? Imagine a small agency builds a support chatbot for a client on top of Muse and ships it under the client's brand. The attribution rule has <em>no</em> revenue threshold, so forgetting that one line is a license breach on day one. The same project on Beam has no line to forget. The New Stack notes Meta's terms look a lot like those Moonshot uses for Kimi K3, so this "open, but" style is becoming the norm for big labs.</p>
+    <div class="callout"><strong>Rule of thumb:</strong> read the license before the benchmark table. For most commercial teams, it settles half the decision in five minutes.</div>
+
+    <h2 id="moe">3. Two parameter counts: how mixture-of-experts works</h2>
+    <p>Both models are <strong>mixture-of-experts (MoE)</strong>. Instead of one giant block of layers that runs fully for every token, most layers are split into many smaller "expert" networks. A small router picks just a few experts per token.</p>
+    <p>That's why each model has two numbers:</p>
+    <ul>
+      <li><strong>Total parameters</strong> (816B / 501B) decide how much <strong>memory</strong> you need. All the experts must be loaded, because any of them might be picked.</li>
+      <li><strong>Active parameters</strong> (42B / 23B) decide how much <strong>compute</strong> each token costs, and so speed and price.</li>
+    </ul>
+    <div class="callout"><strong>Analogy:</strong> a hospital with 200 specialists on staff. You pay to keep all 200 on the payroll (memory), but each patient only sees two or three of them (compute per token). A bigger staff makes the building expensive; it doesn't make each visit slower.</div>
+    <p>There's a third hidden cost: the <strong>attention cache</strong> (KV cache), the memory that grows with each token of conversation. Hugging Face's write-ups estimate about 32 GB at 128K tokens for Muse versus about 4.6 GiB for Beam, because Beam uses sliding-window attention on most layers. On the same 4 GPUs, Beam leaves much more room for concurrent users and long agent sessions.</p>
+
+    <h2 id="calc">4. Calculator: how much memory does a model need?</h2>
+    <p>The basic rule is <code>weights memory ≈ total parameters × bytes per parameter</code>. Lower precision (quantization) shrinks it. Try it:</p>
+    <div class="calc" id="calc-en">
+      <div class="card-title">Weights memory (rough estimate)</div>
+      <label>Model
+        <select id="m-en" onchange="calc('en')">
+          <option value="816">Muse Spark Open · 816B total</option>
+          <option value="501.3">Beam 1.0 · 501.3B total</option>
+          <option value="70">A typical 70B dense model</option>
+        </select>
+      </label>
+      <label>Precision
+        <select id="p-en" onchange="calc('en')">
+          <option value="2">BF16 · 2 bytes per parameter</option>
+          <option value="1">FP8 · 1 byte</option>
+          <option value="0.5625" selected>NVFP4 · ~4.5 bits incl. scales</option>
+        </select>
+      </label>
+      <div class="row">
+        <div class="stat"><b id="mem-en">–</b><span>weights in memory</span></div>
+        <div class="stat"><b id="gpu-en">–</b><span>80 GB GPUs just for weights</span></div>
+        <div class="stat"><b id="gpu2-en">–</b><span>288 GB GPUs (B300-class)</span></div>
+      </div>
+      <small>Illustrative only. Real checkpoints keep some layers at higher precision (that's why Beam's official NVFP4 build is 273 GiB), and you still need headroom for the KV cache and activations. Meta's card asks for at least 700 GB of VRAM for Muse.</small>
+    </div>
+    <p>Both vendors name four Blackwell Ultra GPUs for their 4-bit builds. Meta also describes running Muse on two linked M5 Ultra Mac Studios with 512 GB each via MLX, a desktop path Beam doesn't offer. "Desktop" here means a setup that costs about as much as a compact car.</p>
+
+    <h2 id="bench">5. The benchmarks, and why you can't line them up</h2>
+    <p>Six benchmarks appear on both model cards (vendor-reported figures compiled by Digital Applied):</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Benchmark</th><th>Beam</th><th>Muse</th><th>What it tests</th></tr>
+      <tr><td>Terminal-Bench 2.1</td><td><strong>80.1</strong></td><td>76.4</td><td>Agent work in a terminal</td></tr>
+      <tr><td>GPQA Diamond</td><td><strong>90.6</strong></td><td>89.0</td><td>Graduate-level science</td></tr>
+      <tr><td>MCP-Atlas</td><td>80.8</td><td><strong>89.2</strong></td><td>Tool use through MCP servers</td></tr>
+      <tr><td>HLE, with tools</td><td>51.1</td><td><strong>61.0</strong></td><td>Hard reasoning</td></tr>
+      <tr><td>DeepSWE v1.1</td><td>43.3</td><td><strong>60</strong></td><td>Repository-scale coding</td></tr>
+      <tr><td>SciCode</td><td>49.2</td><td><strong>58.5</strong></td><td>Scientific programming</td></tr>
+    </table>
+    </div>
+    <p>Tempting to call it 4–2 for Muse. Don't, yet. Each vendor ran its own tests with its own harness and settings: Meta at <code>xhigh</code> effort with its preferred harness on some rows, Reflection at temperature 0.7 with an unstated effort. Same benchmark name, different experiments.</p>
+    <p>The one independent number so far: <strong>Artificial Analysis's Intelligence Index</strong> (Oct 16) scores Muse at 39 and Beam at 30. Reflection counters that Beam reaches comparable quality with about 3× fewer reasoning tokens, which, if true on your workload, could make its cost per finished task lower even where its scores are lower.</p>
+    <div class="callout"><strong>The trap of defaults:</strong> on OpenRouter, Beam defaults to <em>max</em> effort and Muse to <em>medium</em>, the reverse of each vendor's own docs. Compare them "out of the box" and you're comparing Beam at its hardest against Muse near its lightest. Always pin the effort level before you compare.</div>
+    <p>Against the Chinese leaders, The New Stack reads Meta's numbers as: Muse leads Kimi K3, GLM 5.3 and Qwen3.8 on agentic and tool-use benchmarks, roughly ties on SciCode, and still trails on DeepSWE (60 vs 68), the same gap Meta acknowledged back in April.</p>
+
+    <h2 id="choose">6. How to choose</h2>
+    <div class="layers">
+      <div class="layer"><span class="q">Reselling / hosting for customers</span><b>Beam</b><span>No attribution, no revenue clause.</span></div>
+      <div class="layer"><span class="q">Screenshots, PDFs, audio</span><b>Muse</b><span>Beam is text only. Budget for the attribution line.</span></div>
+      <div class="layer"><span class="q">Non-English product</span><b>Muse (lean)</b><span>Trained on 100+ languages; Reflection says Beam is predominantly English.</span></div>
+      <div class="layer"><span class="q">Many users on one node</span><b>Beam</b><span>Smaller weights and a much smaller KV cache.</span></div>
+      <div class="layer"><span class="q">Big refactors</span><b>Trial both</b><span>Vendor scores disagree with independent runs. Test on your own repo.</span></div>
+    </div>
+    <p>A practical trial plan: take 20 real tasks, run both at the same pinned effort on the same kind of provider, and record tokens, time and outcome per task. Compare <strong>cost per finished task</strong>, not price per token. (On OpenRouter, Oct 19–20, Muse listed $1.25/$4.25 per million input/output tokens; Beam's providers ranged from $0.25/$1.00 to $1.30/$4.30.)</p>
+
+    <h2 id="big">7. The bigger picture</h2>
+    <ul>
+      <li><strong>The open frontier is now a two-country race.</strong> Chinese labs had the top open models most of the year; two US labs closed much of the gap in 48 hours.</li>
+      <li><strong>Licenses are diverging.</strong> Apache 2.0 on one side, "free with attribution and a big-company clause" on the other. That second model (Meta, Moonshot) is how large labs keep open releases from feeding their direct competitors.</li>
+      <li><strong>Open models fill slots, not thrones.</strong> October's releases so far are mostly specialists and open models (DeepSeek V4.1 Flash, MiniMax M3.1 Flash, Mercury 3). The useful question isn't "is it better than the frontier?" but "what can I stop sending to a frontier API?"</li>
+      <li><strong>Hardware is the real gatekeeper.</strong> "Open" at 800B parameters still means hundreds of gigabytes of GPU memory. For most teams the realistic way to use these models is through a hosting provider, not their own rack.</li>
+    </ul>
+    <div class="callout"><strong>Summary:</strong> Muse Spark Open is the bigger, multimodal, multilingual model with a conditional license. Beam is the leaner, text-only coding and agent model under Apache 2.0. Filter on license and input types first, then trial both on your own tasks with the effort level pinned.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://www.digitalapplied.com/blog/reflection-beam-vs-meta-muse-spark-open" target="_blank" rel="noopener">Digital Applied — "Reflection Beam vs Muse Spark Open: Which Open Model Fits" (Oct 18, 2026, updated Oct 20; read directly)</a></li>
+      <li><a href="https://thenewstack.io/meta-muse-spark-open/" target="_blank" rel="noopener">The New Stack — "Meta ships Muse Spark Open, its answer to China's best open-weight models" (Oct 2026; read directly)</a></li>
+      <li><a href="https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker" target="_blank" rel="noopener">Digital Applied — "AI Model Releases: October 2026 Tracker" (refreshed Oct 20, 2026; read directly)</a></li>
+      <li><a href="https://www.trendingtopics.eu/muse-spark-open-meta-open-weight-license/" target="_blank" rel="noopener">Trending Topics — Muse Spark Open license coverage (Oct 2026; search summary only)</a></li>
+      <li><a href="https://aiweekly.co/alerts/meta-launches-816b-muse-spark-open-and-closed-wonder-models" target="_blank" rel="noopener">AI Weekly — Meta launches Muse Spark Open and closed Wonder models (Oct 2026; search summary only)</a></li>
+      <li><a href="https://artificialanalysis.ai/articles/reflection-beam" target="_blank" rel="noopener">Artificial Analysis — Reflection Beam analysis (Oct 16, 2026; cited via Digital Applied)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: strict rotation applied (no new Anthropic announcement dated today). All benchmark figures are vendor-reported unless stated. The memory calculator is a simplified estimate, not a sizing guide. One secondary source describes Muse's $20M clause as "monthly"; this lesson follows the license wording quoted by The New Stack (any consecutive 12 months).</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Panorama da indústria</span>
+      <h1>Os EUA respondem nos pesos abertos: Muse Spark Open vs Reflection Beam</h1>
+      <p class="subtitle">Durante quase todo 2026, os modelos de pesos abertos no topo dos rankings vieram de laboratórios chineses (Kimi K3, GLM 5.3, Qwen3.8). Aí, em 15 e 16 de outubro, dois laboratórios americanos lançaram modelos abertos de escala frontier com um dia de diferença: o Muse Spark Open, da Meta, e o Beam 1.0, da Reflection. Os dois têm contexto de 1M de tokens. Em quase todo o resto, apontam para lados opostos. Veja o que "pesos abertos" significa de verdade, como ler os dois lançamentos e como escolher.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#what-pt">O que saiu, numa tabela</a></li>
+        <li><a href="#open-pt">Pesos abertos não é código aberto</a></li>
+        <li><a href="#moe-pt">Dois números de parâmetros: como funciona o mixture-of-experts</a></li>
+        <li><a href="#calc-pt-sec">Calculadora: quanta memória um modelo precisa?</a></li>
+        <li><a href="#bench-pt">Os benchmarks, e por que não dá para comparar direto</a></li>
+        <li><a href="#choose-pt">Como escolher</a></li>
+        <li><a href="#big-pt">O quadro maior</a></li>
+      </ol>
+    </div>
+
+    <h2 id="what-pt">1. O que saiu, numa tabela</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th></th><th>Meta · Muse Spark Open</th><th>Reflection · Beam 1.0</th></tr>
+      <tr><td><strong>Lançamento</strong></td><td>15/10/2026</td><td>16/10/2026</td></tr>
+      <tr><td><strong>Parâmetros totais</strong></td><td>816B</td><td>501,3B</td></tr>
+      <tr><td><strong>Ativos por token</strong></td><td>~42B</td><td>~23,4B</td></tr>
+      <tr><td><strong>Contexto</strong></td><td>1M de tokens</td><td>1M de tokens</td></tr>
+      <tr><td><strong>Entradas</strong></td><td>Texto, imagem, vídeo, áudio</td><td>Só texto</td></tr>
+      <tr><td><strong>Licença</strong></td><td>Muse Model License (própria)</td><td>Apache 2.0</td></tr>
+      <tr><td><strong>Menor build oficial</strong></td><td>NVFP4, ~530 GB</td><td>NVFP4, 273 GiB</td></tr>
+      <tr><td><strong>Onde</strong></td><td>Hugging Face, SageMaker, Google Cloud, Microsoft Foundry; APIs via Together, Fireworks, Groq, OpenRouter e outros</td><td>Hugging Face, API da Reflection (beta público grátis), provedores no OpenRouter</td></tr>
+    </table>
+    </div>
+    <p>O Muse Spark Open é o irmão aberto do Muse Spark, que a Meta lançou fechado em abril. Na mesma janela, a Meta lançou também o <strong>Muse Wonder</strong> (12/10), seu primeiro modelo frontier fechado, vendido pela Meta Model API. Ou seja: a Meta agora joga em duas pistas, um modelo topo de linha fechado e um aberto um degrau abaixo.</p>
+    <div class="callout"><strong>Como a Meta vende:</strong> "o modelo de pesos abertos americano mais capaz até hoje". É uma comparação com rivais dos EUA, como o Nemotron 3 Ultra da Nvidia e o Inkling da Thinking Machines, que os benchmarks da Meta superam com folga. Contra os líderes chineses a briga é mais apertada (veja a seção 5).</div>
+
+    <h2 id="open-pt">2. Pesos abertos não é código aberto</h2>
+    <p>"Pesos abertos" quer dizer que você pode baixar os números treinados (os pesos) e rodar o modelo por conta própria. Não diz nada sobre a <strong>licença</strong>, que é o que define o que você pode fazer. Esses dois lançamentos mostram bem os extremos:</p>
+    <div class="layers">
+      <div class="layer"><span class="q">Apache 2.0 · Beam</span><b>Sem gatilhos</b><span>Uso comercial, modificação, redistribuição. O card da Reflection diz que não proíbe destilação nem treinar com as saídas do Beam. Sem limite de faturamento, sem aviso obrigatório para o usuário.</span></div>
+      <div class="layer"><span class="q">Muse Model License · Muse</span><b>Grátis, com condições</b><span>Todo produto feito com ele precisa "exibir com destaque 'Built with Muse Spark Open'". Oferecer como serviço hospedado com mais de US$ 20 mi de receita bruta em quaisquer 12 meses exige avisar a Meta e assinar um contrato à parte. Uma política de uso proíbe aplicações militares e de infraestrutura crítica.</span></div>
+    </div>
+    <p>Por que isso pesa na prática? Imagine uma agência pequena que monta um chatbot de atendimento para um cliente em cima do Muse e entrega com a marca do cliente. A regra de atribuição <em>não</em> tem limite de faturamento, então esquecer aquela linha já é violação de licença no primeiro dia. O mesmo projeto no Beam não tem linha nenhuma para esquecer. O The New Stack observa que os termos da Meta lembram muito os que a Moonshot usa no Kimi K3, ou seja, esse estilo "aberto, mas..." está virando padrão nos laboratórios grandes.</p>
+    <div class="callout"><strong>Regra prática:</strong> leia a licença antes da tabela de benchmarks. Para a maioria dos times comerciais, ela resolve metade da decisão em cinco minutos.</div>
+
+    <h2 id="moe-pt">3. Dois números de parâmetros: como funciona o mixture-of-experts</h2>
+    <p>Os dois modelos são <strong>mixture-of-experts (MoE)</strong>. Em vez de um bloco gigante de camadas que roda inteiro para cada token, a maior parte das camadas é dividida em várias redes "especialistas" menores. Um roteador pequeno escolhe só algumas por token.</p>
+    <p>Por isso cada modelo tem dois números:</p>
+    <ul>
+      <li><strong>Parâmetros totais</strong> (816B / 501B) definem quanta <strong>memória</strong> você precisa. Todos os especialistas ficam carregados, porque qualquer um pode ser chamado.</li>
+      <li><strong>Parâmetros ativos</strong> (42B / 23B) definem quanto <strong>processamento</strong> cada token custa, e portanto velocidade e preço.</li>
+    </ul>
+    <div class="callout"><strong>Analogia:</strong> um hospital com 200 especialistas na equipe. Você paga para manter os 200 na folha (memória), mas cada paciente só passa por dois ou três deles (processamento por token). Uma equipe maior encarece o prédio; não deixa cada consulta mais lenta.</div>
+    <p>Tem um terceiro custo escondido: o <strong>cache de atenção</strong> (KV cache), a memória que cresce a cada token da conversa. Os textos do Hugging Face estimam cerca de 32 GB em 128K tokens para o Muse, contra cerca de 4,6 GiB para o Beam, porque o Beam usa atenção com janela deslizante na maioria das camadas. Nas mesmas 4 GPUs, o Beam deixa muito mais espaço livre para usuários simultâneos e sessões longas de agente.</p>
+
+    <h2 id="calc-pt-sec">4. Calculadora: quanta memória um modelo precisa?</h2>
+    <p>A regra básica é <code>memória dos pesos ≈ parâmetros totais × bytes por parâmetro</code>. Precisão menor (quantização) reduz o tamanho. Teste:</p>
+    <div class="calc" id="calc-pt">
+      <div class="card-title">Memória dos pesos (estimativa)</div>
+      <label>Modelo
+        <select id="m-pt" onchange="calc('pt')">
+          <option value="816">Muse Spark Open · 816B totais</option>
+          <option value="501.3">Beam 1.0 · 501,3B totais</option>
+          <option value="70">Um modelo denso típico de 70B</option>
+        </select>
+      </label>
+      <label>Precisão
+        <select id="p-pt" onchange="calc('pt')">
+          <option value="2">BF16 · 2 bytes por parâmetro</option>
+          <option value="1">FP8 · 1 byte</option>
+          <option value="0.5625" selected>NVFP4 · ~4,5 bits com escalas</option>
+        </select>
+      </label>
+      <div class="row">
+        <div class="stat"><b id="mem-pt">–</b><span>pesos na memória</span></div>
+        <div class="stat"><b id="gpu-pt">–</b><span>GPUs de 80 GB só para os pesos</span></div>
+        <div class="stat"><b id="gpu2-pt">–</b><span>GPUs de 288 GB (classe B300)</span></div>
+      </div>
+      <small>Só ilustrativo. Checkpoints reais mantêm algumas camadas em precisão maior (por isso o build NVFP4 oficial do Beam tem 273 GiB), e ainda é preciso folga para o KV cache e as ativações. O card da Meta pede pelo menos 700 GB de VRAM para o Muse.</small>
+    </div>
+    <p>Os dois fabricantes citam quatro GPUs Blackwell Ultra para os builds de 4 bits. A Meta também descreve rodar o Muse em dois Mac Studio M5 Ultra de 512 GB ligados entre si via MLX, um caminho de "desktop" que o Beam não oferece. "Desktop", aqui, é um setup que custa mais ou menos um carro compacto.</p>
+
+    <h2 id="bench-pt">5. Os benchmarks, e por que não dá para comparar direto</h2>
+    <p>Seis benchmarks aparecem nos dois cards (números informados pelos fabricantes, compilados pela Digital Applied):</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Benchmark</th><th>Beam</th><th>Muse</th><th>O que mede</th></tr>
+      <tr><td>Terminal-Bench 2.1</td><td><strong>80,1</strong></td><td>76,4</td><td>Agente trabalhando no terminal</td></tr>
+      <tr><td>GPQA Diamond</td><td><strong>90,6</strong></td><td>89,0</td><td>Ciência nível pós-graduação</td></tr>
+      <tr><td>MCP-Atlas</td><td>80,8</td><td><strong>89,2</strong></td><td>Uso de ferramentas via servidores MCP</td></tr>
+      <tr><td>HLE, com ferramentas</td><td>51,1</td><td><strong>61,0</strong></td><td>Raciocínio difícil</td></tr>
+      <tr><td>DeepSWE v1.1</td><td>43,3</td><td><strong>60</strong></td><td>Código em escala de repositório</td></tr>
+      <tr><td>SciCode</td><td>49,2</td><td><strong>58,5</strong></td><td>Programação científica</td></tr>
+    </table>
+    </div>
+    <p>Dá vontade de cravar 4 a 2 para o Muse. Calma. Cada fabricante rodou seus próprios testes, com seu harness e suas configurações: a Meta em esforço <code>xhigh</code> e com o harness preferido em algumas linhas, a Reflection com temperature 0,7 e esforço não informado. Mesmo nome de benchmark, experimentos diferentes.</p>
+    <p>O único número independente até agora: o <strong>Intelligence Index da Artificial Analysis</strong> (16/10) dá 39 ao Muse e 30 ao Beam. A Reflection rebate dizendo que o Beam chega a qualidade parecida com cerca de 3× menos tokens de raciocínio. Se isso se confirmar no seu uso, o custo por tarefa concluída pode ser menor mesmo onde a nota é menor.</p>
+    <div class="callout"><strong>A armadilha do padrão:</strong> no OpenRouter, o Beam vem em esforço <em>max</em> e o Muse em <em>medium</em>, o contrário da documentação de cada fabricante. Comparar "do jeito que vem" é colocar o Beam no máximo contra o Muse quase no mínimo. Sempre fixe o nível de esforço antes de comparar.</div>
+    <p>Contra os líderes chineses, o The New Stack lê os números da Meta assim: o Muse passa Kimi K3, GLM 5.3 e Qwen3.8 nos benchmarks de agente e uso de ferramentas, empata mais ou menos no SciCode e ainda fica atrás no DeepSWE (60 contra 68), a mesma diferença que a Meta já admitia em abril.</p>
+
+    <h2 id="choose-pt">6. Como escolher</h2>
+    <div class="layers">
+      <div class="layer"><span class="q">Revender / hospedar para clientes</span><b>Beam</b><span>Sem atribuição, sem cláusula de faturamento.</span></div>
+      <div class="layer"><span class="q">Prints, PDFs, áudio</span><b>Muse</b><span>O Beam só lê texto. Conte com a linha de atribuição.</span></div>
+      <div class="layer"><span class="q">Produto fora do inglês</span><b>Muse (tendência)</b><span>Treinado em mais de 100 idiomas; a Reflection diz que o Beam é predominantemente inglês.</span></div>
+      <div class="layer"><span class="q">Muitos usuários num só nó</span><b>Beam</b><span>Pesos menores e KV cache bem menor.</span></div>
+      <div class="layer"><span class="q">Refatorações grandes</span><b>Teste os dois</b><span>Os números dos fabricantes e os independentes discordam. Teste no seu repositório.</span></div>
+    </div>
+    <p>Um plano de teste prático: pegue 20 tarefas reais, rode os dois com o mesmo esforço fixado, no mesmo tipo de provedor, e anote tokens, tempo e resultado de cada tarefa. Compare <strong>custo por tarefa concluída</strong>, não preço por token. (No OpenRouter, em 19–20/10, o Muse aparecia a US$ 1,25/4,25 por milhão de tokens de entrada/saída; os provedores do Beam iam de US$ 0,25/1,00 a US$ 1,30/4,30.)</p>
+
+    <h2 id="big-pt">7. O quadro maior</h2>
+    <ul>
+      <li><strong>A fronteira aberta virou corrida de dois países.</strong> Os chineses tiveram os melhores modelos abertos quase o ano inteiro; dois laboratórios americanos encurtaram boa parte da distância em 48 horas.</li>
+      <li><strong>As licenças estão se separando.</strong> Apache 2.0 de um lado, "grátis com atribuição e cláusula para empresa grande" do outro. Esse segundo modelo (Meta, Moonshot) é como os laboratórios grandes evitam que o lançamento aberto alimente os concorrentes diretos.</li>
+      <li><strong>Modelos abertos ocupam vagas, não tronos.</strong> Os lançamentos de outubro até agora são sobretudo especialistas e modelos abertos (DeepSeek V4.1 Flash, MiniMax M3.1 Flash, Mercury 3). A pergunta útil não é "é melhor que o frontier?", e sim "o que eu posso parar de mandar para uma API frontier?".</li>
+      <li><strong>Hardware é o verdadeiro porteiro.</strong> "Aberto" com 800B de parâmetros ainda significa centenas de gigabytes de memória de GPU. Para a maioria dos times, o caminho realista é usar via provedor de hospedagem, não no próprio servidor.</li>
+    </ul>
+    <div class="callout"><strong>Resumo:</strong> o Muse Spark Open é o modelo maior, multimodal e multilíngue, com licença condicionada. O Beam é o modelo mais enxuto, só texto, focado em código e agentes, sob Apache 2.0. Filtre primeiro por licença e tipo de entrada, depois teste os dois nas suas tarefas com o esforço fixado.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://www.digitalapplied.com/blog/reflection-beam-vs-meta-muse-spark-open" target="_blank" rel="noopener">Digital Applied — "Reflection Beam vs Muse Spark Open: Which Open Model Fits" (18/10/2026, atualizado em 20/10; lido diretamente)</a></li>
+      <li><a href="https://thenewstack.io/meta-muse-spark-open/" target="_blank" rel="noopener">The New Stack — "Meta ships Muse Spark Open, its answer to China's best open-weight models" (out/2026; lido diretamente)</a></li>
+      <li><a href="https://www.digitalapplied.com/blog/ai-model-releases-october-2026-tracker" target="_blank" rel="noopener">Digital Applied — "AI Model Releases: October 2026 Tracker" (atualizado em 20/10/2026; lido diretamente)</a></li>
+      <li><a href="https://www.trendingtopics.eu/muse-spark-open-meta-open-weight-license/" target="_blank" rel="noopener">Trending Topics — cobertura da licença do Muse Spark Open (out/2026; só resumo de busca)</a></li>
+      <li><a href="https://aiweekly.co/alerts/meta-launches-816b-muse-spark-open-and-closed-wonder-models" target="_blank" rel="noopener">AI Weekly — Meta lança Muse Spark Open e o fechado Wonder (out/2026; só resumo de busca)</a></li>
+      <li><a href="https://artificialanalysis.ai/articles/reflection-beam" target="_blank" rel="noopener">Artificial Analysis — análise do Reflection Beam (16/10/2026; citado via Digital Applied)</a></li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: rotação estrita aplicada (nenhum anúncio novo da Anthropic datado de hoje). Os números de benchmark são dos fabricantes, salvo indicação. A calculadora é uma estimativa simplificada, não um guia de dimensionamento. Uma fonte secundária descreve a cláusula de US$ 20 mi do Muse como "mensal"; esta lição segue o texto da licença citado pelo The New Stack (quaisquer 12 meses consecutivos).</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent" id="footer-right">US open weights</span>
+</footer>
+
+<script>
+  function calc(lang) {
+    var b = parseFloat(document.getElementById('m-' + lang).value);
+    var bpp = parseFloat(document.getElementById('p-' + lang).value);
+    var gb = b * bpp;
+    var fmt = function (n) { var s = n >= 100 ? Math.round(n).toString() : n.toFixed(1); return lang === 'pt' ? s.replace('.', ',') : s; };
+    document.getElementById('mem-' + lang).textContent = gb >= 1000 ? (lang === 'pt' ? (gb/1000).toFixed(2).replace('.', ',') : (gb/1000).toFixed(2)) + ' TB' : fmt(gb) + ' GB';
+    document.getElementById('gpu-' + lang).textContent = Math.ceil(gb / 80);
+    document.getElementById('gpu2-' + lang).textContent = Math.ceil(gb / 288);
+  }
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+    document.getElementById('footer-right').textContent = lang === 'en' ? 'US open weights' : 'Pesos abertos dos EUA';
+  }
+  calc('en'); calc('pt');
+</script>
+
+</body>
+</html>

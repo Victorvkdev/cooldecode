@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: The price tag is not the bill: cost per task</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+    --ok: #34d399; --bad: #f87171; --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; word-break: break-word; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; word-break: normal; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .layers { display: grid; gap: 10px; margin: 20px 0; }
+  .layers > div { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 14.5px; }
+  .layers b { font-family: 'Space Grotesk', sans-serif; color: #fff; }
+  .layers .n { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; text-align: center; line-height: 22px; margin-right: 8px; }
+  .sim { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .sim-modes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .sim-modes button { background: var(--bg-card-2); border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; padding: 6px 10px; font-family: 'SF Mono', 'Menlo', monospace; font-size: 12.5px; cursor: pointer; }
+  .sim-modes button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .sim-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-dim); margin-bottom: 8px; cursor: pointer; }
+  .sim-toggle input { accent-color: var(--accent); }
+  .sim table { margin: 8px 0 0; }
+  .sim td:last-child { white-space: nowrap; }
+  .res { font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .res.run { color: var(--ok); } .res.ask { color: var(--warn); } .res.deny { color: var(--bad); } .res.cls { color: #c4b5fd; }
+  .sim-note { font-size: 13px; color: var(--text-dim); margin-top: 10px; min-height: 20px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; max-width: 820px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; padding-bottom: 40px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  @media (max-width: 560px) { h1 { font-size: 26px; } .wrapper { padding: 32px 16px 64px; } .sim td:last-child { white-space: normal; } }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc label { display:block; font-size:13px; color:var(--text-dim); margin: 0 0 4px; }
+  .calc input[type=number] { width:100%; max-width:200px; background:var(--bg-card-2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 10px; font-family:inherit; font-size:14px; }
+  .calc .row { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:12px; }
+  .calc td.num { text-align:right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · Industry landscape</span>
+      <h1>The price tag is not the bill: why "cost per task" beats "price per million tokens"</h1>
+      <p class="subtitle">October 2026 brought a pile of launches with sharp prices: GPT-6.1 Terra at $1/$5, Claude Haiku 5.5 as the fast small model, Gemini 4 Argon at an introductory $2/$10. Comparing them by rate card alone is the most common mistake in picking a model. Here is how to compare properly.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#map-en">The October map</a></li>
+        <li><a href="#why-en">Why the rate card lies</a></li>
+        <li><a href="#case-en">A real case: same price, 2.7x the bill</a></li>
+        <li><a href="#calc-en">Try it: your own cost per task</a></li>
+        <li><a href="#promo-en">Promos, dates and moving targets</a></li>
+        <li><a href="#tiers-en">Tiers: when a cheaper model is the right answer</a></li>
+        <li><a href="#how-en">How to compare models in practice</a></li>
+      </ol>
+    </div>
+
+    <h2 id="map-en">1. The October map</h2>
+    <p>Three labs moved in the same month, and all three pushed on <strong>cost</strong>, not only on raw capability:</p>
+    <ul>
+      <li><strong>OpenAI:</strong> GPT-6.1 Terra, aimed at computer use (understanding screens, acting across apps). Per OpenAI's release notes it is 50% cheaper than GPT-5.6 Terra and reached ChatGPT Work, Codex and the API around October 26. A pricing breakdown published October 28 lists it at <strong>$1 per million input tokens and $5 per million output tokens</strong>. For harder research and coding, OpenAI itself points to the pricier GPT-6.1 Sol and GPT-6 Astra.</li>
+      <li><strong>Anthropic:</strong> Claude Haiku 5.5 (October 7), described as the fastest, most capable small model, built for high-volume work like summarization, subagents and browser use. It sits under Sonnet 5.5 and Opus 5.5 in the same family.</li>
+      <li><strong>Google:</strong> Gemini 4 Argon, announced September 30 and reported generally available on October 13 (third-party trackers; I could not open Google's own post). Launch price $2/$10 per million tokens, with a stated $4/$20 after the introductory period.</li>
+    </ul>
+    <p>Notice the pattern: every lab now sells a <em>ladder</em> (small, mid, frontier), and the headline news is about how cheap each rung got. That makes the buying question harder, not easier.</p>
+
+    <h2 id="why-en">2. Why the rate card lies</h2>
+    <p>A price per million tokens tells you what a token costs. Your bill is <code>tokens used × price</code>, and tokens used differ a lot between models because:</p>
+    <ol>
+      <li><strong>Models write different amounts.</strong> A verbose model, or one that "thinks" a lot, produces more output tokens for the same task. Output is also the expensive side: usually 4–5x the input price.</li>
+      <li><strong>Thinking tokens are billed as output.</strong> At higher reasoning effort, hidden reasoning can dwarf the visible answer.</li>
+      <li><strong>Tokenizers differ.</strong> The same text can be a different number of tokens in different model families.</li>
+      <li><strong>Caching changes the input side</strong> (cached input is often ~90–95% cheaper), which pushes the bill even further toward output.</li>
+      <li><strong>Retries count.</strong> A cheaper model that needs two attempts, or a human fix, may cost more than a pricier one that succeeds first time.</li>
+    </ol>
+    <div class="callout"><strong>Rule of thumb:</strong> compare <code>cost per successful task</code>, not <code>price per token</code>. Tokens per task and success rate are properties of <em>your</em> workload, so measure them on it.</div>
+
+    <h2 id="case-en">3. A real case: same price, 2.7x the bill</h2>
+    <p>The clearest example this month comes from Artificial Analysis' index run, as summarized by eesel AI. At launch, Gemini 4 Argon and GPT-6.1 Sol had the <em>identical</em> rate card ($2 in, $10 out, $0.10 cached input). Yet:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Model (setting)</th><th>Intelligence index</th><th>Cost per task</th></tr>
+      <tr><td>GPT-6.1 Sol (max)</td><td>52</td><td>$0.72</td></tr>
+      <tr><td>Claude Opus 5.5 (high)</td><td>54</td><td>$1.82</td></tr>
+      <tr><td>Gemini 4 Argon (high), promo price</td><td>53</td><td>$1.99</td></tr>
+      <tr><td>GPT-6 Astra (max)</td><td>53</td><td>$3.26</td></tr>
+      <tr><td>Gemini 4 Argon (high), standard price</td><td>53</td><td>$3.98</td></tr>
+    </table>
+    </div>
+    <p>The reported reason: Argon used about <strong>62K output tokens per task</strong>, against 27K for GPT-6 Astra. Same price per token, much more writing. Per task, Argon at promo price cost roughly 2.7x GPT-6.1 Sol for one more point on the index. (The Opus 5.5 row came from a forum commenter reading the same chart, so treat it as less solid than the others.)</p>
+    <p>And the flip side: Argon is reported to be strong on very long context retrieval and to have no published long-context surcharge, which can make it the cheapest option for huge-document jobs. The right model depends on the workload.</p>
+
+    <h2 id="calc-en">4. Try it: your own cost per task</h2>
+    <p>Enter a workload and two rate cards. The sample numbers use the launch prices above; the defaults mimic a verbose model versus a concise one.</p>
+    <div class="calc" data-calc="en">
+      <div class="row">
+        <div><label>Input tokens per task</label><input type="number" data-k="in" value="200000"></div>
+        <div><label>Cached share of input (%)</label><input type="number" data-k="cache" value="0" min="0" max="100"></div>
+        <div><label>Tasks per month</label><input type="number" data-k="n" value="1000"></div>
+      </div>
+      <table>
+        <tr><th>Model</th><th>$/M in</th><th>$/M cached</th><th>$/M out</th><th>Output tokens/task</th></tr>
+        <tr><td>A (verbose)</td><td><input type="number" data-k="ai" value="2" step="0.01"></td><td><input type="number" data-k="ac" value="0.1" step="0.01"></td><td><input type="number" data-k="ao" value="10" step="0.01"></td><td><input type="number" data-k="at" value="62000"></td></tr>
+        <tr><td>B (concise)</td><td><input type="number" data-k="bi" value="2" step="0.01"></td><td><input type="number" data-k="bc" value="0.1" step="0.01"></td><td><input type="number" data-k="bo" value="10" step="0.01"></td><td><input type="number" data-k="bt" value="23000"></td></tr>
+      </table>
+      <div class="sim-note" data-out></div>
+    </div>
+    <p>Try setting the cached share to 90%: the input side nearly vanishes and the output tokens decide almost everything. That is why "ask for shorter outputs" is often the best cost lever.</p>
+
+    <h2 id="promo-en">5. Promos, dates and moving targets</h2>
+    <p>Argon's $2/$10 is introductory; Google's footnote states $4/$20 afterwards. Reports differ on timing: one site says the promo runs to November 30 with the doubling on December 1, while an earlier analysis said Google had given no date. Meanwhile an October 1 article said the API still returned a 404, which later coverage contradicts (general availability on October 13). This is normal for week-one coverage, and the lesson is practical:</p>
+    <ul>
+      <li><strong>Budget at the post-promo price.</strong> Treat the discount as a bonus.</li>
+      <li><strong>Check the date on every price you read.</strong> Prices and availability change faster than blog posts do.</li>
+      <li><strong>Prefer primary sources</strong> (the lab's pricing page) over aggregators for anything you will sign off on.</li>
+    </ul>
+
+    <h2 id="tiers-en">6. Tiers: when a cheaper model is the right answer</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Job</th><th>Start with</th><th>Why</th></tr>
+      <tr><td>Classification, extraction, summaries at volume</td><td>Small tier (Haiku-class, Terra-class)</td><td>Quality is "good enough", volume makes price dominant</td></tr>
+      <tr><td>Subagents inside a bigger agent</td><td>Small tier</td><td>Many short calls; latency matters</td></tr>
+      <tr><td>Everyday coding and writing</td><td>Mid tier</td><td>Best balance of quality and cost</td></tr>
+      <tr><td>Hard reasoning, long multi-step agents, high-stakes review</td><td>Frontier tier</td><td>A failed task costs more than the token bill</td></tr>
+    </table>
+    </div>
+    <p>A common architecture is a <strong>router</strong>: a small model handles easy requests and escalates to a bigger one when it is unsure. Done well, it cuts the average cost per task without lowering the quality ceiling.</p>
+
+    <h2 id="how-en">7. How to compare models in practice</h2>
+    <ol>
+      <li>Collect 20–50 real tasks from your workload, with a way to judge success.</li>
+      <li>Run each candidate on all of them, at the effort setting you would really use.</li>
+      <li>Log input tokens, output tokens (including reasoning), retries and pass/fail.</li>
+      <li>Compute <code>cost per successful task</code> at the <em>post-promo</em> rate card.</li>
+      <li>Re-run when a new model or price lands. It will, usually within weeks.</li>
+    </ol>
+    <div class="callout"><strong>Takeaway:</strong> in 2026 the industry competes on price tiers and cost-efficiency as much as on benchmark peaks. The skill that transfers is not memorizing prices (they expire) but measuring tokens per task on your own work.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://releasebot.io/updates/openai" target="_blank" rel="noopener">Releasebot — OpenAI release notes (read directly, Oct 27, 2026): GPT-6.1 Terra, 50% lower prices vs GPT-5.6 Terra, availability</a></li>
+      <li><a href="https://www.eesel.ai/blog/gemini-4-argon-pricing" target="_blank" rel="noopener">eesel AI — "Gemini 4 Argon pricing" (read directly, last edited Oct 1, 2026): rate cards, Artificial Analysis cost-per-task figures, the 62K vs 27K output tokens, Terra $1/$5 listed in related-posts headline dated Oct 28</a></li>
+      <li><a href="https://www.anthropic.com/news/announcements" target="_blank" rel="noopener">Anthropic — newsroom / announcements (via search summary, Oct 29, 2026): Claude Haiku 5.5, Oct 7</a></li>
+      <li>Gemini 4 Argon general availability on Oct 13 and the Dec 1 price doubling: reported by third-party sites (letsdatascience.com, braindetox.kr, buildmvpfast.com) in search results; Google's own post was not opened.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: rotation pointed to "Industry landscape". No single major Anthropic announcement outweighed it today. Several figures come from third-party aggregators and may change; verify before relying on them.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Panorama da indústria</span>
+      <h1>O preço de tabela não é a fatura: por que "custo por tarefa" vale mais que "preço por milhão de tokens"</h1>
+      <p class="subtitle">Outubro de 2026 trouxe uma leva de lançamentos com preços agressivos: GPT-6.1 Terra a $1/$5, Claude Haiku 5.5 como o modelo pequeno e rápido, Gemini 4 Argon a $2/$10 promocionais. Comparar só pela tabela de preços é o erro mais comum na hora de escolher um modelo. Aqui vai como comparar direito.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Conteúdo</div>
+      <ol>
+        <li><a href="#map-pt">O mapa de outubro</a></li>
+        <li><a href="#why-pt">Por que a tabela de preços engana</a></li>
+        <li><a href="#case-pt">Um caso real: mesmo preço, 2,7x a fatura</a></li>
+        <li><a href="#calc-pt">Teste: seu próprio custo por tarefa</a></li>
+        <li><a href="#promo-pt">Promoções, datas e alvos móveis</a></li>
+        <li><a href="#tiers-pt">Faixas: quando o modelo mais barato é a resposta certa</a></li>
+        <li><a href="#how-pt">Como comparar modelos na prática</a></li>
+      </ol>
+    </div>
+
+    <h2 id="map-pt">1. O mapa de outubro</h2>
+    <p>Três laboratórios se mexeram no mesmo mês, e os três empurraram o <strong>custo</strong>, não só a capacidade bruta:</p>
+    <ul>
+      <li><strong>OpenAI:</strong> GPT-6.1 Terra, focado em uso de computador (entender telas, agir entre apps). Segundo as release notes da OpenAI, é 50% mais barato que o GPT-5.6 Terra e chegou ao ChatGPT Work, ao Codex e à API por volta de 26/10. Uma análise de preços publicada em 28/10 o lista a <strong>$1 por milhão de tokens de entrada e $5 por milhão de saída</strong>. Para pesquisa e código mais difíceis, a própria OpenAI aponta o GPT-6.1 Sol e o GPT-6 Astra, mais caros.</li>
+      <li><strong>Anthropic:</strong> Claude Haiku 5.5 (7/10), descrito como o modelo pequeno mais rápido e capaz, feito para trabalho em alto volume como resumos, subagentes e uso de navegador. Fica abaixo do Sonnet 5.5 e do Opus 5.5 na mesma família.</li>
+      <li><strong>Google:</strong> Gemini 4 Argon, anunciado em 30/09 e relatado como disponível para todos em 13/10 (trackers de terceiros; não consegui abrir o post do Google). Preço de lançamento $2/$10 por milhão de tokens, com $4/$20 declarado para depois do período introdutório.</li>
+    </ul>
+    <p>Repare no padrão: todo laboratório agora vende uma <em>escada</em> (pequeno, médio, de fronteira), e a notícia principal é o quanto cada degrau ficou barato. Isso torna a decisão de compra mais difícil, não mais fácil.</p>
+
+    <h2 id="why-pt">2. Por que a tabela de preços engana</h2>
+    <p>O preço por milhão de tokens diz quanto custa um token. A sua fatura é <code>tokens usados × preço</code>, e os tokens usados variam muito entre modelos porque:</p>
+    <ol>
+      <li><strong>Modelos escrevem quantidades diferentes.</strong> Um modelo verboso, ou que "pensa" muito, gera mais tokens de saída para a mesma tarefa. E a saída é o lado caro: geralmente 4–5x o preço da entrada.</li>
+      <li><strong>Tokens de raciocínio são cobrados como saída.</strong> Com esforço de raciocínio alto, o raciocínio oculto pode ser maior que a resposta visível.</li>
+      <li><strong>Tokenizadores diferem.</strong> O mesmo texto pode virar um número diferente de tokens em famílias diferentes.</li>
+      <li><strong>Cache muda o lado da entrada</strong> (entrada em cache costuma ser ~90–95% mais barata), o que empurra a fatura ainda mais para a saída.</li>
+      <li><strong>Retentativas contam.</strong> Um modelo barato que precisa de duas tentativas, ou de correção humana, pode custar mais que um caro que acerta de primeira.</li>
+    </ol>
+    <div class="callout"><strong>Regra prática:</strong> compare <code>custo por tarefa bem-sucedida</code>, não <code>preço por token</code>. Tokens por tarefa e taxa de sucesso são propriedades da <em>sua</em> carga de trabalho, então meça nela.</div>
+
+    <h2 id="case-pt">3. Um caso real: mesmo preço, 2,7x a fatura</h2>
+    <p>O exemplo mais claro do mês vem da rodada do índice da Artificial Analysis, resumida pela eesel AI. No lançamento, o Gemini 4 Argon e o GPT-6.1 Sol tinham a tabela de preços <em>idêntica</em> ($2 entrada, $10 saída, $0,10 entrada em cache). Mesmo assim:</p>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Modelo (configuração)</th><th>Índice de inteligência</th><th>Custo por tarefa</th></tr>
+      <tr><td>GPT-6.1 Sol (max)</td><td>52</td><td>$0,72</td></tr>
+      <tr><td>Claude Opus 5.5 (high)</td><td>54</td><td>$1,82</td></tr>
+      <tr><td>Gemini 4 Argon (high), preço promocional</td><td>53</td><td>$1,99</td></tr>
+      <tr><td>GPT-6 Astra (max)</td><td>53</td><td>$3,26</td></tr>
+      <tr><td>Gemini 4 Argon (high), preço padrão</td><td>53</td><td>$3,98</td></tr>
+    </table>
+    </div>
+    <p>O motivo relatado: o Argon usou cerca de <strong>62 mil tokens de saída por tarefa</strong>, contra 27 mil do GPT-6 Astra. Mesmo preço por token, muito mais texto. Por tarefa, o Argon promocional custou cerca de 2,7x o GPT-6.1 Sol por um ponto a mais no índice. (A linha do Opus 5.5 veio de um comentarista de fórum lendo o mesmo gráfico, então é menos sólida que as outras.)</p>
+    <p>E o outro lado: o Argon é relatado como forte em recuperação em contexto muito longo e sem sobretaxa publicada para contexto longo, o que pode torná-lo a opção mais barata para jobs com documentos enormes. O modelo certo depende da carga de trabalho.</p>
+
+    <h2 id="calc-pt">4. Teste: seu próprio custo por tarefa</h2>
+    <p>Informe uma carga de trabalho e duas tabelas de preço. Os números de exemplo usam os preços de lançamento acima; o padrão imita um modelo verboso contra um conciso.</p>
+    <div class="calc" data-calc="pt">
+      <div class="row">
+        <div><label>Tokens de entrada por tarefa</label><input type="number" data-k="in" value="200000"></div>
+        <div><label>Parte da entrada em cache (%)</label><input type="number" data-k="cache" value="0" min="0" max="100"></div>
+        <div><label>Tarefas por mês</label><input type="number" data-k="n" value="1000"></div>
+      </div>
+      <table>
+        <tr><th>Modelo</th><th>$/M entrada</th><th>$/M cache</th><th>$/M saída</th><th>Tokens de saída/tarefa</th></tr>
+        <tr><td>A (verboso)</td><td><input type="number" data-k="ai" value="2" step="0.01"></td><td><input type="number" data-k="ac" value="0.1" step="0.01"></td><td><input type="number" data-k="ao" value="10" step="0.01"></td><td><input type="number" data-k="at" value="62000"></td></tr>
+        <tr><td>B (conciso)</td><td><input type="number" data-k="bi" value="2" step="0.01"></td><td><input type="number" data-k="bc" value="0.1" step="0.01"></td><td><input type="number" data-k="bo" value="10" step="0.01"></td><td><input type="number" data-k="bt" value="23000"></td></tr>
+      </table>
+      <div class="sim-note" data-out></div>
+    </div>
+    <p>Tente colocar o cache em 90%: o lado da entrada quase some e os tokens de saída decidem quase tudo. Por isso "peça respostas mais curtas" costuma ser a melhor alavanca de custo.</p>
+
+    <h2 id="promo-pt">5. Promoções, datas e alvos móveis</h2>
+    <p>Os $2/$10 do Argon são introdutórios; a nota do Google diz $4/$20 depois. Os relatos divergem no prazo: um site diz que a promoção vai até 30/11, com a dobra em 1/12, enquanto uma análise anterior dizia que o Google não deu data. E um artigo de 1/10 dizia que a API ainda retornava 404, o que a cobertura posterior contradiz (disponibilidade geral em 13/10). Isso é normal na cobertura da primeira semana, e a lição é prática:</p>
+    <ul>
+      <li><strong>Faça o orçamento no preço pós-promoção.</strong> Trate o desconto como bônus.</li>
+      <li><strong>Confira a data de todo preço que ler.</strong> Preços e disponibilidade mudam mais rápido que posts de blog.</li>
+      <li><strong>Prefira fontes primárias</strong> (a página de preços do laboratório) a agregadores para qualquer coisa que você vá aprovar.</li>
+    </ul>
+
+    <h2 id="tiers-pt">6. Faixas: quando o modelo mais barato é a resposta certa</h2>
+    <div class="table-wrap">
+    <table>
+      <tr><th>Trabalho</th><th>Comece com</th><th>Por quê</th></tr>
+      <tr><td>Classificação, extração, resumos em volume</td><td>Faixa pequena (classe Haiku, classe Terra)</td><td>Qualidade "boa o bastante", o volume faz o preço dominar</td></tr>
+      <tr><td>Subagentes dentro de um agente maior</td><td>Faixa pequena</td><td>Muitas chamadas curtas; latência importa</td></tr>
+      <tr><td>Código e escrita do dia a dia</td><td>Faixa média</td><td>Melhor equilíbrio entre qualidade e custo</td></tr>
+      <tr><td>Raciocínio difícil, agentes longos de vários passos, revisão de alto risco</td><td>Faixa de fronteira</td><td>Uma tarefa que falha custa mais que a conta de tokens</td></tr>
+    </table>
+    </div>
+    <p>Uma arquitetura comum é o <strong>roteador</strong>: um modelo pequeno resolve os pedidos fáceis e escala para um maior quando fica em dúvida. Bem feito, reduz o custo médio por tarefa sem baixar o teto de qualidade.</p>
+
+    <h2 id="how-pt">7. Como comparar modelos na prática</h2>
+    <ol>
+      <li>Junte de 20 a 50 tarefas reais da sua carga, com um jeito de julgar o sucesso.</li>
+      <li>Rode cada candidato em todas, no nível de esforço que você usaria de verdade.</li>
+      <li>Registre tokens de entrada, de saída (incluindo raciocínio), retentativas e passou/falhou.</li>
+      <li>Calcule o <code>custo por tarefa bem-sucedida</code> com a tabela de preços <em>pós-promoção</em>.</li>
+      <li>Refaça quando sair um modelo ou preço novo. Vai sair, geralmente em semanas.</li>
+    </ol>
+    <div class="callout"><strong>Conclusão:</strong> em 2026 a indústria compete em faixas de preço e eficiência de custo tanto quanto em picos de benchmark. A habilidade que fica não é decorar preços (eles expiram), e sim medir tokens por tarefa no seu próprio trabalho.</div>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://releasebot.io/updates/openai" target="_blank" rel="noopener">Releasebot — release notes da OpenAI (lido diretamente, 27/10/2026): GPT-6.1 Terra, preços 50% menores vs GPT-5.6 Terra, disponibilidade</a></li>
+      <li><a href="https://www.eesel.ai/blog/gemini-4-argon-pricing" target="_blank" rel="noopener">eesel AI — "Gemini 4 Argon pricing" (lido diretamente, editado em 1/10/2026): tabelas de preço, custo por tarefa da Artificial Analysis, 62K vs 27K tokens de saída, Terra $1/$5 listado em manchete de posts relacionados de 28/10</a></li>
+      <li><a href="https://www.anthropic.com/news/announcements" target="_blank" rel="noopener">Anthropic — newsroom / anúncios (via resumo de busca, 29/10/2026): Claude Haiku 5.5, 7/10</a></li>
+      <li>Disponibilidade geral do Gemini 4 Argon em 13/10 e dobra de preço em 1/12: relatadas por sites de terceiros (letsdatascience.com, braindetox.kr, buildmvpfast.com) nos resultados de busca; o post do próprio Google não foi aberto.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontou para "Panorama da indústria". Nenhum anúncio isolado da Anthropic pesou mais hoje. Vários números vêm de agregadores de terceiros e podem mudar; confirme antes de depender deles.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Industry landscape · cost per task</span>
+</footer>
+
+<script>
+  (function() {
+    function val(box, k) { return parseFloat(box.querySelector('[data-k="' + k + '"]').value) || 0; }
+    function fmt(x) { return '$' + x.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function render(box) {
+      var lang = box.dataset.calc;
+      var inTok = val(box, 'in'), share = Math.min(100, Math.max(0, val(box, 'cache'))) / 100, n = val(box, 'n');
+      function cost(p, c, o, t) { return (inTok * (1 - share) * p + inTok * share * c + t * o) / 1e6; }
+      var a = cost(val(box, 'ai'), val(box, 'ac'), val(box, 'ao'), val(box, 'at'));
+      var b = cost(val(box, 'bi'), val(box, 'bc'), val(box, 'bo'), val(box, 'bt'));
+      var ratio = b > 0 ? (a / b).toFixed(2) : '—';
+      var t = lang === 'en'
+        ? 'Per task: A ' + fmt(a) + ' · B ' + fmt(b) + ' (A is ' + ratio + 'x B). Per month: A ' + fmt(a * n) + ' · B ' + fmt(b * n) + '.'
+        : 'Por tarefa: A ' + fmt(a) + ' · B ' + fmt(b) + ' (A é ' + ratio + 'x B). Por mês: A ' + fmt(a * n) + ' · B ' + fmt(b * n) + '.';
+      box.querySelector('[data-out]').textContent = t;
+    }
+    document.querySelectorAll('[data-calc]').forEach(function(box) {
+      box.querySelectorAll('input').forEach(function(i) { i.addEventListener('input', function() { render(box); }); });
+      render(box);
+    });
+  })();
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>

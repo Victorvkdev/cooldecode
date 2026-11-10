@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Attention and the KV cache</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; overflow-x: auto; margin: 20px 0; font-size: 13.5px; line-height: 1.6; }
+  pre code { background: none; border: none; padding: 0; color: #d4d4dc; font-size: inherit; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px; }
+  .calc label { display: block; font-size: 12.5px; color: var(--text-dim); margin-bottom: 4px; }
+  .calc input, .calc select { width: 100%; background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+  .calc-out { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 26px; color: #fff; }
+  .calc-out small { font-family: 'DM Sans', sans-serif; font-weight: 400; font-size: 13px; color: var(--text-dim); display: block; margin-top: 2px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .btn { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .btn:hover { border-color: var(--accent); color: #fff; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+
+  <div class="lang-switch">
+    <div class="lang-switch-inner">
+      <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+    </div>
+  </div>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <div data-lang="en">
+
+    <header>
+      <span class="badge">AI Watch · LLM concepts explained</span>
+      <h1>Attention and the KV cache: why a long conversation costs memory</h1>
+      <p class="subtitle">A model rereads everything you wrote before it writes each new word. The trick that keeps this from being impossibly slow is a notebook called the KV cache, and the notebook is why long context, prompt caching and GPU bills are all connected.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Contents</div>
+      <ol>
+        <li><a href="#attn">Attention: a search over everything so far</a></li>
+        <li><a href="#slow">The waste: recomputing the past</a></li>
+        <li><a href="#cache">The KV cache: a notebook of what is already known</a></li>
+        <li><a href="#mem">The bill: memory that grows with every token</a></li>
+        <li><a href="#shrink">How the industry shrinks the notebook</a></li>
+        <li><a href="#you">What this means for you as a developer</a></li>
+      </ol>
+    </div>
+
+    <h2 id="attn">1. Attention: a search over everything so far</h2>
+    <p>You know from the <em>tokens</em> and <em>embeddings</em> lessons that text becomes a list of vectors. <strong>Attention</strong> is the step where each token decides which earlier tokens matter to it. For every token the model computes three vectors from its embedding:</p>
+    <ul>
+      <li><strong>Query (Q):</strong> what this token is looking for.</li>
+      <li><strong>Key (K):</strong> what each earlier token advertises about itself.</li>
+      <li><strong>Value (V):</strong> the actual information that token hands over if it is picked.</li>
+    </ul>
+    <p>The current token's Query is compared with every Key. The scores go through softmax (the same function from the temperature lesson) and become weights that add up to 100%. The output is the weighted mix of all the Values. In the formula from the Hugging Face docs: <code>softmax(Q·Kᵀ / √d) · V</code>, with a mask so a token can never look at the future.</p>
+    <div class="callout"><strong>Analogy:</strong> a library. The Query is your question at the desk. Each Key is the label on a book's spine. The Value is the book's content. You do not read one book: you read a blend of all of them, weighted by how well each label matched your question.</div>
+    <p>A tiny version in plain JavaScript, for one query against three earlier tokens:</p>
+<pre><code>function attention(q, keys, values) {
+  // score = how well the query matches each key
+  const scores = keys.map(k =&gt; k.reduce((s, x, i) =&gt; s + x * q[i], 0) / Math.sqrt(q.length));
+  const max = Math.max(...scores);
+  const exps = scores.map(s =&gt; Math.exp(s - max));
+  const sum = exps.reduce((a, b) =&gt; a + b, 0);
+  const weights = exps.map(e =&gt; e / sum);         // add up to 1
+  // output = weighted mix of the values
+  return values[0].map((_, i) =&gt; weights.reduce((s, w, j) =&gt; s + w * values[j][i], 0));
+}</code></pre>
+
+    <h2 id="slow">2. The waste: recomputing the past</h2>
+    <p>A model writes one token at a time. To write token 501 it needs the Keys and Values of tokens 1 to 500. Without any shortcut, it would rebuild all 500 of them. For token 502 it would rebuild 501, and so on. Generating N tokens would take roughly N²/2 units of work. For 1,000 tokens that is about 500,000 operations instead of about 1,000.</p>
+    <p>The key observation: because a token can only look backward, <strong>its Key and Value never change once computed</strong>. They depend only on that token's own input and the frozen model weights. Recomputing them is pure waste.</p>
+
+    <h2 id="cache">3. The KV cache: a notebook of what is already known</h2>
+    <p>The <strong>KV cache</strong> stores the Keys and Values of every token already processed, in every layer of the model. For a new token, the model computes only that token's Q, K and V, appends the new K and V to the notebook, and runs the lookup. Notice the cache keeps K and V but <strong>not Q</strong>: an old Query is never needed again.</p>
+    <p>One generation has two phases, which behave very differently:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Phase</th><th>What happens</th><th>What limits speed</th></tr>
+      <tr><td><strong>Prefill</strong></td><td>The whole prompt is processed in parallel and the cache is filled</td><td>Raw compute. This is the wait before the first word appears.</td></tr>
+      <tr><td><strong>Decode</strong></td><td>One token at a time; each step reads the whole cache</td><td>Memory bandwidth. A bigger cache means more data to read per word.</td></tr>
+    </table></div>
+    <p>The Hugging Face documentation describes the trade: without the cache, attention work per step grows with the square of the sequence length; with it, work per new token stays low while memory grows linearly. One benchmark in the Morph article (a T4 GPU, 1,000 tokens) measured 11.9 s with the cache versus 56.2 s without, about 4.7x. Treat that as one data point on one GPU, not a universal number. The gap widens with longer output.</p>
+    <div class="callout"><strong>The core trade:</strong> the KV cache swaps compute for memory. Almost every optimization below is a different way of managing that swap.</div>
+
+    <h2 id="mem">4. The bill: memory that grows with every token</h2>
+    <p>The size of the notebook for one conversation is:</p>
+<pre><code>bytes = 2 × layers × kv_heads × head_dim × tokens × bytes_per_number
+        ↑ K and V</code></pre>
+    <p>It grows with every token, for every layer, for every simultaneous user. Try it. The presets use the public architectures of Llama 3.1 8B and 70B (32 and 80 layers, 8 KV heads, head size 128), which are commonly cited examples:</p>
+    <div class="calc" id="calc-en">
+      <div class="btn-row">
+        <button class="btn" data-preset="8">8B-class preset</button>
+        <button class="btn" data-preset="70">70B-class preset</button>
+      </div>
+      <div class="calc-grid">
+        <div><label>Layers</label><input type="number" data-f="layers" value="80" min="1"></div>
+        <div><label>KV heads</label><input type="number" data-f="heads" value="8" min="1"></div>
+        <div><label>Head size</label><input type="number" data-f="dim" value="128" min="1"></div>
+        <div><label>Context (tokens)</label><input type="number" data-f="tokens" value="131072" min="1"></div>
+        <div><label>Precision</label>
+          <select data-f="bytes"><option value="2" selected>16-bit (2 bytes)</option><option value="1">FP8 (1 byte)</option><option value="0.5">4-bit (0.5 byte)</option></select></div>
+      </div>
+      <div class="calc-out"><span data-out="total">–</span><small data-out="pertoken"></small></div>
+    </div>
+    <p>With 16-bit numbers, the 70B-class model needs about <strong>0.31 MB per token</strong>, which is about <strong>40 GiB for a single 128K-token conversation</strong>. That is more than the weights of the same model compressed to 4 bits (about 35 GB), per the Morph article. Serve ten users at once and you multiply it by ten. This is why the cache, not the model weights, is often the real ceiling on how many people one GPU can serve.</p>
+    <div class="callout"><strong>Heads-up: a source error.</strong> The Morph article's size table is inconsistent with its own formula, except for the 70B at 128K row. Using its formula, the 8B model needs about 0.5 / 4 / 16 GiB at 4K / 32K / 128K tokens (the table says 0.13 / 1 / 4), and the 70B needs about 1.25 / 10 / 40 GiB (the table says 0.33 / 2.5 / ~40). I recomputed everything above from the formula. Lesson for the habit: when a table and a formula disagree, run the formula.</div>
+
+    <h2 id="shrink">5. How the industry shrinks the notebook</h2>
+    <ul>
+      <li><strong>Grouped Query Attention (GQA):</strong> many Query heads share a few KV heads. Llama 3.1 70B has 64 query heads but only 8 KV heads, an 8x smaller cache than giving each query head its own. It is now the default in most open models.</li>
+      <li><strong>Multi-Head Latent Attention (MLA):</strong> introduced by DeepSeek-V2, it compresses K and V into a small latent vector before caching. The Morph article reports a 93.3% cache reduction versus standard multi-head attention (a figure from DeepSeek's own paper, via Morph).</li>
+      <li><strong>Quantization:</strong> store the cache in FP8 or 4-bit instead of 16-bit. FP8 halves it with small accuracy impact; 4-bit saves about 4x but can lose a little quality at high load.</li>
+      <li><strong>Paged attention (vLLM):</strong> instead of reserving one big block per conversation for the maximum length, allocate small blocks on demand, like virtual memory in an operating system. Morph cites memory waste dropping from 60-80% to under 4%, and 2-4x more throughput.</li>
+      <li><strong>Sliding windows:</strong> some layers keep only the last N tokens in the cache, so those layers stop growing.</li>
+    </ul>
+
+    <h2 id="you">6. What this means for you as a developer</h2>
+    <h3>Prompt caching is the KV cache, sold to you</h3>
+    <p>The key for a token depends only on the tokens before it. So if two requests start with the same 5,000 tokens, their caches for that part are identical, and a provider can reuse it instead of recomputing. That is <strong>prefix caching</strong>, and it is what the <em>prompt caching</em> lesson was about. It explains the practical rule: <strong>put stable content first (system prompt, tool definitions, reference documents) and variable content last</strong>. Change one token early in the prompt and everything after it misses the cache.</p>
+    <h3>Why long context is not free</h3>
+    <p>A 1M-token window means a 1M-entry notebook per layer. That is why providers add surcharges, limits or slower speeds for very long prompts, and why the context window lesson warned that a bigger window does not solve everything. Fewer input tokens means a faster first word, a smaller memory read per word, and room for more users on the same hardware.</p>
+    <h3>Why agents get slower as sessions grow</h3>
+    <p>A coding agent that has accumulated 50,000 tokens of old tool output pays for that cache on every step. Trimming stale context is not only about staying under the limit: it makes each remaining step cheaper.</p>
+    <h3>A short exercise</h3>
+    <p>Using the formula, estimate the cache for your own case. Take an 8B-class model (32 layers, 8 KV heads, head size 128, 16-bit) serving 20 users at 8K tokens each. Answer: 131,072 bytes per token × 8,192 tokens × 20 users ≈ 21.5 GB, before counting the model weights. Now try halving the precision in the calculator above.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Sources</p>
+    <ul class="sources">
+      <li><a href="https://huggingface.co/docs/transformers/v5.13.1/cache_explanation" target="_blank" rel="noopener">Hugging Face — Transformers documentation, "Caching" (v5.13.1, read directly, Oct 23, 2026): attention formula, why past K/V never change, per-layer cache, quadratic vs linear step cost</a></li>
+      <li><a href="https://www.morphllm.com/kv-cache-explained" target="_blank" rel="noopener">Morph — "KV Cache Explained" (Apr 5, 2026, read directly): prefill vs decode, memory formula, GQA, paged attention, MLA, quantization, T4 benchmark. The article is by a vendor of context-compression tools; its size table has errors, noted above.</a></li>
+      <li>Search summaries consulted for orientation (not read in full): neptune.ai, inference.net, Towards AI on KV cache basics and compression.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Note: category rotation pointed to "LLM concepts explained"; no new Anthropic/Claude announcement dated today was found (the latest, Claude Duet, was covered on Oct 22). Figures from Morph about paged attention, MLA and quantization are the vendor's reporting of other teams' results and were not checked against the original papers.</p>
+
+  </div>
+
+  <!-- ===================== PORTUGUÊS ===================== -->
+  <div data-lang="pt" style="display:none">
+
+    <header>
+      <span class="badge">IA Watch · Conceitos de LLMs explicados</span>
+      <h1>Atenção e KV cache: por que uma conversa longa custa memória</h1>
+      <p class="subtitle">O modelo relê tudo o que você escreveu antes de escrever cada palavra nova. O truque que impede isso de ser lento demais é um caderno de anotações chamado KV cache, e esse caderno liga contexto longo, prompt caching e a conta de GPU.</p>
+    </header>
+
+    <div class="toc">
+      <div class="card-title">Sumário</div>
+      <ol>
+        <li><a href="#attn-pt">Atenção: uma busca em tudo que veio antes</a></li>
+        <li><a href="#slow-pt">O desperdício: recalcular o passado</a></li>
+        <li><a href="#cache-pt">O KV cache: um caderno do que já se sabe</a></li>
+        <li><a href="#mem-pt">A conta: memória que cresce a cada token</a></li>
+        <li><a href="#shrink-pt">Como a indústria encolhe o caderno</a></li>
+        <li><a href="#you-pt">O que isso significa para você, dev</a></li>
+      </ol>
+    </div>
+
+    <h2 id="attn-pt">1. Atenção: uma busca em tudo que veio antes</h2>
+    <p>Você viu nas lições de <em>tokens</em> e <em>embeddings</em> que o texto vira uma lista de vetores. A <strong>atenção</strong> é a etapa em que cada token decide quais tokens anteriores importam para ele. Para cada token, o modelo calcula três vetores a partir do embedding:</p>
+    <ul>
+      <li><strong>Query (Q):</strong> o que este token está procurando.</li>
+      <li><strong>Key (K):</strong> o que cada token anterior anuncia sobre si.</li>
+      <li><strong>Value (V):</strong> a informação de fato que esse token entrega se for escolhido.</li>
+    </ul>
+    <p>A Query do token atual é comparada com todas as Keys. As notas passam pelo softmax (a mesma função da lição de temperature) e viram pesos que somam 100%. A saída é a mistura ponderada de todos os Values. Na fórmula da documentação do Hugging Face: <code>softmax(Q·Kᵀ / √d) · V</code>, com uma máscara para o token nunca olhar o futuro.</p>
+    <div class="callout"><strong>Analogia:</strong> uma biblioteca. A Query é a sua pergunta no balcão. Cada Key é a etiqueta na lombada de um livro. O Value é o conteúdo do livro. Você não lê um livro só: lê uma mistura de todos, ponderada pelo quanto cada etiqueta combinou com a sua pergunta.</div>
+    <p>Uma versão minúscula em JavaScript puro, para uma query contra três tokens anteriores:</p>
+<pre><code>function attention(q, keys, values) {
+  // nota = quanto a query combina com cada key
+  const scores = keys.map(k =&gt; k.reduce((s, x, i) =&gt; s + x * q[i], 0) / Math.sqrt(q.length));
+  const max = Math.max(...scores);
+  const exps = scores.map(s =&gt; Math.exp(s - max));
+  const sum = exps.reduce((a, b) =&gt; a + b, 0);
+  const weights = exps.map(e =&gt; e / sum);         // somam 1
+  // saída = mistura ponderada dos values
+  return values[0].map((_, i) =&gt; weights.reduce((s, w, j) =&gt; s + w * values[j][i], 0));
+}</code></pre>
+
+    <h2 id="slow-pt">2. O desperdício: recalcular o passado</h2>
+    <p>Um modelo escreve um token por vez. Para escrever o token 501, precisa das Keys e Values dos tokens 1 a 500. Sem nenhum atalho, reconstruiria os 500. Para o 502, reconstruiria 501, e assim por diante. Gerar N tokens custaria cerca de N²/2 unidades de trabalho. Para 1.000 tokens, são uns 500.000 cálculos em vez de uns 1.000.</p>
+    <p>A observação-chave: como um token só olha para trás, <strong>a Key e o Value dele nunca mudam depois de calculados</strong>. Dependem só da entrada daquele token e dos pesos congelados do modelo. Recalcular é puro desperdício.</p>
+
+    <h2 id="cache-pt">3. O KV cache: um caderno do que já se sabe</h2>
+    <p>O <strong>KV cache</strong> guarda as Keys e Values de todo token já processado, em todas as camadas do modelo. Para um token novo, o modelo calcula só o Q, K e V dele, acrescenta o novo K e V ao caderno e faz a busca. Repare que o cache guarda K e V, mas <strong>não o Q</strong>: uma Query antiga nunca é usada de novo.</p>
+    <p>Uma geração tem duas fases, que se comportam de forma bem diferente:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Fase</th><th>O que acontece</th><th>O que limita a velocidade</th></tr>
+      <tr><td><strong>Prefill</strong></td><td>O prompt inteiro é processado em paralelo e o cache é preenchido</td><td>Poder de cálculo. É a espera antes da primeira palavra aparecer.</td></tr>
+      <tr><td><strong>Decode</strong></td><td>Um token por vez; cada passo lê o cache inteiro</td><td>Largura de banda de memória. Cache maior significa mais dados lidos por palavra.</td></tr>
+    </table></div>
+    <p>A documentação do Hugging Face descreve a troca: sem cache, o trabalho de atenção por passo cresce com o quadrado do tamanho da sequência; com cache, o trabalho por token novo continua baixo, enquanto a memória cresce de forma linear. Um benchmark do artigo da Morph (GPU T4, 1.000 tokens) mediu 11,9 s com cache contra 56,2 s sem, uns 4,7x. Trate como um dado de uma GPU, não como número universal. A diferença aumenta com saídas mais longas.</p>
+    <div class="callout"><strong>A troca central:</strong> o KV cache troca cálculo por memória. Quase toda otimização abaixo é uma forma diferente de administrar essa troca.</div>
+
+    <h2 id="mem-pt">4. A conta: memória que cresce a cada token</h2>
+    <p>O tamanho do caderno de uma conversa é:</p>
+<pre><code>bytes = 2 × camadas × kv_heads × head_dim × tokens × bytes_por_número
+        ↑ K e V</code></pre>
+    <p>Ele cresce a cada token, em cada camada, para cada usuário simultâneo. Teste. Os presets usam as arquiteturas públicas do Llama 3.1 8B e 70B (32 e 80 camadas, 8 KV heads, tamanho de head 128), exemplos muito citados:</p>
+    <div class="calc" id="calc-pt">
+      <div class="btn-row">
+        <button class="btn" data-preset="8">Preset classe 8B</button>
+        <button class="btn" data-preset="70">Preset classe 70B</button>
+      </div>
+      <div class="calc-grid">
+        <div><label>Camadas</label><input type="number" data-f="layers" value="80" min="1"></div>
+        <div><label>KV heads</label><input type="number" data-f="heads" value="8" min="1"></div>
+        <div><label>Tamanho da head</label><input type="number" data-f="dim" value="128" min="1"></div>
+        <div><label>Contexto (tokens)</label><input type="number" data-f="tokens" value="131072" min="1"></div>
+        <div><label>Precisão</label>
+          <select data-f="bytes"><option value="2" selected>16 bits (2 bytes)</option><option value="1">FP8 (1 byte)</option><option value="0.5">4 bits (0,5 byte)</option></select></div>
+      </div>
+      <div class="calc-out"><span data-out="total">–</span><small data-out="pertoken"></small></div>
+    </div>
+    <p>Com números de 16 bits, o modelo de classe 70B precisa de cerca de <strong>0,31 MB por token</strong>, ou seja, uns <strong>40 GiB para uma única conversa de 128 mil tokens</strong>. É mais do que os pesos do mesmo modelo comprimido para 4 bits (uns 35 GB), segundo o artigo da Morph. Atenda dez usuários ao mesmo tempo e multiplique por dez. Por isso o cache, e não os pesos do modelo, costuma ser o teto real de quantas pessoas uma GPU atende.</p>
+    <div class="callout"><strong>Atenção: erro numa fonte.</strong> A tabela de tamanhos do artigo da Morph é inconsistente com a própria fórmula, exceto na linha do 70B a 128K. Usando a fórmula, o modelo 8B precisa de cerca de 0,5 / 4 / 16 GiB a 4K / 32K / 128K tokens (a tabela diz 0,13 / 1 / 4), e o 70B de cerca de 1,25 / 10 / 40 GiB (a tabela diz 0,33 / 2,5 / ~40). Recalculei tudo acima a partir da fórmula. Lição de hábito: quando tabela e fórmula discordam, rode a fórmula.</div>
+
+    <h2 id="shrink-pt">5. Como a indústria encolhe o caderno</h2>
+    <ul>
+      <li><strong>Grouped Query Attention (GQA):</strong> várias heads de Query compartilham poucas heads de KV. O Llama 3.1 70B tem 64 heads de query mas só 8 de KV, um cache 8x menor do que dar uma head de KV para cada query. Hoje é o padrão na maioria dos modelos abertos.</li>
+      <li><strong>Multi-Head Latent Attention (MLA):</strong> criada no DeepSeek-V2, comprime K e V num vetor latente pequeno antes de guardar. O artigo da Morph relata 93,3% de redução do cache frente à atenção multi-head padrão (número do paper da própria DeepSeek, via Morph).</li>
+      <li><strong>Quantização:</strong> guardar o cache em FP8 ou 4 bits em vez de 16 bits. FP8 corta pela metade com pouco impacto de precisão; 4 bits economiza uns 4x, mas pode perder um pouco de qualidade com carga alta.</li>
+      <li><strong>Paged attention (vLLM):</strong> em vez de reservar um bloco grande por conversa para o tamanho máximo, aloca blocos pequenos sob demanda, como a memória virtual de um sistema operacional. A Morph cita o desperdício caindo de 60-80% para menos de 4%, e 2-4x mais vazão.</li>
+      <li><strong>Janelas deslizantes:</strong> algumas camadas guardam só os últimos N tokens, então essas camadas param de crescer.</li>
+    </ul>
+
+    <h2 id="you-pt">6. O que isso significa para você, dev</h2>
+    <h3>Prompt caching é o KV cache, vendido para você</h3>
+    <p>A key de um token depende só dos tokens anteriores. Então, se duas requisições começam com os mesmos 5.000 tokens, os caches dessa parte são idênticos, e o provedor pode reaproveitar em vez de recalcular. Isso é o <strong>prefix caching</strong>, tema da lição de <em>prompt caching</em>. Ele explica a regra prática: <strong>coloque o conteúdo estável primeiro (system prompt, definições de ferramentas, documentos de referência) e o variável por último</strong>. Mude um token no começo do prompt e tudo depois dele perde o cache.</p>
+    <h3>Por que contexto longo não é de graça</h3>
+    <p>Uma janela de 1M de tokens significa um caderno de 1M de entradas por camada. Por isso provedores colocam sobretaxas, limites ou menos velocidade para prompts muito longos, e por isso a lição de context window avisou que janela maior não resolve tudo. Menos tokens de entrada significa primeira palavra mais rápida, menos memória lida por palavra e espaço para mais usuários no mesmo hardware.</p>
+    <h3>Por que agentes ficam mais lentos conforme a sessão cresce</h3>
+    <p>Um agente de código que acumulou 50 mil tokens de saídas antigas de ferramentas paga por esse cache a cada passo. Podar contexto velho não serve só para ficar abaixo do limite: deixa cada passo restante mais barato.</p>
+    <h3>Um exercício rápido</h3>
+    <p>Usando a fórmula, estime o cache do seu caso. Pegue um modelo de classe 8B (32 camadas, 8 KV heads, head de 128, 16 bits) atendendo 20 usuários com 8K tokens cada. Resposta: 131.072 bytes por token × 8.192 tokens × 20 usuários ≈ 21,5 GB, sem contar os pesos do modelo. Agora tente reduzir a precisão pela metade na calculadora acima.</p>
+
+    <p style="margin-top:40px; padding-top:24px; border-top:1px solid var(--border); font-size:13px; color:var(--text-dim);">Fontes</p>
+    <ul class="sources">
+      <li><a href="https://huggingface.co/docs/transformers/v5.13.1/cache_explanation" target="_blank" rel="noopener">Hugging Face — documentação do Transformers, "Caching" (v5.13.1, lido diretamente em 23/10/2026): fórmula de atenção, por que K/V passados nunca mudam, cache por camada, custo quadrático vs linear por passo</a></li>
+      <li><a href="https://www.morphllm.com/kv-cache-explained" target="_blank" rel="noopener">Morph — "KV Cache Explained" (05/04/2026, lido diretamente): prefill vs decode, fórmula de memória, GQA, paged attention, MLA, quantização, benchmark em T4. O artigo é de um fornecedor de ferramentas de compressão de contexto; a tabela de tamanhos tem erros, apontados acima.</a></li>
+      <li>Resumos de busca consultados só para orientação (não lidos por inteiro): neptune.ai, inference.net, Towards AI sobre fundamentos e compressão de KV cache.</li>
+    </ul>
+    <p style="font-size:13px; color:var(--text-dim);">Nota: a rotação apontava para "Conceitos fundamentais de LLMs explicados"; não foi encontrado anúncio novo da Anthropic/Claude datado de hoje (o mais recente, Claude Duet, foi coberto em 22/10). Os números da Morph sobre paged attention, MLA e quantização são o relato do fornecedor sobre resultados de outras equipes e não foram conferidos nos papers originais.</p>
+
+  </div>
+
+</div>
+
+<footer>
+  <span id="footer-left">Cooldecode · AI Watch</span>
+  <span class="accent">Attention &amp; KV cache</span>
+</footer>
+
+<script>
+  var PRESETS = { '8': { layers: 32, heads: 8, dim: 128 }, '70': { layers: 80, heads: 8, dim: 128 } };
+  function fmt(bytes, lang) {
+    var gib = bytes / Math.pow(2, 30);
+    var s = gib >= 1 ? gib.toFixed(gib >= 10 ? 1 : 2) + ' GiB' : (bytes / Math.pow(2, 20)).toFixed(1) + ' MiB';
+    return lang === 'pt' ? s.replace('.', ',') : s;
+  }
+  function calc(box) {
+    var lang = box.id.slice(-2);
+    var v = {};
+    box.querySelectorAll('[data-f]').forEach(function(el) { v[el.dataset.f] = parseFloat(el.value) || 0; });
+    var perToken = 2 * v.layers * v.heads * v.dim * v.bytes;
+    box.querySelector('[data-out="total"]').textContent = fmt(perToken * v.tokens, lang);
+    var mb = (perToken / Math.pow(2, 20)).toFixed(3);
+    box.querySelector('[data-out="pertoken"]').textContent = (lang === 'pt' ? mb.replace('.', ',') + ' MiB por token, por conversa' : mb + ' MiB per token, per conversation');
+  }
+  document.querySelectorAll('.calc').forEach(function(box) {
+    box.querySelectorAll('input,select').forEach(function(el) { el.addEventListener('input', function() { calc(box); }); });
+    box.querySelectorAll('[data-preset]').forEach(function(b) {
+      b.addEventListener('click', function() {
+        var p = PRESETS[b.dataset.preset];
+        Object.keys(p).forEach(function(k) { box.querySelector('[data-f="' + k + '"]').value = p[k]; });
+        calc(box);
+      });
+    });
+    calc(box);
+  });
+
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) {
+      el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.setlang === lang);
+    });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+</script>
+
+</body>
+</html>
