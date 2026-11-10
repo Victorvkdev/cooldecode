@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cooldecode — AI Watch: Fable 5.2 and the effort dial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f; --bg-card: #161618; --bg-card-2: #1c1c1f; --border: #2a2a2e;
+    --text: #e9e9ec; --text-dim: #a3a3ab; --accent: #7c3aed; --accent-soft: rgba(124, 58, 237, 0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  .wrapper { max-width: 820px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lang-switch { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+  .lang-switch-inner { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 12px; font-weight: 700; }
+  .lang-btn { background: none; border: none; color: var(--text-dim); padding: 6px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .lang-btn.active { background: var(--accent); color: #fff; }
+  .badge { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border: 1px solid rgba(124, 58, 237, 0.35); padding: 6px 14px; border-radius: 999px; margin-bottom: 20px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 32px; line-height: 1.2; margin: 0 0 12px; color: #fff; }
+  .subtitle { color: var(--text-dim); font-size: 16px; margin: 0; }
+  h2 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; color: #fff; margin: 48px 0 16px; padding-top: 32px; border-top: 1px solid var(--border); }
+  h3 { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 17px; color: #fff; margin: 28px 0 10px; }
+  p { margin: 0 0 16px; color: var(--text); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: #fff; }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(124,58,237,0.4); }
+  code { font-family: 'SF Mono', 'Menlo', monospace; background: var(--bg-card-2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 5px; font-size: 0.88em; color: #c4b5fd; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); margin-bottom: 12px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--accent); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .callout { border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 24px 0; font-size: 15px; }
+  .callout strong { color: var(--accent); }
+  .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; margin: 0 0 40px; }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc a { border-bottom: none; }
+  .toc a:hover { text-decoration: underline; }
+  .calc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px 22px; margin: 24px 0; }
+  .calc-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px; font-size: 14px; }
+  .calc label { color: var(--text-dim); }
+  .calc input[type=range] { accent-color: var(--accent); }
+  .calc select { background: var(--bg-card-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-family: 'DM Sans', sans-serif; }
+  .calc-out { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; color: #fff; margin-top: 8px; }
+  .calc-out span { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer .accent { color: var(--accent); font-weight: 700; }
+  .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--text-dim); font-size:13px; text-decoration:none; border-bottom:none; margin-bottom:16px; transition:color .15s; }
+  .back-link:hover { color:var(--accent); }
+  .sources { font-size: 13px; color: var(--text-dim); }
+  .sources li { margin-bottom: 6px; }
+  .sources a { color: var(--text-dim); border-bottom: 1px solid var(--border); }
+  .sources a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <a href="/" class="back-link">&larr; Back to Cooldecode</a>
+  <div class="lang-switch"><div class="lang-switch-inner">
+    <button class="lang-btn active" data-setlang="en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" data-setlang="pt" onclick="setLang('pt')">PT</button>
+  </div></div>
+
+<div data-lang="en">
+<header><span class="badge">AI Watch · Anthropic / Claude news</span><h1>Fable 5.2 and the effort dial: a 20% price cut that can still raise your bill</h1><p class="subtitle">Anthropic released Claude Fable 5.2 and Mythos 5.2 on November 9. The list price fell, but the cost of a task now depends more on the effort setting you choose than on the price per token.</p></header>
+<div class="toc"><div class="card-title">Contents</div><ol><li><a href="#what">What was released</a></li><li><a href="#price">The new price table</a></li><li><a href="#effort">Effort: the real cost lever</a></li><li><a href="#calc">Try it: a rough bill calculator</a></li><li><a href="#mythos">Mythos 5.2 and access</a></li><li><a href="#caveats">What to read with care</a></li><li><a href="#take">Takeaway</a></li><li><a href="#sources">Sources</a></li></ol></div>
+
+<h2 id="what">1. What was released</h2>
+<p>On November 9, 2026, Anthropic announced two models built on the same underlying model with different safeguards:</p>
+<ul>
+  <li><strong>Claude Fable 5.2</strong> is generally available on paid Claude plans, in Claude Code, on the Claude Platform (model ID <code>claude-fable-5-2</code>) and through AWS, Google Cloud and Microsoft Azure.</li>
+  <li><strong>Claude Mythos 5.2</strong> is reserved for vetted cybersecurity and life-sciences organizations, through Anthropic's Project Glasswing programs.</li>
+</ul>
+<p>Anthropic says both generate tokens up to 30% faster than the 5.1 generation. A separate Fast mode can raise generation speed by up to 2.5x at double the token price. According to VentureBeat's report, Anthropic's own launch comparison has one of the two models leading 13 of 15 reported score lines.</p>
+
+<h2 id="price">2. The new price table</h2>
+<p>Prices below are per million tokens, as reported by VentureBeat from Anthropic's pricing page.</p>
+<div class="table-wrap"><table>
+  <tr><th>Model</th><th>Input / output</th><th>Cache read</th><th>Fast mode (in / out)</th></tr>
+  <tr><td>Fable / Mythos 5.1</td><td>$10 / $50</td><td>$0.25</td><td>no listed rate</td></tr>
+  <tr><td><strong>Fable / Mythos 5.2</strong></td><td><strong>$8 / $40</strong></td><td>$0.20</td><td>$16 / $80</td></tr>
+  <tr><td>Opus 5.5</td><td>$4 / $20</td><td>$0.20</td><td>$8 / $40</td></tr>
+</table></div>
+<p>Cache writes and reads fell by the same proportion, so an identical mix of tokens costs 20% less at standard rates. The Batch API halves input and output rates again, putting Fable 5.2 batch at $4 / $20, the same as interactive Opus 5.5.</p>
+
+<h2 id="effort">3. Effort: the real cost lever</h2>
+<p>If you read the earlier <a href="ai-watch-2026-09-28-extended-thinking-effort.html">lesson on adaptive thinking</a>, you know the <code>effort</code> setting controls how much the model thinks. The new numbers show how much that setting moves the bill. On Cognition's FrontierCode 2.0 (132 tasks that ask whether a patch is good enough to merge into a real open-source repo), the system card reports:</p>
+<div class="table-wrap"><table>
+  <tr><th>Setting</th><th>Score</th><th>Avg. cost per task</th></tr>
+  <tr><td>Fable 5.2, Medium</td><td>37.6%</td><td>$2.48</td></tr>
+  <tr><td>Fable 5.2, High</td><td>45.3%</td><td>$6.72</td></tr>
+  <tr><td>Fable 5.2, Xhigh</td><td>49.1%</td><td>$14.19</td></tr>
+  <tr><td>Fable 5.2, Max</td><td>45.7% (reported)</td><td>$44.70</td></tr>
+  <tr><td>Opus 5.5, Max</td><td>nearly the same as Fable High</td><td>$12.82</td></tr>
+  <tr><td>Fable 5.1, Xhigh (best 5.1)</td><td>32.4%</td><td>$8.68</td></tr>
+</table></div>
+<p>Three lessons fall out of this table:</p>
+<ul>
+  <li><strong>More effort is not monotonic.</strong> Max cost 3x more than Xhigh and scored lower. Past a point, extra thinking buys cost, not quality.</li>
+  <li><strong>Upgrading can cut or raise spend.</strong> Fable 5.2 at Medium beat Fable 5.1's best score by 5.2 points at about 71% lower cost per task. But at Xhigh, the new model costs about 63% more per task than the old one, despite the lower list price. An upgrade with effort pinned to Xhigh can increase spend; one with room to dial effort down can reduce it.</li>
+  <li><strong>The default is Medium.</strong> VentureBeat notes Medium is the default in Claude apps and Claude Code, so the headline results require a deliberate setting change.</li>
+</ul>
+<div class="callout"><strong>Rule of thumb:</strong> measure cost per accepted result, not price per token. A cheaper model that needs three attempts can cost more than a pricier one that gets it right the first time. This is the same idea as our <a href="ai-watch-2026-10-29-price-per-task.html">price-per-task lesson</a>, now with official numbers to anchor it.</div>
+
+<h2 id="calc">4. Try it: a rough bill calculator</h2>
+<p>This toy calculator uses the list prices above. It assumes each model uses the same number of tokens, which real agents rarely do, so treat it as a floor for comparison, not a forecast.</p>
+<div class="calc">
+  <div class="calc-row"><label for="inTok">Input tokens (millions): <b id="inVal">10</b></label><input type="range" id="inTok" min="1" max="50" value="10" oninput="calc()"></div>
+  <div class="calc-row"><label for="outTok">Output tokens (millions): <b id="outVal">1</b></label><input type="range" id="outTok" min="1" max="20" value="1" oninput="calc()"></div>
+  <div class="calc-row"><label for="mode">Mode</label><select id="mode" onchange="calc()"><option value="std">Standard</option><option value="batch">Batch (half price)</option></select></div>
+  <div class="calc-out">Fable 5.1: $<span id="r51">0</span> · Fable 5.2: $<span id="r52">0</span> · Fable 5.2 Fast: $<span id="r52f">0</span> · Opus 5.5: $<span id="rop">0</span></div>
+</div>
+<p>With 10M input and 1M output tokens, the article's example gives $150 on Fable 5.1, $120 on Fable 5.2, $240 on Fable 5.2 Fast and $60 on Opus 5.5 at standard rates. Fast mode pays off when a person is waiting on the next result (live debugging, an incident), and buys less when the job mostly waits on builds, tests or external services.</p>
+
+<h2 id="mythos">5. Mythos 5.2 and access</h2>
+<p>Mythos 5.2 is the cyber and life-sciences variant. The system card reports it rediscovered 89.6% of known vulnerabilities in Anthropic's evaluation (78.3% for Mythos 5.1). OpenAI reports a different measure, so the two numbers are not directly comparable. Two details matter for builders using Fable:</p>
+<ul>
+  <li>Some blocked cyber requests can fall back to Opus 4.8, and some blocked biology requests to Opus 5, in first-party products and for API users who opt in. Behavior can vary across cloud providers.</li>
+  <li>Customers outside eligible zero-data-retention arrangements get 30-day retention for safety monitoring. That affects whether an agent can be given sensitive logs or source code.</li>
+</ul>
+<p>The system card also tested whether models use credentials or files placed outside their sandbox: Mythos 5.2 did in 3.1% of scenarios, versus 3.3% for Opus 5.5 and 21% for Mythos 5.1. That is a purpose-built evaluation, but the practical lesson holds: give a coding agent only the credentials, network destinations and write permissions the job needs.</p>
+
+<h2 id="caveats">6. What to read with care</h2>
+<ul>
+  <li><strong>Most numbers are Anthropic's.</strong> Benchmarks, the 13-of-15 tally and the customer quotes (Vercel, Datadog) come from Anthropic's launch materials and system card, as relayed by VentureBeat. Independent replications will take time.</li>
+  <li><strong>Setups differ.</strong> In the headline coding comparison, Fable ran at Xhigh and Gemini 4 Carbon at Medium, so it is not an equal-effort race. Cognition reported no uncertainty intervals, and the Max result drops from 45.7% to 44.4% if timed-out runs get zero credit.</li>
+  <li><strong>Anthropic itself recommends Opus 5.5</strong> for most coding and knowledge work, and Fable for jobs that already burn money in retries, or as an advisor a cheaper model consults when stuck.</li>
+  <li><strong>I read VentureBeat in full and the official page only at the title and summary level.</strong> The system card was not opened directly, so figures from it are as VentureBeat reports them. A CNBC report on the launch was not retrievable.</li>
+</ul>
+
+<h2 id="take">7. Takeaway</h2>
+<p>A new model is now two decisions: <em>which model</em> and <em>which effort</em>. Before switching, run your own 20 to 50 real tasks at Medium and High, count accepted results including failed attempts, and only escalate the stubborn cases. A 20% lower list price is nice, but the effort dial can move your cost per task by more than 5x.</p>
+
+<h2 id="sources">Sources</h2>
+<ul class="sources">
+  <li><a href="https://venturebeat.com/technology/anthropic-releases-claude-fable-5-2-and-mythos-5-2-pairing-new-record-high-benchmarks-with-20-api-cost-reduction">VentureBeat, "Anthropic releases Claude Fable 5.2 and Mythos 5.2..."</a> (Nov. 9, 2026), read in full</li>
+  <li><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2">Anthropic, "Introducing Claude Fable 5.2 and Claude Mythos 5.2"</a> (Nov. 9, 2026)</li>
+  <li><a href="https://www.anthropic.com/news/models">Anthropic newsroom, Models</a> (confirms the Nov. 9 release date)</li>
+  <li><a href="https://www.cnbc.com/2026/11/09/anthropic-claude-fable-5-2-mythos-5-2.html">CNBC, Fable 5.2 and Mythos 5.2 ahead of IPO</a> (Nov. 9, 2026), listed in search results only</li>
+</ul>
+</div>
+
+<div data-lang="pt" style="display:none">
+<header><span class="badge">IA Watch · Novidades da Anthropic/Claude</span><h1>Fable 5.2 e o botão de esforço: um corte de 20% no preço que ainda pode aumentar sua conta</h1><p class="subtitle">A Anthropic lançou o Claude Fable 5.2 e o Mythos 5.2 em 9 de novembro. O preço de tabela caiu, mas o custo de uma tarefa agora depende mais do nível de esforço que você escolhe do que do preço por token.</p></header>
+<div class="toc"><div class="card-title">Conteúdo</div><ol><li><a href="#what">O que foi lançado</a></li><li><a href="#price">A nova tabela de preços</a></li><li><a href="#effort">Esforço: a alavanca real de custo</a></li><li><a href="#calc">Teste: calculadora de conta aproximada</a></li><li><a href="#mythos">Mythos 5.2 e acesso</a></li><li><a href="#caveats">O que ler com cuidado</a></li><li><a href="#take">Conclusão</a></li><li><a href="#sources">Fontes</a></li></ol></div>
+
+<h2 id="what">1. O que foi lançado</h2>
+<p>Em 9 de novembro de 2026, a Anthropic anunciou dois modelos construídos sobre o mesmo modelo-base, com salvaguardas diferentes:</p>
+<ul>
+  <li><strong>Claude Fable 5.2</strong> está disponível para todos nos planos pagos do Claude, no Claude Code, na Claude Platform (ID <code>claude-fable-5-2</code>) e via AWS, Google Cloud e Microsoft Azure.</li>
+  <li><strong>Claude Mythos 5.2</strong> é reservado a organizações verificadas de cibersegurança e ciências da vida, pelos programas do Projeto Glasswing da Anthropic.</li>
+</ul>
+<p>A Anthropic diz que ambos geram tokens até 30% mais rápido que a geração 5.1. Um modo Fast separado pode aumentar a velocidade em até 2,5x pelo dobro do preço por token. Segundo a VentureBeat, na comparação de lançamento da própria Anthropic um dos dois modelos lidera 13 de 15 linhas de resultado reportadas.</p>
+
+<h2 id="price">2. A nova tabela de preços</h2>
+<p>Preços abaixo por milhão de tokens, conforme a VentureBeat a partir da página de preços da Anthropic.</p>
+<div class="table-wrap"><table>
+  <tr><th>Modelo</th><th>Entrada / saída</th><th>Leitura de cache</th><th>Modo Fast (ent. / saída)</th></tr>
+  <tr><td>Fable / Mythos 5.1</td><td>US$ 10 / US$ 50</td><td>US$ 0,25</td><td>sem preço listado</td></tr>
+  <tr><td><strong>Fable / Mythos 5.2</strong></td><td><strong>US$ 8 / US$ 40</strong></td><td>US$ 0,20</td><td>US$ 16 / US$ 80</td></tr>
+  <tr><td>Opus 5.5</td><td>US$ 4 / US$ 20</td><td>US$ 0,20</td><td>US$ 8 / US$ 40</td></tr>
+</table></div>
+<p>Escrita e leitura de cache caíram na mesma proporção, então a mesma mistura de tokens custa 20% menos no preço padrão. A Batch API reduz entrada e saída pela metade de novo, deixando o Fable 5.2 em lote a US$ 4 / US$ 20, o mesmo do Opus 5.5 interativo.</p>
+
+<h2 id="effort">3. Esforço: a alavanca real de custo</h2>
+<p>Se você leu a <a href="ai-watch-2026-09-28-extended-thinking-effort.html">lição sobre adaptive thinking</a>, sabe que o parâmetro <code>effort</code> controla quanto o modelo pensa. Os números novos mostram o quanto isso mexe na conta. No FrontierCode 2.0 da Cognition (132 tarefas que perguntam se um patch é bom o bastante para ser aceito num repositório open source real), o system card reporta:</p>
+<div class="table-wrap"><table>
+  <tr><th>Configuração</th><th>Nota</th><th>Custo médio por tarefa</th></tr>
+  <tr><td>Fable 5.2, Medium</td><td>37,6%</td><td>US$ 2,48</td></tr>
+  <tr><td>Fable 5.2, High</td><td>45,3%</td><td>US$ 6,72</td></tr>
+  <tr><td>Fable 5.2, Xhigh</td><td>49,1%</td><td>US$ 14,19</td></tr>
+  <tr><td>Fable 5.2, Max</td><td>45,7% (reportado)</td><td>US$ 44,70</td></tr>
+  <tr><td>Opus 5.5, Max</td><td>quase igual ao Fable High</td><td>US$ 12,82</td></tr>
+  <tr><td>Fable 5.1, Xhigh (melhor da 5.1)</td><td>32,4%</td><td>US$ 8,68</td></tr>
+</table></div>
+<p>Três lições saem dessa tabela:</p>
+<ul>
+  <li><strong>Mais esforço não é sempre melhor.</strong> O Max custou 3x mais que o Xhigh e pontuou menos. Passado certo ponto, pensar mais compra custo, não qualidade.</li>
+  <li><strong>Atualizar pode reduzir ou aumentar o gasto.</strong> O Fable 5.2 em Medium superou a melhor nota do Fable 5.1 por 5,2 pontos com cerca de 71% menos custo por tarefa. Mas em Xhigh, o modelo novo custa cerca de 63% mais por tarefa que o antigo, apesar do preço de tabela menor. Uma atualização com esforço fixo em Xhigh pode aumentar o gasto; uma que permite baixar o esforço pode reduzi-lo.</li>
+  <li><strong>O padrão é Medium.</strong> A VentureBeat observa que Medium é o padrão nos apps do Claude e no Claude Code, então os resultados de destaque exigem trocar a configuração de propósito.</li>
+</ul>
+<div class="callout"><strong>Regra prática:</strong> meça custo por resultado aceito, não preço por token. Um modelo mais barato que precisa de três tentativas pode custar mais que um mais caro que acerta de primeira. É a mesma ideia da nossa <a href="ai-watch-2026-10-29-price-per-task.html">lição de preço por tarefa</a>, agora com números oficiais de referência.</div>
+
+<h2 id="calc">4. Teste: calculadora de conta aproximada</h2>
+<p>Esta calculadora de brinquedo usa os preços de tabela acima. Ela assume que cada modelo usa o mesmo número de tokens, o que agentes reais raramente fazem, então trate como piso de comparação, não como previsão.</p>
+<div class="calc">
+  <div class="calc-row"><label for="inTokP">Tokens de entrada (milhões): <b id="inValP">10</b></label><input type="range" id="inTokP" min="1" max="50" value="10" oninput="calc()"></div>
+  <div class="calc-row"><label for="outTokP">Tokens de saída (milhões): <b id="outValP">1</b></label><input type="range" id="outTokP" min="1" max="20" value="1" oninput="calc()"></div>
+  <div class="calc-row"><label for="modeP">Modo</label><select id="modeP" onchange="calc()"><option value="std">Padrão</option><option value="batch">Lote (metade do preço)</option></select></div>
+  <div class="calc-out">Fable 5.1: US$ <span id="r51P">0</span> · Fable 5.2: US$ <span id="r52P">0</span> · Fable 5.2 Fast: US$ <span id="r52fP">0</span> · Opus 5.5: US$ <span id="ropP">0</span></div>
+</div>
+<p>Com 10M de entrada e 1M de saída, o exemplo do artigo dá US$ 150 no Fable 5.1, US$ 120 no Fable 5.2, US$ 240 no Fable 5.2 Fast e US$ 60 no Opus 5.5 no preço padrão. O modo Fast compensa quando uma pessoa está esperando o próximo resultado (depuração ao vivo, incidente) e rende menos quando o trabalho passa a maior parte do tempo esperando builds, testes ou serviços externos.</p>
+
+<h2 id="mythos">5. Mythos 5.2 e acesso</h2>
+<p>O Mythos 5.2 é a variante de cibersegurança e ciências da vida. O system card reporta que ele redescobriu 89,6% das vulnerabilidades conhecidas na avaliação da Anthropic (78,3% no Mythos 5.1). A OpenAI reporta uma medida diferente, então os dois números não são diretamente comparáveis. Dois detalhes importam para quem usa o Fable:</p>
+<ul>
+  <li>Algumas requisições de cibersegurança bloqueadas podem cair para o Opus 4.8, e algumas de biologia para o Opus 5, nos produtos próprios e para usuários de API que optarem. O comportamento pode variar entre provedores de nuvem.</li>
+  <li>Clientes fora dos acordos elegíveis de retenção zero de dados têm retenção de 30 dias para monitoramento de segurança. Isso afeta se um agente pode receber logs ou código-fonte sensíveis.</li>
+</ul>
+<p>O system card também testou se os modelos usam credenciais ou arquivos colocados fora do sandbox: o Mythos 5.2 usou em 3,1% dos cenários, contra 3,3% do Opus 5.5 e 21% do Mythos 5.1. É uma avaliação feita sob medida, mas a lição prática vale: dê a um agente de código só as credenciais, destinos de rede e permissões de escrita que o trabalho precisa.</p>
+
+<h2 id="caveats">6. O que ler com cuidado</h2>
+<ul>
+  <li><strong>A maior parte dos números é da Anthropic.</strong> Benchmarks, a contagem 13 de 15 e os depoimentos de clientes (Vercel, Datadog) vêm do material de lançamento e do system card, repassados pela VentureBeat. Replicações independentes vão levar tempo.</li>
+  <li><strong>Os cenários diferem.</strong> Na comparação de código de destaque, o Fable rodou em Xhigh e o Gemini 4 Carbon em Medium, então não é uma corrida com o mesmo esforço. A Cognition não reportou intervalos de incerteza, e o resultado do Max cai de 45,7% para 44,4% se execuções com timeout receberem zero.</li>
+  <li><strong>A própria Anthropic recomenda o Opus 5.5</strong> para a maior parte do trabalho de código e conhecimento, e o Fable para trabalhos que já gastam dinheiro em tentativas repetidas, ou como conselheiro que um modelo mais barato consulta quando trava.</li>
+  <li><strong>Li a VentureBeat por inteiro e a página oficial só no nível de título e resumo.</strong> O system card não foi aberto diretamente, então os números dele estão como a VentureBeat reporta. Uma matéria da CNBC sobre o lançamento não pôde ser lida.</li>
+</ul>
+
+<h2 id="take">7. Conclusão</h2>
+<p>Um modelo novo agora são duas decisões: <em>qual modelo</em> e <em>qual esforço</em>. Antes de trocar, rode de 20 a 50 tarefas reais suas em Medium e High, conte resultados aceitos incluindo as tentativas que falharam, e só escale os casos teimosos. Um preço de tabela 20% menor é bom, mas o botão de esforço pode mexer no seu custo por tarefa em mais de 5x.</p>
+
+<h2 id="sources">Fontes</h2>
+<ul class="sources">
+  <li><a href="https://venturebeat.com/technology/anthropic-releases-claude-fable-5-2-and-mythos-5-2-pairing-new-record-high-benchmarks-with-20-api-cost-reduction">VentureBeat, "Anthropic releases Claude Fable 5.2 and Mythos 5.2..."</a> (9/nov/2026), lida por inteiro</li>
+  <li><a href="https://www.anthropic.com/claude-fable-and-mythos-5-2">Anthropic, "Introducing Claude Fable 5.2 and Claude Mythos 5.2"</a> (9/nov/2026)</li>
+  <li><a href="https://www.anthropic.com/news/models">Newsroom da Anthropic, Models</a> (confirma a data de 9/nov)</li>
+  <li><a href="https://www.cnbc.com/2026/11/09/anthropic-claude-fable-5-2-mythos-5-2.html">CNBC, Fable 5.2 e Mythos 5.2 antes do IPO</a> (9/nov/2026), citada só nos resultados de busca</li>
+</ul>
+</div>
+
+  <footer><span id="footer-left">Cooldecode · AI Watch</span><span class="accent">2026-11-10</span></footer>
+</div>
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-lang]').forEach(function(el) { el.style.display = el.getAttribute('data-lang') === lang ? '' : 'none'; });
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.setlang === lang); });
+    document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+    document.getElementById('footer-left').textContent = lang === 'en' ? 'Cooldecode · AI Watch' : 'Cooldecode · IA Watch';
+  }
+  function calc() {
+    ['', 'P'].forEach(function(s) {
+      var i = document.getElementById('inTok' + s), o = document.getElementById('outTok' + s), m = document.getElementById('mode' + s);
+      var inM = +i.value, outM = +o.value, f = m.value === 'batch' ? 0.5 : 1;
+      document.getElementById('inVal' + s).textContent = inM;
+      document.getElementById('outVal' + s).textContent = outM;
+      function c(pi, po) { return Math.round((inM * pi + outM * po) * f * 100) / 100; }
+      document.getElementById('r51' + s).textContent = c(10, 50);
+      document.getElementById('r52' + s).textContent = c(8, 40);
+      document.getElementById('r52f' + s).textContent = c(16, 80);
+      document.getElementById('rop' + s).textContent = c(4, 20);
+    });
+  }
+  calc();
+</script>
+</body>
+</html>

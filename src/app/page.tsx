@@ -1047,6 +1047,17 @@ const posts: Post[] = [
   {
     category: "ai",
     categoryLabel: { en: "AI Watch", pt: "IA Watch" },
+    title: { en: "Fable 5.2 and the effort dial: a 20% price cut that can still raise your bill", pt: "Fable 5.2 e o botão de esforço: um corte de 20% no preço que ainda pode aumentar sua conta" },
+    desc: {
+      en: "Anthropic released Claude Fable 5.2 and Mythos 5.2 on Nov. 9 at $8/$40 per million tokens. Why the effort setting moves cost per task more than list price, with the reported FrontierCode numbers and a rough bill calculator.",
+      pt: "A Anthropic lançou o Claude Fable 5.2 e o Mythos 5.2 em 9/nov por US$ 8/US$ 40 por milhão de tokens. Por que o nível de esforço mexe mais no custo por tarefa que o preço de tabela, com os números reportados do FrontierCode e uma calculadora de conta aproximada.",
+    },
+    date: "2026-11-10",
+    file: "ai-watch-2026-11-10-fable-5-2-effort-cost.html",
+  },
+  {
+    category: "ai",
+    categoryLabel: { en: "AI Watch", pt: "IA Watch" },
     title: { en: "MCPhantom: when the model's memory becomes your package manager", pt: "MCPhantom: quando a memória do modelo vira seu gerenciador de pacotes" },
     desc: {
       en: "Coding agents keep installing archived, unpatched MCP servers they remember from training. Why EDR and dependency scanners miss it, how one browser permission became code execution, Anthropic's new pre-tool-call hooks, a DIY hook, and an in-browser MCP config checker.",
